@@ -1,0 +1,226 @@
+.TH MAUS 2 "PDP-11 only"
+.SH NAME
+maus \- multiple-access-user-space (shared memory) operations
+.SH SYNOPSIS
+.B #include <sys/fcntl.h>
+.PP
+.B int getmaus (path, oflag)
+.br
+.B char *path;
+.br
+.B int oflag;
+.PP
+.B int freemaus (mausdes)
+.br
+.B int mausdes;
+.PP
+.B char *enabmaus (mausdes)
+.br
+.B int mausdes;
+.PP
+.B int dismaus (saddr)
+.br
+.B char *saddr;
+.PP
+.B char *switmaus (mausdes, saddr)
+.br
+.B int mausdes;
+.br
+.B char *saddr;
+.SH DESCRIPTION
+.SM MAUS
+(Multiple Access User Space)
+is a dedicated portion of physical memory that is
+subdivided into logical subsections.
+These subsections can be attached to the calling process's data segment
+or released from its data segment with the following calls.
+.PP
+.I Path
+points to a path name naming a special file that is one of the
+.SM MAUS
+logical subsections.
+.I Getmaus
+opens a maus descriptor for the named file and sets the file status flag
+according to the value of
+.IR oflag .
+.I Oflag
+is one of the following:
+.RS 8
+.TP 12
+.SM
+.B O_RDONLY
+Open for reading only.
+.TP
+.SM
+.B O_WRONLY
+Open for writing only.
+.TP
+.SM
+.B O_RDWR
+Open for reading and writing.
+.RE
+.PP
+No process may have more than eight (8) maus descriptors open simultaneously.
+.PP
+The named file is opened unless one or more of the following are true:
+.IP
+A component of the
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+The named file does not exist.
+.SM
+\%[ENOENT]
+.IP
+The named file is not a maus special file.
+.SM
+\%[EINVAL]
+.IP
+A component of the
+path prefix
+denies search permission.
+.SM
+\%[EACCES]
+.IP
+.I Oflag\^
+permission is denied for the named file.
+.SM
+\%[EACCES]
+.IP
+Eight (8) maus descriptors are currently open.
+.SM
+\%[EMFILE]
+.IP
+The
+.SM
+MAUS
+area associated with the special file does not exist.
+.SM
+\%[ENXIO]
+.IP
+.I Path\^
+points to an illegal address.
+.SM
+\%[EFAULT]
+.PP
+.I Freemaus
+closes the maus descriptor specified by
+.IR mausdes .
+Note that if a maus descriptor has been enabled (see
+.IR enabmaus " below)"
+it may still be closed:
+a
+.SM MAUS
+file remains attached to a process's data segment until a
+.I dismaus
+(see below) 
+is used to free it.
+.PP
+.I Freemaus
+will fail if
+.I mausdes
+is not a valid open maus descriptor.
+.SM
+\%[EBADF]
+.PP
+.I Enabmaus
+attaches the
+.SM MAUS
+file associated with
+.I mausdes
+to the data segment of the calling process.
+The file is attached starting at the first available 8k-byte boundary
+address beyond the current break value (see
+.IR brk (2)).
+Note that multiple
+.I enabmaus
+calls can be made with the same maus descriptor.
+Each call will attach the file at a different 8k-byte boundary address.
+.PP
+.I Enabmaus
+will fail and not attach the
+.SM MAUS
+file if one or more of the following are true:
+.IP
+.I Mausdes
+is not a valid open maus descriptor.
+.SM
+\%[EBADF]
+.IP
+No more 8k-byte boundary starting addresses are available.
+.SM
+\%[ENOMEM]
+.PP
+.I Dismaus 
+frees from the calling process's data segment the
+.SM MAUS
+file that starts at the data segment address given by
+.RI ( saddr " \-" 
+.RI ( saddr " modulus 8192))."
+.PP
+.I Dismaus
+will fail and not free the
+.SM MAUS
+file if
+.RI ( saddr " \-" 
+.RI ( saddr " modulus 8192))"
+is not the data segment starting address of a
+.SM MAUS
+file.
+.SM
+\%[EINVAL]
+.PP
+.I Switmaus
+attaches the
+.SM MAUS
+file associated with
+.I mausdes
+to the data segment of the calling process.
+The file is attached starting at the address given by
+.RI ( saddr " \-" 
+.RI ( saddr " modulus 8192))."
+.PP
+.I Switmaus
+will fail if one or more of the following are true:
+.IP
+.I Mausdes
+is not a valid open maus descriptor.
+.SM
+\%[EBADF]
+.IP
+The value of
+.RI ( saddr " \-" 
+.RI ( saddr " modulus 8192))"
+is not a legal 8k-byte boundary address above the current break value.
+.SM
+\%[EINVAL]
+.SH RETURN VALUES
+Upon successful completion, the return value is as follows:
+.IP
+.I Getmaus
+returns a non-negative integer, namely a maus descriptor.
+.IP
+.I Freemaus
+returns a value of 0.
+.IP
+.I Enabmaus
+returns the data segment starting address of the attached
+.SM MAUS
+file.
+.IP
+.I Dismaus
+and
+.I switmaus
+return the maus descriptor previously associated with the data segment starting
+address given by
+.RI ( saddr " \-" 
+.RI ( saddr " modulus 8192))"
+if one exists.
+Otherwise, a value of \-2 is returned.
+.PP
+On other than successful completion, a value of \-1 is returned with
+.I errno
+set to indicate the error.
+.\"	@(#)maus.2	5.2 of 5/18/82

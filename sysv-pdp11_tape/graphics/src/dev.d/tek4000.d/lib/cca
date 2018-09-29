@@ -1,0 +1,9 @@
+# @(#)cca	1.1
+for i
+do prog=`echo $i | sed "s/\.c//"`
+   cc -c ${prog}.c
+   ar r tek.a ${prog}.o
+   rm ${prog}.o
+   chmod 644 tek.a
+   echo "${prog} done"
+done

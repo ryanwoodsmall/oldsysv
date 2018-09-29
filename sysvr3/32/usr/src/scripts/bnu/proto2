@@ -1,0 +1,80 @@
+/dev/null
+1422 104
+d--775 0 3
+install	d--755	5 3
+	INSTALL	---444	5 3	./install/bnu/INSTALL
+	ORDER	---444	5 3	./install/bnu/ORDER2
+	Rlist.uucp	---444	5 3	./install/bnu/Rlist.uucp
+	UNINSTALL	---444	5 3	./install/bnu/UNINSTALL
+	packagename	---444	5 3	./install/bnu/packagename
+	postinstall	---555	5 3	./install/bnu/postinstall
+	preinstall	---555	5 3	./install/bnu/preinstall
+	unsetup		---555	5 3	./install/bnu/unsetup
+	update.Dialers	---555	5 3	./install/bnu/update.Dialers
+$
+new	d--755	5 3
+	usr	d--775	0 3
+		options	d--775	0 3
+			uucp.name	---755	0 3	./install/bnu/packagename
+		$
+		lib	d--775	0 3
+			uucp	d--755	5 5
+				SetUp	---555	5 5	../usr/lib/uucp/SetUp
+				Uutry	---555	5 5	../usr/lib/uucp/Uutry
+				remote.unknown	-u-111	5 5	../usr/lib/uucp/remote.unknown
+				nttysrv	-u-111	0 3	../usr/lib/uucp/nttysrv
+				uucheck	---110	5 5	../usr/lib/uucp/uucheck
+				uucico	-u-111	5 5	../usr/lib/uucp/uucico
+				uucleanup	---110	5 5	../usr/lib/uucp/uucleanup
+				uudemon.admin	---555	5 5	../usr/lib/uucp/uudemon.admin
+				uudemon.cleanu	---555	5 5	../usr/lib/uucp/uudemon.cleanu
+				uudemon.hour	---555	5 5	../usr/lib/uucp/uudemon.hour
+				uudemon.poll	---555	5 5	../usr/lib/uucp/uudemon.poll
+				uugetty	---544	5 5	../usr/lib/uucp/uugetty
+				uusched	-u-111	5 5	../usr/lib/uucp/uusched
+				uuxqt	-u-111	5 5	../usr/lib/uucp/uuxqt
+				Poll	---444	5 5	../usr/lib/uucp/Poll
+				Sysfiles	---444	5 5	../usr/lib/uucp/Sysfiles
+				Systems	---400	5 5	../usr/lib/uucp/Systems
+				Dialcodes		---444	5 5	../usr/lib/uucp/Dialcodes	
+				Dialers		---444	5 5	../usr/lib/uucp/Dialers	
+				Devconfig	---444	5 5	../usr/lib/uucp/Devconfig
+				Devices	---444	5 5	../usr/lib/uucp/Devices
+				Permissions	---400	5 5	../usr/lib/uucp/Permissions
+			$
+		$
+		spool	d--775	0 2
+			locks	d--755	5 5
+			$
+			uucp	d--755	5 5
+				.Admin	d--755	5 5
+				$
+				.Corrupt	d--755	5 5
+				$
+				.Log	d--755	5 5
+					uucico	d--755	5 5
+					$
+					uucp	d--755	5 5
+					$
+					uux	d--755	5 5
+					$
+					uuxqt	d--755	5 5
+					$
+				$
+				.Old	d--755	5 5
+				$
+				.Sequence	d--755	5 5
+				$
+				.Status	d--755	5 5
+				$
+				.Workspace	d--755	5 5
+				$
+				.Xqtdir	d--755	5 5
+				$
+			$
+			uucppublic	d--777	5 5
+			$
+		$
+	$
+$
+$

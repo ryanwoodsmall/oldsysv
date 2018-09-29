@@ -1,0 +1,122 @@
+.TH X25IPVC 3C
+.SH NAME
+x25ipvc, x25rpvc \- install or remove a \s-1PVC\s+1 on a link
+.SH SYNOPSIS
+.nf
+.B #include <x25lib.h>
+.PP
+.B "int x25ipvc (slotname, chno, linkid, flags)"
+.B char \(**slotname;
+.B int chno, linkid;
+.B unsigned flags;
+.PP
+.B int x25rpvc (slotname)
+.B char \(**slotname;
+.SH DESCRIPTION
+.I X25ipvc\^
+may be used
+to install a
+.SM BX\*S.25
+Permanent Virtual Circuit (\s-1PVC\s+1)
+on a specified
+.SM BX\*S.25
+interface
+.RI ( link ).
+If
+.I slotname\^
+is currently connected (but removable) this
+connection is removed and the new connection is made
+to the logical channel
+.I chno\^
+on the link specified by
+.IR linkid .
+.PP
+.I Slotname\^
+is a path name that specifies a
+.SM BX\*S.25
+minor device (slot), e.g.,
+.BR /dev/x25s12 .
+.PP
+.I Chno\^
+is the \s-1BX\s+1.25 level 3 logical channel number associated with
+the \s-1PVC\s+1, e.g., 3.
+.I chno\^
+must be in the range 1 to 4095
+and must not be currently in use
+for any other
+.SM BX\*S.25
+minor device associated with that link.
+.PP
+.I Linkid\^
+is the identifier for the link data structure to be
+used in the operating system. This identifier can be
+thought of as the connector between
+.I x25ipvc\^
+calls and the
+.I x25alnk\^
+call for the physical link on which the channels
+are multiplexed. An example of a link identifier is 1.
+.PP
+.I Flags\^
+contains settings for specifying \s-1PVC\s+1 install options;
+permissible \s-1PVC\s+1
+.I flags\^
+bit settings are:
+.RS
+.TP \w'PVCSESS\ \ 'u
+.PD 0
+.SM PVCSESS
+Session connect/disconnect packets used.
+.TP
+.SM PVCREST
+.SM RESET
+in-order/out-of-order responded to.
+.TP
+.SM PVCNONE
+No establishment protocol used.
+.PD
+.RE
+.PP
+.I X25rpvc\^
+is used to remove the association between
+.SM BX\*S.25
+minor device
+.I slotname\^
+and the link and channel to which it is currently connected.
+The command will fail if the slot is open, if packets are
+waiting to be transmitted, or if there are unacknowledged
+packets outstanding.
+.SH SEE ALSO
+ioctl(2),
+open(2),
+stat(2),
+perror(3C).
+.br
+nc(7), vpm(7), x25(7)
+in the
+.IR "\s-1UNIX\s+1 System Admninistrator's Manual" .
+.br
+.IR "Operations Systems Network Protocol Specification: BX.25 Issue 2" ,
+Bell Laboratories.
+.SH DIAGNOSTICS
+.PD 0
+.TP \w'\s-1EPVCNCO\s+1\ \ 'u
+.SM EPVCNP
+no (or multiple) setup protocol specified
+(one of \s-1PVCSESS\s+1,
+\s-1PVCREST\s+1,
+or \s-1PVCNONE\s+1 must be in \fIflags\fP argument).
+.TP
+.SM EPVCNCO
+network control device \fIopen\fP failed; check \fIerrno\fP.
+.TP
+.SM EPVCNCI
+network control device \fIioctl\fP failed; check \fIerrno\fP.
+.TP
+.SM EPVCSS
+\fIstat\fP of slot (\s-1PVC\s+1) name failed; check \fIerrno\fP.
+.TP
+.SM EPVCSNC
+file associated with \fIslotname\fP not a character special device.
+.PD
+.\"	@(#)x25ipvc.3c	5.2 of 5/18/82

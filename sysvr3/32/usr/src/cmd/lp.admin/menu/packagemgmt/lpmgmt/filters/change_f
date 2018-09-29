@@ -1,0 +1,159 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/filters/change_f	1.5"
+## IDOC:   SCREEN 2.44: CHANGE FILTER
+#menu# Change a filter
+
+##+++ (help _H130)
+#help#        You use the "change" command to change the definition  of  a
+#help#        filter.   The  same  information you gave when you added the
+#help#        filter will provide the defaults for each item you are asked
+#help#        to respecify, so you can quickly step through the definition
+#help#        to find the item you want to change.
+##--- (help _H130)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"When entering more than one answer or value,
+separate them with a space or comma.
+"
+##--- (line 3)
+
+tmpfile=${TMPDIR:-/tmp}/FLT.$$
+
+DEF_f=`cat ${TMPDIR:-/tmp}/FLT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.44.4)
+chk_name \
+	"Filter name:${DEF_f:+ (default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of the filter you want to
+        change.   If  you  don't know the name, enter \"q\" and select
+        the \"list\" command from the \"filters\" menu, to get a list of
+        known filters.  \
+"
+OPT_f=${RESP}
+##--- (2.44.4)
+
+	if [ "${OPT_f}" = "any" -o "${OPT_f}" = "all" -o "${OPT_f}" = "none" ]
+	then
+		echo "You can not use \"any\", \"all\", or \"none\". Try again."
+		continue
+	fi
+
+	/usr/lib/lpfilter -f ${OPT_f} -l >${tmpfile} && break
+done
+
+OPT_input_types=`sed -n -e '/Input types: /s///p' ${tmpfile}`
+OPT_output_types=`sed -n -e '/Output types: /s///p' ${tmpfile}`
+OPT_printer_types=`sed -n -e '/Printer types: /s///p' ${tmpfile}`
+OPT_printers=`sed -n -e '/Printers: /s///p' ${tmpfile}`
+OPT_type=`sed -n -e '/Filter type: /s///p' ${tmpfile}`
+OPT_command=`sed -n -e '/Command: /s///p' ${tmpfile}`
+OPT_options=`sed -n -e '/Options: /s///p' ${tmpfile}`
+OPT_install="edit"
+rm -f ${tmpfile}
+
+firsttime=yes
+while [ "edit" = "${OPT_install}" ]
+do
+
+g='``'
+##+++ (2.44.5)
+FILTERI="/usr/spool/lp/admins/lp/filter.table.i"
+if [ -s $FILTERI ]
+then
+	if egrep ":[^:]*:[^:]*:[^:]*:${OPT_f}:*" ${FILTERI} >/dev/null
+	then
+		if checkyn ${flags} -f \
+			${DEF_i:+"-D${DEF_i}"} -H \
+			"\
+       			 Enter a \"y\" (for yes) to restore the filter to its original,
+       			 installed  definition.   Enter a \"n\" (for no) if you want to
+       			 step through the filter definition to change parts of it.  \
+			" \
+			"Restore to ${g}factory settings''?${DEF_i:+ (default: ${DEF_i})}"
+		then
+				/usr/lib/lpfilter -f ${OPT_f} -i || continue
+				exit 0
+		else
+				:
+		fi
+	else
+		:
+	fi
+else
+	:
+fi
+##--- (2.44.5)
+
+	DEF_input_types=${OPT_input_types}
+	DEF_output_types=${OPT_output_types}
+	DEF_printer_types=${OPT_printer_types}
+	DEF_printers=${OPT_printers}
+	DEF_type=${OPT_type}
+	DEF_command=${OPT_command}
+	DEF_options=${OPT_options}
+
+	if [ "yes" != "${firsttime}" ]
+	then
+		echo "
+Edit the filter definition:
+"
+	fi
+	firsttime=
+
+. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.43
+
+	if [ "skip" = "${OPT_install}" ]
+	then
+		exit 0
+	fi
+
+
+	if [ "install" = "${OPT_install}" ]
+	then
+		/usr/lib/lpfilter -f ${OPT_f} - <<-EOF
+			input types: ${OPT_input_types}
+			output types: ${OPT_output_types}
+			printer types: ${OPT_printer_types}
+			printers: ${OPT_printers}
+			filter type: ${OPT_type}
+			command: ${OPT_command}
+			options: ${OPT_options}
+			EOF
+
+		if [ $? -eq 0 ]
+		then
+			echo ${OPT_f} >${TMPDIR:-/tmp}/FLT.`basename \`tty\``
+			break
+		else
+			OPT_install="edit"
+		fi
+	fi
+done
+

@@ -1,0 +1,98 @@
+#ident	"@(#)sadmin:admin/menu/softwaremgmt/installpkg	2.6"
+#menu# install new software package onto built-in disk
+#help# 
+#help#	Installpkg copies files from removable media onto the built-in disk and
+#help#	performs additional work as necessary so you can run that software.
+#help#	From then on, you will have access to those commands.
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+question="
+Insert the removable medium for the package you want to install
+into the ${ndrive}.
+Press <RETURN> when ready.  Type  q  to quit."
+
+while true
+do
+	fulllabel=`disklabel -q "${question}" $$ ${ddrive}`
+	fsname=
+	eval `labelfsname "${fulllabel}"`
+	case "${fsname}" in
+	instal | install )
+		trap '	trap "" 1 2
+			cd /;  diskumount -n "${ndrive}" ${ddrive}' 0
+
+		/etc/umount ${ddrive} 2>/dev/null
+		chmod 700 /install
+		/etc/mount ${ddrive} /install -r  ||  exit 1
+		;;
+	'' )
+		echo >&2 '
+	This removable medium is not labeled and will not work.
+	Try another.'
+		continue
+		;;
+	* )
+		echo >&2 "
+	This removable medium is labeled '${label}' and is not a package.
+	The file system name is '${fsname}'.  It should be 'install'.
+	The full label is:
+${fulllabel}
+	Try another."
+		continue
+	esac
+
+	if [ ! -r /install/install/INSTALL ]
+	then
+		admerr $0 'Improperly built software removable medium.'
+		exit 1
+	fi
+
+	trap '	trap "" 1 2
+		rm -f /tmp/$$*
+		cd / '"
+		diskumount -n '${ndrive}' ${ddrive}" 0
+
+	cd /tmp
+	cp /install/install/INSTALL $$INSTALL
+	chmod +x $$INSTALL
+
+	trap : 1 2
+	if [ -r /etc/coredirs  -a  ! -f $$installpkg ]
+	then
+		#	A problem in cpio makes it change the modes and
+		#	ownership of directories it did not create.  This trick
+		#	records and later restores the existing values.  The
+		#	directories to be protected are listed in /etc/coredirs.
+		cpio -o </etc/coredirs >$$installpkg 2>/dev/null
+	fi
+	/tmp/$$INSTALL ${ddrive} /install "${ndrive}"  ||
+		echo 'WARNING:  Installation may not have completed properly.'
+	trap '' 1 2
+	if [ -f $$installpkg ]
+	then
+		#	Restore the directory modes and ownerships.
+		cpio -id <$$installpkg >/dev/null 2>&1
+	fi
+	rm -f $$INSTALL
+	diskumount -n "${ndrive}" ${ddrive}
+	trap 'rm -f /tmp/$$*' 0
+	trap exit 1 2
+done

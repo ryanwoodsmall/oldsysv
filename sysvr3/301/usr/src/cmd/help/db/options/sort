@@ -1,0 +1,65 @@
+
+\S sort: \S  Options
+
+     -m   merges files that ar already sorted.
+
+     -u   eliminates duplicate lines in the output.
+
+     -c   checks that input file is sorted according to ordering rule, and
+          prints a message the includes the file name and the term "disorder"
+          if the lines of the file are ordered incorrectly.
+
+     -M   considers the first three non-blank characters of a field to be the
+          names of months.  Compares and orders them as JAN < FEB < ... < DEC.
+
+     -b   ignores leading blanks in restricted field comparisons.  If you use
+          "b" before <+position1> on the command line, the option is applied
+          to every restricted field.  You can ignore blanks in specific
+          fields by listing "b" after <+position1> and/or <position2>.
+          
+
+     -d   letters, digits and blanks are used when sorting lines.  Can be
+          attached to <position1> or <position2>.
+
+     -f   maps lower case letters onto upper case.  Can be attached to
+          <position1> or <position2>.
+
+     -i   ignores characters outside ASCII range in non-numeric comparisons.
+          Can be attached to <position1> or <position2>.
+
+     -n   sorts an initial numeric string by arithmetic value.
+
+     -r   sorts in reverse order.
+
+     -o output_file   writes the output of the sort to <output_file> instead 
+                      of standard output.
+
+
+     -tchar   <char> is the field separator character.  The default field 
+               separator is a blank space.
+
+     -ymemory  uses <memory> kilobytes of memory instead of the default memory
+               size. "y" alone uses the maximum memory from the start.
+               (Useful only with "c" and "m" options.)
+
+     -zsize   <size> is the size of the longest line. Useful for avoiding
+               abnormal terminations.  (Useful only with "c" and "m" options.)
+
+     +position1   <position1> is starting position of \Ssort\S.  Normally,
+                  the sort begins in the 1st field with the 1st character.  By
+                  specifying a position, you can change the starting place of
+                  the sort.  <position1> takes the form "m.n" where "m" and "n"
+                  are integers.  The value of "m" specifies how many fields to
+                  skip before starting the sort. The "n" specifies the number
+                  of characters in the field before starting the sort.
+                  The default for "n" and "m" is 0, so sorting begins at the 
+                  1st character of the 1st field.
+
+
+
+     -position2   <position2> is ending position for \Ssort\S.  Normally,
+                   the sort stops at the end of the line.  With <position1> and
+                   <position2> you can sort from a character you specify in
+                   <position1> up to and including the character you specify
+                   with <position2>.  For <position2>  "m.n" means end the 
+                   sort on character "n" in field "m".

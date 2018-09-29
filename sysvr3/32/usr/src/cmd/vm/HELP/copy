@@ -1,0 +1,35 @@
+
+   The COPY command allows you to duplicate a selected object  keeping
+   one  copy  in  its  original location and moving the other to a new
+   location.  In the command syntax, the "object_name" is  the  object
+   to  be  copied  and  the  "folder_name"  is the folder in which the
+   copy is to be placed. FACE will prompt you for any
+   information you do not give.
+
+
+     1.  To COPY an object use one of the following  options.   If  an
+         object is not specified the current object is assumed.
+
+            - Function Key - Press CHG-KEYS then press COPY
+
+            - Command menu - Select COPY + RETURN
+
+            - COMMAND LINE - Type copy [object_name]
+                               [to folder_name] + RETURN
+
+     2.  The following message and prompt will appear if you  did  not
+         specify a destination folder with the COPY command.
+
+            Open or move to the destination folder and press SELECT.
+
+         SELECT is the label on Function Key F8. Navigate to the
+         destination  folder,  opening  it if it is not currently open
+         and press SELECT.  If you would like to copy  the  object  to
+         the  currently  active folder simply press SELECT.  To cancel
+         the COPY command, press the CANCEL Screen Labeled Key.
+
+     3.  If a file with the same name already exists in the destination
+         folder, you will be prompted for a new name for the copy.
+
+   To COPY an entire folder to another folder, specify the folder name
+   as the object to be copied.

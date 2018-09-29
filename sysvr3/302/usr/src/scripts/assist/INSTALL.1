@@ -1,0 +1,380 @@
+#####################################################################
+#
+#	Floppy Installation Procedure for Package
+#	ASSIST System  1.0  March, 1986  
+#		(3B2 UNIX V 3.0)
+#
+#####################################################################
+#
+#	Packages are shipped on a file system '/install'.
+#	Below that point are the following directories and files:
+#	/install/install/		contains the installation procedure
+#	/install/install/INSTALL	actually installs the commands
+#	/install/install/UNINSTALL	script to remove package from the system
+#	/install/install/ORDER		the diskette number
+#	/install/install/packagename	contains the package info
+#	/install/install/preinstall	actions performed before
+#					files are copied.
+#					files are copied.
+#	/install/new			the "root" of the files to be installed
+#	/install/new/root		top of files going to / file system
+#
+#####################################################################
+#
+#	Set global variables
+#
+
+PKGNAME="ASSIST"
+LAST=3		        # number of floppies 
+REPLACE=0
+USRSPACE=0		# blocks required in /usr file system
+			# "0" blocks if computation required for every floppy
+USRINCR=0		# blocks required in /usr file system
+			# blocks required for incremental install
+			# i.e. replacement of currently installed version
+TOTALSPACE=0
+
+#####################################################################
+#
+# find and set unixvers (UNIX VERSION) to 1 (1.0) or 2 (2.x)
+#
+# sysadm install (Version 1.0) and sysadm installpkg (Version 1.1)
+# use different floppy device names (/dev/install - /dev/diskette).
+# We therefore save mount device and mount directory at entry point:
+# Note that installpkg passes those two parameters to INSTALL.
+#
+
+unixvers=1
+
+if [ -b "$1" ]
+then
+	mntdev=$1	# installpkg passes mount device
+	unixvers=2
+elif
+	test -b /dev/diskette
+then
+	mntdev=/dev/diskette
+elif
+	test -b /dev/install
+then
+	mntdev=/dev/install
+else
+	echo "** ERROR **  Can't find mount device."
+	exit
+fi
+
+#	Save passed mount directory parameter or default to /install
+#
+
+mntdir=${2:-/install}
+
+#####################################################################
+#
+#	Set local variables
+#
+
+INSPATH=${mntdir}/new
+PKGINFO=`cat ${mntdir}/install/packagename`
+CURDIR=`pwd`
+
+SPACEFLAG=0		# space required flag
+
+
+#####################################################################
+# Give installer a way out if wrong diskette or application mounted
+
+if [ -n "${PKGINFO}" ]
+then
+	echo "\nThis diskette contains:\n     ${PKGINFO}"
+	/usr/lbin/chkyn -f "Do you want to install it?"  ||  exit 0
+else
+	echo "** ERROR **  Packagename file missing from diskette.  Installation aborted."
+	exit 1
+fi
+
+#####################################################################
+#	Ask if user wants display of README file
+
+if [ -f ${mntdir}/install/README ]
+then
+	echo
+	/usr/lbin/chkyn -f "Do you want to read the PACKAGE DESCRIPTION FILE, which details
+installation requirements and procedures?" &&
+		( echo "\n********************************************************"
+		echo "***  HIT CARRIAGE RETURN TO VIEW THE FIRST PAGE AND  ***"
+		echo "*** SUBSEQUENT PAGES OF THE PACKAGE DESCRIPTION FILE ***"
+		echo "********************************************************"
+		pr -tpl23 ${mntdir}/install/README 2> /dev/null
+		echo "\nEnd of PACKAGE DESCRIPTION FILE display.\n"
+
+		#
+		#	Give user another escape
+		#
+
+		/usr/lbin/chkyn -f "Do you want to continue?" ||
+		( echo "Installation aborted.\n" ; exit 9 )
+	)
+	test `echo $?` = "9" && exit 0
+fi
+
+###############################################################
+#
+#	Check to see if package has already been installed.
+#
+
+if [ -f /usr/options/assist.name ]
+then
+	echo "\n$PKGNAME already installed.\n"
+	/usr/lbin/chkyn -f "Do you want to replace it with
+     ${PKGINFO}?"  || exit 1
+
+	REPLACE=1
+fi
+
+echo " "
+echo "Copyright (c) 1985 AT&T"
+echo "All Rights Reserved"
+echo " "
+echo "${PKGNAME} contains 3 (three) floppy diskettes."
+echo "The first two diskettes contain the files required for ASSIST."
+echo "The third diskette contains the ASTGEN software.  (ASTGEN allows"
+echo "you to modify existing menus and command forms or create new menus "
+echo "and command forms.)  The ASSIST software will work without the "
+echo "installation of ASTGEN. If you want to save disk space, we suggest "
+echo "that you install the ASTGEN software only if you are planning to"
+echo "use it.  Remember that you can easily install ASTGEN in the future"
+echo "by reinstalling the three floppy ASSIST/ASTGEN set."
+echo " "
+
+echo "Do you want to install the third diskette? (please answer y or n): \c"
+read ANS
+while true
+do
+	case $ANS in
+		yes | ye | y | Y)
+		LAST=3
+		break
+		;;
+		no | n | N)
+		LAST=2
+		break
+		;;
+		*) echo "Please type y or n"
+		   echo '>\c'
+		   read ANS
+		   ;;
+	esac
+done
+
+if [ ! "$USRSPACE" = "0" ]	# space requirement hard coded
+then
+	spaceleft=`df /usr  |  sed 's/.* \([0-9]\{1,\}\) block.*/\1/'`
+	if [ $REPLACE -eq 0 ]
+	then
+		if [ "${USRSPACE}" -gt "${spaceleft}" ]
+		then
+			echo "**ERROR**  This package needs $USRSPACE blocks in file system  '/usr'.
+There are only ${spaceleft} blocks left."
+			echo "${PKGNAME} cannot be installed."
+			exit 0
+		fi
+	else
+		if [ "${USRINCR}" -gt "${spaceleft}" ]
+		then
+			echo "**ERROR**  This package needs $USRSPACE blocks in file system  '/usr'.
+There are only ${spaceleft} blocks left."
+			echo "${PKGNAME} cannot be installed."
+			exit 0
+		fi
+	fi
+fi
+
+###############################################################
+#
+#  Check for special work (in preinstall) before files are copied in.
+#
+
+if [ -x ${mntdir}/install/preinstall ]
+then
+	# note that system parameters may be used in preinstall
+	# and are therefore passed on. Add others as needed.
+
+	${mntdir}/install/preinstall $mntdir $mntdev $unixvers
+	if [ $? = 0 ]
+	then
+		echo "\nPreinstallation work completed.\n"
+	else
+		echo "\nInstallation aborted.\n"
+		exit 1
+	fi
+fi
+
+#####################################################################
+#	Multiple Floppy Loop:
+#
+
+expect=1
+while [ $expect -le $LAST ]
+do
+	if [ $expect -gt 1 ]
+	then
+		#########################################################
+		#
+		# not the first floppy: umount, mount required
+		#
+
+		cd /		# avoid device busy
+		sync;sync;sync
+		/etc/umount $mntdev 2>/dev/null
+		echo "Remove floppy and insert floppy number $expect"
+		echo "Type <return> when ready: \c"
+		read ans
+		/etc/mount $mntdev $mntdir -r 2>/dev/null
+	fi
+
+	################################################################
+	#
+	#	Check that floppy belongs to package
+	#	Check that this is correct floppy of the set
+	#
+
+	while [ ! -s ${mntdir}/install/packagename \
+	    -o "${PKGINFO}" != "`cat ${mntdir}/install/packagename`" \
+	    -o "`cat ${mntdir}/install/ORDER`" != "$expect" ]
+	do
+	  if [ "`cat ${mntdir}/install/ORDER`" != "$expect" ]
+	  then
+		echo "\n**WARNING**  Floppy out of sequence"
+		echo "Expecting floppy diskette number $expect"
+		cd /
+		/etc/umount $mntdev 2>/dev/null
+		echo "Replace floppy with the correct one"
+		echo "Type <return> when ready: \c"
+		read ans
+		/etc/mount $mntdev $mntdir -r 2>/dev/null
+	  else
+		echo "\n** ERROR **  Floppy does not belong to ${PKGINFO}"
+		cd /
+		/etc/umount $mntdev 2>/dev/null
+		echo "Replace floppy with the correct one"
+		echo "Type <return> when ready: \c"
+		read ans
+		/etc/mount $mntdev $mntdir -r 2>/dev/null
+	  fi
+	done
+
+	###############################################################
+	#	Deal with interrupts
+
+	trap "cd ${CURDIR}; exit" 1 2 15
+	trap "rm -f /tmp/$$INSTALLlist" 0
+
+	###############################################################
+	#	Calculate space required to install this package.
+	#	This may cause a partial installation if insufficient
+	#	space is encountered at floppy n.  See earlier note
+	#	on hardcoded space requirements ($USRSPACE).
+
+	cd ${INSPATH}
+	if [ "$USRSPACE" = "0" ]
+	then
+	    for dir in *
+	    do
+		if [ ! -d ${dir} ]
+		then
+			continue
+		fi
+		newsize=`du -s ${dir}  |  sed 's/\([0-9]\{1,\}\).*/\1/'`
+		if [ ${dir} = root ]
+		then
+			dir=/
+		else
+			dir=/${dir}
+		fi
+		spaceleft=`df ${dir}  |  sed 's/.* \([0-9]\{1,\}\) block.*/\1/'`
+		if [ ${newsize} -gt ${spaceleft} ]
+		then
+			SPACEFLAG=1
+			echo "\n**ERROR**  This package needs ${newsize} blocks in file system  ${dir}."
+			echo "There are only ${spaceleft} blocks left."
+		fi
+	    done
+	    if [ ${SPACEFLAG} -ne 0 ]
+	    then
+		echo "\n${PKGINFO} cannot be installed."
+		exit 0
+	    fi
+	fi
+
+	###############################################################
+	#	Develop list of files to be installed.
+
+	find * -print  |  sort >/tmp/$$INSTALLlist
+
+	###############################################################
+	#
+	#	Do the file installation
+	#
+	TOTALSPACE=`expr $TOTALSPACE + $newsize`
+	cd ${INSPATH}
+	echo "\nThe following files are being installed:"
+
+	grep -v '^root/' /tmp/$$INSTALLlist  |  cpio -pdlumv / 2>/dev/null
+	if [ -d root ]
+	then
+		cd root
+		sed -n '/^root\//s///p' /tmp/$$INSTALLlist  |
+			cpio -pdlumv / 2>/dev/null
+	fi
+
+	#############################################################
+	#
+	#	Increment number for next expected floppy
+	#
+
+	echo "\nInstallation of floppy number $expect is complete."
+	expect=`expr $expect + 1`
+done
+
+#####################################################################
+#
+#	Call the postinstall procedure to do additional (setup)
+#	work for the application.
+
+if [ -x ${mntdir}/install/postinstall ]
+then
+	# note that system parameters may be used in postinstall
+	# and are therefore passed on. Add others as needed.
+
+	${mntdir}/install/postinstall $mntdir $mntdev $unixvers
+	if [ $? = 0 ]
+	then
+		echo "\nPostinstallation work completed.\n"
+	else
+		echo "\nPostinstallation work aborted.\n"
+		echo "Installation may be incomplete.\n"
+		exit 1
+	fi
+fi	
+
+#####################################################################
+#	Display end message
+
+echo "\nInstallation of ${PKGINFO} complete.\n"
+
+#####################################################################
+#
+#	all finished
+#
+
+cd $CURDIR
+	spaceleft=`df /usr  |  sed 's/.* \([0-9]\{1,\}\) block.*/\1/'`
+        echo " "
+	echo "********************************************************"
+	echo "***Total blocks left in /usr = $spaceleft"
+        echo "***Total blocks installed by ASSIST = $TOTALSPACE"
+	echo "********************************************************"
+        echo " "
+exit
+
+

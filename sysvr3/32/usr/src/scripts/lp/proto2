@@ -1,0 +1,91 @@
+/dev/null
+1422 75
+d--775 0 3
+install		d--775 0 3
+	INSTALL 	---755 2 2	./install/lp/INSTALL
+	ORDER		---444 2 2	./install/lp/ORDER2
+	Rlist		---555 2 2	./install/lp/Rlist.lp
+	UNINSTALL	---555 2 2	./install/lp/UNINSTALL
+	postinstall	---755 2 2	./install/lp/postinstall
+	preinstall	---755 2 2	./install/lp/preinstall
+	uninstall	---755 2 2	./install/lp/uninstall
+$
+new		d--775 0 3
+	etc		d--775 0 3
+		init.d		d--775 0 3
+			lp		---444 0 3	../etc/init.d/lp
+		$
+	$
+	usr		d--775 0 3
+		bin		d--775 2 2
+			cancel		---555 71 2	../usr/bin/cancel
+			lp		---555 71 2	../usr/bin/lp
+			lpstat		---555 71 2	../usr/bin/lpstat
+		$
+		lib		d--775 0 3
+			accept		---555 71 2	../usr/lib/accept
+			lpfilter	---555 71 2	../usr/lib/lpfilter
+		$
+		spool		d--775 0 2
+			lp		d--775 71 2
+				admins		d--775 71 2
+					lp		d--775 71 2
+						classes		d--775 71 2
+						$
+						forms		d--775 71 2
+						$
+						interfaces	d--775 71 2
+						$
+						logs		d--775 71 2
+						$
+						printers	d--775 71 2
+						$
+						pwheels		d--775 71 2
+						$
+					$
+				$
+				bin		d--775 71 2
+					alert.proto	---444 71 2	../usr/spool/lp/bin/alert.proto
+					drain.output	---775 71 2	../usr/spool/lp/bin/drain.output
+					lp.cat		---775 71 2	../usr/spool/lp/bin/lp.cat
+					lp.page		---775 71 2	../usr/spool/lp/bin/lp.page
+					lp.set		---775 71 2	../usr/spool/lp/bin/lp.set
+					lp.tell		---775 71 2	../usr/spool/lp/bin/lp.tell
+					lpsched.jr	---775 71 2	../usr/spool/lp/bin/lpsched.jr
+					slow.filter	---775 71 2	../usr/spool/lp/bin/slow.filter
+				$
+				fifos		d--775 71 2
+					private		d--771 71 2
+					$
+					public		d--773 71 2
+					$
+				$
+				logs		d--775 71 2
+				$
+				requests	d--775 71 2
+				$
+				system		d--775 71 2
+				$
+				temp		d--775 71 2
+				$
+				model		d--775 71 2
+					standard	---775 2 2	../usr/spool/lp/model/standard
+					1640		---775 2 2	../usr/spool/lp/model/1640
+					dqp10		---775 2 2	../usr/spool/lp/model/dqp10
+					lqp40		---775 2 2	../usr/spool/lp/model/lqp40
+					dumb		---775 2 2	../usr/spool/lp/model/dumb
+					f450		---775 2 2	../usr/spool/lp/model/f450
+					hp		---775 2 2	../usr/spool/lp/model/hp
+					pprx		---775 2 2	../usr/spool/lp/model/pprx
+					prx		---775 2 2	../usr/spool/lp/model/prx
+					5310		---775 2 2	../usr/spool/lp/model/5310
+				$
+			$
+		$
+		options		d--775 0 3
+			lp.name		---555 2 2	./install/lp/lp.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.nlp:lp/proto2	1.11"

@@ -1,0 +1,18 @@
+* @(#)holidays	1.3 of 1/20/85
+* Prime/Nonprime Table for UNIX Accounting System
+*
+* Curr	Prime	Non-Prime
+* Year	Start	Start
+*
+  1985	0830	1700
+*
+* Day of	Calendar	Company
+* Year		Date		Holiday
+*
+    1		Jan 1		New Year's Day
+  147		May 27		Memorial Day
+  185		Jul 4		Indep. Day
+  245		Sep 2		Labor Day
+  332		Nov 28		Thanksgiving Day
+  333		Nov 29		day after Thanksgiving
+  359		Dec 25		Christmas

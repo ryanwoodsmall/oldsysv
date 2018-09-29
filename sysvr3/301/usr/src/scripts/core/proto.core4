@@ -1,0 +1,147 @@
+/dev/null
+1422 250
+d--775 0 3
+	setup		---555 2 2	setup.core4
+	dgn		d--775 0 0
+		SBD		---500 0 0	../init/dgn/MSBD
+		X.SBD		---500 0 0	../init/dgn/X.SBD
+		PORTS		---500 0 0	../init/dgn/PORTS
+		X.PORTS		---500 0 0	../init/dgn/X.PORTS
+	$
+	etc	d--775 0 3
+		cron		---544 2 2		../etc/cron
+		editsa		---550 0 0		../etc/editsa
+		edittbl		---755 2 2		../etc/edittbl
+		fltboot		---555 2 2		../etc/fltboot
+		fmtflop		---555 0 3		../etc/fmtflop
+		getty		---544 0 2		../etc/getty
+		killall		---555 2 2		../etc/killall
+		led		---550 2 2		../etc/led
+		labelit		---555 2 2		../etc/labelit
+		mount		---555 2 2		../etc/mount
+		newboot		---555 2 2		../etc/newboot
+		ports		---555 2 2		../etc/ports
+		setmnt		---555 2 2		../etc/setmnt
+		umount		---555 2 2		../etc/umount
+	$
+	usr	d--775 0 0
+		bin	d--775 2 2
+			cut		---555 2 2	../usr/bin/cut
+			egrep		---555 2 2	../usr/bin/egrep
+			what		---555 2 2	../usr/bin/what
+		$
+		lbin		d--775 2 2
+			mktable		---555 0 3	../usr/lbin/mktable
+			ncpio		---555 0 3	../usr/lbin/ncpio
+			num		---555 0 3	../usr/lbin/num
+			oldfile		---555 0 3	../usr/lbin/oldfile
+			restorefiles	---555 0 3	../usr/lbin/restorefiles
+			rmjunk		---555 0 3	../usr/lbin/rmjunk
+			samedev		---555 0 3	../usr/lbin/samedev
+			selectdevice	---555 0 3	../usr/lbin/selectdevice
+			spacewatch	---555 0 3	../usr/lbin/spacewatch
+			optparttn	---555 2 2	../usr/lbin/optparttn
+		$
+		lib	d--755 0 3
+			.COREterm	d--775 2 2
+			$
+			terminfo	d--775 2 2
+				1	d--775 2 2
+					1620	---644 2 2	../usr/lib/terminfo/1/1620
+				$
+				2	d--775 2 2
+					2621	---644 2 2	../usr/lib/terminfo/2/2621
+					2622	---644 2 2	../usr/lib/terminfo/2/2622
+					2623	---644 2 2	../usr/lib/terminfo/2/2623
+					2624	---644 2 2	../usr/lib/terminfo/2/2624
+					2626	---644 2 2	../usr/lib/terminfo/2/2626
+					2640	---644 2 2	../usr/lib/terminfo/2/2640
+					2640b	---644 2 2	../usr/lib/terminfo/2/2640b
+					2645	---644 2 2	../usr/lib/terminfo/2/2645
+					2648	---644 2 2	../usr/lib/terminfo/2/2648
+				$
+				3	d--775 2 2
+					31	---644 2 2	../usr/lib/terminfo/3/31
+					36	---644 2 2	../usr/lib/terminfo/3/36
+					3a	---644 2 2	../usr/lib/terminfo/3/3a
+				$
+				4	d--775 2 2
+					4012	---644 2 2	../usr/lib/terminfo/4/4012
+					4013	---644 2 2	../usr/lib/terminfo/4/4013
+					4014	---644 2 2	../usr/lib/terminfo/4/4014
+					4015	---644 2 2	../usr/lib/terminfo/4/4015
+					4023	---644 2 2	../usr/lib/terminfo/4/4023
+					4024	---644 2 2	../usr/lib/terminfo/4/4024
+					4112	---644 2 2	../usr/lib/terminfo/4/4112
+					4115	---644 2 2	../usr/lib/terminfo/4/4115
+					42	---644 2 2	../usr/lib/terminfo/4/42
+					4410	---644 2 2	../usr/lib/terminfo/4/4410
+					4415	---644 2 2	../usr/lib/terminfo/4/4415
+					4418	---644 2 2	../usr/lib/terminfo/4/4418
+					4424	---644 2 2	../usr/lib/terminfo/4/4424
+					4424-2	---644 2 2	../usr/lib/terminfo/4/4424-2
+					4425	---644 2 2	../usr/lib/terminfo/4/4425
+					4426	---644 2 2	../usr/lib/terminfo/4/4426
+				$
+				5	d--775 2 2
+					513bct	---644 2 2	../usr/lib/terminfo/5/513bct
+					5420_2	---644 2 2	../usr/lib/terminfo/5/5420_2
+					5620	---644 2 2	../usr/lib/terminfo/5/5620
+				$
+				6	d--775 2 2
+					610bct	---644 2 2	../usr/lib/terminfo/6/610bct
+				$
+				9	d--775 2 2
+					925	---644 2 2	../usr/lib/terminfo/9/925
+					950	---644 2 2	../usr/lib/terminfo/9/950
+				$
+				A	d--775 2 2
+					ATTPT505	---644 2 2	../usr/lib/terminfo/A/ATTPT505
+				$
+				a	d--775 2 2
+					adm3	---644 2 2	../usr/lib/terminfo/a/adm3
+				$
+				b	d--775 2 2
+					bantam	---644 2 2	../usr/lib/terminfo/b/bantam
+				$
+				c	d--775 2 2
+					c100	---644 2 2	../usr/lib/terminfo/c/c100
+					c108	---644 2 2	../usr/lib/terminfo/c/c108
+				$
+				d	d--775 2 2
+					decwriter	---644 2 2	../usr/lib/terminfo/d/decwriter
+					dumb	---644 2 2	../usr/lib/terminfo/d/dumb
+					dw1	---644 2 2	../usr/lib/terminfo/d/dw1
+					dw3	---644 2 2	../usr/lib/terminfo/d/dw3
+					dw4	---644 2 2	../usr/lib/terminfo/d/dw4
+				$
+				h	d--775 2 2
+					hp262x	---644 2 2	../usr/lib/terminfo/h/hp262x
+				$
+				i	d--775 2 2
+					intext	---644 2 2	../usr/lib/terminfo/i/intext
+					intext2	---644 2 2	../usr/lib/terminfo/i/intext2
+				$
+				l	d--775 2 2
+					lp	---644 2 2	../usr/lib/terminfo/l/lp
+				$
+				r	d--775 2 2
+					regent100	---644 2 2	../usr/lib/terminfo/r/regent100
+					regent20	---644 2 2	../usr/lib/terminfo/r/regent20
+					regent200	---644 2 2	../usr/lib/terminfo/r/regent200
+					regent25	---644 2 2	../usr/lib/terminfo/r/regent25
+					regent40	---644 2 2	../usr/lib/terminfo/r/regent40
+				$
+				t	d--775 2 2
+					teletec	---644 2 2	../usr/lib/terminfo/t/teletec
+				$
+				v	d--775 2 2
+					viewpoint	---644 2 2	../usr/lib/terminfo/v/viewpoint
+					vt100	---644 2 2	../usr/lib/terminfo/v/vt100
+					vt52	---644 2 2	../usr/lib/terminfo/v/vt52
+				$
+			$
+		$
+	$
+$
+:#ident	"@(#)core:proto.core4	1.11"

@@ -1,0 +1,17 @@
+
+\Ssum\S:  Description
+
+Syntax Summary:  sum [-r] file_name ...
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Ssum\S reports the checksum and the number of 512 byte blocks of storage
+     that the file occupies.  The checksum is the sum of the octal values of
+     the characters in the file.  Use \Ssum\S to verify that two copies of a 
+     file are the same.  You execute \Ssum\S on a file both before and 
+     after it is archived and transmitted to another system to "check the sum"
+     for the transmitted file to check that the file was transmitted without 
+     any errors.  See also: size(1) and wc(1) for a command with a function 
+     similar to \Ssum\S.
+

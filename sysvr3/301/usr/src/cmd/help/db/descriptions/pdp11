@@ -1,0 +1,16 @@
+
+\Spdp11\S:  Description
+
+Syntax Summary:  pdp11
+
+Description:
+     The \Spdp11\S command checks the machine ID of the computer it is running
+     on.  If the computer is a pdp-11/45 or a pdp-11/70, \Spdp11\S sets the
+     exit status to zero, showing that it executed successfully.  If the
+     computer is anything other than a pdp-11/45 or pdp-11/70, \Spdp11\S sets
+     the exit status to a non-zero number.  Use \Spdp11\S as a test in shell
+     programs to identify the type of computer being used.  It insures that the
+     system executes the machine-specific lines that are appropriate to the
+     pdp-11/45 or pdp-11/70.  See also:  false(1), test(1), true(1), u370(1),
+     u3b(1), u3b2(1), u3b5(1), and vax(1) for commands with functions similar  
+     to \Spdp11\S, and make(1) for a command that might be used with \Spdp11\S.

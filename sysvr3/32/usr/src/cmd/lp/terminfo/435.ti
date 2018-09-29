@@ -1,0 +1,13 @@
+#ident	"@(#)nlp:terminfo/435.ti	1.3"
+#01-08-88
+
+435|att435|AT&T 435 6 pen plotter,
+
+	bufsz#1024,
+
+#Set Configuration;Disable hardware handshake and monitor mode, enable normal mode Set handshake mode 2 DC1/DC3
+	is2=\E.\100;0:\E.I81;;17:\E.N;19:,
+
+7475|hp7475|Hewlett Packard 7475A,
+
+	use=435,

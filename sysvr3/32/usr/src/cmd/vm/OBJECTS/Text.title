@@ -1,0 +1,13 @@
+Title=$ARG2
+help=OPEN TEXT $WISHROOT/OBJECTS/Text.title $WISHROOT/OBJECTS/T.h1.help 'Help Facility - HELP'
+rows=16
+columns=72
+begrow=current
+begcol=current
+lifetime=longterm
+text=`readfile -s $ARG1`
+wrap
+
+name="CONTENTS"
+button=8
+action=OPEN MENU $WISHROOT/OBJECTS/Menu.h0.toc

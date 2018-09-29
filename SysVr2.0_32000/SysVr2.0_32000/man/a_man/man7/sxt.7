@@ -1,0 +1,149 @@
+.TH SXT 7
+.SH NAME
+sxt \- pseudo-device driver
+.SH DESCRIPTION
+.I Sxt\^
+is a pseudo-device driver that interposes a discipline between the standard
+.I tty\^
+line disciplines and a real device driver.
+The standard disciplines manipulate
+.I virtual tty
+structures (channels) declared by the
+.I sxt\^ 
+driver.
+.I Sxt\^
+acts as a discipline manipulating a 
+.I real tty
+structure declared by a real device driver.
+The
+.I sxt
+driver is currently only used by the
+.IR shl\^ (1)
+command.
+.P
+Virtual ttys 
+are named by inodes in the subdirectory \fB/dev/sxt\fP
+and are allocated in groups of up to eight.
+To allocate a group, a program should exclusively open a file with a name
+of the form \fB/dev/sxt/??0\fP (channel 0) and then execute 
+a SXTIOCLINK
+.I ioctl\^ 
+call to initiate the multiplexing.
+.P
+Only one channel, the 
+\f2controlling\fR channel,
+can receive input from the keyboard at a time; 
+others attempting to read will be blocked.
+.P
+There are two groups of
+.IR ioctl (2)
+commands supported by
+.IR sxt .
+The first group contains the standard
+.I ioctl
+commands described in
+.IR termio (7),
+with the addition of the following:
+.RS
+.TP "\w'TIOCEXCL 'u"
+.SM TIOCEXCL
+Set
+.I "exclusive use"
+mode: no further opens are permitted until the file has been closed.
+.TP
+.SM TIOCNXCL
+Reset
+.I "exclusive use"
+mode: further opens are once again permitted.
+.RE
+.P
+The second group are directives to 
+.I sxt\^ 
+itself.
+Some of these may only be executed on channel 0.
+.RS
+.TP "\w'SSSSSXTIOCNOTRACE    'u"
+.SM SXTIOCLINK
+Allocate a channel group
+and multiplex the virtual ttys onto the real tty.
+The argument is the number of channels to allocate.
+This command may only be executed on channel 0.
+Possible errors include:
+.RS "\w'XTIOCNOTRACE  'u"
+.TP "\w'ENOTTY 'u"
+.SM EINVAL
+The argument is out of range.
+.TP
+.SM ENOTTY
+The command was not issued from a real tty.
+.TP
+.SM ENXIO
+.I linesw
+is not configured with
+.IR sxt .
+.TP
+.SM EBUSY
+An SXTIOCLINK command has already been issued for this real \fItty\fR.
+.TP
+.SM ENOMEM
+There is no system memory available for allocating the virtual tty structures.
+.TP
+.SM EBADF
+Channel 0 was not opened before this call.
+.RE
+.TP "\w'XTIOCNOTRACE 'u"
+.SM SXTIOCSWTCH
+Set the controlling channel.
+Possible errors include:
+.RS "\w'XTIOCNOTRACE  'u"
+.TP "\w'ENOTTY 'u"
+.SM EINVAL
+An invalid channel number was given.
+.TP
+.SM EPERM
+The command was not executed from channel 0.
+.RE
+.TP "\w'XTIOCNOTRACE 'u"
+.SM SXTIOCWF
+Cause a channel to wait until it is the controlling channel.
+This command will return the error, \fIEINVAL\fR, if
+an invalid channel number is given.
+.TP
+.SM SXTIOCUBLK
+Turn off the \f3loblk\fR control flag in the
+virtual tty of the indicated channel.
+The error \f2EINVAL\fR will be returned if an
+invalid number or channel 0 is given.
+.TP
+.SM SXTIOCSTAT
+Get the status (blocked on input or output)
+of each channel and store in the \f2sxtblock\fR
+structure referenced by the argument.
+The error \f2EFAULT\fR will be returned
+if the structure cannot be written.
+.TP
+.SM SXTIOCTRACE
+Enable tracing.
+Tracing information is written to 
+the console.
+This command has no effect if tracing is not configured.
+.TP
+.SM SXTIOCNOTRACE
+Disable tracing.
+This command has no effect if tracing is not configured.
+.RE
+.SH FILES
+.PD 0
+.TP "\w'/usr/include/sys/xtproto.h  'u"
+/dev/sxt/??[0-7]
+Virtual tty devices
+.TP
+/usr/include/sys/sxt.h
+Driver specific definitions.
+.PD
+.SH SEE ALSO
+shl(1),
+stty(1),
+ioctl(2),
+open(2),
+termio(7).

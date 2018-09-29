@@ -1,0 +1,307 @@
+.TH FSCK 1M
+.SH NAME
+fsck, dfsck \- file system consistency check and interactive repair
+.SH SYNOPSIS
+.B /etc/fsck
+.RB [ \-y ]
+.RB [ \-n ]
+.RB [ \-s \s-1X\s+1]
+.RB [ \-\s-1S\s+1 \s-1X\s+1]
+.RB [ \-t " file]"
+.RB [ \-q ]
+.RB [ \-\s-1D\s+1 ]
+.RB [ \-f ]
+[\|file-systems\|]
+.PP
+.B /etc/dfsck
+[ options1 ]
+filsys1
+.B .\|.\|.
+.B \-
+[ options2 ]
+filsys2
+.B .\|.\|.
+.SH DESCRIPTION
+.SS Fsck
+.I  Fsck\^
+audits and interactively repairs inconsistent conditions
+for \s-1UNIX\s+1 system files. 
+If the file system is consistent then the number of files, number of blocks
+used, and number of blocks free are reported.
+If the file system is inconsistent the operator is prompted for concurrence
+before each correction is attempted.
+It should be noted that most corrective actions will result in some loss
+of data.
+The amount and severity of data lost may be determined from the diagnostic
+output.
+The default action for each consistency correction
+is to wait for the operator to respond \fByes\fP or \fBno\fP.
+If the operator does not have write permission 
+.I fsck\^
+will default to a 
+.BR "\-n " action.
+.PP
+.I Fsck\^
+has more consistency checks than
+its predecessors
+.IR check ,
+.IR dcheck ,
+.IR fcheck ,
+and
+.I icheck\^
+combined.
+.PP
+The following options are interpreted by
+.IR fsck .
+.TP 6
+.B  \-y
+Assume a yes response to all questions asked by 
+.IR fsck .
+.TP 6
+.B  \-n
+Assume a no response to all questions asked by 
+.IR fsck ;
+do not open the file system for writing.
+.TP 6
+.BR \-s \fIX
+Ignore the actual free list and (unconditionally) reconstruct a new
+one by rewriting the super-block of the file system.  
+The file system should be unmounted while this is done; if this
+is not possible, care should be taken that the system is quiescent
+and that it is rebooted immediately afterwards.
+This precaution is necessary so that the old, bad, in-core copy
+of the superblock will not continue to be used, or written on the file system.
+.IP
+The
+.BR \-s \fIX
+option allows for creating an optimal free-list organization.
+The following forms of
+.I X\^
+are supported for the following devices:
+.sp
+.nf
+	\-s3 (\s-1RP\s+1\&03)
+	\-s4 (\s-1RP\s+1\&04, \s-1RP\s+1\&05, \s-1RP\s+1\&06)
+	\-sBlocks-per-cylinder\fB:\fRBlocks-to-skip (for anything else)
+.fi
+.IP "" 6
+If 
+.I X\^
+is not given,
+the values used when the file system was created
+are used.
+If these values were not specified, then the value
+.IB 400 : 7
+is used.
+.TP 6
+.BR \-S \fIX
+Conditionally reconstruct the free list. This option
+is like
+.BR \-s \fIX
+above except that the free list is rebuilt only
+if there were no discrepancies discovered in the
+file system. Using
+.B \-S
+will force a no response to all questions asked
+by
+.IR fsck .
+This option is useful for forcing free list reorganization
+on uncontaminated file systems.
+.TP 6
+.B \-t
+If
+.I fsck\^
+cannot obtain enough memory to keep its tables,
+it uses a scratch file. If the \f3\-t\fP option is
+specified, the file named in the next argument
+is used as the scratch file, if needed. Without the
+.BR "\-t " flag,
+.I fsck\^
+will prompt the operator for the name of the
+scratch file. The file chosen should not be on the
+file system being checked, and if it is not
+a special file or did not already exist, it is
+removed when
+.I fsck\^
+completes.
+.TP 6
+.B \-q
+Quiet
+.I fsck.\^
+Do not print size-check messages in Phase 1.
+Unreferenced
+.BR fifos
+will silently be removed. 
+If
+.I fsck
+requires it, counts in the superblock will be automatically
+fixed and the free list salvaged.
+.TP 6
+.B \-D
+Directories are checked for bad blocks.
+Useful after system crashes.
+.TP 6
+.B \-f
+Fast check.
+Check block and sizes (Phase 1) and check the free list (Phase 5).
+The free list will be reconstructed (Phase 6) if it is necessary.
+.PP
+If no
+.I file-systems\^
+are specified,
+.I fsck\^
+will read a list of default file systems from
+the file
+.BR /etc/checklist .
+.PP
+.ne 10
+Inconsistencies checked are as follows:
+.RS
+.PD 0
+.TP 6
+1.
+Blocks claimed by more than one i-node or the free list.
+.TP 6
+2.
+Blocks claimed by an i-node or the free list outside the range of the file system.
+.TP 6
+3.
+Incorrect link counts.
+.TP 6
+4.
+Size checks:
+.IP "" 12
+Incorrect number of blocks.
+.br
+Directory size not 16-byte aligned.
+.TP 6
+5.
+Bad i-node format.
+.TP 6
+6.
+Blocks not accounted for anywhere.
+.TP 6
+7.
+Directory checks:
+.IP "" 12
+File pointing to unallocated i-node.
+.br
+I-node number out of range.
+.TP 6
+8.
+Super Block checks:
+.IP "" 12
+More than 65536 i-nodes.
+.br
+More blocks for i-nodes than there are in the file system.
+.TP 6
+9.
+Bad free block list format.
+.TP 6
+10.
+Total free block and/or free i-node count incorrect.
+.RE
+.PD
+.PP
+Orphaned files and directories (allocated but unreferenced) are,
+with the operator's concurrence, reconnected by
+placing them in the 
+.B lost+found
+directory, if the files are nonempty.
+The user will be notified if the file or directory is empty or not.
+If it is empty,
+.I fsck
+will silently remove them.
+.I Fsck
+will force the reconnection of nonempty directories.
+The name assigned is the i-node number.
+The only restriction
+is that the directory 
+.B lost+found
+must preexist
+in the root of the file system being checked and
+must have empty slots in which entries can be made.
+This is accomplished by making 
+.BR lost+found ,
+copying a number of files to the directory, and then removing them
+(before
+.I
+fsck
+is executed).
+.PP
+Checking the raw device is almost always faster and should be used
+with everything but the
+.I root
+file system.
+.PP
+.SS Dfsck
+.I Dfsck
+allows two file system checks on two different drives simultaneously.
+.I options1
+and
+.I options2
+are used to pass options to
+.I fsck
+for the two sets of file systems.
+A
+.B \-
+is the separator between the file system groups.
+.PP
+The
+.I dfsck
+program permits an operator to interact with two
+.IR fsck (1M)
+programs
+at once.
+To aid in this,
+.I dfsck
+will print the file system name for each
+message to the operator.
+When answering a question from
+.IR dfsck ,
+the operator must prefix the response with a
+.B 1
+or a
+.B 2
+(indicating that the answer refers to the first or second file system group).
+.PP
+Do not use
+.I dfsck
+to check the
+.I root
+file system.
+.br
+.ne 5v
+.SH FILES
+.PD 0
+.TP 21
+/etc/checklist
+contains default list of file systems to check.
+.TP 21
+/etc/checkall
+optimizing 
+.I dfsck
+shell file.
+.PD
+.bp
+.SH "SEE ALSO"
+checkall(1M),
+clri(1M),
+ncheck(1M),
+checklist(4),
+fs(4).
+.br
+.sp
+\f2Setting Up the \s-1UNIX\s+1 System\fR in the
+.IR "\s-1UNIX\s+1 System V Administrator Guide" .
+.SH BUGS
+I-node numbers for
+.B .
+and
+.B .\|.
+in each directory should be checked for validity.
+.SH DIAGNOSTICS
+The diagnostics produced by 
+.I fsck\^
+are intended to be self-explanatory.
+.\"	@(#)fsck.1m	6.2 of 9/2/83

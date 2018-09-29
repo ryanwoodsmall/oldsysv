@@ -1,0 +1,175 @@
+#ident	"@(#)pkg.nsu:setup	1.7.2.1"
+#
+#	Setup script for AT&T NSU Package for AT&T 3B2 Computer.
+#
+
+#
+# Install the CLONE driver
+#
+CMAJOR=`/etc/drvinstall -d /boot/clone.o -v 1.0`
+
+#
+# Install the LOG driver.
+#
+
+LMAJOR=`/etc/drvinstall -d /boot/log.o -v 1.0`
+rm -rf /dev/log
+/etc/mknod /dev/log c $CMAJOR $LMAJOR
+
+#
+# Install the TIMOD module
+#
+
+/etc/drvinstall -d /boot/timod.o -v 1.0 -c 32
+
+#
+# Install the TIRDWR module
+#
+
+/etc/drvinstall -d /boot/tirdwr.o -v 1.0 -c 16
+
+#
+# Install the PTS driver.
+#
+
+SMAJOR=`/etc/drvinstall -d /boot/pts.o -v 1.0`
+rm -rf /dev/pts???
+
+PNUM=0
+
+#
+#while true
+#do
+#	echo "Enter number of pseudo terminal devices [0 - 256]: \c"
+#	read PNUM
+#	if [ `expr "$PNUM" : \[0-9\]\*` -ne `expr "$PNUM" : \.\*` ]
+#	then
+#		continue
+#	fi
+#	if [ "$PNUM" -gt 256 ]
+#	then
+#		continue
+#	fi
+#	break
+#done
+#
+
+TEMP=0
+
+until [ "$TEMP" -eq "$PNUM" ]
+do
+	PNAME=/dev/pts
+	if [ "$TEMP" -lt 100 ]
+	then
+		PNAME="$PNAME"0
+	fi
+	if [ "$TEMP" -lt 10 ]
+	then
+		PNAME="$PNAME"0
+	fi
+	PNAME="$PNAME$TEMP"
+	/etc/mknod "$PNAME" c "$SMAJOR" "$TEMP"
+	TEMP=`expr $TEMP + 1`
+done
+
+#
+# Install the PTM driver
+#
+MMAJOR=`/etc/drvinstall -d /boot/ptm.o -v 1.0 -c $PNUM`
+rm -rf /dev/ptmx
+/etc/mknod /dev/ptmx c 63 $MMAJOR
+chmod 666 /dev/ptmx
+
+#
+# Install the PTEM module
+#
+
+/etc/drvinstall -d /boot/ptem.o -v 1.0 -c $PNUM >/dev/null 2>&1
+
+#
+# Install the LDTERM module
+#
+
+LNUM=`expr $PNUM + 16`
+/etc/drvinstall -d /boot/ldterm.o -v 1.0 -c $LNUM >/dev/null 2>&1
+
+rm -f /boot/log.o
+rm -f /boot/clone.o
+rm -f /boot/timod.o
+rm -f /boot/tirdwr.o
+rm -f /boot/ptm.o
+rm -f /boot/pts.o
+rm -f /boot/ptem.o
+rm -f /boot/ldterm.o
+
+if [ "$PNUM" -eq 0 ]
+then
+ed - /etc/system <<!
+/^INCLUDE:PTS$/s/IN/EX/
+/^INCLUDE:PTM(0)$/s/IN/EX/
+/^INCLUDE:PTEM(0)$/s/IN/EX/
+w
+q
+!
+fi
+touch /etc/system
+
+NSTREAM=`expr 36 + $PNUM`
+NQUEUE=`expr $NSTREAM \* 12`
+NSTREVENT=`expr $NSTREAM \* 8`
+
+ed - /etc/master.d/kernel <<!
+/^NCALL/s/=[	 ]*[0-9][0-9]*$/= 60/
+/^NSTREAM/s/=[	 ]*[0-9][0-9]*$/= $NSTREAM/
+/^NQUEUE/s/=[	 ]*[0-9][0-9]*$/= $NQUEUE/
+/^NMUXLINK/s/=[	 ]*[0-9][0-9]*$/= 32/
+/^NSTREVENT/s/=[	 ]*[0-9][0-9]*$/= $NSTREVENT/
+/^MAXSEPGCNT/s/=[	 ]*[0-9][0-9]*$/= 1/
+/^NBLK4096/s/=[	 ]*[0-9][0-9]*$/= 0/
+/^NBLK2048/s/=[	 ]*[0-9][0-9]*$/= 28/
+/^NBLK1024/s/=[	 ]*[0-9][0-9]*$/= 20/
+/^NBLK512/s/=[	 ]*[0-9][0-9]*$/= 16/
+/^NBLK256/s/=[	 ]*[0-9][0-9]*$/= 32/
+/^NBLK128/s/=[	 ]*[0-9][0-9]*$/= 80/
+/^NBLK64/s/=[	 ]*[0-9][0-9]*$/= 512/
+/^NBLK16/s/=[	 ]*[0-9][0-9]*$/= 384/
+/^NBLK4/s/=[	 ]*[0-9][0-9]*$/= 384/
+w
+q
+!
+
+/etc/mkboot -k /boot/KERNEL
+
+if [ ! -d /usr/adm/streams ] 
+	then
+	mkdir /usr/adm/streams
+	chown adm /usr/adm/streams
+	chgrp adm /usr/adm/streams
+	chmod 775 /usr/adm/streams
+fi
+
+if  grep listen /etc/passwd
+	then
+	echo "listen user already defined in /etc/passwd"
+	else
+	/usr/bin/passmgmt -a -u 37 -g 4 -c "Network Admin" -h /usr/net/nls listen
+fi
+LHOME=/usr/net/nls
+chown root $LHOME; chgrp sys $LHOME
+for i in $LHOME/*
+do
+	chown root $i; chgrp sys $i
+	if test -d $i
+	then
+		chown root $i/*; chgrp sys $i/*
+		if test -f $i/dbf
+		then
+			cp $i/dbf $i/odbf
+			/usr/net/nls/dbfconv $i/odbf $i/dbf
+			if [ $? -ne 0 ]
+			then
+				echo "**ERROR** listener database conversion failed"
+			fi
+		fi
+	fi
+done

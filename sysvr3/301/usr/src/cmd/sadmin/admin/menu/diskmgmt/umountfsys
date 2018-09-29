@@ -1,0 +1,8 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/umountfsys	2.3"
+#menu# unmount a removable medium file system
+#help#
+#help#	Umountfsys unmounts a file system, allowing you remove the medium.
+#help#	THE MEDIUM MUST NOT BE REMOVED UNTIL THE FILE SYSTEM IS UNMOUNTED.
+
+
+. ${MENUTOP:?}/umountfsys

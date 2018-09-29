@@ -1,0 +1,516 @@
+.ds < \s-2<\h@-.2m@<\h@-.2m@<\s+2
+.ds > \s-2>\h@-.2m@>\h@-.2m@>\s+2
+.TH "11/780 OPS" 8 "VAX-11/780 only"
+.SH NAME
+780ops \- \s-1VAX\s+1-11/780 console operations
+.SH DESCRIPTION
+The procedures described here include the major
+operational sequences involved in running the
+.SM UNIX
+System on the \s-1VAX\s+1-11/780 system.
+Note that these procedures are different from those used on the
+\s-1VAX\s+1-11/750.
+For the \s-1VAX\s+1-11/750, see
+.IR 750ops (8).
+The following notation is used:
+.TP 3
+1.
+Special characters are enclosed in <\^>
+(e.g.,
+.B <ctl>
+represents the ``control'' key, and
+.B <cr>
+stands for the ``carriage return'' key).
+.TP
+2.
+Items within
+.BR {\^} s
+are mandatory substitutions.
+.SH DAILY PROCEDURES
+.SS Disk Boot
+This procedure can be used only on a
+system with a floppy disk
+updated for use with the \s-1UNIX\s+1 System.
+If the floppy disk has not been so updated,
+the sequences shown below under
+.I "\s-1UNIX\s+1 System Floppy Update\^"
+must be performed.
+.PP
+When the system is first turned on, the console prompt
+.B \*>
+is printed.
+If the \s-1UNIX\s+1 System has been shut down, but not halted
+(see
+.IR "Bringing the System Down" ),
+the operator must type
+.B <ctl>p
+to get into console mode.
+After the prompt, type
+.B H<cr>
+to halt the system.
+.PP
+With the system halted, any of the console commands
+may be executed as described below under
+.IR "Console Operation" .
+.PP
+To boot the stand-alone shell
+.RI ( sash )
+from the default disk drive, the operator
+types
+.BR B<cr> .
+Alternatively, the boot command may have an argument that selects
+the boot device superceding the default.
+For example,
+.IP
+.SM "B RP\*S0"
+.PP
+will boot from disk drive 0, and
+.IP
+.SM "B RP\*S1"
+.PP
+will boot from drive 1.
+.PP
+The following is an example of this operation,
+starting after the
+.BR <ctl>p
+command:
+.PP
+.RS
+.nf
+.ss 18
+.TP
+\*>H<cr>
+\s-1HALTED\s+1 \s-1AT\s+1 \f2nnnnnnnn\^\fP
+.TP
+\*>B<cr>
+\s-1CPU\s+1 \s-1HALTED\s+1
+\s-1INIT\s+1 \s-1SEQ\s+1 \s-1DONE\s+1
+\s-1HALT\s+1 \s-1INST\s+1 \s-1EXECUTED\s+1
+\s-1HALTED\s+1 \s-1AT\s+1 \f2nnnnnnnn\^\fP
+\s-1LOAD\s+1 \s-1DONE\s+1, \f2nnnnnnnn\^\fP \s-1BYTES\s+1 \s-1LOADED\s+1
+.TP
+$$
+.fi
+.ss 12
+.RE
+.PP
+The
+.B $$
+prompt indicates that the stand-alone shell
+.RI ( sash )
+is ready to accept commands.
+If it is desired to run stand-alone
+.IR fsck (1M)
+(or other stand-alone functions), this is the time to do it.
+The commands have the form
+.BI /stand/ program\^
+where
+.I program\^
+can be any name from a limited list of the \s-1UNIX\s+1 System commands
+found in the directory
+.BR /stand .
+To perform a file system consistency check, type:
+.PP
+.RS
+$$ \|/stand/fsck \|/dev/rp0
+.RE
+.PP
+To bring up the
+.SM UNIX\*S
+System, the operator must type
+.BR unix<cr> .
+The system should come up through
+SINGLE USER MODE
+(\fBinit s\fR,
+see
+.IR init (1M)).
+.PP
+This is the appropriate time to do file system
+backups, and
+.IR fsck (1M)
+should be executed if it
+was not executed in the stand-alone section of the boot.
+One must never operate the \s-1UNIX\s+1 System with a defective file system.
+.PP
+After successful completion of
+.IR fsck (1M),
+the operator
+can bring the system to multi-user operation
+by executing
+.BR "init 2" .
+.br
+.ne 4
+.SS Bringing the System Down
+The shutdown procedure is designed to gracefully
+turn off all processes and bring the system back
+to single user state with all buffers flushed.
+To do this the operator should execute
+.IR shutdown (1M).
+If
+.IR shutdown
+is not successful, use the following sequence of commands:
+.PP
+.RS
+.nf
+.ss 18
+killall
+sync
+telinit 6
+fsck (optional)
+.fi
+.ss 12
+.RE
+.PP
+The system may then be halted by typing the
+.B <ctl>p
+and
+.B H<cr>
+sequence.
+.SS System Dumps
+After a system crash, the following procedure
+should be used to get a system dump on tape.
+.PP
+.PD 0
+.TP 3
+1.
+Mount a tape with write ring and bring it on-line.
+.TP
+2.
+Enter console mode with
+.BR <ctl>p .
+.TP
+3.
+After the
+.B \*>
+prompt, halt the system with
+.BR H<cr> .
+.TP
+4.
+Issue the following command sequence, each command followed by
+.BR <cr> :
+.RS
+.TP "\w'E/V\ \|@/N:3F\ \ \ \ 'u"
+E \|R0/N:F
+(\f2Examine R0 thru R15\^\fP)
+.TP
+E \|SP
+(\f2Get the stack pointer for the next command\^\fP)
+.TP
+E/V \|@/N:3F
+(\f2Examine virtual memory beginning at the
+address from the previous instruction, and continuing
+for the next 63 locations; i.e., examine the stack\^\fP)
+.TP
+S \|400
+(\f2Start execution at 400, i.e., dump to tape\^\fP)
+.RE
+.TP
+5.
+Before returning to the
+.SM UNIX\*S
+System, execute the stand-alone
+.IR fsck (1M).
+.PD
+.PP
+To read the dump tape into a file for examination by
+.IR crash (1M)
+or
+any other debugging program,
+use
+.IR dd (1).
+For example, the following will read the dump and create a file named
+core in the current directory:
+.PP
+.RS
+.nf
+dd if=/dev/rmt0 of=core bs=16b
+.fi
+.RE
+.SS System Faults
+On occasion, the \s-1UNIBUS\s+1 or its devices fail in such a manner
+as to flood the console with error messages and
+suspend operations on \s-1UNIBUS\s+1 devices.
+It may be possible under these conditions to bring the
+system down gracefully from an internal point-of-view, by
+inhibiting \s-1UNIBUS\s+1 interrupts and running a normal shutdown.
+The following sequence can be executed:
+.PP
+.RS
+.nf
+.ss 18
+.ta 20n
+<ctl>p
+\*>\|H
+\*>\|E 20006004	(\f2Look at \s-1UBA\s+1 control register\^\fP)
+\*>\|D \(** 1	(\f2Clear the \s-1UBA\s+1\^\fP)
+\*>\|C	(\f2Return to \s-1UNIX\s+1\^\fP)
+.fi
+.ss 12
+.RE
+.PP
+You should now be able to login as \fBroot\fP and run a normal
+shutdown sequence.
+Reboot the system by normal means, ensuring
+.IR fsck (1M)
+is performed.
+.br
+.ne 3v
+.SH INSTALLATION BOOT PROCEDURES
+.SS Tape Boot
+The floppy disk delivered with the \s-1VAX\s+1-11/780 does not
+have tape-boot capability.
+The user must type in a program
+to read the first record on tape drive 0.
+If tape drive 0 is a
+.SM "TE\*S16-type"
+tape drive, use the first program provided below.
+For a
+.SM "TU\*S78"
+tape drive, use the second program.
+Make sure the auto-restart switch in the front panel is set to the off position.
+Type \f3<cr>\fP at the end of each input line:
+.RS
+.SS TE16 Tape Drive
+.PP
+.nf
+.ss 18
+.RS
+.ta 20n
+\*>\|H
+\*>\|U
+\*>\|I
+.sp .5v
+.RS
+\s-1INIT\s+1 \s-1SEQ\s+1 \s-1DONE\s+1
+.RE
+.sp .5v
+\*>\|D 20000 20008FD0
+\*>\|D + D0502001
+\*>\|D + 3204A001
+\*>\|D + C003C08F
+\*>\|D + A0D40424
+\*>\|D + 8FD00C
+\*>\|D + C0800000
+\*>\|D + 8F320800
+\*>\|D + 10A0FE00
+\*>\|D + C007D0
+\*>\|D + C039D004
+\*>\|D + 400
+\*>\|S 20000	(\f2Start tape load\^\fP)
+.sp .5v
+.RS
+\s-1HALT\s+1 \s-1INST\s+1 \s-1EXECUTED\s+1
+\s-1HALTED\s+1 \s-1AT\s+1 0002002F
+.RE
+.sp .5v
+\*>\|S 0	(\f2Execute boot program loaded from tape\^\fP)
+.fi
+.ss 12
+.RE
+.RE
+.RS
+.SS TU78 Tape Drive
+.PP
+.nf
+.ss 18
+.RS
+.ta 20n
+\*>\|H
+\*>\|U
+\*>\|I
+.sp .5v
+.RS
+\s-1INIT\s+1 \s-1SEQ\s+1 \s-1DONE\s+1
+.RE
+.sp .5v
+\*>\|D 20000 20008FD0
+\*>\|D + D4502001
+\*>\|D + 8FD00CA0
+\*>\|D + 80000000
+\*>\|D + 320800C0
+\*>\|D + A0FE008F
+\*>\|D + C004D010
+\*>\|D + 39320404
+\*>\|D + 000400C0
+\*>\|S 20000	(\f2Start tape load\^\fP)
+.sp .5v
+.RS
+\s-1HALT\s+1 \s-1INST\s+1 \s-1EXECUTED\s+1
+\s-1HALTED\s+1 \s-1AT\s+1 00020029
+.RE
+.sp .5v
+\*>\|S 0	(\f2Execute boot program loaded from tape\^\fP)
+.fi
+.ss 12
+.RE
+.RE
+.PP
+From this point the loader initiates a question and
+answer sequence to control the remainder of the load process.
+.SS Disk Boot
+The floppy disk delivered with the \s-1VAX\s+1-11/780 does not
+have \s-1UNIX\s+1 system disk-boot capability.
+The user must type in the following program
+to read the first block on disk drive 0.
+Type \f3<cr>\fP at the end of each line.
+.nf
+.ss 18
+.PP
+.RS
+.ta 20n 30n
+\*>\|H
+\*>\|LINK		(\f2Save the following sequence on the floppy\^\f3)
+		(\f2The prompt should change to \f3\*<\fR)
+\*<\|H			\f2Halt processor\fP
+\*<\|U			\f2Unjam the SBI\fP
+\*<\|I			\f2Initialize the processor\fP
+\*<\|D/I 11 20003800		\f2Register initialization\fP
+\*<\|D R0 0			\f2Device type code\fP
+\*<\|D R1 8			\f2NEXUS number of MBA in hex\fP
+\*<\|D R2 0			\f2drive number\fP
+\*<\|D R3 0			\f2drive number\fP
+\*<\|D R4 0
+\*<\|D R5 8			\f2Software boot flags\fP
+\*<\|D FP 0			\f2Set "no machine check expected"\fP
+\*<\|S 20003000		\f2Start rom program \fP
+\*<\|WAIT DONE
+\*<\|E SP		\f2Show address of working memory +0x200\fP
+\*<\|L VMB.EXE/S:@		\f2Load primary bootstrap\fP
+\*<\|S @			\f2and start it\fP
+\*<\|<ctl>C		(\f2Exit\^\fP \f3\s-1LINK\s+1\fP \f2mode\^\fP)
+\*>
+.fi
+.ss 12
+.RE
+.PP
+You are now ready to boot the \s-1UNIX\s+1 System.
+Each time it is necessary to boot (or reboot) the \s-1UNIX\s+1 System, simply
+follow the sequence:
+.PP
+.PD 0
+.RS
+.TP "\w'$$ unix<cr>\ \ \ \ 'u"
+\*>\|P<cr>
+(\f2Execute the commands saved in floppy link file;
+the console should echo each command in the file.\^\fP)
+.TP
+$$ unix<cr>
+(\f2Load and execute \^\fP\f3/unix\fP)
+.RE
+.PD
+.SS UNIX System Floppy Update
+To update the console floppy for the \s-1UNIX\s+1 system operation,
+one must have brought the \s-1UNIX\s+1 System up by one of the initial-load
+procedures described above.
+The following sequence can then be executed.
+.PP
+.RS
+# \|cd \|/stand/conflp
+.br
+# \|sh \|update
+.RE
+.PP
+.I Update\^
+prints commentary during the
+update operation indicating the files that
+are being replaced or added.
+Finally, a new table of contents is printed
+and the available space is indicated.
+.SH CONSOLE OPERATION
+The following is condensed from Chapter 14 of
+the
+.IR "\s-1VAX\s+1-11/780 Hardware Handbook" ,
+.SM DEC\*S,
+1980.
+.PP
+The following are the standard console commands.
+The most abbreviated form is shown in parentheses.
+.TP 14
+<ctl>\s-1P\s+1
+Causes console to exit Program \s-1I/O\s+1 mode (talking
+to the \s-1VAX\s+1-11/780 program).
+This does
+.I not\^
+halt the \s-1VAX CPU\s+1.
+.TP
+<ctl>\s-1U\s+1
+Deletes the current input line.
+.TP
+<del>
+Deletes the previous character.
+.TP
+<ctl>\s-1C\s+1
+Interrupts printout.
+.TP
+(\s-1HE\s+1)\s-1LP\s+1
+Prints ``help'' file of which this is a part.
+.TP
+(\s-1E\s+1)\s-1XAMINE\s+1 \|{address}
+Displays 8-digit hexadecimal address and its
+contents.
+See ``help'' file for qualifiers.
+.TP
+(\s-1D\s+1)\s-1EPOSIT\s+1 \|{address} \|{data}
+Enters data to address.
+.TP
+(\s-1I\s+1)\s-1NITIALIZE\s+1
+Initializes \s-1CPU\s+1.
+.TP
+(\s-1U\s+1)\s-1NJAM\s+1
+Unjams the \s-1SBI\s+1.
+.TP
+(\s-1SH\s+1)\s-1OW\s+1
+Displays console and \s-1CPU\s+1 state.
+.TP
+(\s-1H\s+1)\s-1ALT\s+1
+Halts execution of \s-1VAX CPU\s+1 instructions.
+.TP
+(\s-1S\s+1)\s-1TART\s+1 \|{address}
+Initializes \s-1CPU\s+1, enters address to \s-1PC\s+1, issues
+\s-1CONTINUE\s+1 to \s-1CPU\s+1, and puts console into Program \s-1I/O\s+1 mode.
+.TP
+(\s-1C\s+1)\s-1ONTINUE\s+1
+Starts execution of \s-1VAX CPU\s+1 instructions.
+.TP
+(\s-1SE\s+1)\s-1T\s+1 \|(\s-1T\s+1)\s-1ERMINAL\s+1 \|(\s-1P\s+1)\s-1ROGRAM\s+1
+Puts console into Program \s-1I/O\s+1 mode.
+.TP
+@{file}
+Causes the named floppy file to be
+printed and executed.
+.SH WARNINGS
+Only
+.B <ctl>p
+can be executed from Program
+\s-1I/O\s+1 mode.
+It
+.I "does not\^"
+stop the
+\s-1VAX CPU\s+1 from running.
+Only
+.SM
+.B HALT
+can be executed while the \s-1VAX CPU\s+1 is running and not in Program
+\s-1I/O\s+1 mode;
+therefore, the sequence to stop the
+.SM VAX\*S-11/780
+while running the
+.SM UNIX
+System (Program \s-1I/O\s+1 mode)
+is:
+.RS
+<ctl>p
+.br
+\*>H<cr>
+.RE
+.SH FILES
+/etc/shutdown
+.br
+/stand/\(**
+.SH SEE ALSO
+filesave(1M),
+fsck(1M),
+init(1M),
+shutdown(1M),
+tapeboot(8).
+.\"	@(#)780ops.8	5.2 of 5/18/82

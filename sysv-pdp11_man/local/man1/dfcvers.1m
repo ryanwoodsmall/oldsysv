@@ -1,0 +1,32 @@
+.TH DFCVERS 1M "3B20S only"
+.SH NAME
+dfcvers \- determine version of \s-1DFC\s+1 firmware
+.SH SYNOPSIS
+.B /etc/dfcvers
+unit
+.SH DESCRIPTION
+.I Dfcvers\^
+attempts to determine the version of the firmware
+in the specified \s-1DFC\s+1.
+.I Unit\^
+specifies the unit number of the \s-1DFC\s+1 to be used.
+.SH CAVEATS
+This command is intended to help installers determine
+what boards contain.
+If the \s-1DFC\s+1 is in service,
+the command prints the version information that was
+obtained from the \s-1DFC\s+1 while bringing it in service.
+For Generic 1 firmware, the information was obtained
+via the \s-1SYSGEN\s+1 of the \s-1DFC\s+1.
+For Generic 2 firmware, the information was obtained
+as the response to the Generic \s-1ID\s+1 \s-1PIO\s+1.
+If the \s-1DFC\s+1 is out of service, the command
+causes a Generic \s-1ID\s+1 \s-1PIO\s+1 to be issued.
+This provides correct information only for Generic 2 firmware,
+and then only if the Generic \s-1ID\s+1 \s-1PIO\s+1 can be completely processed.
+Further, the response for this case is printed by the \s-1DFC\s+1 driver,
+which means it prints at the console.
+If failures occur while setting up to send the \s-1PIO\s+1,
+the corresponding messages are also console messages.
+.\"	%W%
+.\"%W%

@@ -1,0 +1,60 @@
+.TH DSTART 1M "3B20S only"
+.SH NAME
+dstart, dstop, dstat \- start, stop and find status of on-line diagnostics
+.SH SYNOPSIS
+.B /dgn/bin/dstart
+.PP
+.B /dgn/bin/dstop
+.PP
+.B /dgn/bin/dstat
+.SH DESCRIPTION
+\fIDstart\fP enables on-line diagnostics to be run
+by automatically starting both the
+Output Message Spooler Program (\s-1SPOOLER\s+1) and
+the Maintenance Request Input Administrator Program (\s-1MIRA\s+1),
+respectively.
+These two diagnostics programs are only started
+if they're not already running.
+Also, both program's process \s-1ID\s+1 numbers are reported
+in parentheses.
+On-line diagnostics require that both these
+programs be started before any diagnostics
+requests are accepted.
+.P
+The spooler arranges for all diagnostic output
+to be logged in \fB/dgn/dgnc/log\fP.
+When the spooler is restarted, \fB/dgn/dgnc/log\fP
+is moved to \fB/dgn/dgnc/oldlog\fP and a
+new \fB/dgn/dgnc/log\fP is started.
+All output is also appended to each file
+mentioned in the map file, \fB/dgn/dgnc/map\fP
+(see \fIchmap\fP(1M)).
+.P
+\f\s-1ID\s+1stop\fP stops both the \s-1SPOOLER\s+1 and \s-1MIRA\s+1 programs
+only if they are currently running.
+Otherwise, no explicit action is taken.
+In either case, an appropriate message
+is reported indicating what action did occur.
+.P
+\fIDstat\fP reports the current status
+of both the \s-1SPOOLER\s+1 and \s-1MIRA\s+1 diagnostic programs.
+If both programs are currently running a message
+indicating that they are running is reported
+along with their respective process \s-1ID\s+1 numbers.
+Otherwise, a message indicating that they are
+not running is reported.
+.SH FILES
+.PD 0
+.TP 20
+/dgn/dgnc/log
+spooler output message log.
+.TP 20
+/dgn/dgnc/map
+list of file names for routing spooler output messages.
+.PD
+.SH "SEE ALSO"
+dgn(1M), rmv(1M), rst(1M).
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)dstart.1m	5.2 of 5/18/82

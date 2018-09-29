@@ -1,0 +1,62 @@
+.TH MKPT 1M
+.SH NAME
+mkpt \- change the disk partition tables.
+.SH DESCRIPTION
+\f2Mkp\f1 is a stand-alone program that may be used to edit the drive
+header in order to modify the origin and/or size of the
+file system partitions on a drive.  The size of a partition is
+specified in disk \fBsectors\fR, not file system blocks.
+.P
+\f2Mkpt\fR uses standard UNIX System V notation in identifying
+disk partitions.  A partition is specified as \f3/dev/dsk/xsy\f1, where
+x refers to the disk drive number and y refers to the disk
+slice number.
+.P
+The program terminates when it receives a carriage return in
+response to the prompt for a partition to modify.  Entering
+a carriage return in response to the 'offset' or 'size' prompts
+will cancel any action on that partition, leaving it unchanged.
+Invalid input detected in any response will also result in
+cancellation of any changes.
+.P
+To examine the partition table on drive 'n', enter '?n' in
+response to the 'Disk' prompt.  Note:  if you get a message
+warning that the unit needs a header (followed by an 'autoconfigure'
+message), the partitions displayed will be default values for
+the particular type of disk drive.  If this occurs, you will
+need to fix the disk header (see the next paragraphs).  The '?' option
+doesn't change the header on the disk.
+.P
+If you enter a disk partition for a drive with a bad header, the
+program will warn you and then display a table of header parameters.
+The first column contains the parameters actually found in the
+drive's header block.  The second column displays the 'autoconfigure'
+parameters which are dependent on the type of drive which the program
+finds.  This display is shown when the disk magic
+number (first parameter in the list) differs from the correct
+autoconfigure value.
+.P
+If the header does have a bad magic number, you will need to write
+the autoconfigure values out to the disk to establish the correct
+magic number.  Note that the partition table is changed to the 
+autoconfigure defaults in this case.  You can manually change the
+partition table once the magic number has been corrected.  Occasionally,
+transient errors will cause the program to think the header is bad.
+If the 'Current header data' column seems correct, then it may suffice
+to simply write that current data back out to the disk.  Step-by-step
+questions allow you to write out the autoconfigure data, the current
+header data, or to make no changes at all.
+.P
+If a partition is to be changed in size, the filesystem residing on that
+partition should first be saved on tape, using the cpio utility.
+Next, run \f2mkpt\fR and make the appropriate changes to the
+partition table.  A new filesystem should then be built with
+\f2mkfs\fR(1M).  After the new filesystem has been built, use the
+cpio utility to restore the saved filesystem.
+.SH FILES
+/usr/include/sys/disk.h    disk header
+.SH "SEE ALSO"
+dcutest(1M)
+.SH DIAGNOSTICS
+Self-explanatory.
+.\"	@(#)mkpt.1M      5.2 of 10/15/84

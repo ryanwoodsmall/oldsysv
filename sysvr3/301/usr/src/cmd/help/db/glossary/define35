@@ -1,0 +1,10 @@
+
+\S link \S
+
+A link is the association between a "file name"\S*\S and a file.
+Normally, a file has only one name linked to it.  But a file can have
+many names, thus it can have many links. Accessing a file through
+any one of the  links, by using one of the file names, produces the
+same result as accessing it through any of the other file names.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,140 @@
+.TH VOLCOPY 1M
+.SH NAME
+volcopy, labelit \- copy file systems with label checking
+.SH SYNOPSIS
+.B /etc/volcopy
+[options] fsname special1 volname1 special2 volname2
+.PP
+.B /etc/labelit
+special [ fsname volume [ \f3\-n\fP ] ]
+.SH DESCRIPTION
+.I Volcopy\^
+makes a literal copy of the file system
+using
+a blocksize matched to the device.
+.I Options
+are:
+.PD 0
+.RS
+.TP
+.B \-a
+invoke a verification sequence
+requiring a positive operator response instead of the
+standard 10 second delay before the copy is made,
+.TP
+.B \-s
+(default) invoke the
+.B "\s-1DEL\s+1 if wrong"
+verification sequence.
+.PD
+.RE
+.PP
+Other \fIoptions\fP are used only with tapes:
+.PD 0
+.RS
+.TP \w'\fB\-bpi\fPdensity\ \ 'u
+.BR \-bpi density
+bits-per-inch (i.e.,
+.BR 800 / 1600 / 6250,
+or for 3B20S systems with Kennedy tape drives,
+.BR 1600k ),
+.TP
+.BR \-feet size
+size of reel in feet (i.e.,
+.BR 1200 / 2400 ),
+.TP
+.BR \-reel num
+beginning reel number for a restarted copy,
+.TP
+.B \-buf
+use double buffered I/O.
+.PD
+.RE
+.PP
+The program requests length and density
+information if it is not given on the
+command line or is not recorded on an input tape label.
+If the file system is too large to fit on one reel,
+.I volcopy\^
+will prompt for additional reels.
+Labels of all reels are checked.
+Tapes may  be mounted alternately on two or more drives.
+.PP
+The
+.I fsname\^
+argument represents the mounted name (e.g.:
+.BR root ,
+.BR u1 ,
+etc.)
+of the filsystem being copied.
+.PP
+The
+.I special\^
+should be the physical disk section or tape (e.g.:
+.BR /dev/rdsk15 ,
+.BR /dev/rmt0 ,
+etc.).
+.PP
+The
+.I volname\^
+is the physical volume name (e.g.:
+.BR pk3 ,
+.BR t0122 ,
+etc.)
+and should match the external label sticker.
+Such label names are limited to six or fewer characters.
+.I Volname
+may be
+.B \-
+to use the existing volume name.
+.PP
+.I Special1\^
+and
+.I volname1\^
+are the device and volume from which the copy of the file system is
+being extracted.
+.I Special2\^
+and
+.I volname2\^
+are the target device and volume.
+.PP
+.I Fsname\^
+and
+.I volname\^
+are recorded in the last 12 characters
+of the superblock (\fBchar fsname[6], volname[6];\fP).
+.PP
+.I Labelit\^
+can be used to provide initial labels for unmounted disk
+or tape file systems.
+With the optional arguments omitted,
+.I labelit\^
+prints current label values.
+The
+.B \-n
+option provides for initial labeling of new tapes only
+(this destroys previous contents).
+.SH FILES
+/etc/log/filesave.log	a record of file systems/volumes copied
+.SH "SEE ALSO"
+fs(4).
+.bp
+.SH BUGS
+Only device names beginning
+.B /dev/rmt
+(on \s-1DEC\s+1 systems) or
+.B /dev/rtp
+(on 3B20S systems)
+are treated as tapes.
+Tape record sizes are determined both by density and by
+drive type.
+On \s-1DEC\s+1 systems, records are 5,120 bytes long at 800 and 1600
+bits-per-inch, and 25,600 bytes long at 6250 bits-per-inch.
+On 3B20S systems, records are 2,048 bytes long on the Kennedy
+(see
+.IR un32 ( 7 ) )
+tape drive
+.RB ( 1600k
+option)
+and 5,120 bytes long for all other tape drives.
+.\"	@(#)volcopy.1m	5.2 of 5/18/82

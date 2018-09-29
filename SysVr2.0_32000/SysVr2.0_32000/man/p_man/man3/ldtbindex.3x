@@ -1,0 +1,87 @@
+.TH LDTBINDEX 3X
+.SH NAME
+ldtbindex \- compute the index of a symbol table entry of a common object file
+.SH SYNOPSIS
+.ft B
+.nf
+.ta \w'LDFILE\ \ \ 'u
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <syms.h>
+.B #include <ldfcn.h> \}
+.el \{
+.ft B
+#include "\s-1INCDIR\s+1\/filehdr.h"
+#include "\s-1INCDIR\s+1\/syms.h"
+#include "\s-1INCDIR\s+1\/ldfcn.h" \}
+.PP
+.B long ldtbindex (ldptr)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.fi
+.DT
+.ft R
+.SH DESCRIPTION
+.I Ldtbindex
+returns the
+.RB ( long )
+index of the symbol table entry
+at the current position
+of the common object file
+associated with
+.IR ldptr .
+.PP
+The index returned by
+.I ldtbindex
+may be used in subsequent calls to 
+.IR ldtbread (3X).
+However, since 
+.I ldtbindex
+returns the index of the symbol table entry that begins at the current
+position of the object file,
+if
+.I ldtbindex
+is called immediately after a particular symbol table entry has been
+read,
+it will return the index of the next entry.
+.PP
+.I Ldtbindex 
+will fail if 
+there are no symbols in the object file,
+or if the object file is not positioned at the beginning of a symbol
+table entry.
+.PP
+Note that the first symbol in the symbol table has an index of
+.IR zero .
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+\s-1LIBDIR\s+1\/libld.a .
+\}
+.if !'\*p'' \{\
+.PP
+.IR Intro (4)
+describes
+.IR \s-1INCDIR\s+1 " and " \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X),
+ldopen(3X),
+ldtbread(3X),
+ldtbseek(3X),
+ldfcn(4).
+\}
+.el \{\
+ldclose(3X),
+ldopen(3X),
+ldtbread(3X),
+ldtbseek(3X),
+intro(4),
+ldfcn(4),
+paths.h(4).
+\}
+.\"	%W% of %G%

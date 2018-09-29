@@ -1,0 +1,17 @@
+
+\Sstty\S:  Description
+
+Syntax Summary:  stty [-a] [-g] [setting ...]
+
+         where:  setting  is a string that specifies a terminal
+                          characteristic.
+
+Description:
+     \Sstty\S is shorthand for "set tty".  Use \Sstty\S to set and check the
+     value of UNIX environment variables that affect your terminal, and to
+     report the current status of those variables.  Typing \Sstty\S by itself
+     prints a summary of the current status of your terminal's settings.
+     \Sstty\S with settings as an argument resets that terminal characteristic
+     for your terminal.  For more information on setting terminal 
+     characteristics using environment variables see the manual page for 
+     \Sstty\S.

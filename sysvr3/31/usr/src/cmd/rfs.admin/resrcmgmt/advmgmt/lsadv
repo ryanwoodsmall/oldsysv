@@ -1,0 +1,83 @@
+#ident	"@(#)rfs.admin:resrcmgmt/advmgmt/lsadv	1.8"
+#menu# list local resources that are advertised
+
+#help#
+#help#	The subcommand "lsadv" shows you a list of all the local 
+#help#	resources that are advertised.  The list also designates 
+#help#	the status of each advertised resource as "Current", "Auto",
+#help#	or both.  Resources can be "Current" only when RFS is 
+#help#	running and the resources are available to other machines.  
+#help#	Resources are designated as "Auto" if they are on the 
+#help#	Automatic Advertise List.
+#help#
+
+#set trap
+trap '/bin/rm -f /usr/tmp/cur$$ /usr/tmp/res$$ /usr/tmp/unadv$$ /usr/tmp/unadv_$$ /usr/tmp/client$$ /usr/tmp/auto$$ /usr/tmp/autocur$$ /usr/tmp/lsadv$$ /usr/tmp/perm$$ /usr/tmp/desc$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo '\n\n		ADVERTISED LOCAL RESOURCES'
+
+#initialization
+>/usr/tmp/cur$$
+>/usr/tmp/auto$$
+
+#Define description
+INTRO="
+The fields in this list are in the following order:
+Resource Identifier, Local Pathname, Client Access Permissions, 
+Resource Status, Resource Description, Client List.
+
+The status of a resource is \"C\" (Current) if RFS is running and the
+resource is now available to client machines.  The status is \"A\" (Automatic) 
+if the resource is in the Automatic Advertise List.  A resource may be both
+\"A\" and \"C\".  Please wait for the list ...
+-------------------------------------------------------------------------\n"
+
+# Print description of the program
+echo "$INTRO\n"
+
+# Get currently advertised resources
+/usr/bin/adv | /bin/sed  "/^$/d
+	s/[	 ][	 ]*/ /g" | /bin/sort >/usr/tmp/cur$$
+
+# Get automaically advertised resources and format
+if [ -s /etc/rstab ]
+then
+	/bin/sed "s/#.*//" /etc/rstab >/usr/tmp/unadv_$$
+	/bin/sed -n "s/^.*adv[ 	]*-/-/
+		s/^-r[ 	]*-d/read-only/p
+		s/^-d/read\/write/p" /usr/tmp/unadv_$$ >/usr/tmp/unadv$$
+
+	/bin/sed -n "s/^.*\"//gp" /usr/tmp/unadv$$ | /usr/bin/awk '{ printf "%s %s\n", $1, $2}' >/usr/tmp/res$$ 
+
+	/usr/bin/cut -d" " -f1 /usr/tmp/unadv$$ >/usr/tmp/perm$$
+	/usr/bin/cut -d\" -f2 /usr/tmp/unadv$$ | /bin/sed "s/^/\"/p
+		s/$/\"/p" >/usr/tmp/desc$$
+	/bin/sed -n "s/^.*\"//gp" /usr/tmp/unadv$$ | /usr/bin/awk '{ 
+		if ( NF < 3 ) 
+			print "unrestricted"
+		else {
+			{ for (i= 3; i <= NF; i++) printf " %s", $i }
+				printf "\n" }
+		}' >/usr/tmp/client$$
+		
+	/usr/bin/paste /usr/tmp/res$$ /usr/tmp/perm$$ /usr/tmp/desc$$ /usr/tmp/client$$ | /bin/sed "s/[	 ][	 ]*/ /g" | /bin/sort >/usr/tmp/auto$$
+fi
+
+# Get currently advertised resources only, auto-advertised resources only, and resources
+# advertised currently and automatically.  Format with the appropriate field descriptor.
+# Sort, and print.
+if [  -s /usr/tmp/cur$$  -o  -s /usr/tmp/auto$$  ]
+then 
+	/usr/bin/comm -12 /usr/tmp/cur$$ /usr/tmp/auto$$ | /bin/sort >/usr/tmp/autocur$$
+	 /bin/sed "s/\"/A\/C \"/" /usr/tmp/autocur$$ >/usr/tmp/lsadv$$
+
+	/usr/bin/comm -23 /usr/tmp/cur$$ /usr/tmp/autocur$$ | /bin/sed "s/\"/C \"/" >>/usr/tmp/lsadv$$
+
+	/usr/bin/comm -23 /usr/tmp/auto$$ /usr/tmp/autocur$$ | /bin/sed "s/\"/A \"/" >>/usr/tmp/lsadv$$
+
+	/bin/sort -u /usr/tmp/lsadv$$ | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+	echo
+else
+	echo "\nThere are no resources currently or automatically advertised.\n"
+fi

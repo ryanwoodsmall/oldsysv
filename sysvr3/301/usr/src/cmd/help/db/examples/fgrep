@@ -1,0 +1,24 @@
+
+\S fgrep \S:  Examples
+
+       fgrep root /etc/passwd
+
+    Searches through the file "/etc/passwd" for the lines containing "root" and
+    prints the lines on the standard output.
+
+    ----------------------------------------------------------------------
+
+       ps -af | fgrep -x -f expfile
+
+    Searches through the list of active processes for lines that entirely match
+    the lines in "expfile".
+
+
+
+
+    ----------------------------------------------------------------------
+
+       find .-exec fgrep 1 attachment {} \\;
+
+    Prints the names of all files under the current working directory that
+    contain the string "attachment".

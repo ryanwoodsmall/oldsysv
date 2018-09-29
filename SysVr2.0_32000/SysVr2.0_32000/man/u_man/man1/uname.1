@@ -1,0 +1,38 @@
+.TH UNAME 1
+.SH NAME
+uname \- print name of current \s-1UNIX\s+1 system
+.SH SYNOPSIS
+.B uname
+[
+.B \-snrvma
+]
+.SH DESCRIPTION
+.I Uname\^
+prints the current system name of the \s-1UNIX\s+1 system on the standard output file.
+It is mainly useful to determine which system one is using.
+The options cause selected information returned by
+.IR uname (2)
+to be printed:
+.TP
+.B \-s
+print the system name (default).
+.TP
+.B \-n
+print the nodename (the nodename may be a name that the system is known by
+to a communications network).
+.TP
+.B \-r
+print the operating system release.
+.TP
+.B \-v
+print the operating system version.
+.TP
+.B \-m
+print the machine hardware name.
+.TP
+.B \-a
+print all the above information.
+.SH "SEE ALSO"
+uname(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)uname.1	6.2 of 9/2/83

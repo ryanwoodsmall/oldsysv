@@ -1,0 +1,42 @@
+.if t .nr L 9i
+.if n .nr L 54
+.if t .nr O .75i
+.if n .nr O 7.5
+.if t .nr W 4.5i
+.if n .nr W 45
+.so /usr/lib/tmac/tmac.m
+.PH "''''"
+.rm TP
+.SA 1
+.di CT
+.nf
+.fi
+.S 11
+.ce
+TRADEMARKS
+.sp
+.S 9
+UNIX is a trademark AT&T Bell Laboratories.
+.br
+SYS32 is a trademark of National Semiconductor Corporation.
+.br
+DEC, PDP, UNIBUS, and MASSBUS are trademarks of Digital Equipment Corporation.
+.br
+HP is a trademark of Hewlett-Packard, Inc.
+.br
+DIABLO is a trademark of Xerox Corporation.
+.br
+TEKTRONIX is a registered trademark of Tektronix, Inc.
+.br
+Versatec is a registered trademark of Versatec Corporation.
+.br
+TELETYPE is a trademark of AT&T Teletype Corporation.
+.br
+DOCUMENTER'S WORKBENCH is a trademark of AT&T Technologies.
+.di
+.nr dh \n(dnu
+.br
+.rs
+.sp |\n(.pu-\n(dhu/2u
+.nf
+.CT

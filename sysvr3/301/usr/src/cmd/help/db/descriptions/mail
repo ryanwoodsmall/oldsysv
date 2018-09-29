@@ -1,0 +1,27 @@
+
+\Smail\S:  Description
+
+Syntax Summary:  mail [-ot] [system_name!] login_name ...
+                 mail [-e] [-h] [-p] [-qr] [-f file_name]
+                 mail -F ["[system_name!] login_name ..."|""]
+
+         where:  system_name  is a system name.
+
+                 login_name  is a user login name.
+
+                 file_name  is the name of a file.
+
+Description:
+     \Smail\S refers to electronic mail.  Use \Smail\S to communicate with
+     other users on your system and other systems.  You may send mail to one or
+     more persons on your own computer system by listing one or more login
+     names.  You can send mail to users on remote systems by specifying the
+     system they work on and their login name separated from one another by a
+     "!".  You can send messages from standard input or from a file.  When you
+     type \Smail\S, it prints all of the messages other users sent to you in
+     last-in, first-out order. The options change the order in which your
+     messages are printed, or change the procedure you use to save each 
+     message.  \Smail\S also enables you to forward mail to one or more other
+     users.  See manual page for instructions on sending, saving, or deleting 
+     mail messages.  See also:  mailx(1), mesg(1), write(1), and rmail(1) for
+     commands with functions similar to \Smail\S.

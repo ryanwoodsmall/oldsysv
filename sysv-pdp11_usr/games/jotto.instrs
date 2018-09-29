@@ -1,0 +1,14 @@
+Welcome to the game of jotto.  Your objective is to guess my secret
+five letter word before I guess yours.  Clues are obtained by entering
+probe words.  For example, if my secret word is 'brown' and you probe
+with 'stare', I will reply '1' indicating that there is one letter in
+common between your probe and my secret word.  Double letters count
+only once unless they appear in both words.  For example, if the hidden
+word is 'igloo' and you probe with 'broke', I will reply '1'.  But if
+you probe with 'gloom', I will respond '4'.  All secret words and
+probe words should be non-proper English five-letter words.  If I guess
+your word exactly, please respond with 'y'.  I will then tell you what my
+secret word was.
+
+If you wish me to tell you how close I am to guessing your word, invoke me
+with a -p flag.

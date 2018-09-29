@@ -1,0 +1,24 @@
+
+\S cut \S:  Examples
+
+       cut -f3 datafile
+
+    Prints the third field of each line in the file "datafile" in the current
+    working directory. Tab is the default field separator.
+
+    ----------------------------------------------------------------------
+
+       who | cut -c 1-8
+
+    who(1) identifies the users who are logged on to the system, their tty
+    numbers, and the time that they logged in. \S cut \S prints only the first
+    through the eighth characters, which is the user login names.
+
+
+
+    ----------------------------------------------------------------------
+
+       cut -f2,4 -d":" /etc/passwd
+
+    Prints the second and fourth field from the file "/etc/passwd." Colon is 
+    the field separator used in the file "/etc/passwd."

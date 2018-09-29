@@ -1,0 +1,152 @@
+520 clearall #ident
+705 3 7 65
+              DEBUGGING CORE DUMPS
+
+
+A program can fail in a variety of ways; for example, a program 
+may exit unexpectly if a zero divisor is used.  A program that 
+fails with certain types of errors may generate a "core file" 
+when the program fails.  This core file, which contains the 
+state of the program from the aborted run, can then be examined 
+with "sdb" to help determine the cause of the program's failure.  
+706 
+520 arrow
+520 redraw
+520 code3
+8 0 0 $ 
+2 17 7
+19 
+705 3001 3000 60
+testrepeat.c is a program to test the function repeat(i) that
+echos each character in a string i times.
+706 
+520 arrow
+520 clearbot1
+8 20 7 First, we'll compile testrepeat.c
+15 
+1 2
+2 0 2
+15 
+1 1
+3 cc -g -o testrepeat testrepeat.c
+15 
+1 1
+2 1 0
+15 
+1 1
+3 $ 
+15 
+520 clearbot
+520 arrow
+520 clearbot1
+705 3001 3000 54
+The testrepeat.c code compiled successfully.  Now let's
+execute the testrepeat program.
+706 
+15 
+520 arrow
+8 1 2 testrepeat "hello world"
+15 
+1 1
+2 2 0
+15 
+1 1
+3 Memory fault - core dumped
+15 
+8 1001 0 $ 
+18 
+15 
+520 clearbot
+705 3001 3000 61
+When we try to execute the testrepeat program, we find that
+an error occurs causing the program to terminate and producing
+a core dump.
+706 
+520 arrow
+520 clearbot
+705 3001 3000 58
+"Core dumped" means that the system saved the state of the 
+executing program in a file named "core" in the current 
+directory.  "Memory fault" means that our program tried to 
+reference an area of memory that was not allowed.  
+706 
+520 arrow
+520 clearbot
+705 2000 0 11
+$ ls
+core
+testrepeat
+testrepeat.c
+$
+706 
+18 
+705 3001 3000 53
+If we look at our current directory, we see that we
+now have file named core in addition to our souce code
+and executable program.
+706 
+520 arrow
+520 clearbot
+2 17 7
+19 
+8 3001 3000 Let's use "sdb" to debug the program 
+15 
+1 1
+8 2000 2 sdb testrepeat
+15 
+2 1 0
+15 
+1 1
+8 2001 0 repeat:8:  while(*p != '\n') {
+15 
+8 2002 0 *
+15 
+18 
+520 arrow
+520 clearbot
+705 3001 3000 54
+"sdb" examines the core file and reports that the error
+occurred in the repeat function at line 8.  
+706 
+520 arrow
+520 clearbot
+705 3000 3000 65
+The command t will cause "sdb" to print a "stack trace" (a listing
+of the function calls that led to the error). 
+706 
+520 instruct
+3 Get a trace of the functions that led to the error.
+15 
+253 %0t%0
+254 t
+520 ansloopstr
+34 alt
+2 9 40
+700 d1 r15 d2 l15 d1
+35 alt
+8 2001 1999 repeat(i=3)  [testrepeat.c:8]    
+8 2002 1999 main(argc=1,argv=15729024,15729032)  [testrepeat.c:3]
+15 
+18 
+8 2001 0 *
+18 
+520 clearbot
+15 
+520 arrow
+520 clearbot
+705 3001 3000 71
+The trace command showed that the error occurred within the repeat() 
+function at line 8 of the file testrepeat.c.  The repeat() function was 
+called with the argument i equal to 3, and was called from the function 
+main() at line 3 of testrepeat.c.  
+706 
+520 arrow
+520 clearall
+2 0 0
+12 
+8 3 17 SUMMARY OF CORE DUMP COMMANDS
+705 6 12 54
+t .... List function calls leading to error that caused
+       program termination
+706 
+520 arrow

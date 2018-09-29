@@ -1,0 +1,54 @@
+#ident	"@(#)cmd-3b2:inst/bin/ckdf	1.6"
+
+# Calculate the space needed to install the package.
+
+HARD=${1}
+ROOTneeds=800
+ROOTspace="`fsinfo -l ${ROOT_0}`"
+if [ "$ROOTspace" -lt "$ROOTneeds" ]
+then
+	SPACEFLAG=1
+	echo "\nThe package cannot be installed " >&2
+	echo "Not enough free blocks on the hard disk" >&2
+	echo "There are $ROOTspace blocks available" >&2
+	echo "on the / (root) file system --" >&2
+	echo "$ROOTneeds blocks are needed\n" >&2
+fi
+
+usr=
+eval `fstab < ${HARD}/etc/fstab | while read dev dir ronly junk
+	do
+		if [ "'${dir}'" = "'/usr'" ]
+		then
+			echo usr="\"${dev}\""
+		fi
+	done`
+if [ "'${usr}'" = "''" ]
+then
+	echo "
+There is no \"usr\" file system in your /etc/fstab. This is a required core
+file system. The installation cannot be performed without it.\n" >&2
+	SPACEFLAG=1
+else
+	USRneeds=600
+	USRspace="`fsinfo -l "${usr}"`"
+	if [ "$USRspace" -lt "$USRneeds" ]
+	then
+		SPACEFLAG=1
+		echo "\nThe package cannot be installed " >&2
+		echo "Not enough free blocks on the hard disk" >&2
+		echo "There are $USRspace blocks available" >&2
+		echo "on the /usr file system --" >&2
+		echo "$USRneeds blocks are needed\n"
+	fi
+fi
+
+# Check to see if the space flag is set.
+#
+if [ "$SPACEFLAG" -eq 1 ]
+then
+	fstabmnt -u < ${HARD}/etc/fstab
+	fsys -u ${ROOT_0}
+	exit 1
+fi
+exit 0

@@ -1,0 +1,26 @@
+
+\S terminal type \S
+
+A terminal type is a name and/or number that designates the manufacturer
+and model of a terminal.  Terminal type is important for the operating
+system when it is sending you information, and it is also important when
+you use text formatting commands.
+
+The shell must know what type of terminal you are working on so that the
+information it sends you prints nicely on your terminal.  The shell finds
+out what your terminal type is when you assign a value to the $TERM
+variable. When you login, your ".profile"\S*\S program asks you which
+type of terminal you are using.  If you are working on a TELETYPE 5620
+Dot-Mapped Display terminal, you could type 5620 or dmd and the system
+would interpret it correctly.  You can get a list of valid terminal types
+from the /usr/lib/terminfo directory, or from the manual page for term(5).
+
+Terminal type is also important when you are formatting text with commands
+like nroff(1).  These text formatting commands have options that take a
+terminal type as an argument.  By specifying the terminal where you will
+have the text printed, you will be sure that the text prints correctly.
+The valid terminal types are different for each text formatting command,
+and you can get a list of the valid types on the "manual pages"\S*\S for
+each command.
+
+\S*\S defined in the \Sglossary\S

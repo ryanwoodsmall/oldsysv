@@ -1,0 +1,144 @@
+.OP
+.tl '''November 19, 1982'
+.sp 2
+.ce
+UNIX System Administrator's Manual
+.ce
+System V
+.tr ~
+.sp 2
+.ce
+.ul
+PRINTING INSTRUCTIONS
+.sp 2
+Print entire manual two-sided; mock-ups of front and back
+cover (together with sizing information), as well as cover
+title and tabs copy are attached.
+.sp
+Total page count (including blank pages) is 308.
+.nf
+.sp 2
+.ce
+.I "FOLIO LIST"
+.sp 2
+.I "Front Matter:"
+.sp
+.ta 5 10 25 34
+.ul
+	No tab:
+		Title page			~~~~1*
+		Trademark page			~~~~2
+.FS *
+Page 1 is
+.I not
+numbered.
+.I All
+other pages
+.I "that carry any text"
+are numbered by entry and should
+be placed back-to-back, regardless of odd or even number, with
+the exception of new "Tab" divisions.
+.FE
+.sp
+.ul
+	Tab "INTRO":
+		Introduction			~~~~3-4 incl.
+.sp
+.ul
+	Tab "CONTENTS":
+		Contents			~~~~1-4 incl.
+.sp
+.ul
+	Tab "INDEX":
+		Permuted Index		~~~~1-49 incl.
+		     Blank page ~~~~50
+.bp
+.nf
+.sp 2
+.ul
+Tab "1":
+'\"	Section 1 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(1M)	1	ERRDEMON(1M)	1	PCLDAEMON(1M)	1
+ABT(1M)	1	ERRPT(1M)	1	PRM(1M)	1
+ACCEPT(1M)	1	ERRSTOP(1M)	1	PROFILER(1M)	1
+ACCT(1M)	1-2 incl.	FF(1M)	1	PWCK(1M)	1
+ACCTCMS(1M)	1	FILESAVE(1M)	1	REBOOT(1M)	1
+ACCTCON(1M)	1	FINC(1M)	1	RMV(1M)	1
+ACCTMERG(1M)	1	FORMAT(1M)	1	RST(1M)	1-2 incl.
+ACCTPRC(1M)	1	FREC(1M)	1	RUNACCT(1M)	1-2 incl.
+ACCTSH(1M)	1-2 incl.	FSCK(1M)	1-3 incl.	SAR(1M)	1-2 incl.
+ACUSET(1M)	1	FSCV(1M)	1	SETMNT(1M)	1
+ATB(1M)	1	FSDB(1M)	1-3 incl.	SETMRF(1M)	1
+BCOPY(1M)	1	FTS(1M)	1	SHUTDOWN(1M)	1
+BRC(1M)	1	FUSER(1M)	1	SSR(1M)	1
+CHECKALL(1M)	1	FWTMP(1M)	1	ST(1M)	1
+CHMAP(1M)	1	GETTY(1M)	1-2 incl.	STA(1M)	1
+CHROOT(1M)	1	INIT(1M)	1-3 incl.	STGETTY(1M)	1
+CLRI(1M)	1	INSTALL(1M)	1 incl.	SYSDEF(1M)	1
+CONFIG.3B(1M)	1	IPB(1M)	1	UUCLEAN(1M)	1
+CONFIG.DC(1M)	1-4 incl.	KILLALL(1M)	1	UUSUB(1M)	1
+CRASH(1M)	1-3 incl.	LINK(1M)	1	VCF(1M)	1
+CRON(1M)	1	LPADMIN(1M)	1-2 incl.	VLX(1M)	1
+DCOPY(1M)	1	LPSCHED(1M)	1	VOLCOPY(1M)	1
+DEVNM(1M)	1	MKBOOT(1M)	1	VPMC.DEC(1M)	1-10 incl.
+DF(1M)	1	MKFS(1M)	1-2 incl.	VPMC.U3B(1M)	1-5 incl.
+DGN(1M)	1	MKNOD(1M)	1	VPMSAVE(1M)	1
+DON(1M)	1	MOUNT(1M)	1	VPMSET(1M)	1
+DSKFMT(1M)	1	MSI(1M)	1	VPMTEST(1M)	1
+DSTART(1M)	1	MVDIR(1M)	1	WALL(1M)	1
+EMULCNTRL(1M)	1	NCHECK(1M)	1	WHODO(1M)	1
+EMULLOAD(1M)	1	NEWBOOT(1M)	1	X25PVC(1M)	1-3 incl.
+EMULSTAT(1M)	1	NSCLOOP(1M)	1
+ERRDEAD(1M)	1	NSCMON(1M)	1-3 incl.
+.TE
+.sp 2
+.br
+.ne 25v
+.ul
+Tab "7":
+'\"	Section 7 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(7)	1	KMC(7)	1	STERMIO(7)	1-4 incl.
+ACU(7)	1	LP(7)	1	TERMIO(7)	1-7 incl.
+CAT(7)	1	MEM(7)	1	TM(7)	1
+DGN(7)	1	ML11(7)	1	TN4(7)	1
+DMC(7)	1	NC(7)	1-2 incl.	TN74(7)	1
+DMK(7)	1	NSC(7)	1-5 incl.	TN83(7)	1
+DSK(7)	1	NULL(7)	1	TN85(7)	1
+DU(7)	1	OSM(7)	1	TRACE(7)	1
+DZ(7)	1	PCL(7)	1-2 incl.	TS11(7)	1
+EMULIO(7)	1-3 incl.	PRF(7)	1	TTY(7)	1
+ERR(7)	1	RF(7)	1	TU78(7)	1
+GD(7)	1	RK(7)	1	UN32(7)	1
+GT(7)	1	RL(7)	1	UN52(7)	1
+HM(7)	1	RM80(7)	1	UN53(7)	1
+HP(7)	1	RP(7)	1	VP(7)	1
+HS(7)	1	RP07(7)	1	VPM(7)	1-4 incl.
+HT(7)	1	ST(7)	1-2 incl.	X25(7)	1-5 incl.
+KL(7)	1		blank page	1
+.TE
+.sp 2
+.ul
+Tab "8":
+'\"	Section 8 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(8)	1	CRASH.DEC(8)	1-3 incl.	PRM(8)	1-3 incl.
+3B20BOOT(8)	1	CRASH.U3B(8)	1-2 incl.	RJE(8)	1-4 incl.
+3B20OPS(8)	1	DISKBOOT(8)	1	ROMBOOT(8)	1-2 incl.
+70BOOT(8)	1-4 incl.	EAI(8)	1-4 incl.	TAPEBOOT(8)	1
+750OPS(8)	1-4 incl.	LDTAPE(8)	1	TROUBLE(8)	1-2 incl.
+780OPS(8)	1-5 incl.	MK(8)	1-2 incl.	UNIXBOOT(8)	1
+.TE

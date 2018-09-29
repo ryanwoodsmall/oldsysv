@@ -1,0 +1,13 @@
+
+\S file \S:  Examples
+
+       file /bin/grep
+
+    Prints the file type of the file "/bin/grep".
+
+    ----------------------------------------------------------------------
+
+       file * | grep -l executable
+
+    Classifies all the files in the current working directory according to type
+    and prints the names of executable files on the standard output.

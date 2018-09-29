@@ -1,0 +1,76 @@
+#  macref  statistics formatter
+define	plural(num,string)
+	"0" num		/s(freturn)
+	"" osym		/s(plur0)
+	oline = osym "	"
+	osym = ""	/(plur1)
+plur0	oline = oline ", "
+plur1	"1" num		/s(plur2)
+	oline = oline num " " string "s"	/(freturn)
+plur2	oline = oline num " " string		/(freturn)
+start	sym = ""
+	osym = ""
+	oline = ""
+	done = "no"
+
+
+st1	strcnt = "0"
+	nrcnt = "0"
+	maccnt = "0"
+	reqcnt = "0"
+	parcnt = "0"
+	divcnt = "0"
+	modcnt = "0"
+
+ml1	line = syspit		/f(last)
+
+	line *nsym* "	" = ""
+	line *type/"1"*
+	line ** "-" *type/"1"*
+
+	sym nsym		/f(out)
+	nsym sym		/f(out)
+
+ml2	"p" type	/s(incp)
+	"m" type	/s(incm)
+	"s" type	/s(incs)
+	"n" type	/s(incn)
+	"r" type	/s(incr)
+	"d" type	/s(incd)
+	syspot = "? type error: " type	/(end)
+
+ml3	line ** "#"		/f(ml1)
+	modcnt = modcnt + "1"	/(ml1)
+
+incp	parcnt = parcnt + "1"	/(ml3)
+incm	maccnt = maccnt + "1"	/(ml3)
+incn	nrcnt = nrcnt + "1"	/(ml3)
+incr	reqcnt = reqcnt + "1"	/(ml3)
+incs	strcnt = strcnt + "1"	/(ml3)
+incd	divcnt = divcnt + "1"	/(ml3)
+
+last	done = "yes"
+
+out	"" sym		/s(outl)
+	plural(maccnt,"macro ref")
+	plural(reqcnt,"request call")
+	plural(strcnt,"string ref")
+	plural(nrcnt,"number reg ref")
+	plural(divcnt,"diversion ref")
+	plural(parcnt,"parameter ref")
+	plural(modcnt,"modification")
+	syspot = oline
+	oline = ""
+
+outl	sym = nsym
+	osym = sym
+	strcnt = "0"
+	nrcnt = "0"
+	maccnt = "0"
+	reqcnt = "0"
+	parcnt = "0"
+	divcnt = "0"
+	modcnt = "0"
+	"no"  done		/s(ml2)
+
+end	bye bye "@(#)macrstat.sno	1.2"

@@ -1,0 +1,127 @@
+.TH UTIME 2
+.SH NAME
+utime \- set file access and modification times
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B int utime (path, times)
+.br
+.B char \(**path;
+.br
+.B struct utimbuf \(**times;
+.SH DESCRIPTION
+.I Path\^
+points to a
+path name
+naming a file.
+.I Utime\^
+sets the access and modification times
+of the named file.
+.PP
+If
+.I times\^
+is
+.SM
+.BR NULL ,
+the access and modification times of the file are set to the current time.
+A process must be the owner of the file or have write permission to use
+.I utime\^
+in this manner.
+.PP
+If
+.I times\^
+is not
+.SM
+.B NULL,
+.I times\^
+is interpreted as a pointer to a
+.I utimbuf\^
+structure and
+the access and modification times are set to the values contained in
+the designated structure.
+Only the owner of the file or the super-user may
+use
+.I utime\^
+this way.
+.PP
+The times in the following structure are measured in seconds since
+00:00:00
+.SM GMT\*S,
+Jan. 1, 1970.
+.PP
+.RS
+.nf
+.ta .5i 1i 1.75i 2.5i
+struct	utimbuf	{
+	time_t	actime;	/\(** access time \(**/
+	time_t	modtime;	/\(** modification time \(**/
+};
+.fi
+.RE
+.PP
+.PP
+.I Utime\^
+will fail if one or more of the following are true:
+.TP 15
+.SM
+\%[ENOENT]
+The named file does not exist.
+.TP
+.SM
+\%[ENOTDIR]
+A component of the
+path prefix
+is not a directory.
+.TP
+.SM
+\%[EACCES]
+Search permission is denied by a component of the
+path prefix.
+.TP
+.SM
+\%[EPERM]
+The effective user
+.SM ID
+is not super-user and not the owner of the file
+and
+.I times\^
+is not
+.SM
+.BR NULL .
+.TP
+.SM
+\%[EACCES]
+The effective user
+.SM ID
+is not super-user and not the owner of the file
+and 
+.I times\^
+is
+.SM
+.B NULL
+and write access is denied.
+.TP
+.SM
+\%[EROFS]
+The file system containing the file is mounted read-only.
+.TP
+.SM
+\%[EFAULT]
+.I Times\^
+is not
+.SM
+.B NULL
+and points outside the process's allocated address space.
+.TP
+.SM
+\%[EFAULT]
+.I Path\^
+points outside the process's allocated address space.
+.SH "RETURN VALUE"
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+stat(2).
+.\"	@(#)utime.2	6.2 of 9/6/83

@@ -1,0 +1,162 @@
+.\"%W%
+.TH NET 1C "DEC only"
+.SH NAME
+net \- execute a command on the \s-1PCL\s+1 network
+.SH SYNOPSIS
+.B net\^
+system\ [\|command\ [\|args\|]\^]
+.SH DESCRIPTION
+.I Net\^
+provides a bi-directional connection to another \s-1UNIX\s+1 System.
+The first argument is the name of the remote
+.IR system .
+The second argument is a
+.I command
+to be executed.
+Any remaining arguments are passed to the given command as arguments.
+.P
+.I System
+can be any name that exists in the directory
+.I /dev/pcl
+followed by a channel number.
+.I Net
+passes the local \fBnodename\fR to the remote
+.IR system .
+.P
+All commands are passed to the user's default shell on the remote system
+executing in the user's home directory.
+If
+.I command
+is not given,
+then the default command is an interactive shell
+.RB ( "/bin/sh \-i" ).
+Before execution starts,
+the user's environment is extracted from the remote \fB.profile\fR
+file, if any.
+.P
+.I Net
+reads the standard input, thus allowing
+.I command
+to be part of a ``pipeline'' if
+.I command
+reads the standard input also.
+.P
+At the remote end,
+a daemon logs all commands.
+.SH EXAMPLES
+Execute the
+.IR who (1)
+command on system A and return the output to your terminal: 
+.P
+.RS 2
+net \|A \|who
+.RE
+.P
+Copy one file from system A to the local system:
+.P
+.RS 2
+net \|A \|"cat /file/on/A" \|> \|/file/on/localsys
+.RE
+.P
+Copy a directory structure from system A to the
+local system:
+.P
+.RS 2
+cd \|/dir/on/localsys
+.br
+net \|A \|"cd \|/dir/on/A; \|find 
+.B \|.
+\|\-print \|\(bv \|cpio \|\-oc" \|\(bv \|cpio \|\-icd
+.RE
+.P
+Send a directory structure from the local system to system A
+(this uses the command's ability to read standard input):
+.P
+.RS 2
+find \|\fB.\fP \|\-print \|\(bv \|cpio \|\-oc \|\(bv \|net \|A \|"cd \|/dir/on/A\fB;\fP \|cpio \|\-icd"
+.RE
+.SH FILES
+.PD 0
+.TP "\w'/dev/pcl/\fI?\fP[0-7]  'u"
+/dev/pcl/\fI*\fP[0-7]
+.SM PCL
+channel interfaces for system
+.IR * .
+.TP
+/usr/adm/pcllog
+Activity log.
+.PD
+.SH SEE ALSO
+cpio(1),
+find(1),
+pcldaemon(1C),
+sh(1),
+pcl(7).
+.ne 10
+.SH DIAGNOSTICS
+.TP
+.I uid unknown
+Your
+.I uid
+cannot be matched in the password file.
+.TP
+.I command list too long
+A command and its arguments are restricted to less than 512 bytes.
+.TP
+.I user is unknown at remote
+Your login name does not exist at the remote site.
+.TP
+.I user is denied access at remote
+Your login name is not allowed to be used via
+.I net
+at the remote site.
+N.B. This applies in particular to super-users.
+.TP
+.I home directory inaccessible
+Your remote home directory is unavailable, possibly unmounted.
+.TP
+.I cannot open channel to system
+A connection can't be made to the requested system.
+.TP
+.I connection broken
+A non-recoverable write error occurred.
+.TP
+.I write error
+A recoverable write error occurred.
+The write will be retried until it completes successfully without losing data.
+.TP
+.I cannot fork reader process
+.I Net\^
+is unable to create a reader process and a writer process.
+.SH WARNINGS
+A successful invocation of
+.I net
+reads at least 2 blocks of the standard input, if present,
+even if
+.I command
+does not use standard input.
+The standard input must be explicitly closed
+(via
+.BR <&\- )
+or redirected
+(such as from
+.BR /dev/null )
+if this feature is not desired.
+.br
+The use of
+.I net 
+to invoke certain programs on the remote system may result
+in delayed transmission of output to the user.
+This is because the \s-1PCL\s+1 is not a tty device.
+Data written to standard output by an invoked program
+will be treated as though it is being written to an
+ordinary file, and not to a user terminal.
+.SH BUGS
+\s-1PCL\s+1 channels are not ``tty'' files, so
+that commands that do ``funny'' things with your terminal (i.e.,
+.IR cu (1C),
+.IR passwd (1),
+.IR su (1),
+etc.),
+or that expect ``tty'' behaviour of the standard output file,
+won't work as expected.

@@ -1,0 +1,18 @@
+
+\Schown\S:  Description
+
+Syntax Summary:  chown owner name ...
+
+         where:  owner  is a valid user ID number or login name.
+                 name  is the name of a file or directory name.
+Description:
+     \Schown\S stands for "change owner."  Use \Schown\S to change the owner
+     of files or directories.  You name a new owner using a login name or
+     numeric user ID.  \Schown\S does not change the contents of the files or
+     directories, but it does change the owner who has read, write, and execute
+     permissions.  You can use \Schown\S only if you are the current owner of
+     the files or directories, or if you are the super-user.  After you change
+     the owner of your files and directories you can use them only if the 
+     access permissions for group or other users permit you to use them.  See
+     the glossary for descriptions of access permissions.  See also:  chgrp(1)
+     and chmod(1) for commands with functions similar to \Schown\S.

@@ -1,0 +1,24 @@
+
+   Preferences  gives  you  the  ability  to  customize  many  of  the
+   functions in your FACE environment.
+
+   You can choose to edit the following forms:
+
+      - CHANGE PASSWORD -- Change current password to a new password.
+
+      - FOLDER OPTIONS -- Change the way objects are displayed  (order
+        of  presentation  and  amount  of information) throughout your
+        Filecabinet, Wastebasket and other folders on your system.
+
+      - OFFICE PREFERENCES -- Set the interval for deletion of objects
+        in  your  Wastebasket.   Determine  whether  an  alert  prompt
+        appears  when  objects  are  ready  for  deletion   from   the
+        Wastebasket. Set the default editor.  Assign frames to be open
+        upon login.
+
+      - PERMISSIONS -- Determine who has the ability to  Read,  Write,
+        and  Run/Search objects in your Filecabinet. Note that changes
+        made to the values in this form will only impact newly created
+        files and folders.  The security settings of files and folders
+        currently in the  Filecabinet  and  Wastebasket  will  not  be
+        impacted.

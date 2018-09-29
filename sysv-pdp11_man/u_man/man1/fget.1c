@@ -1,0 +1,310 @@
+.TH FGET 1C "DEC only"
+.SH NAME
+fget, fget.demon \- retrieve files from the \s-1HONEYWELL\s+1 6000
+.SH SYNOPSIS
+.B fget
+[ options ] [ files ]
+.br
+.B /usr/lib/fget.demon
+time
+.SH DESCRIPTION
+.I Fget\^
+arranges to have
+one or more
+.SM GCOS
+files sent to the
+\s-1UNIX\s+1 System.
+.SM GCOS
+identification must appear in
+the
+.SM UNIX
+System password file (see
+.IR passwd (4)),
+or be supplied by the
+.B \-i
+option.
+Normally, the files retrieved will appear in the
+.SM UNIX
+System user's
+current directory under the
+.SM GCOS
+file name.
+.I Fget.demon
+is the daemon that does the actual retrieval.
+.PP
+The
+.SM GCOS
+catalog from which the files are obtained
+depends on the form of the file name
+argument.
+If the file name has only embedded slashes,
+then it is assumed to be a full
+.SM GCOS
+path name and that file is
+retrieved.
+If the file name has no embedded slashes or begins with
+a slash,
+then the
+.SM GCOS
+catalog from which the file is
+retrieved is the same as the
+.SM UNIX
+System login name of the person
+who issues the command.
+If, however, a user has a different name in the
+third field of the
+.SM GCOS
+``ident card image''
+(which image is extracted from the
+.SM UNIX
+System password file\-see
+.IR passwd (4)),
+this name is taken as the
+.SM GCOS
+catalog name.
+Whatever
+.SM GCOS
+catalog is finally
+used, the files must either have general read permission
+or the user must have arranged that the user
+.SM ID
+.I network\^
+has read permission on that catalog (see
+.IR fsend (1C)).
+This can be accomplished with the
+.SM GCOS
+command:
+.RS
+.PP
+filsys \|mc \|<user \s-1ID\s+1>,(r)/network/
+.RE
+.PP
+The
+.SM UNIX
+System file into which the retrieved
+.SM GCOS
+file will
+ultimately be written is initialized with one line
+containing the complete
+.SM GCOS
+file name.
+If the file contains the initial line for an extended period,
+it means that
+.SM GCOS
+is down or something has gone horribly wrong
+and you should try again.
+.PP
+The following options, each as a separate argument
+may appear in any order
+but must precede all file arguments.
+.PP
+.PD 0
+.TP 7
+.B  \-a
+Retrieve files as
+.SM ASCII
+(default).
+.TP 7
+.B  \-b
+Retrieve files as binary.
+.TP 7
+.BI \-d dir
+Use
+.I dir
+as the
+.SM UNIX
+System directory into which
+retrieved files are written.
+.TP 7
+.BI \-f file
+Use
+.I file
+as the
+.SM UNIX
+System filename for the retrieved file.
+.TP 7
+.BI \-i job,bin
+Supply the
+.SM GCOS
+``ident card'' image as the parameter
+.BI \-i job,bin
+where
+.I job
+is the
+.SM GCOS
+job number and
+.I bin
+the
+.SM GCOS
+bin number
+or any comment to the
+.SM GCOS
+operators.
+.TP 7
+.B  \-m
+When the request has been forwarded to \s-1GCOS\s+1, report by
+.IR mail (1)
+the so-called
+.I snumb\^
+of the receiving
+job;
+mail is sent by the
+.SM UNIX
+System
+.IR dpd (1C)
+daemon;
+there is no guarantee that the
+.SM GCOS
+job ran
+or that the
+.SM UNIX
+System retrieved the output.
+This is the default option.
+.TP 7
+.B  \-n
+Do not report the forwarding of the request by
+.IR mail (1).
+.TP 7
+.B  \-o
+Print the on-line
+.SM GCOS
+accounting output.
+.TP 7
+.B  \-t
+Toss out the on-line
+.SM GCOS
+accounting output.
+This is the default option.
+.TP 7
+.BI \-s n\^
+Submit job to
+.SM GCOS
+with service grade
+.I n\^
+.RI ( n "=1, 2, 3, 4)."
+Default is
+.BR \-s1 .
+.TP 7
+.BI \-u userid
+Use
+.I userid
+as the
+.SM GCOS
+catalog name for all files.
+.PD
+.PP
+The
+.SM GCOS
+job to send the requested files to the
+.SM UNIX
+System is sent by the
+.IR dpd (1C)
+daemon.
+Receiving these files
+is then done by
+a corresponding retrieval daemon,
+.IR fget.demon ,
+which stays alive for a minimum of
+.I time
+seconds,
+(default 360),
+or until it has successfully retrieved one or more files.
+The file
+.B glock
+in the spooling directory
+.BR /usr/spool/dpd
+is used
+to prevent two daemons from becoming active simultaneously.
+After the program has successfully set the lock,
+it forks and the main path exits, thus
+spawning the daemon.
+.SM GRTS
+is interrogated for any output for the daemon's station-id.
+If none,
+.I fget.demon\^
+will wait up to
+.I time\^
+seconds,
+interrogating
+.SM GRTS
+every minute or so to see if any output has arrived.
+All problems and successful transactions are recorded
+in the
+.B errors
+file in the spooling directory.
+.PP
+To restart
+.I fget.demon\^
+(in the case of hardware or software malfunction),
+it is necessary to first kill the old
+.I fget.demon\^
+(if still alive),
+and remove the lock file
+(if present),
+before initiating
+.IR fget.demon .
+This should be done automatically
+by
+.I /etc/rc
+when the system is brought up,
+in case there are any files waiting to come over.
+.SH EXAMPLES
+The command:
+.RS
+.PP
+fget \|\-u\|gcosme \|\-t \|\-n \|\-d\|/usr/me/test \|file1 \|file2
+.RE
+.PP
+will retrieve the
+.SM GCOS
+files
+.B gcosme/file1
+and
+.BR gcosme/file2 ,
+as the
+.SM UNIX
+System files
+.B /usr/me/test/file1
+and
+.BR /usr/me/test/file2 ,
+respectively,
+but will not generate any mail or
+.SM GCOS
+accounting output
+as a result of the transaction.
+.SH FILES
+.PD 0
+.TP 20
+/etc/passwd
+user's identification and
+.SM GCOS
+ident card.
+.TP
+/usr/lib/dpd
+sending daemon.
+.TP
+/usr/spool/dpd/\(**
+spool area.
+.TP
+/dev/dn?
+.SM ACU\*S device.
+.TP
+/dev/du?
+.SM DATA-PHONE
+data set.
+.TP
+/dev/vpb?
+Bottom
+.SM VPM
+device to interface to
+.SM KMC\*S11-B.
+.TP
+/dev/vpm?
+Top
+.SM VPM
+device to interface to
+.SM KMC\*S11-B.
+.PD
+.SH SEE ALSO
+dpd(1C), dpr(1C), fsend(1C), passwd(4).
+.\"	@(#)fget.1c	5.2 of 5/18/82

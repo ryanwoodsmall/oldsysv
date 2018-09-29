@@ -1,0 +1,155 @@
+.TH SHL 1
+.SH NAME
+shl \- shell layer manager
+.SH SYNOPSIS
+.B shl
+.SH DESCRIPTION
+.I Shl\^
+allows a user to interact with more than one shell from a single terminal.
+The user controls these shells, 
+known as 
+.IR layers\^ ,
+using the commands 
+described below.
+.P
+The
+.I current layer
+is the layer which can receive input from the keyboard.
+Other layers attempting to read from the keyboard are blocked.
+Output from multiple layers is multiplexed onto the terminal.
+To have the output of a layer blocked when it is not current, the 
+.I stty\^ 
+option
+.B loblk
+may be set within the layer.
+.P
+The
+.I stty\^ 
+character
+.B swtch\^
+(set to ^Z if \s-1NUL\s+1)
+is used to switch control to
+.I shl\^
+from a layer.
+.I Shl\^
+has its own prompt, \f3>\h@-.3m@>\h@-.3m@>\fP, to
+help distinguish it from a layer.
+.P
+A
+.I layer\^ 
+is a shell
+which has been bound to a virtual tty device 
+.RB ( /dev/sxt??? ).
+The virtual device can be manipulated like a real tty device using
+.IR stty\^ (1)
+and 
+.IR ioctl\^ (2).
+Each layer has its own process group id.
+.SS Definitions
+A
+.I name\^
+is a sequence of characters delimited by a blank, tab or new-line.
+Only the first eight characters are significant.
+The \fInames\fP 
+.B (1) 
+through
+.BR (7) 
+cannot be used when creating a layer.
+They are used by
+.I shl\^ 
+when no name is supplied.
+They may be abbreviated to just the digit.
+.SS Commands
+The following commands may be issued from the 
+.I shl\^
+prompt level.
+Any unique prefix is accepted.
+.PP
+.PD 0
+.TP
+\f3create\fP \*(OK \f2name\^\fP \*(CK
+Create a layer called 
+.I name\^ 
+and make it the current layer.
+If no argument is given, a layer will be created with a name of the form
+\fI(#)\fP where \fI#\fP is the last digit of the virtual device 
+bound to the layer.
+The shell prompt variable 
+.B \s-1PS1\s+1
+is set to the name of the layer followed by a space.
+A maximum of seven layers can be created.
+.TP
+\f3block\f2 name\fR [ \f2name\fR ... ]
+For each \f2name\fR, block the output of the corresponding
+layer when it is not the current layer.
+This is equivalent to setting the \f2stty\fR option \f3loblk\fR
+within the layer.
+.TP
+\f3delete\fP \f2name\^\fP \*(OK \f2name\^\fP .\|.\|. \*(CK
+For each \fIname\fP, delete the corresponding layer.
+All processes in the process group of the layer are sent the SIGHUP signal
+(see 
+.IR signal (2)).
+.TP
+.BR help " (or " ? )
+Print the syntax of the
+.I shl\^
+commands.
+.TP
+\f3layers\fP \*(OK \f3\-l\fP \*(CK \*(OK \f2name\^\fP .\|.\|. \*(CK
+For each \fIname\fP, list the layer name and its process group.
+The
+.B \-l 
+option produces a 
+.IR ps (1)-like
+listing.
+If no arguments are given, information is presented for all existing
+layers.
+.TP
+\f3resume\fP \*(OK \f2name\^\fP \*(CK
+Make the layer referenced by 
+.I name\^
+the current layer.
+If no argument is given, the last existing current layer 
+will be resumed.
+.TP
+\f3toggle\fR
+Resume the layer that was current before the last current layer.
+.bp
+.TP
+\f3unblock\f2 name\fR  [ \f2name\fR ... ]
+For each \f2name\fR, do not block the output of the
+corresponding layer when it is not the current layer.
+This is equivalent to setting the \f2stty\fR option \f3loblk\fR
+within the layer.
+.TP
+.B quit
+Exit 
+.IR shl\^ .
+All layers are sent the SIGHUP signal.
+.TP
+\f2name\^\fP
+Make the layer referenced by 
+.I name\^
+the current layer.
+.PD
+.SH FILES
+.PD 0
+.TP 18
+/dev/sxt???
+Virtual tty devices
+.TP
+\s-1$SHELL\s+1
+Variable containing path name of the shell to use (default is 
+/bin/sh).
+.PD
+.SH SEE ALSO
+sh(1),
+stty(1).
+.br
+ioctl(2),
+signal(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+sxt(7) in the
+\f2\s-1UNIX\s+1 System V Administrator Reference Manual\fR.

@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:shell/selpattern	2.5"
+#	Select which pattern matches the given device file.
+
+#!	chmod +x ${file}
+
+echo ${1:?}  |
+	sed '	s;.*/\([^/].*\);\1;
+		s/\([0-9]*\)\([a-zA-Z]*\).*/\1\2/
+	'

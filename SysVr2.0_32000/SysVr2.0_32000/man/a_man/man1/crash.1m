@@ -1,0 +1,414 @@
+.TH CRASH 1M
+.SH NAME
+crash \- examine system images
+.SH SYNOPSIS
+.B /etc/crash
+[ system ] [ namelist ]
+.SH DESCRIPTION
+.I Crash\^
+is an interactive utility for examining
+an operating system core image.
+It has facilities for interpreting
+and formatting the various control structures
+in the system and certain miscellaneous
+functions that are useful when perusing a dump.
+.PP
+The arguments to
+.I crash\^
+are the file name where the
+.I system
+image
+can be found and
+a
+.I namelist
+file to be used
+for symbol values.
+.PP
+The default values are
+.BR /dev/mem
+and
+.BR /unix ;
+hence,
+.I crash\^
+with no arguments can be used to examine
+an active system.
+If a
+.I system
+image file is given,
+it is assumed to be a system core dump and
+the default process is set to be that of the
+process running at the time
+of the crash.
+This is determined by a value
+stored in a fixed location
+by the dump mechanism.
+.SH COMMANDS
+Input to
+.I crash\^
+is typically of the form:
+.br
+.ti 10
+command [ \f2options\fR ] [ structures to be printed ].
+.br
+When allowed,
+.I options
+will modify the format of the printout.
+If no specific structure elements are specified,
+all valid entries will be used.
+As an example,
+.B "proc \- 12 15 3"
+would print process table slots
+12, 15, and 3 in a long format,
+while
+.B proc
+would print the entire process table
+in standard format.
+.PP
+In general, those commands that perform
+\s-1I\s+1/\s-1O\s+1
+with addresses assume
+hexadecimal on 32-bit
+machines and octal on 16-bit machines.
+.PP
+The current repertory consists of:
+.TP
+\fBuser\fP [ list of process table entries ]
+Aliases:
+.BR uarea ,
+.BR u_area ,
+.BR u .
+.br
+Print the user structure of the named process
+as determined by the information contained in the process table entry.
+If no entry number is given, the information from the last executing process
+will be printed.
+Swapped processes produce an error message.
+.TP
+\fBtrace\fR  \-r [ list of process table entries ]
+Aliases:
+.BR "t \-r" .
+.br
+Generate a kernel stack trace of the current process.
+If the
+.B \-r
+option is used,
+the trace begins at the saved stack frame pointer in
+.BR kfp .
+Otherwise, the trace starts at the bottom of the stack
+and attempts to find valid stack frames deeper in
+the stack.
+On the SYS32,
+.BR kfp
+may be invalid when examining a running system.
+If no entry number is given, the last executing process's information
+will be printed.
+.TP
+\fBkfp\fP [ stack frame pointer ]
+Aliases:
+.BR r5 ,
+.BR fp .
+.br
+Print the program's idea of the start
+of the current stack frame (set initially
+from a fixed location in the dump)
+if no argument is given,
+or set the frame pointer to the supplied value.
+.TP
+\fBstack\fP [ list of process table entries ]
+Aliases:
+.BR stk ,
+.BR s ,
+.BR kernel ,
+.BR k .
+.br
+Format a dump of the kernel stack of a process.
+The addresses shown are virtual system data addresses
+rather than true physical locations.
+If no entry number is given, the information from the last executing process
+will be printed.
+.TP
+\fBproc\fP [ \fB\-\fP[\fBr\fP] ] [ list of process table entries ]
+Aliases:
+.BR ps ,
+.BR p .
+.br
+Format the process table.
+The
+.B \-r
+option causes only runnable processes to be printed.
+The
+.B \-
+alone generates a longer listing.
+.TP
+\fBpcb\fP [ list of process table entries ]
+The process control block is not implemented in the NS32000 system.
+.TP
+\fBinode\fP [ \fB\-\fP ] [ list of i-node table entries ]
+Aliases:
+.BR ino ,
+.BR i .
+.br
+Format the i-node table.
+The
+.B \-
+option will also print
+the i-node data block addresses.
+.TP
+\fBfile\fP [ list of file table entries ]
+Aliases:
+.BR files ,
+.BR f .
+.br
+Format the file table.
+.TP
+\f3lck\fR
+.br
+Aliases:  \f3l\fR
+.br
+Print the active and sleep record lock tables;
+also verify the correctness of the record locking linked lists.
+.TP
+\fBmount\fP [ list of mount table entries ]
+Aliases:
+.BR mnt ,
+.BR m .
+.br
+Format the mount table.
+.ne 4
+.TP
+\fBtext\fP [ list of text table entries ]
+Aliases:
+.BR txt ,
+.BR x .
+.br
+Format the text table (swapping version of \s-1UNIX\s+1 system only).
+.TP
+\fBtty\fP [ type ] [ \fB\-\fP ] [ list of tty entries ]
+Aliases:
+.BR term 
+.br
+Print the tty structures.
+The
+.I type\^
+argument determines which structure will be used.
+No default 
+.I type\^
+is provided.
+However,
+once specified,
+the last
+.I type\^
+is remembered.  In the NS32000 system, the supported types are
+.I con\^
+and
+.IR sio .
+The
+.B \-
+option prints the
+.IR stty (1)
+parameters for the given line.
+The following is an example:
+.nf
+
+> tty sio
+SLOT  RAW DEL CAN OUT  PGRP COL STATE
+sio00   0   0   0   0  1766   0 isopen carr_on
+sio04   0   0   0   0  1748   4 isopen carr_on iaslp
+> tty - 00
+SLOT  RAW DEL CAN OUT  PGRP COL STATE
+sio00   0   0   0   0  1766   0 isopen carr_on
+        (010,@) out rtn: 26131,
+        input:   brkint ignpar istrip icrnl ixon
+        output:  opost onlcr nl0 cr0 tab3 bs0 vt0 ff0
+        cntrl:   b9600 cs7 cread parenb hupcl
+        displn:  isig icanon echo echoe echok
+.fi
+.TP
+.B stat
+.br
+Print certain statistics found in the dump.
+These include the
+panic string (if a panic occurred), time of crash, system name,
+and the registers saved in low memory
+by the dump mechanism.
+.TP
+.B var
+.br
+Aliases:
+.BR tunables ,
+.BR tunable ,
+.BR tune ,
+.BR v .
+.br
+Print the tunable system parameters.
+.TP
+\fBbuf\fP [ list of buffer headers ]
+Aliases:
+.BR hdr ,
+.BR bufhdr .
+.br
+Format the system buffer headers.
+.TP
+\fBbuffer\fP [ format ] [ list of buffers ]
+Alias:
+.BR b .
+.br
+Print the data in a system buffer
+according to
+.IR format .
+If
+.I format
+is omitted, the previous
+.I format
+is used.
+Valid formats include
+.BR decimal ,
+.BR octal ,
+.BR hex ,
+.BR character ,
+.BR byte ,
+.BR directory ,
+.BR i-node ,
+and
+.BR write .
+The last creates a file
+in the current directory (see
+.I
+.SM FILES\*S\fP)
+containing the buffer data.
+.TP
+.B callout
+Aliases:
+.BR calls ,
+.BR call ,
+.BR c ,
+.BR timeout ,
+.BR time ,
+.BR tout .
+.br
+Print all entries in the callout table.
+.TP
+\fBregion\fR [ region table number | region table address ]
+Prints region table. Region table address must be of the form 0x\ ...\ \.
+.TP
+\fBpreg\fR [ proc slot number ]
+Prints data about a process's pregions.
+.TP
+\fBmap\fP [ list of map names ]
+Format the named system map structures.
+.TP
+\fBnm\fP [ list of symbols ]
+Print symbol value and type as found in the
+.I namelist
+file.
+.TP
+\fBts\fP [ list of text addresses ]
+Find the closest text symbols to the given addresses.
+.TP
+\fBds\fP [ list of data addresses ]
+Find the closest data symbols to the given addresses.
+.TP
+\fBod\fP [ symbol name or address ] [ count ] [ format ]
+Aliases:
+.BR dump ,
+.BR rd .
+.br
+Dump
+.I count\^
+data values
+starting at the symbol value or address given
+according to
+.IR format .
+Allowable formats are
+.BR octal ,
+.BR longoct ,
+.BR decimal ,
+.BR longdec ,
+.BR character ,
+.BR hex ,
+or
+.BR byte .
+.TP
+.B !
+Escape to shell.
+.TP
+.B q
+Exit from
+.IR crash .
+.TP
+.B ?
+Print synopsis of commands.
+.SH ALIASES
+There are built-in aliases for many of the
+.I formats
+as well as those listed for the commands.
+Some of them are:
+.PD 0
+.RS
+.TP \w'hexadecimal\ \ 'u
+byte
+b.
+.TP
+character
+char, c.
+.TP
+decimal
+dec, e.
+.TP
+directory
+direct, dir, d.
+.TP
+hexadecimal
+hexadec, hex, h, x.
+.TP
+i-node
+ino ,
+i.
+.TP
+longdec
+ld, \s-1D\s+1.
+.TP
+longoct
+lo, \s-1O\s+1.
+.TP
+octal
+oct, o.
+.TP
+write
+w.
+.RE
+.PD
+.SH FILES
+.PD 0
+.TP \w'/usr/include/sys/\(**.h\ \ 'u
+/usr/include/sys/\(**.h
+header files for table and structure info
+.TP
+/dev/mem
+default system image file
+.TP
+/unix
+default namelist file
+.TP
+buf.#
+files created containing buffer data
+.DT
+.PD
+.bp
+.SH "SEE ALSO"
+mount(1M),
+nm(1),
+ps(1),
+sh(1),
+stty(1),
+crash(8).
+.SH BUGS
+Most flags are abbreviated and will have little meaning
+to the uninitiated user. A source listing of the system
+header files at hand would be most useful while using
+.I crash.
+.PP
+Stack tracing of the current process on a
+running system and procs running at the time of a crash
+do not work.
+.\"	@(#)crash.1m	6.3 of 4/3/84

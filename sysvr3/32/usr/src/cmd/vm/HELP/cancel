@@ -1,0 +1,9 @@
+
+   The CANCEL command allows you to close a frame (or frames), or
+   cancel a request or activity.
+
+   To use CANCEL choose one of the following options:
+
+      - Press the Function Key labeled CANCEL
+
+      - On the COMMAND LINE type: cancel [frame# ...] + RETURN

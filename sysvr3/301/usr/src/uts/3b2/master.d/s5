@@ -1,0 +1,15 @@
+*#ident	"@(#)kern-port:master.d/s5	10.5"
+*
+* S5
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+orxj	-	s5	-	-	-
+						s5flag(%l) ={FLAGS5}
+						s5name(%15c)= {NAMES5}
+						s5notfy(%l) = {NOTFYS5}
+
+$$$
+
+FLAGS5 =  0
+NAMES5 = "S51K"
+NOTFYS5 = 0x4

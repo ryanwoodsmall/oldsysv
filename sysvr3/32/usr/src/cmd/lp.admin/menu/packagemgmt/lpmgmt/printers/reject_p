@@ -1,0 +1,130 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/printers/reject_p	1.5"
+## IDOC:   SCREEN 2.35: REJECT PRINT REQUESTS
+#menu# Stop printer from accepting print requests
+
+##+++ (help _H92)
+#help#        You use  the  "reject"  command  to  keep  additional  print
+#help#        requests  from  being  queued  for a printer.  This does not
+#help#        discard or move any requests currently  in  the  queue,  nor
+#help#        does  it  it  stop  requests  currently  in  the  queue from
+#help#        printing.
+#help#
+#help#        You may need  to  reject  additional  print  requests  or  a
+#help#        printer if you want to take the printer out of service for a
+#help#        long time, or if too many requests are in queue already  and
+#help#        you  want  the backlog to reduce itself before more requests
+#help#        are allowed.
+#help#
+#help#        Use the "disable" command in the "printers" menu if you also
+#help#        want  to stop printing;  use  the  "lpmove"  command  if you
+#help#        want to move requests currently queued to another printer.
+##--- (help _H92)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_printer_list () {
+# listof: printer-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!printer-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo ${RESP} | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then :; else if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid printer name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_one_line_comment () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!one-line-comment!}" \
+		'.*' '' \
+	`
+}
+##--- (functions)
+
+DEF=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+
+##+++ (line 1)
+echo \
+"Enter the names of the printers or printer classes
+that are to stop accepting print requests.
+Separate multiple names with a space or comma."
+##--- (line 3)
+
+##+++ (2.35.4)
+chk_printer_list \
+	"${DEF:+(default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the name of the printer for  which
+        you  want  no further print requests accepted.  If you don't
+        know the name, enter \"q\" and  select  the  \"status\"  command
+        from the \"printers\" menu, to get a list of known printers.
+
+        When you are ready to let print requests  be  queued  again,
+        use the \"accept\" command in the \"printers\" menu.  \
+"
+OPT=${RESP}
+##--- (2.35.4)
+
+##+++ (line 5)
+echo \
+"Reason for rejecting:"
+##--- (line 5)
+
+DEF_r=none
+##+++ (2.35.6)
+chk_one_line_comment \
+	"${DEF_r:+(default: ${DEF_r})}" \
+	"${DEF_r}" \
+	"\
+        You are  expected  to  enter  a  reason  for  disabling  the
+        printer(s).   The  only  purpose of the reason is to give an
+        explanation to the users who inquire about a printer  that's
+        no  longer  accepting  print requests.  Just press return if
+        you don't care to explain what you're doing.  \
+"
+OPT_r=${RESP}
+##--- (2.35.6)
+
+	if [ "none" != "${OPT_r}" ]
+	then
+		/usr/lib/reject -r "${OPT_r}" ${OPT} && break
+	else
+		/usr/lib/reject ${OPT} && break
+	fi
+
+done

@@ -1,0 +1,183 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/add_f	1.6"
+## IDOC:   SCREEN 2.37: ADD FORM
+#menu# Add a new form
+
+##+++ (help _H96)
+#help#        You use the "add" command in the "forms" menu to add  a  new
+#help#        preprinted  form  to  the  LP Printer Service.  A preprinted
+#help#        form is the special paper you want to print on such as blank
+#help#        checks,  blank  vouchers,  labels, company letter-head, etc.
+#help#        By telling the LP Print Service  a  few  details  about  the
+#help#        forms  you'll  be using, the service will keep track of them
+#help#        and will:  alert you when a form needs to be mounted, verify
+#help#        that  a  printer can handle a form, and initialize a printer
+#help#        to print correctly on the form.
+##--- (help _H96)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"When entering more than one answer or value,
+separate them with a space or comma.
+"
+##--- (line 3)
+
+OPT_f=
+OPT_length=66
+OPT_width=80
+OPT_number_of_pages=1
+OPT_lpi=6
+OPT_cpi=10
+OPT_character_set_choice=any
+OPT_mandatory=no
+OPT_ribbon_color=any
+OPT_comment=
+OPT_alignment_pattern=
+OPT_type=simple
+OPT_allow=all
+OPT_deny=none
+OPT_A="mail lp"
+OPT_Q=1
+OPT_W=0
+
+DEF_f=${OPT_f}
+##+++ (2.37.4)
+while true
+do
+chk_name \
+	"Name of form:${DEF_f:+ (default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of  the  new  form.   You
+        should  choose  any name that makes sense to you and will be
+        understood by your users, as long as  you  limit  it  to  14
+        characters  or  less,  and  use  only  letters,  digits, and
+        underscores.  You must name every form you add to the  print
+        service.  \
+"
+OPT_f=${RESP}
+##--- (2.37.4)
+
+	if [ "${OPT_f}" = "any" -o "${OPT_f}" = "all" -o "${OPT_f}" = "none" ]
+	then
+		echo "You can not use \"any\", \"all\", or \"none\". Try again."
+		continue
+	fi
+
+	if ls -d /usr/spool/lp/admins/lp/forms/${OPT_f} 2>/dev/null 1>&2
+	then
+		echo \
+"That form already exists; use the \"change\" command in the \"forms\" menu
+to change a form.  Try again."
+	else
+		break
+	fi
+done
+
+OPT_install=edit
+firsttime=yes
+while [ "edit" = "${OPT_install}" ]
+do
+
+
+	DEF_length=${OPT_length}
+	DEF_width=${OPT_width}
+	DEF_number_of_pages=${OPT_number_of_pages}
+	DEF_lpi=${OPT_lpi}
+	DEF_cpi=${OPT_cpi}
+	DEF_character_set_choice=${OPT_character_set_choice}
+	DEF_mandatory=${OPT_mandatory}
+	DEF_ribbon_color=${OPT_ribbon_color}
+	DEF_comment=${OPT_comment}
+	DEF_alignment_pattern=${OPT_alignment_pattern}
+	DEF_type=${OPT_type}
+	DEF_allow=${OPT_allow}
+	DEF_deny=${OPT_deny}
+	DEF_A=${OPT_A}
+	DEF_Q=${OPT_Q}
+	DEF_W=${OPT_W}
+
+	if [ "yes" != "${firsttime}" ]
+	then
+		echo "
+Edit the form definition:
+"
+	fi
+	firsttime=
+
+. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.38
+
+	echo
+
+	if [ "${OPT_deny}" = "none" ]
+	then
+		OPT_aldeny="allow:${OPT_allow}"
+	else
+		OPT_aldeny="deny:${OPT_deny}"
+	fi
+
+	if [ "skip" = "${OPT_install}" ]
+	then
+		exit 0
+	fi
+
+	if [ "install" = "${OPT_install}" ]
+	then
+		if [ "yes" = "${OPT_mandatory}" ]
+		then
+			mand=",mandatory"
+		else
+			mand=
+		fi
+		cat - ${OPT_alignment_pattern:-/dev/null} <<-EOF | /usr/lib/lpforms -f ${OPT_f} -u "${OPT_aldeny}" -
+page length: ${OPT_length}
+page width: ${OPT_width}
+number of pages: ${OPT_number_of_pages}
+line pitch: ${OPT_lpi}
+character pitch: ${OPT_cpi}
+character set choice: ${OPT_character_set_choice}${mand}
+ribbon color: ${OPT_ribbon_color}${OPT_comment:+
+comment:
+${OPT_comment}}${OPT_alignment_pattern:+
+alignment pattern: ${OPT_type}}
+		EOF
+
+		if [ $? -eq 0 ]
+		then
+			echo ${OPT_f} >${TMPDIR:-/tmp}/FRM.`basename \`tty\``
+			if [ -n "${OPT_A}" -a "none" != "${OPT_A}" ]
+			then
+				/usr/lib/lpforms -f ${OPT_f} -A "${OPT_A}" -Q ${OPT_Q} -W ${OPT_W}
+			fi
+			if [ $? -eq 0 ]
+			then
+				break
+			fi
+		fi
+		OPT_install="edit"
+	fi
+
+done

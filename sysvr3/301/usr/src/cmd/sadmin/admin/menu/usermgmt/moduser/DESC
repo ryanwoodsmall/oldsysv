@@ -1,0 +1,6 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/moduser/DESC	1.2"
+#menu# menu of commands to modify a user's login
+#head#			MODIFY USER'S LOGIN
+#help#
+#help#	This menu contains commands that modify the various aspects of a
+#help#	user's login.

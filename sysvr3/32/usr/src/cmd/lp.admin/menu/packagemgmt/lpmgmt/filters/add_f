@@ -1,0 +1,149 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/filters/add_f	1.5"
+## IDOC:   SCREEN 2.42: ADD FILTER
+#menu# Add a new filter
+
+##+++ (help _H118)
+#help#        You use the "add" command in the "filters" menu to add a new
+#help#        filter to the print service.  Filters are used:
+#help#
+#help#          * when a file needs to be printed on a  printer,  but  the
+#help#            printer  can't handle the file type; the filter converts
+#help#            the file into a type that the printer can handle.
+#help#
+#help#          * when a file is to be printed with special modes, such as
+#help#            portrait  or  landscape orientation, two-sided printing,
+#help#            draft or letter quality, etc.; only filters can  provide
+#help#            these special modes.
+#help#
+#help#          * when only a few pages of a file are to be printed;  only
+#help#            a filter can correctly break a file into pages.
+#help#
+#help#          * when more sophisticated print fault handling is  needed,
+#help#            such  as  automatic  resumption  of printing on the page
+#help#            where printing stopped; only a filter can know about ALL
+#help#            the peculiarities of a printer.
+#help#
+##--- (help _H118)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"When entering more than one answer or value,
+separate them with a space or comma.
+"
+##--- (line 3)
+
+OPT_f=
+OPT_input_types=any
+OPT_output_types=any
+OPT_printer_types=any
+OPT_printers=any
+OPT_type=slow
+OPT_command=
+OPT_options=
+
+OPT_install="edit"
+firsttime=yes
+while [ "edit" = "${OPT_install}" ]
+do
+
+	if [ "yes" != "${firsttime}" ]
+	then
+		echo "
+Edit the filter definition:
+"
+	fi
+	firsttime=
+
+DEF_f=${OPT_f}
+##+++ (2.42.4)
+chk_name \
+	"Filter name:${DEF_f:+ (default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name you would like to give to
+        the filter.  This name is only used to reference this filter
+        again later, when you want  to  change  its  definition,  or
+        examine  it,  or delete it.  You are free to choose any name
+        as long as it is 14 characters or  less  and  contains  only
+        letters, digits, and underscores.  \
+"
+OPT_f=${RESP}
+##--- (2.42.4)
+
+	if [ "${OPT_f}" = "any" -o "${OPT_f}" = "all" -o "${OPT_f}" = "none" ]
+	then
+		echo "You can not use \"any\", \"all\", or \"none\". Try again."
+		firsttime=yes
+		continue
+	fi
+
+	/usr/lib/lpfilter -f ${OPT_f} -l >/dev/null 2>&1 && {
+		echo \
+"That filter already exists; use the \"change\" command in the  \"filters\"
+menu to change a filter.  Try again."
+		firsttime=yes
+		continue
+	}
+
+	DEF_input_types=${OPT_input_types}
+	DEF_output_types=${OPT_output_types}
+	DEF_printer_types=${OPT_printer_types}
+	DEF_printers=${OPT_printers}
+	DEF_type=${OPT_type}
+	DEF_command=${OPT_command}
+	DEF_options=${OPT_options}
+
+. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.43
+
+	echo
+
+	if [ "skip" = "${OPT_install}" ]
+	then
+		exit 0
+	fi
+
+	if [ "install" = "${OPT_install}" ]
+	then
+		/usr/lib/lpfilter -f ${OPT_f} - <<-EOF
+			input types: ${OPT_input_types}
+			output types: ${OPT_output_types}
+			printer types: ${OPT_printer_types}
+			printers: ${OPT_printers}
+			filter type: ${OPT_type}
+			command: ${OPT_command}
+			options: ${OPT_options}
+			EOF
+
+		if [ $? -eq 0 ]
+		then
+			echo ${OPT_f} >${TMPDIR:-/tmp}/FLT.`basename \`tty\``
+			break
+		else
+			OPT_install="edit"
+		fi
+	fi
+done

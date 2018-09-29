@@ -1,0 +1,178 @@
+'\" t
+.TH MATHERR 3M
+.SH NAME
+matherr \- error-handling function
+.SH SYNOPSIS
+.PP
+.B #include <math.h>
+.PP
+.B int matherr (x)
+.br
+.B struct exception \(**x;
+.SH DESCRIPTION
+.I Matherr\^
+is invoked by functions in the Math Library when
+errors are detected.
+Users may define their own procedures for handling errors
+by including a function named
+.I matherr\^
+in their programs.
+.I Matherr\^
+must be of the form described above.
+A pointer to the exception structure
+.I x\^
+will be passed to the user-supplied
+.I matherr\^
+function when an error occurs.
+This structure,
+which is defined in the
+.I <math.h>\^
+header file, is as follows:
+.RS
+.PP
+.nf
+struct exception {
+	int type;
+	char \(**name;
+	double arg1, arg2, retval;
+};
+.fi
+.RE
+.PP
+The element
+.I type\^
+is an integer describing the type of error that has occurred, from the
+following list of constants (defined in the header file):
+.RS
+.PP
+.nf
+.ta \w'UNDERFLOW\ \ 'u
+DOMAIN	domain error
+SING	singularity
+OVERFLOW	overflow
+UNDERFLOW 	underflow
+TLOSS	total loss of significance
+PLOSS	partial loss of significance
+.DT
+.fi
+.RE
+.PP
+The element
+.I name\^
+points to a string containing
+the name of the function that had the error.
+The variables
+.I arg1\^
+and
+.I arg2\^
+are the arguments to the function that had the error.
+.I Retval\^
+is a double that is returned by the function
+having the error.
+If it supplies a return value, the user's
+.I matherr\^
+must return non-zero.
+If the default error value is to be returned, the user's
+.I matherr\^
+must return 0.
+.PP
+If
+.I matherr\^
+is not supplied by the user,
+the default error-handling procedures, described with
+the math functions involved, will be invoked upon error.
+These procedures are also summarized in the table below.
+In every case,
+.I errno\^
+is set to non-zero and the program continues.
+.SH EXAMPLE
+.nf
+.ta .5i 1.0i 1.5i
+matherr(x)
+register struct exception \(**x;
+{
+	switch (x\->type) {
+	case DOMAIN:
+	case SING: /\(** print message and abort \(**/
+		fprintf(stderr, "domain error in %s\en", x\->name);
+		abort( );
+	case OVERFLOW:
+		if (!strcmp("exp", x\->name)) {
+			/\(** if exp, print message, return the argument \(**/
+			fprintf(stderr, "exp of %f\en", x\->arg1);
+			x\->retval = x\->arg1;
+		} else if (!strcmp("sinh", x\->name)) {
+			/\(** if sinh, set errno, return 0 \(**/
+			errno = ERANGE;
+			x\->retval = 0;
+		} else
+			/\(** otherwise, return HUGE \(**/
+			x\->retval = HUGE;
+		break;
+	case UNDERFLOW:
+		return (0); /\(** execute default procedure \(**/
+	case TLOSS:
+	case PLOSS:
+		/\(** print message and return 0 \(**/
+		fprintf(stderr, "loss of significance in %s\en", x\->name);
+		x\->retval = 0;
+		break;
+	}
+	return (1);
+}
+.fi
+.PP
+.in 0
+.TS
+expand box ;
+cB s s s s s s
+c | cI s s s s s
+c | c | c | c | c | c | c
+l | c | c | c | c | c | c .
+DEFAULT ERROR HANDLING PROCEDURES
+_
+	Types of Errors
+_
+	DOMAIN	SING	OVERFLOW 	UNDERFLOW 	TLOSS 	PLOSS 
+_
+BESSEL:	\-	\-	H	0	\-	\(**
+y0, y1, yn	M, \-H 	\-	\-	\-	\-	\-
+ (neg. no.)
+_
+EXP:	\-	\-	H	0	\-
+_
+POW:	\-	\-	H	0	\-	\-
+(neg.)\(**\(**(non-	M, 0 	\-	\-	\-	\-	\-
+ int.), 0\(**\(**0
+_
+LOG:
+log(0):	\-	M, \-H 	\-	\-	\-	\-
+log(neg.):	 M, \-H	\-	\-	\-	\-	\-
+_
+SQRT:	M, 0	\-	\-	\-	\-	\-
+_
+GAMMA:	\-	M, H	\-	\-	\-	\-
+_
+HYPOT:	\-	\-	H	\-	\-	\-
+_
+SINH, COSH:	\-	\-	H	\-	\-	\-
+_
+SIN, COS:	\-	\-	\-	\-	M, 0	M, \(**
+_
+TAN:	\-	\-	H	\-	0	\(**
+_
+ACOS, ASIN:	M, 0	\-	\-	\-	\-	\-
+.TE
+.PP
+.TS
+box;
+cB s
+c l .
+ABBREVIATIONS
+ \(**	As much as possible of the value is returned.
+ M	Message is printed.
+ H	HUGE is returned.
+ \-H	\-HUGE is returned.
+ 0	0 is returned.
+.TE
+.\"	@(#)matherr.3m	5.2 of 5/18/82

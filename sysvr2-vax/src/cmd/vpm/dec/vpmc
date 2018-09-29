@@ -1,0 +1,258 @@
+#	vpmc 1.7 of 3/14/83
+#	@(#)vpmc	1.7
+#
+###########################
+# VPMC(1C) - VPM compiler #
+###########################
+#
+set -- `getopt mcxfrts:l:i:o: $*`
+if [ $? != 0 ]
+then
+	echo "vpmc: usage" >&2
+	exit 2
+fi
+echo $* >&2
+curdir=`pwd`
+ofile="a.out"
+intfile="kmc"
+protocol="-DBISYNC"
+pp="cc -E"
+atoetable=
+etoatable=
+for i in $*
+do
+	case $i in
+	-m)
+		pp="m4 -s"
+		shift
+		;;
+	-c)
+		copt=true
+		shift
+		;;
+	-x)
+		xopt=true
+		shift
+		;;
+	-r)	
+		ropt=true
+		shift
+		;;
+	-f)	# indicates RATFOR compilation
+		fopt=true
+		shift
+		;;
+	-t)
+		topt=true
+		shift
+		;;
+	-i)
+		case $2 in
+			bisync)
+				;;
+			hdlc)
+				protocol="-DHDLC"
+				;;
+			bisync/kms)
+				intfile="kms"
+				;;
+			hdlc/kms)
+				protocol="-DHDLC"
+				intfile="kms"
+				;;
+			*)
+				echo "illegal interpreter version specified" >&2
+
+				exit 1
+				;;
+		esac
+		shift
+		shift
+		;;
+	-l)
+		lfile=$2
+		case $2 in
+			-[mcxfrslio]) echo "option requires an argument -- l"
+				      exit 1
+				      ;;
+		esac
+		shift
+		shift
+		;;
+	-o)
+		ofile=$2
+		case $2 in
+			-[mcxfrslio]) echo "option requires an argument -- o"
+				      exit 1
+				      ;;
+		esac
+		shift
+		shift
+		;;
+	-s)
+		sfile=$2
+		case $2 in
+			-[mcxfrslio]) echo "option requires an argument -- s"
+				      exit 1
+				      ;;
+		esac
+		shift
+		shift
+		;;
+	--)
+		shift
+		break
+		;;
+	esac
+done
+#
+if
+	test -z "$1"
+then
+	echo "vpmc: no command-line source file" >&2
+	exit 1
+fi
+if
+	test ! -r "$1"
+then	
+	echo "vpmc: cannot read source file $1" >&2
+	exit 1
+fi
+infile=$1
+#
+if
+	test ! -w /tmp
+then	# compiler needs /tmp files for communication between passes
+	echo "vpmc: cannot create /tmp files" >&2
+	exit 1
+fi
+#
+v=/usr/lib/vpm
+#
+###########
+# compile #
+###########
+#
+tafile=/tmp/sas_ta$$; > $tafile;
+tbfile=/tmp/sas_tb$$; > $tbfile;
+tcfile=/tmp/sas_tc$$; > $tcfile;
+tdfile=/tmp/sas_td$$; > $tdfile;
+tefile=/tmp/sas_te$$; > $tefile;
+trap "
+	rm $tafile $tbfile $tcfile $tdfile $tefile
+	trap 0
+	exit
+" 0 1 2 3 15
+if
+	test -z "$fopt" -a -n "$ropt"
+then	# need to specify RATFOR compilation to use the "-r" flag 
+	echo "vpmc: RATFOR compilation not specified" >&2  
+	exit 1
+fi
+#
+###################
+# f and r options #
+###################
+#
+if 
+	test -n "$fopt" -a -n "$ropt"
+then
+	$pp $infile | $v/vratfor
+else
+	if	 test -n "$fopt"
+	then	$pp $infile | $v/vratfor | $v/pl | $v/pss0 $tdfile > $tafile
+	else	$pp $infile | $v/mpl | $v/pss0 $tdfile > $tafile
+	fi
+	cat $tdfile $tafile > $tefile
+	cc -E  $tefile > $tbfile
+	if
+		[ $protocol = "-DBISYNC" ]
+	then
+		if
+			fgrep ATOE $tbfile 1> /dev/null
+		then
+			if
+				test -n "$topt"
+			then
+				atoetable="-DATOETBL=\"${curdir}/as_to_eb.h\""
+			else
+				atoetable="-DATOETBL=\"atoetbl.h\""
+			fi
+		fi
+		if
+			fgrep ETOA $tbfile 1> /dev/null
+		then
+			if
+				test -n "$topt"
+			then
+				etoatable="-DETOATBL=\"${curdir}/eb_to_as.h\""
+			else
+				etoatable="-DETOATBL=\"etoatbl.h\""
+			fi
+		fi
+	fi
+	#
+	############
+	# s option #
+	############
+	#
+	if
+		test -n "$sfile"
+	then
+		cp $tbfile $sfile
+	fi
+	#
+	############
+	# l option #
+	############
+	#
+	if
+		test -n "$lfile"
+	then
+		$v/plistg < $tbfile > $lfile
+	fi
+	#
+	####################################
+	# assemble if necessary - c option #
+	####################################
+	#
+	if
+		test -z "$copt"
+	then
+		>$ofile
+		if
+			test $? -ne 0
+		then
+			echo '(cannot create object file)' >&2
+			exit 1
+		fi
+	#
+		$v/pss12 < $tbfile > $tcfile
+		if
+			test $? -ne 0
+		then
+			exit 1
+		fi
+		cc -E -I. -DCFILE=\"$tcfile\" $protocol $atoetable $etoatable \
+		$v/$intfile/main.s | kasb -o $ofile
+	fi
+	#
+	############
+	# x option #
+	############
+	#
+	if
+		test  -n "$xopt"
+	then
+		if
+			test ! -w `pwd`
+		then 
+			echo "vpmc: cannot save intermediate files in this directory" >&2
+			exit 1
+		fi
+		cp $tafile sas_tempa
+		cp $tbfile sas_tempb
+		cp $tcfile sas_tempc
+		cp $tdfile sas_tempd
+	fi
+fi

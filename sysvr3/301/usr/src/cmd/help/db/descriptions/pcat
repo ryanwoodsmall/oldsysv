@@ -1,0 +1,17 @@
+
+\Spcat\S:  Description
+
+Syntax Summary:  pcat file_name ...
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Spcat\S prints the files that you compressed with pack(1).  Use \Spcat\S
+     to read one or more packed files without returning the files to their
+     original form.  \Spcat\S prints each file in its original form without
+     disturbing the compressed form in <file_name.z>.  \Spcat\S prints a files
+     whether you refer to it as <file_name.z> or <file_name>.  \Spcat\S lists
+     the names of files that it cannot print.  \Spcat\S might not print files
+     because they are not the product of pack(1), the file names have too many
+     characters, or it cannot open them.  See also:  pack(1), unpack(1) for
+     commands that might be used with \Spcat\S.

@@ -1,0 +1,24 @@
+
+\Scomm\S:  Examples
+
+        comm report.1 report.2
+
+    Compares "report.1" and "report.2" and lists the lines only in "report.1"
+    in column 1, those only in "report.2" in column 2.  The lines that the
+    files have in common are in column 3.
+
+    ---------------------------------------------------------------------------
+
+        comm -12 - report.2
+
+    Compares "report.2" to standard input and prints only the lines that are
+    identical.
+
+
+
+    ---------------------------------------------------------------------------
+
+        comm -23 report.1 report.2 >change
+
+    Compares "report.1" and "report.2" and sends the lines that are only in
+    "report.1" to the file called "change".

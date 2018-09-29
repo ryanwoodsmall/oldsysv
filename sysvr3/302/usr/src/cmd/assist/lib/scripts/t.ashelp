@@ -1,0 +1,207 @@
+520 clearall #ident	"@(#)script.files:t.ashelp	1.3"
+8 3 25 ASSIST HELP
+705 6 7 50
+ASSIST provides three types of pop-up help:
+
+     1. Help with ASSIST commands
+     2. Brief overview of the current form.
+     3. Information on the current item.
+
+This section will show you each type of pop-up help
+and will teach you the keys you use to get help.
+706 
+520 botarrow
+520 clearall
+520 newtop
+390 f
+520 dumb-top
+393 
+30 
+2 3 13
+18 
+3 >Batch, Background, and Execution Control
+31 
+15 
+2 14 34
+19 
+520 box9-45
+705 3002 3002 39
+If you don't remember an ASSIST command,
+you can get pop-up help on commands
+706 
+390 F
+8 1001 3002 with Function Key 8
+392 
+8 1001 3002 with ^A
+393 
+256 1 272
+2 3006 3002
+520 instructhere
+3 Show the help for ASSIST commands. 
+25 
+600 200
+26 200
+2 2000 2000
+15 
+390 F
+254 Function Key 8
+520 ansloopa
+2 3 1
+18 
+520 fkeyhelp
+392 
+254 control-a
+520 ansloopa
+2 3 1
+18 
+520 ckeyhelp
+393 
+15 
+600 272
+26 1
+520 box9-45
+520 boxarrow
+2 3000 66 
+34 alt
+700 u4 l3 a1
+35 alt
+705 3002 3002 32
+The ... show commands that do not
+apply in the current context.
+706 
+520 boxarrow
+520 box9-45
+705 3002 3002 37
+For example, the command ^C is used
+to quote characters on command forms. 
+It is not used on menus.
+706 
+520 boxarrow
+2 0 0
+12 
+520 newtop
+390 f
+520 dumb-top
+393 
+30 
+8 3 13 >Batch, Background, and Execution Control
+31 
+520 box9-45
+705 3002 3002 33
+Notice that ASSIST shows you the
+keys you can use to get the pop-up
+list of commands.
+706 
+34 alt
+2 2999 70
+700 u11 a1
+520 boxarrow
+2 0 0
+12 
+520 newtop
+390 f
+520 dumb-top
+393 
+2 3 13
+18 
+30 
+3 >Batch, Background, and Execution Control
+31 
+15 
+2 14 34
+19 
+520 box9-45
+705 3002 3002 40
+You can get information about the current
+menu or form 
+706 
+390 F
+8 1000 1000 with Function Key 7
+392 
+8 1000 1000 with ^O
+393 
+256 15 271
+2 3006 3002
+520 instructhere
+3 Show the help for the current menu.
+25 
+2 2000 2000
+390 F
+254 Function Key 7
+392 
+254 control-o
+393 
+520 ansloopa
+520 tophelp
+15 
+520 box9-45
+520 boxarrow
+2 0 0
+12 
+520 newtop
+390 f
+520 dumb-top
+393 
+30 
+2 3 13
+18 
+3 >Batch, Background, and Execution Control
+31 
+2 14 34
+19 
+520 box9-45
+705 3002 3002 39
+The current item on a menu or form
+is the item the cursor is at. For
+example, the current item here is
+Batch, Background, and Execution Control
+706 
+520 boxarrow
+705 3002 3002 40
+You can get information about the current
+item  
+706 
+390 F
+8 1000 1000 with Function Key 6
+392 
+8 1000 1000 with ^Y
+393 
+256 25 270
+2 3006 3002
+520 instructhere
+3 Show the help for the current item.
+25 
+2 2000 2000
+390 F
+254 Function Key 6
+392 
+254 control-y
+393 
+520 ansloopa
+520 batchhelp
+15 
+520 box9-45
+520 boxarrow
+2 0 0
+12 
+30 
+8 4 15 SUMMARY OF COMMANDS FOR POP-UP HELP
+31 
+390 F
+705 9 6 37
+    ASSIST Commands ... Function Key 8
+
+    Menu/Form Help .... Function Key 7
+
+    Item Help ......... Function Key 6
+706 
+392 
+705 9 6 62
+    ASSIST Commands ... ^A (control-a; remember A for Assist)
+
+    Menu/Form Help .... ^O (control-o; remember O for Overview)
+
+    Item Help ......... ^Y (control-y; remember Y for WHY?)
+706 
+393 
+15 

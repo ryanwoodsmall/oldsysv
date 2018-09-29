@@ -1,0 +1,25 @@
+.TH TAN 3F
+.SH NAME
+tan, dtan \- \s-1FORTRAN\s+1 tangent intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = tan(r1)"
+.P
+.B "dp2 = dtan(dp1)"
+.B "dp2 = tan(dp1)"
+.SH DESCRIPTION
+.I Tan\^
+returns the real tangent of its real argument.
+.I Dtan\^
+returns the double-precision tangent of its double-precision argument.
+The generic
+.I tan\^
+function becomes
+.I dtan\^
+as required with a double-precision argument.
+.SH SEE ALSO
+trig(3M).
+.\"	%W% of %G%

@@ -1,0 +1,121 @@
+'\" t
+.TH CRONTAB 1
+.SH NAME
+crontab - user crontab file
+.SH SYNOPSIS
+.B crontab
+[file] 
+.br
+.B crontab
+\fB-r\fR
+.br
+.B crontab
+\fB-l\fR
+.SH DESCRIPTION
+.I Crontab
+copies the specified file,
+or standard input if no file is specified,
+into a directory that holds all users' crontabs.
+The \-r option removes a user's crontab from the crontab directory.
+\f2Crontab\fP \-l will list the crontab file for the
+invoking user.
+.PP
+A user is permitted to use
+.I crontab
+if their name appears in the file
+.B /usr/lib/cron/cron.allow.
+If that file does not exist,
+the file
+.B /usr/lib/cron/cron.deny
+is checked to determine if the user
+should be denied access to
+.I crontab.
+If neither file exists, only root is allowed to
+submit a job.
+If either file is \f3at.deny\fR, global usage is permitted.
+The allow/deny files consist of one user name
+per line.
+.PP
+A crontab file
+consists of lines of six fields each.
+The fields are separated by spaces or tabs.
+The first five are integer patterns that
+specify the following:
+.sp
+.br
+	minute (0\-59),
+.br
+	hour (0\-23),
+.br
+	day of the month (1\-31),
+.br
+	month of the year (1\-12),
+.br
+	day of the week (0\-6 with 0=Sunday).
+.sp
+Each of these patterns may
+be either an asterisk  (meaning all legal values),
+or a list of elements separated by commas.
+An element is either a number, or
+two numbers separated by a minus sign
+(meaning an inclusive range).
+Note that the specification of days
+may be made by two fields
+(day of the month and day of the week).
+If both are specified as a list of elements, 
+both are adhered to.
+For example, 0 0 1,15 \(** 1 would run a command on the
+first and fifteenth of each month, as well as on every Monday.
+To specify days by only one field,
+the other field should be set to \(**
+(for example, 0 0 \(** \(** 1 would run a command only on Mondays).
+.PP
+The sixth field of a line in a crontab
+file is a string that is executed by the shell 
+at the specified times.
+A percent character
+in this field (unless escaped by 
+\fB\e\fP)
+is translated to a new-line
+character.
+Only the first line (up to a % or end of line)
+of the command field is executed by the shell.
+The other lines are made available to the
+command as standard input.
+.PP
+The shell is invoked from your 
+.B \s-1$HOME\s+1 
+directory with an 
+.BR arg0 " of " sh.
+Users who desire to have their \fI.profile\fP executed must
+explicitly do so in the crontab file.
+.I Cron
+supplies a default environment for every shell, defining
+.BR \s-1HOME\s+1 ", " \s-1LOGNAME\s+1 ", " \s-1SHELL\s+1(=/bin/sh) ,
+and 
+.BR PATH(=:/bin:/usr/bin:/usr/lbin) .
+.PP
+.IR NOTE :
+Users should remember to redirect the standard output 
+and standard error of their commands!
+If this is not done, any generated output or errors
+will be mailed to the user.
+.SH FILES
+.TS
+center;
+l l.
+/usr/lib/cron 	main cron directory
+.br
+/usr/spool/cron/crontabs 	spool area
+.br
+/usr/lib/cron/log 	accounting information
+.br
+/usr/lib/cron/cron.allow 	list of allowed users
+.br
+/usr/lib/cron/cron.deny 	list of denied users
+.TE
+.SH "SEE ALSO"
+sh(1).
+.br
+cron(1M) in the \f2\s-1UNIX\s+1 System V Administrator Reference Manual\fR.
+.\"	%W% of %G%

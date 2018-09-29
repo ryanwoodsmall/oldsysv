@@ -1,0 +1,523 @@
+#ident	"@(#)curses:screen/makefile.bsd	1.9.1.2"
+#
+# cursor package maker
+# V7 and Berkeley UNIX makefile
+#
+#
+
+# Sources
+SLIB=	libcurses.a
+BIN=	/usr/ucb
+CTAGS=	ctags
+BUILT=	capnames.c term.h keycaps curses.h keyname.c initkeypad.c termcap.c tiget.c 
+CC=	cc
+LINT=	lint
+LPASS1=	/usr/lib/lint/lint1
+AR=	ar
+RM=	rm
+LN=	ln
+CPPDEFS= -I. -DNOBLIT
+DCPPDEFS= -DDEBUG $(CPPDEFS)
+DFLAGS=	-g $(DCPPDEFS)
+TFLAGS=	-O $(DCPPDEFS)
+CFLAGS=	-O $(CPPDEFS)
+SUBOBJS=
+TMP=/tmp
+LDFLAGS=-n
+LIBS= 
+.SUFFIXES: .p .d .t
+
+HEADERS=curses.h unctrl.h curses.ext curshdr.h term.h uparm.h
+CFILES=	box.c clear.c initscr.c endwin.c mvprintw.c mvscanw.c mvwin.c \
+	overlay.c overwrite.c copywin.c printw.c vsprintf.c doprnt.c \
+	scanw.c doscan.c vsscanf.c refresh.c \
+	touchwin.c erase.c clrtobot.c clrtoeol.c \
+	longname.c delwin.c insertln.c deleteln.c scroll.c getstr.c \
+	getch.c addstr.c addch.c move.c curses.c unctrl.c standout.c \
+	wechochar.c pechochar.c ll_echo.c pnoutref.c wnoutref.c doupdate.c \
+	delay.c tstp.c insch.c delch.c \
+	pos.c beep.c ll_trm.c flushinp.c restart.c \
+	ll_init.c insdelchar.c ll_refresh.c ll_sub.c insdelline.c \
+	ll_newtty.c cio.c trm.c mvcur.c chkinput.c \
+	setupterm.c capnames.c \
+	baudrate.c cbreak.c halfdelay.c clearok.c crmode.c \
+	curs_set.c def_prog.c \
+	delay_out.c draino.c ec_quit.c echo.c erasechar.c fixdelay.c \
+	fixterm.c flash.c garbaged.c getsyx.c gettmode.c has_ic.c \
+	has_il.c idlok.c initkeypad.c intrflush.c keyname.c \
+	keypad.c killchar.c \
+	leaveok.c ll_scrdown.c m_addch.c m_addstr.c m_clear.c m_erase.c \
+	m_initscr.c m_move.c m_newterm.c m_refresh.c makenew.c memSset.c \
+	meta.c mvwprintw.c mvwscanw.c napms.c newpad.c newterm.c nl.c \
+	nocbreak.c nocrmode.c nodelay.c noecho.c nonl.c noraw.c \
+	notimeout.c prefresh.c reset_sh.c resetterm.c resetty.c \
+	ripoffline.c saveterm.c savetty.c scr_dump.c scr_init.c scr_rest.c \
+	scrollok.c set_term.c setsyx.c setterm.c slk_clear.c slk_init.c \
+	slk_label.c slk_nout.c slk_ref.c slk_rest.c slk_set.c slk_touch.c \
+	vwprintw.c vwscanw.c subpad.c subwin.c touchline.c trace.c \
+	typeahead.c ungetch.c vidputs.c wattroff.c wattron.c wattrset.c \
+	wprintw.c wscanw.c \
+	tgoto.c tputs.c tparm.c putp.c termcap.c tiget.c \
+	tic_main.c tic_hash.c tic_captab.c tic_scan.c tic_error.c \
+	tic_parse.c tic_read.c V2.makenew.c V2._sprintw.c V2.__sscans.c \
+	set_TERM.c del_TERM.c
+
+TICHDRS= compiler.h object.h
+TICSRC= tic_main.c tic_hash.c tic_captab.c tic_scan.c tic_error.c \
+	tic_parse.c tic_read.c capnames.c
+
+TICOBJS= tic_main.o tic_hash.o tic_captab.o tic_scan.o tic_error.o \
+	tic_parse.o tic_read.o capnames.o vsprintf.o
+
+CHDRS= print.h otermcap.h
+BSRC= print.c iexpand.c
+BOBJ= print.o iexpand.o
+CSRC= captoinfo.c otermcap.c $(BSRC)
+COBJ= captoinfo.o otermcap.o $(BOBJ)
+ISRC= infocmp.c cexpand.c infotocap.c $(BSRC)
+IOBJ= infocmp.o cexpand.o infotocap.o $(BOBJ)
+
+# Regular, optimized objects
+OBJS=	box.o clear.o initscr.o endwin.o mvprintw.o mvscanw.o mvwin.o \
+	overlay.o overwrite.o copywin.o printw.o vsprintf.o doprnt.o \
+	scanw.o vsscanf.o doscan.o refresh.o \
+	touchwin.o erase.o clrtobot.o clrtoeol.o \
+	longname.o delwin.o insertln.o deleteln.o scroll.o getstr.o \
+	getch.o addstr.o addch.o move.o curses.o unctrl.o standout.o \
+	wechochar.o pechochar.o ll_echo.o pnoutref.o wnoutref.o doupdate.o \
+	delay.o tstp.o insch.o delch.o \
+	pos.o beep.o ll_trm.o flushinp.o restart.o \
+	ll_init.o insdelchar.o ll_refresh.o ll_sub.o insdelline.o \
+	ll_newtty.o cio.o trm.o mvcur.o chkinput.o \
+	setupterm.o capnames.o \
+	tgoto.o tputs.o tparm.o putp.o termcap.o tiget.o \
+	baudrate.o cbreak.o halfdelay.o clearok.o crmode.o \
+	curs_set.o def_prog.o \
+	delay_out.o draino.o ec_quit.o echo.o erasechar.o fixdelay.o \
+	fixterm.o flash.o garbaged.o getsyx.o gettmode.o has_ic.o \
+	has_il.o idlok.o initkeypad.o intrflush.o keyname.o \
+	keypad.o killchar.o \
+	leaveok.o ll_scrdown.o m_addch.o m_addstr.o m_clear.o m_erase.o \
+	m_initscr.o m_move.o m_newterm.o m_refresh.o makenew.o memSset.o \
+	meta.o mvwprintw.o mvwscanw.o napms.o newpad.o newterm.o nl.o \
+	nocbreak.o nocrmode.o nodelay.o noecho.o nonl.o noraw.o \
+	notimeout.o prefresh.o raw.o reset_sh.o resetterm.o resetty.o \
+	ripoffline.o saveterm.o savetty.o scr_dump.o scr_init.o \
+	scr_rest.o scrollok.o set_term.o setsyx.o setterm.o slk_clear.o \
+	slk_init.o slk_label.o slk_nout.o slk_ref.o slk_rest.o slk_set.o \
+	slk_touch.o vwprintw.o vwscanw.o subpad.o subwin.o touchline.o \
+	trace.o typeahead.o ungetch.o vidputs.o wattroff.o wattron.o \
+	wattrset.o wprintw.o wscanw.o V2.makenew.o V2._sprintw.o \
+	V2.__sscans.o \
+	set_TERM.o del_TERM.o
+
+# Profiled, optimized objects
+POBJS=	box.p clear.p initscr.p endwin.p mvprintw.p mvscanw.p mvwin.p \
+	overlay.p overwrite.p copywin.p printw.p vsprintf.p doprnt.p \
+	scanw.p vsscanf.p doscan.p refresh.p \
+	touchwin.p erase.p clrtobot.p clrtoeol.p \
+	longname.p delwin.p insertln.p deleteln.p scroll.p getstr.p \
+	getch.p addstr.p addch.p move.p curses.p unctrl.p standout.p \
+	wechochar.p pechochar.p ll_echo.p pnoutref.p wnoutref.p doupdate.p \
+	delay.p tstp.p insch.p delch.p \
+	pos.p beep.p ll_trm.p flushinp.p restart.p \
+	ll_init.p insdelchar.p ll_refresh.p ll_sub.p insdelline.p \
+	ll_newtty.p cio.p trm.p mvcur.p chkinput.p \
+	setupterm.p capnames.p \
+	tgoto.p tputs.p tparm.p putp.p termcap.p tiget.p \
+ 	baudrate.p cbreak.p halfdelay.p clearok.p crmode.p \
+	curs_set.p def_prog.p \
+	delay_out.p draino.p ec_quit.p echo.p erasechar.p fixdelay.p \
+	fixterm.p flash.p garbaged.p getsyx.p gettmode.p has_ic.p \
+	has_il.p idlok.p initkeypad.p intrflush.p keyname.p \
+	keypad.p killchar.p \
+	leaveok.p ll_scrdown.p m_addch.p m_addstr.p m_clear.p m_erase.p \
+	m_initscr.p m_move.p m_newterm.p m_refresh.p makenew.p memSset.p \
+	meta.p mvwprintw.p mvwscanw.p napms.p newpad.p newterm.p nl.p \
+	nocbreak.p nocrmode.p nodelay.p noecho.p nonl.p noraw.p \
+	notimeout.p prefresh.p raw.p reset_sh.p resetterm.p resetty.p \
+	ripoffline.p saveterm.p savetty.p scr_dump.p scr_init.p \
+	scr_rest.p scrollok.p set_term.p setsyx.p setterm.p slk_clear.p \
+	slk_init.p slk_label.p slk_nout.p slk_ref.p slk_rest.p slk_set.p \
+	slk_touch.p vwprintw.p vwscanw.p subpad.p subwin.p touchline.p \
+	trace.p typeahead.p ungetch.p vidputs.p wattroff.p wattron.p \
+	wattrset.p wprintw.p wscanw.p V2.makenew.p V2._sprintw.p \
+	V2.__sscans.p \
+	set_TERM.p del_TERM.p
+
+# Debugging objects
+DOBJS=	box.d clear.d initscr.d endwin.d mvprintw.d mvscanw.d mvwin.d \
+	overlay.d overwrite.d copywin.d printw.d vsprintf.d doprnt.d \
+	scanw.d vsscanf.d doscan.d refresh.d \
+	touchwin.d erase.d clrtobot.d clrtoeol.d \
+	longname.d delwin.d insertln.d deleteln.d scroll.d getstr.d \
+	getch.d addstr.d addch.d move.d curses.d unctrl.d standout.d \
+	wechochar.d pechochar.d ll_echo.d pnoutref.d wnoutref.d doupdate.d \
+	delay.d tstp.d insch.d delch.d \
+	pos.d beep.d ll_trm.d flushinp.d restart.d \
+	ll_init.d insdelchar.d ll_refresh.d ll_sub.d insdelline.d \
+	ll_newtty.d cio.d trm.d mvcur.d chkinput.d \
+	setupterm.d capnames.d \
+	tgoto.d tputs.d tparm.d putp.d termcap.d tiget.d \
+	baudrate.d cbreak.d halfdelay.d clearok.d crmode.d \
+	curs_set.d def_prog.d \
+	delay_out.d draino.d ec_quit.d echo.d erasechar.d fixdelay.d \
+	fixterm.d flash.d garbaged.d getsyx.d gettmode.d has_ic.d \
+	has_il.d idlok.d initkeypad.d intrflush.d keyname.d \
+	keypad.d killchar.d \
+	leaveok.d ll_scrdown.d m_addch.d m_addstr.d m_clear.d m_erase.d \
+	m_initscr.d m_move.d m_newterm.d m_refresh.d makenew.d memSset.d \
+	meta.d mvwprintw.d mvwscanw.d napms.d newpad.d newterm.d nl.d \
+	nocbreak.d nocrmode.d nodelay.d noecho.d nonl.d noraw.d \
+	notimeout.d prefresh.d raw.d reset_sh.d resetterm.d resetty.d \
+	ripoffline.d saveterm.d savetty.d scr_dump.d scr_init.d \
+	scr_rest.d scrollok.d set_term.d setsyx.d setterm.d slk_clear.d \
+	slk_init.d slk_label.d slk_nout.d slk_ref.d slk_rest.d slk_set.d \
+	slk_touch.d vwprintw.d vwscanw.d subpad.d subwin.d touchline.d \
+	trace.d typeahead.d ungetch.d vidputs.d wattroff.d wattron.d \
+	wattrset.d wprintw.d wscanw.d V2.makenew.d V2._sprintw.d \
+	V2.__sscans.d \
+	set_TERM.d del_TERM.d
+
+# Trace objects - partial debugging
+TOBJS=	box.t clear.t initscr.t endwin.t mvprintw.t mvscanw.t mvwin.t \
+	overlay.t overwrite.t copywin.t printw.t vsprintf.t doprnt.t \
+	scanw.t vsscanf.t doscan.t refresh.t \
+	touchwin.t erase.t clrtobot.t clrtoeol.t \
+	longname.t delwin.t insertln.t deleteln.t scroll.t getstr.t \
+	getch.t addstr.t addch.t move.t curses.t unctrl.t standout.t \
+	wechochar.t pechochar.t ll_echo.t pnoutref.t wnoutref.t doupdate.t \
+	delay.t tstp.t insch.t delch.t \
+	pos.t beep.t ll_trm.t flushinp.t restart.t \
+	ll_init.t insdelchar.t ll_refresh.t ll_sub.t insdelline.t \
+	ll_newtty.t cio.t trm.t mvcur.t chkinput.t \
+	setupterm.t capnames.t \
+	tgoto.t tputs.t tparm.t putp.t termcap.t tiget.t \
+	baudrate.t cbreak.t halfdelay.t clearok.t crmode.t \
+	curs_set.t def_prog.t \
+	delay_out.t draino.t ec_quit.t echo.t erasechar.t fixdelay.t \
+	fixterm.t flash.t garbaged.t getsyx.t gettmode.t has_ic.t \
+	has_il.t idlok.t initkeypad.t intrflush.t keyname.t \
+	keypad.t killchar.t \
+	leaveok.t ll_scrdown.t m_addch.t m_addstr.t m_clear.t m_erase.t \
+	m_initscr.t m_move.t m_newterm.t m_refresh.t makenew.t memSset.t \
+	meta.t mvwprintw.t mvwscanw.t napms.t newpad.t newterm.t nl.t \
+	nocbreak.t nocrmode.t nodelay.t noecho.t nonl.t noraw.t \
+	notimeout.t prefresh.t raw.t reset_sh.t resetterm.t resetty.t \
+	ripoffline.t saveterm.t savetty.t scr_dump.t scr_init.t \
+	scr_rest.t scrollok.t set_term.t setsyx.t setterm.t slk_clear.t \
+	slk_init.t slk_label.t slk_nout.t slk_ref.t slk_rest.t slk_set.t \
+	slk_touch.t vwprintw.t vwscanw.t subpad.t subwin.t touchline.t \
+	trace.t typeahead.t ungetch.t vidputs.t wattroff.t wattron.t \
+	wattrset.t wprintw.t wscanw.t V2.makenew.t V2._sprintw.t \
+	V2.__sscans.t \
+	set_TERM.t del_TERM.t
+
+.c.o:
+	sed '/^#[ 	]*ident/d' $*.c > $(TMP)/$*.c
+	${CC} ${CFLAGS} -c $(TMP)/$*.c
+	rm -f $(TMP)/$*.c
+.c.p:
+	-mv $*.o $*.O
+	sed '/^#[ 	]*ident/d' $*.c > $(TMP)/$*.c
+	${CC} ${CFLAGS} -pg -c $(TMP)/$*.c
+	rm -f $(TMP)/$*.c
+	mv $*.o $*.p
+	-mv $*.O $*.o
+.c.d:
+	-mv $*.o $*.O
+	sed '/^#[ 	]*ident/d' $*.c > $(TMP)/$*.c
+	${CC} ${DFLAGS} -c $(TMP)/$*.c
+	rm -f $(TMP)/$*.c
+	mv $*.o $*.d
+	-mv $*.O $*.o
+.c.t:
+	-mv $*.o $*.O
+	sed '/^#[ 	]*ident/d' $*.c > $(TMP)/$*.c
+	${CC} ${TFLAGS} -c $(TMP)/$*.c
+	rm -f $(TMP)/$*.c
+	mv $*.o $*.t
+	-mv $*.O $*.o
+
+all: $(SLIB) llib-lcurses.ln tools
+
+tools: $(SLIB) tic captoinfo infocmp show tput testterminfo otic
+
+# Regular, optimized objects
+$(OBJS): ${HEADERS}
+
+# Profiled, optimized objects
+$(POBJS): ${HEADERS}
+
+# Debugging objects
+$(DOBJS): ${HEADERS}
+
+# Tracing objects
+#$(TOBJS): ${HEADERS}
+
+dumpti: $(SLIB) setupterm.c
+	@echo
+	@echo Building dumpti
+	@echo
+	sed '/^#[ 	]*ident/d' setupterm.c > $(TMP)/dumpti.c
+	$(CC) $(CFLAGS) -DDUMPTI $(TMP)/dumpti.c $(SLIB) -o dumpti
+	rm -f $(TMP)/dumpti.c
+	@echo
+	@echo dumpti has been built
+	@echo
+
+$(SLIB): ${OBJS}
+	@echo
+	@echo Building libcurses archive
+	@echo
+	${AR} rv $(SLIB) $?
+	ranlib $(SLIB)
+	@echo
+	@echo libcurses has been archived
+	@echo
+
+p:	p$(SLIB)
+p$(SLIB): ${POBJS}
+	rm -f x.c
+	${AR} rv p$(SLIB) $?
+	ranlib p$(SLIB)
+
+d:	d$(SLIB)
+d$(SLIB): ${DOBJS}
+	rm -f x.c
+	${AR} rv d$(SLIB) $?
+	ranlib d$(SLIB)
+
+t:	t$(SLIB)
+t$(SLIB): ${TOBJS}
+	rm -f x.c
+	${AR} rv t$(SLIB) $?
+	ranlib t$(SLIB)
+
+captoinfo: $(COBJ) $(SLIB)
+	$(CC) $(COBJ) $(SLIB) -o captoinfo
+
+infocmp: $(IOBJ) $(SLIB)
+	$(CC) $(IOBJ) $(SLIB) -o infocmp
+
+captoinfo.o:	captoinfo.c curses.h otermcap.h print.h
+otermcap.o:	otermcap.c otermcap.h
+print.o:	print.c curses.h print.h
+iexpand.o:	iexpand.c print.h
+cexpand.o:	cexpand.c print.h
+infotocap.o:	infotocap.c curses.h
+infocmp.o:	infocmp.c curses.h term.h print.h
+
+tic_captab.o:	tic_captab.c compiler.h
+tic_error.o:	tic_error.c compiler.h
+tic_hash.o:	tic_hash.c compiler.h
+tic_main.o:	tic_main.c compiler.h
+tic_parse.o:	tic_parse.c compiler.h object.h
+tic_read.o:	tic_read.c object.h
+tic_scan.o:	tic_scan.c compiler.h
+
+setupterm.o: term.h
+term.h capnames.c: caps maketerm.ed
+	@echo
+	@echo Building term.h
+	@echo If this fails see GLORP in the makefile
+	@echo
+	rm -f term.h capnames.c
+	ed - < maketerm.ed
+	chmod a-w term.h capnames.c
+	@echo
+	@echo "term.h has been built"
+	@echo
+
+keycaps: caps
+	@echo
+	@echo Building keycaps
+	@echo
+	grep "KEY_" caps > keycaps
+	@echo 
+	@echo "keycaps has been built"
+	@echo
+
+curses.h: keycaps curses.form curses.ed
+	@echo 
+	@echo Building ./curses.h
+	@echo 
+	rm -f curses.h
+	ed - < curses.ed
+	chmod a-w curses.h
+	@echo 
+	@echo "curses.h has been built"
+	@echo 
+
+keyname.c: keycaps keyname.ed
+	@echo
+	@echo Building keyname.c
+	@echo
+	rm -f keyname.c
+	ed - < keyname.ed
+	chmod a-w keyname.c
+	@echo
+	@echo "keyname.c has been built"
+	@echo
+
+initkeypad.c: keycaps initkeypad.ed
+	@echo
+	@echo Building initkeypad.c
+	@echo
+	rm -f initkeypad.c
+	ed - < initkeypad.ed
+	chmod a-w initkeypad.c
+	@echo
+	@echo "initkeypad.c has been built"
+	@echo
+
+termcap.c:	termcap.form termcap.ed caps
+	@echo 
+	@echo Building termcap.c
+	@echo
+	rm -f termcap.c
+	ed - < termcap.ed
+	rm -f bool num str
+	chmod a-w termcap.c
+	@echo 
+	@echo "termcap.c has been built"
+	@echo
+
+tiget.c:	tiget.ed caps
+	@echo
+	@echo Building tiget.c
+	@echo
+	rm -f tiget.c
+	cat /dev/null > tiget.c
+	ed - < tiget.ed
+	chmod a-w tiget.c
+	@echo
+	@echo "tiget.c has been built"
+	@echo
+
+tic: ${TICOBJS}
+	@echo
+	@echo Building the tic compiler
+	@echo
+	cc -o tic ${TICOBJS}
+	@echo
+	@echo the tic compiler has been built
+	@echo
+
+otic: otic.o capnames.o unctrl.o
+	cc -o otic otic.o capnames.o unctrl.o
+
+linttic: ${TICSRC}
+	${LINT} ${CPPDEFS} ${TICSRC}
+
+show:	$(SLIB) show.o
+	${CC} ${LDFLAGS} ${CFLAGS} -o show show.o $(SLIB)
+pshow:	p$(SLIB) show.p
+	${CC} ${LDFLAGS} -pg ${CFLAGS} -o pshow show.p p$(SLIB)
+dshow:	d$(SLIB) show.d
+	${CC} ${LDFLAGS} ${DFLAGS} -o dshow show.d d$(SLIB)
+tshow:	t$(SLIB) show.t
+	${CC} ${LDFLAGS} ${TFLAGS} -o tshow show.t t$(SLIB)
+
+tput:	$(SLIB) tput.o
+	${CC} ${LDFLAGS} ${CFLAGS} -o tput tput.o $(SLIB)
+
+testterminfo:	$(SLIB) testterminfo.o
+	${CC} ${LDFLAGS} ${CFLAGS} -o testterminfo testterminfo.o $(SLIB)
+
+new:	clean tags $(SLIB)
+
+allnew:	clean tags $(SLIB) d$(SLIB) p$(SLIB) t$(SLIB)
+
+allfour: $(SLIB) d$(SLIB) p$(SLIB) t$(SLIB)
+
+clean:
+	rm -f ${OBJS} $(SLIB)
+	rm -f ${DOBJS} d$(SLIB)
+	rm -f ${POBJS} p$(SLIB)
+	rm -f ${TOBJS} t$(SLIB)
+	rm -f $(SLIB) ?$(SLIB) *.o trace a.out errs core
+	rm -f show scr page one two cat tic otic infocmp
+	rm -f $(BUILT)
+
+rmhdrs: 
+	@echo
+	@echo The build of libcurses generates programs and header files.
+	@echo We remove any old versions of these files before we begin.
+	@echo
+	rm -f $(BUILT)
+
+tags:
+	${CTAGS} ${CFILES} $(HEADERS)
+
+lint:
+	-ln llib-lcurses llib.c
+	@echo ${LINT} ${CPPDEFS} > lint.out
+	-${LINT} -hxb ${CPPDEFS} ${CFILES} llib.c >> lint.out
+	@echo ${LINT} ${DCPPDEFS} >> lint.out
+	-${LINT} -hxb ${DCPPDEFS} ${CFILES} llib.c >> lint.out
+	rm -f llib.c
+
+lpr:
+	-pr `ls ${HEADERS} | sort` | lpr
+	-pr `ls ${CFILES} | sort` | lpr
+	-lpq
+
+TPFILES= makefile makefile.bsd makefile.sysv \
+	${HEADERS} ${CFILES} \
+	${TICHDRS} ${TICSRC} \
+	${CHDRS} ${BSRC} ${CSRC} ${ISRC} \
+	curses.ed curses.form ns_curses.h \
+	termcap.ed termcap.form maketerm.ex tiget.ed \
+	tags llib-lcurses TODO caps getopt.c initkeypad.ed \
+	keyname.ed otic.c \
+	show.c testterminfo.c tput.c
+
+tp:
+	tp crm0 `ls ${TPFILES} | uniq`
+
+tar:
+	tar crvf curses.tar `ls ${TPFILES} | uniq`
+
+cpio:
+	ls ${TPFILES} | uniq | cpio -o > curses.cpio
+
+cpio-c:
+	ls ${TPFILES} | uniq | cpio -oc > curses.cpio
+
+cpiotape:
+	ls ${TPFILES} | uniq | cpio -oBc > /dev/rmt8
+
+llib-lcurses.ln: llib-lcurses
+	-(/lib/cpp -C -I. -Dlint llib-lcurses | ${LPASS1} > llib-lcurses.ln ) 2>&1 | grep -v warning
+
+install:	all
+	cp $(SLIB) ${DESTDIR}/usr/lib/libcurses.a
+	ranlib ${DESTDIR}/usr/lib/libcurses.a
+	cp curses.h term.h unctrl.h ${DESTDIR}/usr/include
+	rm -f ${DESTDIR}/usr/lib/libtermcap.a
+	ln ${DESTDIR}/usr/lib/libcurses.a ${DESTDIR}/usr/lib/libtermcap.a
+	cp llib-lcurses llib-lcurses.ln ${DESTDIR}/usr/lib/lint
+	cp tic captoinfo infocmp tput testterminfo $(BIN)
+
+cktmp:
+	@echo 
+	@echo libcurses.a is built using $(TMP) for work space.
+	@echo Verifying the existence of $(TMP).
+	@echo
+	@if [ -d $(TMP) ] ;\
+		then \
+			echo "	$(TMP) exists";\
+			echo " ";\
+		else  \
+			echo "	$(TMP) not found.";\
+			echo " ";\
+			echo "	change the following line of the makefile and re-run";\
+			echo -n "		";\
+			grep "TMP=" makefile|grep -v makefile;\
+			echo " ";\
+			exit 1;\
+	fi;
+
+rmident:
+	sh rmident.sh

@@ -1,0 +1,66 @@
+
+
+
+     LLLLEEEENNNN((((3333FFFF))))                   UUUUNNNNIIIIXXXX SSSSyyyysssstttteeeemmmm VVVV                   LLLLEEEENNNN((((3333FFFF))))
+
+
+
+     NNNNAAAAMMMMEEEE
+          len - return length of Fortran string
+
+     SSSSYYYYNNNNOOOOPPPPSSSSIIIISSSS
+          cccchhhhaaaarrrraaaacccctttteeeerrrr****NNNN cccchhhh
+          iiiinnnntttteeeeggggeeeerrrr iiii
+
+          iiii ==== lllleeeennnn((((cccchhhh))))
+
+     DDDDEEEESSSSCCCCRRRRIIIIPPPPTTTTIIIIOOOONNNN
+          _L_e_n returns the length of string _c_h.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Page 1                                         (printed 10/11/83)
+
+
+

@@ -1,0 +1,28 @@
+#ident	"@(#)sadmin3b2:etc/rc.d/sysetup	1.4"
+#   This file contains system setup requirements for the system.
+
+#   First, the ps_data file is always removed so that the ps command
+#   will be forced to read the /unix file, since it may have recently
+#   been created.
+
+if test -f /etc/ps_data
+then
+	rm /etc/ps_data
+fi
+
+/bin/ps > /dev/null 2>&1
+
+#   if the prtconf command exists, then, the system configuration
+#   is printed
+
+if test -f /etc/prtconf
+then
+	/etc/prtconf
+fi
+
+#  If there are trademake files, print them.
+
+if test -d /etc/tm
+then
+	cat /etc/tm/* 2> /dev/null
+fi

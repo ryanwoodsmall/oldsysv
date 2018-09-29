@@ -1,0 +1,21 @@
+
+\Stime\S:  Description
+
+Syntax Summary:  time command
+
+         where:  command  is a UNIX system command, a shell program,
+                          or an executable file and any arguments
+                          it might take.
+
+Description:
+     \Stime\S tells you how long a command takes to execute. \Stime\S
+     prints the real time which is the number of seconds that elapsed between
+     the time you typed the command and when you got your shell prompt back.
+     It prints the user time which is the time spent executing the command,
+     and system time which is the time that it took to execute system code.
+     User time and system time do not add up to real time, because real time
+     includes printing the output.  The output of the \Stime\S command is sent
+     to standard error which is not always the same as standard output.  If you
+     think of several different ways to do something using UNIX commands, you
+     can use \Stime\S to identify the most efficient one.  See also: timex(1)
+     for a command whose function is similar to \Stime\S.

@@ -1,0 +1,381 @@
+#ident	"@(#)setup.files:messages	1.9"
+X 3 ASSIST_SUMMARY
+
+
+                         BASIC ASSIST COMMANDS
+
+ ------------------------------------------------------------------------------
+    IF you want to:                            THEN use:
+ ------------------------------------------------------------------------------
+
+  See a help list of all ASSIST commands      ^A or f8  (see NOTE)
+  Select a menu item                          ^G or f1
+  Enter the ASSIST pop-up menu                ^F or f5
+  Exit ASSIST                                 ^D
+
+ ------------------------------------------------------------------------------
+                      NOTE: ^A  Stands for control-a.  Depress the control key
+                                and strike lower-case a
+                            f8  Stands for Function Key 8.
+
+ 
+
+
+
+X 4 ASSIST_WALK_INTRO
+
+
+
+
+
+                     INTRODUCTION TO ASSIST WALKTHRU
+
+        
+        ASSIST provides an introductory tutorial designed to walk you 
+        through the basic concepts and commands that ASSIST uses.  The 
+        tutorial takes about ten minutes, and many ASSIST users find it 
+        helpful to take the tutorial before they begin using ASSIST.  
+
+
+
+
+
+
+
+
+
+X 5 EXIT_ASSIST_WALK
+
+
+
+        You have exited the Introduction to ASSIST walkthru.
+
+        You can repeat the ASSIST walkthru at any time by:
+
+            - Selecting the "ASSIST Walkthru" item from
+              ASSIST's pop-up menu, 
+            - Or by typing the command "assist -s"
+
+
+
+
+
+
+
+
+
+
+X 6 HOW_TO_ACCESS_ASSIST_WALK
+
+
+
+       If you want, you can use the ASSIST walkthru at any time by:
+
+           - Selecting the "ASSIST Walkthru" item from
+             ASSIST's pop-up menu, 
+
+           - Or by typing the command "assist -s"
+
+
+
+
+
+
+
+
+
+
+
+
+
+X 8 IDENTIFY_TERM
+
+
+
+
+
+                     IDENTIFYING YOUR TERMINAL
+
+        
+        Your UNIX system contains files describing certain terminals.  
+        This part will help you find out what terminal names your 
+        system currently has information about.  
+
+
+
+
+
+
+
+
+
+
+
+X 10 CONTROL_CHARS
+
+                     CONTROL CHARACTERS
+
+
+        ASSIST uses control characters to name some of
+        the ASSIST commands. 
+
+
+
+
+X 11 CTRL_C_NOTATION
+
+                    CONTROL CHARACTER NOTATION
+
+
+        ASSIST uses the caret (^) notation to display control characters. 
+        For example, ^G means control-g.  
+
+
+
+
+X 12 REV_1_CTRL_C
+
+                   A REVIEW OF CONTROL CHARACTERS
+
+     1. Control characters are special characters that are used
+        by computers.  
+
+        Locate the CONTROL key on your terminal. 
+
+        NOTE: The CONTROL key is often located at the left part
+              of your keyboard near the shift key.  It is
+              usually labeled CTRL.  (Some keyboards have two
+              control keys, one on each side; you can use either.)
+
+
+
+     2. The CONTROL key is like a shift key.  Nothing happens when
+        you strike the CONTROL key, or hold it down by itself.
+
+        Push the CONTROL key down several times.  
+        Notice that nothing happens.
+
+
+X 13 REV_2_CTRL_C
+
+     3. You enter a control character by pressing the CONTROL
+        key down and striking another key while you hold the
+        CONTROL key down. 
+
+        For example, you enter the control-d character by
+        holding down the CONTROL key and striking the 
+        letter d 
+
+
+X 20 INTRO_TO_TERM_CHECK
+
+        
+        
+        For ASSIST to work correctly it must know the 
+        capabilities of your terminal. 
+        
+        To check your terminal capabilities, I am going to
+        show you some tests. Type one of these characters
+        after each test:
+
+        Type y if you see the pattern I describe.
+
+        Type n if you see something wrong with the pattern.
+        
+        Type r if you would like to repeat the pattern.
+
+
+
+
+
+
+Z
+
+
+
+
+                     A NOTE ABOUT TERMINAL CHECKING
+
+
+
+        It is unlikely but possible that your screen may continue to 
+        look wrong even after these test patterns are removed.  
+
+        If you do have problems and all else fails, log off; turn off your
+        terminal; and start again.  If you continue to have problems, consult
+        Appendix C of the ASSIST User's Manual for further information.
+
+
+
+
+
+
+
+
+
+Z
+X 30 BASIC_CHECK
+
+
+
+
+        
+        The first test pattern will show you several changing screens 
+        of characters.  At the end, the screen should just show the 
+        word "assist" vertically.
+
+        The pattern should look like this:
+     
+
+                           a
+                           s
+                           s
+                           i
+                           s
+                           t
+
+
+        You should not see extra characters (such as a % sign or
+        letters), or missing characters.
+
+
+X 41 STAND_OUT_CHECK
+           
+                  HIGHLIGHTING CHECK
+
+
+
+        The test pattern that checks for highlighting has three lines.
+        If your terminal has highlighting that ASSIST can use, the middle
+        line of the test pattern will look different from either the
+        first or the third line.
+
+
+
+
+
+
+
+
+
+
+
+X 46 GRAPH_CHAR_CHECK
+
+                   GRAPHICAL CHARACTER CHECK
+
+        
+        The test pattern that checks for graphical characters 
+        is a rectangle.  
+
+        
+        If your terminal has a usable graphical character set, the 
+        rectangle will be drawn with sharp continuous lines and 
+        corners.  There must be no breaks in the rectangle.  
+        
+        
+        If your terminal does not have a graphical character set, you 
+        will see a rectangle composed of letters.  
+
+
+
+
+
+
+
+
+X 50 FKEY_CHECK
+
+
+                    CHECKING FUNCTION KEYS
+
+        
+        Many terminals have special keys called function keys.  These 
+        keys are often located at the upper part of your keyboard.  
+        They are frequently labeled f1 (for Function Key 1), f2 (for 
+        Function Key 2), and so on.  
+        
+        
+
+
+
+
+
+
+
+
+
+X 51 BAD_FKEYS
+
+    Note that you can use ASSIST without function keys since you can enter
+    all ASSIST commands with their control-character names.
+
+    If you have a terminal with programmable function keys, then those keys
+    should be set to send their default character sequences.  This is required
+    before ASSIST can use the terminal's function keys.
+
+    Appendix C of the ASSIST User's Manual contains more information on
+    setting up terminals so that ASSIST can use the function keys.
+
+
+X 60 END_TERM_CHECK
+
+
+        This ends the checking of your terminal.
+
+
+        You will be asked to check your terminal again only if 
+          you use ASSIST with a new terminal type.
+  
+        If you want to recheck your terminal, use the command
+          assist -s
+
+
+
+
+
+
+
+
+
+X 100 TERM_IDENT_PROBLEM
+
+
+                     TERMINAL IDENTIFICATION PROBLEM
+        
+        
+         There appears to be a problem with identifying your terminal. 
+         One possible reason is that your machine does not have a file
+         describing your terminal.  Contact the administrator of your
+         system to help you resolve this problem.
+
+
+
+X 101 TERM_SPEC_PROBLEM
+  Programs that require a visual display terminal need specific information
+  about the terminal before the program can interact appropriately with the
+  terminal.  There appears to be some type of problem with the information
+  provided for your terminal.  This means that ASSIST may appear incorrectly
+  on your terminal screen, and that other visual programs, such as the "vi"
+  text editor, may also not display material correctly. 
+
+  One possible reason is that you are using an incorrect name for your
+  terminal.  Try using a different name to identify your terminal. 
+
+  A second possible reason is that there is a problem with the file on your
+  system that identifies the character sequences used by your terminal.  In
+  this case, please contact the administrator of your system to help you
+  resolve this problem. 
+
+  A third possible reason is that you have your terminal's tabs set to
+  something other than every eight spaces.  Try entering the command "tabs".
+  Then try the command "assist" again. 
+X 120 ASSIST_USAGE
+
+ASSIST USAGE:
+       assist ..................... Enter ASSIST at top-level menu
+       assist [command_name] ...... Enter command-form for command_name
+       assist -c [command_name] ... Use current directory for data file
+       assist -s .................. Invoke ASSIST's setup activities (terminal
+                                    checking, introductory information)
+

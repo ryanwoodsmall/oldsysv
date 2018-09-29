@@ -1,0 +1,17 @@
+
+\S crash: editor crash:  system crash \S
+
+A system crash occurs when a UNIX system unexpectedly malfunctions, and all
+processes stop.  This crash causes all users to be logged off the system,
+and it causes your terminal to ignore commands you type in.  An editor
+crash occurs when an "editor"\S*\S (e.g., ed(1), vi(1), or ex(1))
+malfunctions and doesn't respond to editor commands you type.  The UNIX
+system tries to save a file you were editing with ed(1) if there is an
+editor or system crash.  It does this by saving the contents of the "editor
+buffer"\S*\S in a file named "ed.hup" in the directory that you were
+working in.  When you log in again, you can replace the file you were
+working on with the "ed.hup" file and recover the changes you made.  If you
+use vi(1) or ex(1), you can also use these commands with the "r" option to
+recover from the crash.
+
+\S*\S defined in the \Sglossary\S

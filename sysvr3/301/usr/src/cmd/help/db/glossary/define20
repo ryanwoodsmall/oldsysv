@@ -1,0 +1,18 @@
+
+\S subdirectory :  parent directory \S
+
+A directory is  subordinate to the other directories in  a pathname
+if the other directories are closer to the "root directory"\S*\S. 
+These subordinate directories are called subdirectories. In
+addition, a directory that immediately precedes a subordinate
+directory in a pathname is the parent directory of that directory.
+In the example,
+
+	/system1/sandy/project
+
+
+"sandy" and "project" are subordinate to "system1", and "project" is
+also subordinate to "sandy". "system1" is the parent directory of
+"sandy", and "sandy" is the parent of "project".
+
+\S*\S defined in the \Sglossary\S

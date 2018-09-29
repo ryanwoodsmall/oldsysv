@@ -1,0 +1,11 @@
+
+\S release:  version:  operating system release:  operating system version \S
+
+Operating system release and operating system version provide a way of
+naming the stages in the growth of the UNIX operating system.  The name
+UNIX System V Release 2.1 means that it is release 2, version 1 of the UNIX
+operating system number five.  The system changes with changes to the
+"kernel"\S*\S.  The release changes when the shell changes.  The version
+changes when ever there are enhancements made to the commands.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,223 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/restore	2.15"
+#menu# restore files from "backup" & "store" media to built-in disk
+#help# 
+#help#	Restore copies files from media made by "backup" and "store"
+#help#	back onto the file systems.  You can restore individual files,
+#help#	directories of files, or the entire contents of the media.
+#help#	You can restore from both "incremental" and "complete" media.
+#help#	You can also list the names of files stored on the media.
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2 15
+trap '	trap "" 1 2
+	rm -f /tmp/$$restoreall' 0
+
+rnamewarn='WARNING:
+	Be very careful when you rename a file.  Files incorrectly named
+	by typing errors are difficult to find and repair.
+	Remember that only the first 14 characters of each part of the
+	file name (i.e. the characters between the "/"s) are significant.
+You will be asked to rename each file in turn.  An empty response skips that
+file.  An answer of "." (period) restores the file with its original name.
+If you do not specify a full pathname, the file will be restored under
+/tmp or /usr/tmp (a message will tell you where to find it).'
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+cpiocmd=cpio
+cpioargs=
+
+ncpiocmd=${cpiocmd}	# for backward compatibility
+ncpioargs=${cpioargs}
+
+ddrive=`selectdevice -c $$ /dev/rSA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+if [ -d /usr/tmp ]
+then
+	SA_TMP=/usr/tmp/SA$$
+else
+	SA_TMP=/tmp/SA$$
+fi
+mkdir $SA_TMP
+cd $SA_TMP
+
+ERR=0
+while true
+do
+	type=`checklist ${flags} -fe -H'
+	Option 1 restores only the individual files selected.
+	Option 2 restores all files AND directories below the directory
+	that you specify.
+	Option 3 restores every file from the media.
+	Option 4 list the file names from the media without restoring them.
+	REMEMBER- If you do not rename a file, "restore" will write over any
+	copies of files that are presently on the file systems.  Also, you MUST
+	use a full path name when renaming files.' \
+	'Select:
+	1. restore single files
+	2. restore directories of files
+	3. restore all files
+	4. list all the files
+Enter a number [?, q]:' 1 2 3 4`
+	rflag=
+	l=`disklabel -n "${ndrive}" $$ ${ddrive}`
+	if  dd if=${ddrive} of=/tmp/$$restoreall count=2 2>/dev/null
+	then
+		if  file /tmp/$$restoreall  |
+			grep 'ASCII cpio archive' >/dev/null
+		then
+			case "${type}" in
+			1 )	# single file
+				sfile=`checkre ${flags} -fe -l ' ' -H '
+	You may specify more than one file name (for example,
+	/dir/file1 /dir/file2 ). You may also specify the file 
+	names as cpio(1) patterns (for example, /dir/file? or /dir/f* ).
+
+	If you do not find files that you expect to find, use Option 4 to
+	list out all the file names on the media.  Entering file names
+	exactly as they exist on the list will always work.' \
+	'Enter full path name of file(s) to be restored [?, q]:
+	' \
+	'.' ' ' \
+	'^[^ ;	][^ ;	]*$' 'Blanks or tabs not permitted in the file name.' \
+	'^/' 'A full path name must begin with "/".' \
+	'[^/]$' 'No trailing "/" in the file name.' \
+	'/[^/]\{1,14\}$' 'No more than 14 characters in a file name.'  |
+				sed "/./s;.*;'&';"  |
+				tr '\012' ' '`
+				cpio -ict < "${ddrive}" > /tmp/restore$$ 2>/dev/null
+				for n in `echo ${sfile} | tr -d "\'"`
+				do
+				if [ `grep -c "${n}\$" /tmp/restore$$` -eq 0 ]
+				then
+					echo "\n\tFile does not exist on medium."
+					ERR=1
+				fi
+				done
+				rm -f /tmp/restore$$
+				if [ $ERR -eq 0 ]
+				then
+				if  checkyn ${flags} -f 'Do you want to rename each file as it is copied in?'
+				then
+					echo "${rnamewarn}"
+					rflag=-r
+				else
+					rflag=-v
+				fi
+
+				#  Magic here!  We must keep the shell from
+				#  interpreting meta-characters that may be in
+				#  ${sfile}.
+				eval ${cpiocmd} ${cpioargs} \
+					-icdu ${rflag} -I${ddrive} "${sfile}" 2>/dev/null
+				if [ $? -ne 0 ]
+				then ERR=2
+				fi
+				fi
+				;;
+			2 )	# a directory
+				sfile=`checkre ${flags} -fe -l ' ' \
+	'Enter full path name of directory(s) to be restored [q]:
+	' \
+	'.' ' ' \
+	'^[^ ;	][^ ;	]*$' 'Blanks or tabs not permitted in the file name.' \
+	'^/' 'A full path name must begin with "/".' \
+	'[^/]$' 'No trailing "/" in the file name.' \
+	'/[^/]\{1,14\}$' 'No more than 14 characters in a file name.'  |
+				sed "/./s;.*;'&/*';"  |
+				tr '\012' ' '`
+				LIST=`cpio -ict 2>/dev/null < "${ddrive}" | eval grep -c "${sfile}/"`
+				if [ $LIST -gt 1 ]
+				then
+				if  checkyn ${flags} -f 'Do you want to rename each file as it is copied in?'
+				then
+					echo "${rnamewarn}"
+					rflag=-r
+				else
+					rflag=-v
+				fi
+
+				#  Magic here!  We must keep the shell from
+				#  interpreting meta-characters that may be in
+				#  ${sfile}.
+				eval ${cpiocmd} ${cpioargs} \
+					-icdu ${rflag} -I${ddrive} "${sfile}" 2>/dev/null
+				if [ $? -ne 0 ]
+					then ERR=2
+				fi
+				else
+					echo "\n\tDirectory does not exist on medium,"
+				 	echo "\tor it is empty (no files to restore)."
+					ERR=1
+				fi
+				;;
+			3 )	# entire contents
+				if  checkyn ${flags} -f 'Do you want to rename the files as they are copied in?'
+				then
+					echo "${rnamewarn}"
+					rflag=-r
+				else
+					rflag=-V
+				fi
+				${cpiocmd} ${cpioargs} \
+					-icdu ${rflag} -I${ddrive}
+				if [ $? -ne 0 ]
+				then
+					ERR=2
+				fi
+				;;
+			4 )	# list contents
+				if  checkyn -f 'Do you want to see the file status information, too?'
+				then
+					rflag=-v
+					echo '
+ mode  owner   size   date of last access	  filename
+------ ------  -----  --------------------  --------------------'
+				fi
+				${cpiocmd} ${cpioargs} \
+					-ict ${rflag} -I${ddrive}
+				if [ $? -ne 0 ]
+					then ERR=2
+				fi
+				continue
+			esac
+			cd /
+			if [ $ERR -eq 0 ]
+			then
+				rmdir $SA_TMP 2> /dev/null
+				if [ -d $SA_TMP ]
+				then
+					echo "Files stored in $SA_TMP if full pathname not specified."
+				fi
+			echo 'Restoration complete.'
+			else
+				echo '\n\tWARNING: Restoration incomplete!
+	See the Owner/Operator manual for help.'
+				if [ $ERR -eq 2 ]
+				then
+					echo "\n\tFailed while trying to recover file.  "
+					echo "\tRecovery may be possible using cpio(1) with the -k option."
+					echo "\tSee the User's Reference Manual for further information."
+				fi
+				exit 1
+			fi
+			echo "You may now remove the medium from the ${ndrive}."
+			continue
+		fi
+		echo 'This medium is not a "backup" medium or it is 
+not the first part in a series.  Try again.'
+	else
+		echo "Unable to read medium in the ${ndrive}.  Reinsert and try again."
+	fi
+done

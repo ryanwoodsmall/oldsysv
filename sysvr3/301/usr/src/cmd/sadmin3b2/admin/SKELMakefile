@@ -1,0 +1,50 @@
+#ident	"@(#)sadmin3b2:admin/SKELMakefile	1.2"
+#	skeleton Makefile for admin
+
+ADMINHOME = $(ROOT)/usr/admin
+
+CMDS = --EXECUTABLES--
+
+DIRECTORIES = --DIRECTORIES--
+
+PARTS = $(CMDS) --FILES--
+
+ALL: \
+		$(PARTS)
+
+install: \
+		$(PARTS) remove
+	: 'Must be run by root or the owner of /usr (sys)'
+	-umask 022;  mkdir $(ADMINHOME);  cd $(ADMINHOME); \
+	  mkdir $(DIRECTORIES)
+	umask 022;  ls $(PARTS)  |  cpio -pd $(ADMINHOME)
+
+remove:
+	-cd $(ADMINHOME);  rm -f $(PARTS)
+	-cd $(ADMINHOME);  \
+	  rmdir `echo $(DIRECTORIES)  |  tr ' ' '\012'  |  sort -r`
+	-rmdir $(ADMINHOME)
+
+clean clobber:
+
+partslist:
+	@echo Makefile SKELMakefile $(PARTS)  |  tr ' ' '\012'  |  sort
+
+product:
+	@echo $(PARTS)  |  tr ' ' '\012'  | \
+		sed 's;^;$(ADMINHOME)/;'
+
+productdir:
+	@echo $(ADMINHOME)
+	@echo $(DIRECTORIES)  |  tr ' ' '\012'  | \
+		sed 's;^;$(ADMINHOME)/;'
+
+srcaudit:
+	@(	find * -print;  \
+		ls -d $(DIRECTORIES) $(PARTS) SKELMakefile Makefile  \
+	)  |  sort  |  uniq -u  |  sed 's/$$/	unexpected/'
+
+newmakefile:	../../sadmin/tools/genmakefile SKELMakefile
+	cp Makefile OMakefile
+	../../sadmin/tools/genmakefile SKELMakefile *Makefile  >Makefile
+	rm -f OMakefile

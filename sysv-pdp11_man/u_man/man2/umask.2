@@ -1,0 +1,22 @@
+.TH UMASK 2
+.SH NAME
+umask \- set and get file creation mask
+.SH SYNOPSIS
+.PP
+.B int umask (cmask)
+.br
+.B int cmask;
+.SH DESCRIPTION
+.I Umask\^
+sets the 
+process's file mode creation mask to
+.I cmask\^
+and returns the previous value of the mask.
+Only the low-order 9 bits of
+.I cmask\^
+and the file mode creation mask are used.
+.SH "RETURN VALUE"
+The previous value of the file mode creation mask is returned.
+.SH SEE ALSO
+mkdir(1), sh(1), chmod(2), creat(2), mknod(2), open(2).
+.\"	@(#)umask.2	5.2 of 5/18/82

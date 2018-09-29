@@ -1,0 +1,163 @@
+.tr ~
+.TH CRASH 8 "3B20S only"
+.SH NAME
+crash \- what to do when the system crashes
+.SH DESCRIPTION
+This entry gives at least a few clues about how to proceed if the
+system crashes.
+It can't pretend to be complete.
+.PP
+.IR "How to bring it back up" .
+If the
+.SM UNIX
+System voluntarily crashed,
+it will take a memory dump to disk and attempt
+to reboot itself.
+If the system appears to be ``hung'' for
+unknown reasons, a memory dump should be taken.
+See
+.IR 3B20ops (8)
+for this procedure.
+.PP
+After a crash, it is imperative that the file
+systems be checked for consistency.
+Perform an
+.IR fsck (1M)
+on all file systems that were in use at the time
+of the crash.
+If any serious file system problems are found, they should be repaired.
+When you are satisfied with the health of your disks,
+check and set the date if necessary,
+then come up multi-user.
+.PP
+.IR "If it will not boot" .
+There are many reasons why the
+.SM UNIX
+System might not boot, including:
+hardware problems, an improperly configured system,
+a corrupted boot section on disk, or a corrupted root file system.
+Most boot failures will cause a processor recovery message
+.SM (PRM)
+to be displayed on the system console.
+See
+.IR prm (8)
+for a list of failure messages.
+If
+.B /dev/console
+or
+.B /bin/sh
+cannot be accessed, the system will just
+appear to ``hang'' without any failure message.
+If \fIlboot\fP
+cannot be loaded into memory by \fIMicroboot\fP (indicated by
+\s-1PRM\s+1's starting with
+.BR F0 ),
+suspect hardware problems or a corrupted boot section on disk.
+If the
+.SM UNIX
+System runs and then ``hangs'' or ``panics'',
+suspect an improperly configured system or a
+corrupted root file system.
+As a general strategy, try the following in order:
+boot an older system version and/or minimally configured,
+boot from the back-up root file system,
+boot from another disk pack or the secondary disk drive,
+have the hardware checked out.
+.PP
+.IR "Repairing disks" .
+The first rule to keep in mind is that an addled disk
+should be treated gently;
+it shouldn't be mounted unless necessary,
+and if it is very valuable yet
+in quite bad shape, perhaps it should be copied before
+trying surgery on it.
+This is an area where experience and informed courage count for much.
+.PP
+.IR Fsck (1M)
+is adept at diagnosing and repairing file system problems.
+It first identifies all of the files
+that contain bad (out of range) blocks or
+blocks that appear in more than one file.
+Any such files are then identified by
+name and
+.I fsck\^
+requests permission to remove them from the
+file system.
+Files with bad blocks should be removed.
+In the case of duplicate blocks, all of the
+files except the most recently modified
+should be removed. The contents of the survivor
+should be checked after the file system is repaired
+to ensure that it contains the proper data.
+(Note that running
+.I fsck\^
+with the
+.B \-n
+option will cause it to report all problems
+without attempting any repair.)
+.PP
+.I Fsck\^
+will also report on incorrect link counts and
+will request permission to adjust any that are
+erroneous. In addition, it will reconnect any
+files or directories that are allocated but have
+no file system references to a ``lost+found'' directory.
+Finally, if the free list is bad (out of range,
+missing, or duplicate blocks)
+.I fsck\^
+will, with the operators concurrence, construct a new one.
+.PP
+.IR "Why did it crash" ?
+All messages printed by the
+.SM UNIX
+System are saved in a circular buffer contained in memory
+starting at the symbol
+.BR putbuf .
+These messages can be looked at by examining the memory
+dump using 
+.IR crash (1M).
+.PP
+.SM UNIX
+prints a message of the form ``panic:\ .\|.\|.'' when it voluntarily crashes.
+Here is an incomplete list of such messages.
+.TP 5
+cannot mount root
+An I/O error occurred while trying to mount the root file system.
+Most likely caused by an improperly configured system.
+.TP
+cannot allocate system buffers
+Too many ``buffers'' have been configured into the system.
+.TP
+cannot allocate character buffers
+Too many ``clists'' have been configured into the system.
+.TP
+i/o error in swap
+A hardware error occurred while swapping a process.
+.TP
+trap
+An unexpected hardware trap has occurred.
+This message is accompanied by
+the physical page addresses of the \s-1UAREA\s+1 of the last running process,
+the interrupt stack pointer, the program counter,
+the processor status word, and a short message
+describing the type of trap:
+.RS +5
+.IP ""
+Protection violation \- an attempt to access memory in a way
+that is not permitted, e.g. writing a read-only segment.
+.IP ""
+Segmentation violation \- an attempt to access memory not
+within the kernel's address space.
+.IP ""
+Addressing Alignment Error \- an attempt to access a data
+object at an improper boundary, e.g. a word at an odd address.
+.RE 1
+.PP
+Other ``panics'' are possible but in almost all cases indicate
+hardware problems or that the
+.SM UNIX
+System has been tampered with.
+.SH SEE ALSO
+crash(1M), fsck(1M), 3B20ops(8), 3B20boot(8), prm(8).
+.tr ~~
+.\"	@(#)crash.u3b.8	5.2 of 5/18/82

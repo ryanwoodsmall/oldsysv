@@ -1,0 +1,16 @@
+.TH ABORT 3F
+.SH NAME
+abort \- terminate \s-1FORTRAN\s+1 program
+.SH SYNOPSIS
+.B "call abort ( )"
+.SH DESCRIPTION
+.I Abort\^
+terminates the program which calls it, closing all open files truncated
+to the current position of the file pointer.
+.SH DIAGNOSTICS
+When invoked,
+.I abort\^
+prints ``\s-1FORTRAN\s+1 abort routine called'' on the standard error output.
+.SH SEE ALSO
+abort(3C).
+.\"	%W% of %G%

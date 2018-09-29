@@ -1,0 +1,42 @@
+/dev/null
+1422 64
+d--775 0 3
+	setup		---555 2 2	setup.core3
+	bin	d--775 2 2
+		cat		---555 2 2	../bin/cat
+		chgrp		---555 2 2	../bin/chgrp
+		chmod		---555 2 2	../bin/chmod
+		chown		---555 2 2	../bin/chown
+		date		---555 2 2	../bin/date
+		diff		---555 2 2	../bin/diff
+		ed		---555 2 2	../bin/ed
+		file		---555 2 2	../bin/file
+		grep		---555 2 2	../bin/grep
+		login		-u-555 0 2	../bin/login
+		mail		--g555 2 6	../bin/mail
+		ps		--g555 2 3	../bin/ps
+		pwd		---555 2 2	../bin/pwd
+		sed		---555 2 2	../bin/sed
+		setpgrp		---555 0 3	../bin/setpgrp
+		touch		---555 2 2	../bin/touch
+		uname		---555 2 2	../bin/uname
+		wc		---555 2 2	../bin/wc
+		who		---555 2 2	../bin/who
+		write		---555 2 2	../bin/write
+	$
+	etc	d--775 0 3
+		drvinstall	---755 2 2	../etc/drvinstall
+		errdump		---755 2 2	../etc/errdump
+		getmajor	---555 2 2	../etc/getmajor
+		hdeadd		---555 2 2	../etc/hdeadd
+		hdefix		---555 2 2	../etc/hdefix
+		hdelogger	---555 2 2	../etc/hdelogger
+		magic		---444 2 2	../etc/magic
+		swap		---555 2 2	../etc/swap
+	$
+	usr	d--775 0 0
+		src	d--775 2 2
+		$
+	$
+$
+:#ident	"@(#)core:proto.core3	1.11"

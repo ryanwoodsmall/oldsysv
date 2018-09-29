@@ -1,0 +1,240 @@
+520 clearall
+705 0 0 68
+                  INTRODUCTION TO INPUT REDIRECTION
+
+	In this part of the UNIX System walkthru, you will learn 
+about redirecting standard input from a file.  You should be familiar
+with the material on standard input and output, as well as the
+section on output redirection, before running this section.
+
+
+	As with the rest of the UNIX System walkthru, the top left 
+portion of your screen will simulate a UNIX System session.  You 
+will be entering commands there, and the output of the commands 
+will also appear there.  The top right side of the screen will 
+be used to present diagrams to help explain concepts.  You will 
+see explanatory text on the bottom half of your screen, and on 
+occasion, you will see the instruction to type a command.  
+706 
+520 arrow
+520 clearall
+2 13 0
+34 alt
+700 r79
+35 alt
+2 15 0
+19 
+2 0 0
+18 
+520 clearbot
+520 cleartop
+30 
+8 14 25 REDIRECTING INPUT
+31 
+705 3000 3001 77
+   Remember that UNIX System commands differ in the type of input they expect.
+Some of the commands require a file or directory name as an argument.  The 
+"mkdir" ("make directory") command is one such example.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Other commands need no arguments or other information.  For example, the "pwd"
+("print working directory") command just prints out the current directory name.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+A final group of commands expects input from your keyboard.  For example, if
+you have learned to use the "ed" or "vi" editors, you know that you enter 
+commands from your keyboard.  Commands like these take input from "standard 
+input." This section of the walkthru covers the redirection of standard input
+for this third group of commands.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+This portion of the walkthru will use the "ed" (edit) command to demonstrate
+the concept of input redirection.  The "ed" command can take a file name as an
+argument to the command.  Once "ed" reads in the file, it then waits for you to
+give instructions.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+In other words, the "ed" command expects its instructions to come from your 
+keyboard.  Let's see how this works, before trying to redirect input.  First,
+call the editor on the file "demo".
+706 
+520 cleartop
+8 0 0 $
+520 instruct
+3 edit the file "demo"
+2 0 2
+253 %0ed%1demo%0
+254 ed demo
+520 shansloop
+8 1 0 43
+520 clearbot
+705 3000 3001 74
+The "43" indicates the number of characters in the file "demo." "ed" is now
+waiting for you to enter editing commands.  First, list out the contents of
+the file, using the editor's "p" command.  The correct command is "1,$p"
+(print from line 1 to the end of file).
+706 
+520 instruct
+3 type 1,$p
+2 2 0
+18 
+253 %01%0,%0$%0p%0
+254 1,$p
+520 edloop
+8 3 0 This is line one.$
+8 4 0 This is the second line.$
+520 clearbot
+705 3000 3001 73
+Now use the editor's "d" command to delete line 1.  To do this, type "1d".
+706 
+520 instruct
+3 type "1d"
+2 5 0
+18 
+253 %01%0d%0
+254 1d
+520 edloop
+520 clearbot
+705 3000 3001 77
+Finally, let's save the changes to the file and exit the editor.  To do this, 
+first type "w" followed by a return.
+706 
+520 instruct
+3 type "w"
+2 6 0
+18 
+253 %0w%0
+254 w
+520 edloop
+8 7 0 25
+520 clearbot
+705 3000 3001 78
+The "25" indicates the number of characters in the file now (remember that we 
+deleted the first line).  Now use the editor's "q" command to leave the editor.
+706 
+520 instruct
+3 type "q"
+253 %0q%0
+254 q
+2 8 0
+18 
+520 edloop
+8 9 0 $
+520 clearbot
+705 3000 3001 72
+You can tell that "ed" has terminated, since you see your prompt again.  
+Although this was a short editing session, you can imagine that if you
+had to make the same changes to many files, it might become tedious to
+have to issue all of the editor commands from your keyboard.  This is
+where input redirection becomes useful.
+706 
+520 arrow
+520 clearbot
+520 cleartop
+705 3000 3001 74
+Imagine how much easier it would be if you could create a file containing 
+editing commands, and you could get "ed" to read that file, rather than 
+expecting input from your terminal.  This is what input redirection allows 
+you to do.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Imagine further that you have already created such a file, and you have chosen 
+to call it "ed.script." Examine the contents of the file "ed.script" using the 
+"cat" command.
+706 
+8 0 0 $
+520 instruct
+3 look at the contents of "ed.script"
+2 0 2
+18 
+253 %0cat%1ed.script%0
+254 cat ed.script
+520 shansloop
+8 1 0 1,$p
+8 2 0 1d
+8 3 0 w
+8 4 0 q
+8 5 0 $
+520 clearbot
+705 3000 3001 77
+As you can see, the file "ed.script" contains the same set of editor commands 
+that you just entered from your terminal.
+706 
+520 arrow
+520 cleartop
+520 clearbot
+705 3000 3001 77
+Remember that the special symbol ">" (greater than sign) is used to redirect
+standard output.  The special symbol "<" (less than sign) is used to redirect 
+standard input.  Now try editing the file "backup" (which is a copy of the 
+original file "demo"), but redirect input from the file "ed.script."
+706 
+520 instruct
+3 type "ed backup < ed.script"
+8 0 0 $
+2 0 2
+18 
+253 %0ed%1backup%0<%0ed.script%0
+254 ed backup < ed.script
+520 shansloop
+8 1 0 43
+8 2 0 This is line one.$
+8 3 0 This is the second line.$
+8 4 0 25
+8 5 0 $
+520 clearbot
+705 3000 3001 72
+As before, the "43" is the number of characters read in, the two printed
+lines are the result of the "1,$p" command, and the "25" is the number 
+of characters written back to "backup." Take a look at the file "backup" 
+to see if the changes have been made.
+706 
+520 instruct
+3 type "cat backup"
+253 %0cat%1backup%0
+254 cat backup
+2 5 2
+18 
+520 ansloop
+8 6 0 This is the second line.
+8 7 0 $
+520 clearbot
+705 3000 3001 78
+As you can see, the editing commands inside "ed.script" were used by "ed," and 
+the effect is just as if you had entered the commands from your terminal.
+706 
+520 arrow
+520 cleartop
+520 clearbot
+705 3000 3001 60
+Let's look at another picture to summarize input redirection.
+706 
+520 stdio
+520 arrow
+520 clearbot
+520 redirin
+520 arrow
+520 clearall
+705 0 0 61
+                      SUMMARY OF INPUT REDIRECTION
+
+     You have now learned how to redirect standard input from
+a file.  The "<" symbol is used to indicate input redirection.
+The command will read input from the specified file, instead
+of looking for input from your keyboard.
+
+     Remember that the command for which you are redirecting 
+input must be expecting its input from standard input.
+706 
+520 arrow
+520 clearall

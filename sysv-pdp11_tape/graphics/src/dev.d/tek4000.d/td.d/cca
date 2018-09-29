@@ -1,0 +1,10 @@
+# @(#)cca	1.1
+for i
+do prog=`echo $i | sed "s/\.c//"`
+   cc -c ${prog}.c
+	obj=`echo ${prog} | sed "s/.*\///" | sed "s/$/.o/"`
+   ar r dev.a ${obj}
+   rm ${obj}
+   chmod 644 dev.a
+   echo "${prog} done"
+done

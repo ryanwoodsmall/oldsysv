@@ -1,0 +1,11 @@
+
+\Strue\S:  Description
+
+Syntax Summary:  true
+
+Description:
+     The primary use for \Strue\S is to create an infinite loop in a shell
+     program.  \Strue\S does this by setting the exit status to zero.  The
+     loop in the program continues until it encounters a "break" or "exit" in
+     the loop. See glossary(1) for a description of exit status.  See also:
+     false(1) for a command with a function similar to \Strue\S.

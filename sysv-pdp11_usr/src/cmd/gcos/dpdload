@@ -1,0 +1,9 @@
+#	@(#)dpdload	1.2
+#	3.0 SID #	1.2
+kasb -d /dev/kmc? <<!
+.reset
+.load "/lib/vpmdpd.o"
+.reset
+.run 6
+!
+echo "/dev/kmc? loaded with vpm-dpd code"

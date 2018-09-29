@@ -1,0 +1,50 @@
+# Turn off inittab entries for all devices mentioned in
+# /usr/lib/uucp/Devices and for all devices running uugetty
+
+CRONTAB=/usr/spool/cron/crontabs/root
+TEMPCRON=/usr/tmp/cron.$$
+INITTAB=/etc/inittab
+DEVICES=/usr/lib/uucp/Devices
+
+#	construct list of all devices mentioned in DEVICES file
+#	and all entries in INITTAB running uugetty's.
+devlist=`grep '^[^#]' $DEVICES  2>/dev/null | cut -d' ' -f2  |  
+	grep '^[a-z0-9]' 2>/dev/null`
+uugettylist=`grep '^[^#].*uugetty' $INITTAB  2>/dev/null | cut -d':' -f1 |
+	sed -e 's%^[0-9][0-9]$%tty&%; s%^ct$%contty%' 2>/dev/null`
+
+#	portlist = devlist + uugettylist (minus dups)
+portlist=`echo $devlist $uugettylist | tr "\040" "\012" | sort -u`
+
+#	turn off entry in INITTAB for these ports
+for i in $portlist
+do
+
+    ed - $INITTAB <<-! >/dev/null 2>&1
+	H
+	/$i/s/respawn/off/
+	w
+	q
+!
+
+done
+
+echo "Note that uninstalling UUCP has turned off the inittab entries for these 
+devices:"
+echo $portlist
+
+
+# execute init to reread inittab
+/etc/init q 2>/dev/null
+sleep 10
+
+# Remove cron entries
+
+crontab -l >$TEMPCRON 2>/dev/null
+ed $TEMPCRON <<-!  >/dev/null 2>&1
+	g/uudemon/d
+	w
+	q
+!
+
+crontab $TEMPCRON 2>/dev/null

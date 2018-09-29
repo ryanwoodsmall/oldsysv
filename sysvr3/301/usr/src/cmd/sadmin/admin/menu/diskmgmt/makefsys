@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/makefsys	2.3"
+#menu# create a new file system on a removable medium
+#help# 
+#help#	Makefsys creates a new file system on a removable medium which can
+#help#	then store data which you do not wish to keep on the built-in disks.
+#help#	When "mounted", the file system has all the properties of a
+#help#	file kept on the built-in disks.
+
+. ${MENUTOP:?}/makefsys

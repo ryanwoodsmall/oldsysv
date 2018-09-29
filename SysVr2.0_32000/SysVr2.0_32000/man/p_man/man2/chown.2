@@ -1,0 +1,85 @@
+.TH CHOWN 2
+.SH NAME
+chown \- change owner and group of a file
+.SH SYNOPSIS
+.B int chown (path, owner, group)
+.br
+.B char \(**path;
+.br
+.B int owner, group;
+.SH DESCRIPTION
+.I Path\^
+points to a
+path name
+naming a file.
+The owner
+.SM ID
+and group
+.SM ID
+of the named file
+are set to the numeric values contained in
+.I owner\^
+and
+.I group\^
+respectively.
+.PP
+Only processes with effective user
+.SM ID
+equal to the file owner or
+super-user may change the ownership of a file.
+.PP
+If
+.I chown\^
+is invoked by other than the super-user, the set-user-\s-1ID\s0
+and set-group-\s-1ID\s0
+bits of the file mode, 04000 and 02000 respectively,
+will be cleared.
+.PP
+.I Chown\^
+will fail and the owner and group of the named file will
+remain unchanged if one or more of the following are true:
+.TP 15
+.SM
+\%[ENOTDIR]
+A component of the
+path prefix
+is not a directory.
+.TP
+.SM
+\%[ENOENT]
+The named file does not exist.
+.TP
+.SM
+\%[EACCES]
+Search permission is denied on a
+component of the
+path prefix.
+.TP
+.SM
+\%[EPERM]
+The effective user
+.SM ID
+does not match the owner of the file
+and the effective user
+.SM ID
+is not super-user.
+.TP
+.SM
+\%[EROFS]
+The named file resides on a read-only file system.
+.TP
+.SM
+\%[EFAULT]
+.I Path\^
+points outside the allocated address space of the process.
+.SH "RETURN VALUE"
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+chmod(2).
+.br
+chown(1) in the \f2\s-1UNIX\s+1
+System V User Reference Manual\fR.
+.\"	@(#)chown.2	6.2 of 9/6/83

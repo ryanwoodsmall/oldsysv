@@ -1,0 +1,12 @@
+
+   The DISPLAY command will open a  frame  displaying  the  specified
+   object's contents if the specified object is viewable (ascii text).
+   You can page through the contents of an object if it does  not  fit
+   in one frame.
+
+   To DISPLAY an object use one of the options below.   If  an  object
+   name is not specified the current object is assumed.
+
+      - Command Menu - Select DISPLAY + RETURN
+
+      - Typed Command - Type display [object_name] + RETURN

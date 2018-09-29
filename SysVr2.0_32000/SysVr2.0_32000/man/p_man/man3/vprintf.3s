@@ -1,0 +1,85 @@
+.TH VPRINTF 3S
+.SH NAME
+vprintf, vfprintf, vsprintf \- print formatted output of a varargs argument list
+.SH SYNOPSIS
+.B "#include <stdio.h>"
+.br
+.B "#include <varargs.h>"
+.PP
+.B "int vprintf (format, ap)
+.br
+.B "char \(**format;"
+.br
+.B "va_list ap;
+.PP
+.B "int vfprintf (stream, format, ap)
+.br
+.SM
+.B FILE
+.B \(**stream;
+.br
+.B "char \(**format;"
+.br
+.B "va_list ap;
+.PP
+.B "int vsprintf (s, format, ap)
+.br
+.B "char \(**s, \(**format;"
+.br
+.B "va_list ap;
+.SH DESCRIPTION
+.IR vprintf ,
+.IR vfprintf ,
+and
+.I vsprintf\^
+are the same as
+.IR printf ,
+.IR fprintf ,
+and
+.I sprintf\^
+respectively,
+except that instead of being called with a variable number of 
+arguments, they are called with an argument list as defined
+by 
+.IR varargs (5).
+.SH EXAMPLE
+The following demonstrates how 
+.I vfprintf
+could be used
+to write an error routine.
+.PP
+.nf
+.ss 18
+#include <stdio.h>
+#include <varargs.h>
+	.
+	.
+	.
+/\(**
+ \(**	error should be called like
+ \(**		error(function_name, format, arg1, arg2...);
+ \(**/
+/\(**VARARGS0\(**/
+void
+error(va_alist)
+/\(** Note that the function_name and format arguments cannot be
+ \(**      separately declared because of the definition of varargs.
+ \(**/
+va_dcl
+{
+	va_list args;
+	char \(**fmt;
+
+	va_start(args);
+	/\(** print out name of function causing error \(**/
+	(void)fprintf(stderr, "ERROR in %s: ", va_arg(args, char \(**));
+	fmt = va_arg(args, char \(**);
+	/\(** print out remainder of message \(**/
+	(void)vfprintf(fmt, args);
+	va_end(args);
+	(void)abort( );
+}
+.fi
+.SH SEE ALSO
+vprintf(3X), varargs(5).
+.\"	@(#)vprintf.3s	6.3 of 5/31/83

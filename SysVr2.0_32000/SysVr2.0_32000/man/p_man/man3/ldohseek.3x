@@ -1,0 +1,56 @@
+.TH LDOHSEEK 3X
+.SH NAME
+ldohseek \- seek to the optional file header of a common object file
+.SH SYNOPSIS
+.ft B
+.nf
+.ta \w'\s-1LDFILE\s+1\ \ \ 'u
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <ldfcn.h> \}
+.el \{\
+.ft B
+#include "\s-1INCDIR\s+1\/filehdr.h"
+#include "\s-1INCDIR\s+1\/ldfcn.h" \}
+.PP
+.B int ldohseek (ldptr)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.ft R
+.fi
+.DT
+.SH DESCRIPTION
+.I Ldohseek
+seeks to the optional file header 
+of the common object file
+currently associated with
+.IR ldptr .
+.PP
+.I Ldohseek
+.RB "returns " \s-1SUCCESS\s+1 " or " \s-1FAILURE\s+1 .
+.I Ldohseek 
+will fail
+if the object file has no optional header
+or if it cannot seek to the optional header.
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a .
+\}
+.if !'\*p'' \{\
+.PP
+.IR Intro (4)
+describes
+.IR \s-1INCDIR\s+1 " and " \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X), ldopen(3X), ldfhread(3X), ldfcn(4).
+\}
+.el \{\
+ldclose(3X), ldopen(3X), ldfhread(3X), intro(4), ldfcn(4), path.h(4).
+\}
+.\"	%W% of %G%

@@ -1,0 +1,131 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/filters/delete_f	1.5"
+## IDOC:   SCREEN 2.45: DELETE FILTER
+#menu# Delete a filter
+
+##+++ (help _H133)
+#help#        You use the "delete" command to remove  a  filter  from  the
+#help#        print  service.  No more print requests will be accepted for
+#help#        it and the filter definition will be destroyed.  Any print
+#help#        requests  currently  queued  that  need this filter to print
+#help#        properly will be CANCELED if another filter cannot be  found
+#help#        to take its place.
+##--- (help _H133)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_filter_list () {
+# listof: filter-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!filter-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then : ; else if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid filter name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+##--- (functions)
+
+DEF_f=`cat ${TMPDIR:-/tmp}/FLT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.45.1)
+chk_filter_list \
+	"Enter the names of the filters to remove:${DEF_f:+ (default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of the filter you want to
+        delete.   You  can  give  a  list  of  filters  to delete by
+        separating the names with spaces or commas.   If  you  don't
+        know  a filter name, enter \"q\" and select the \"list\" command
+        from the \"filters\" menu, to get a list of known filters.
+
+                                  WARNING
+Some print requests may  be  pending  that  require  this  filter  to  print
+adequately.   If  you  delete  the  filter, the LP Print Service will try to
+find another filter for them, but if  it can't  it  will  CANCEL  the  print
+requests.
+
+        \
+"
+OPT_f=${RESP}
+##--- (2.45.1)
+
+
+##+++ (2.45.2)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        Enter a \"n\" (for no) if you made  a  mistake  and  gave  the
+        wrong  filter name(s).  Otherwise, enter a \"y\" (for yes) and
+        the filter(s) you named  will  be  deleted  and  the  filter
+        definition(s) DESTROYED.
+
+                                  WARNING
+Any print requests pending that need this filter to print  adequately,  will
+be CANCELED if another filter cannot be found for them.
+
+        \
+" \
+	"Are you sure?${DEF:+ (default: ${DEF})}"
+then
+	repeat=no
+	for filter in ${OPT_f}
+	do
+		if /usr/lib/lpfilter -f ${filter} -x
+		then
+			if [ $filter = "all" ]
+			then
+				echo "All filters deleted."
+			else
+				echo "Filter ${filter} deleted."
+			fi
+
+			if [ "${DEF_f}" = "${filter}" ]
+			then
+				rm -f ${TMPDIR:-/tmp}/FLT.`basename \`tty\`` 2>/dev/null
+			fi
+		else
+			repeat=yes
+		fi
+	done
+	if [ "no" = "${repeat}" ]
+	then
+		break
+	fi
+else
+	break
+fi
+##--- (2.45.2)
+done

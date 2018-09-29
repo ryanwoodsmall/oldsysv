@@ -1,0 +1,46 @@
+
+\Ssum\S:  Examples
+
+        sum record
+
+    Prints the file name and checksum for "record", and the number of 512 byte
+    blocks of memory that "record" occupies.  If you transmit "record" to
+    another system and then execute \Ssum\S again, you can check that "record"
+    was transmitted without any errors.
+
+
+
+
+
+
+
+
+
+    ---------------------------------------------------------------------------
+        sum -r record labels
+
+    Calculates the checksum and the number of 512 byte blocks of memory for the
+    files "record" and "labels".  You use the alternate algorithm because
+    "record" and "label" were transferred to your system from a UNIX System
+    Version 7 system.  The algorithm used with the "r" option is compatible
+    with the algorithm used by \Ssum\S on UNIX System Version 7 systems.  This
+    allows you to compare the checksum values both before and after the files
+    were transmitted to check that there are no errors.  \Ssum\S prints the
+    information for each file on a separate line.
+
+
+
+
+
+
+
+
+    ---------------------------------------------------------------------------
+        grep -l account /SYSTEMS/* | xargs sum
+
+    grep(1) searches through the directory "SYSTEMS" for files with the string
+    "account" in them. The command xargs(1) executes \Ssum\S on each file
+    that contains "account".  \Ssum\S prints a checksum, the number of 512
+    byte blocks of memory, and the file name of each file.  This command is
+    useful for checking that many files transferred without errors from one
+    system to another.

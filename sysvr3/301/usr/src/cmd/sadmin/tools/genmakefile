@@ -1,0 +1,63 @@
+#ident	"@(#)sadmin:tools/genmakefile	2.2"
+#	generate makefiles
+
+#!	chmod +x ${file}
+
+if [ $# -lt 1 ]
+then
+	echo >&2 "Usage:  $0 skeleton-makefile [ excluded-files ... ]"
+	exit 1
+fi
+skeleton=$1
+if [ ! -r ${skeleton} ]
+then
+	echo >&2 "$0:  Cannot read '${skeleton}'"
+	exit 1
+fi
+shift
+
+#	perform the actions proscribed by lines that begin:
+#		#!
+#	with ${file} set the that file's name.
+for file in `grep -l '^#!' *`
+do
+	if [ ! -f ${file} ]
+	then
+		continue
+	fi
+	eval `sed -n '/^#!/s///p' ${file}`
+done
+
+#	Generate the Makefile from the skeleton Makefile
+trap "rm -r /tmp/$$genmakefile" 0
+trap exit 1 2 15
+find * -print  |
+	fgrep -vx "`ls -d $* /dev/null 2>/dev/null`"  |
+	xargs ls -ld  |
+	sed 's/ .* / /'  |
+	sort +1 >/tmp/$$genmakefile
+e=`sed -n 's/^-..x.* //p' </tmp/$$genmakefile  |  tr '\012' ' '`
+f=`sed -n 's/^-..-.* //p' </tmp/$$genmakefile  |  tr '\012' ' '`
+d=`sed -n 's/^d.* //p' </tmp/$$genmakefile  |  tr '\012' ' '`
+
+#	the %\W% and %\P% is to keep SCCS from making substitutions.
+sed "
+	1{
+		i\\
+#ident	\"%\W%\"
+		s/	/  /g
+		h
+		d
+	}
+	2{
+		s/[Ss]keleton //
+		p
+		s/.*/#	Generated `date` from skeleton makefile:/
+		p
+		g
+		s/@(#)//
+	}
+	s;--EXECUTABLES--;${e};
+	s;--FILES--;${f};
+	s;--DIRECTORIES--;${d};" <${skeleton}  |
+	shorten -e77 -f20 -t' \'

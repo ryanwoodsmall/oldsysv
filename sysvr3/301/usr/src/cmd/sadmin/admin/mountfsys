@@ -1,0 +1,123 @@
+#ident	"@(#)sadmin:admin/mountfsys	2.9"
+#	Mount a removable medium file system.
+#help# 
+#help#	Mountfsys mounts a file system, found on a removable medium, making
+#help#	it available to the user.  The file system is unmounted with the
+#help#	"umountfsys" command.  THE MEDIUM MUST NOT BE REMOVED WHILE THE
+#help#	FILE SYSTEM IS STILL MOUNTED.
+
+#!	chmod +x ${file}
+
+flags="-qq -k$$"	# flags for checkyn to implement [q] (quit)
+trap 'exit 0' 1 2 15
+
+unset disklabelarg makedir mountit readonly patterns
+
+while getopts p:ry c 
+do
+	case "$c" in
+	p )
+		patterns=$OPTARG
+		;;
+	y )
+		disklabelarg=-y
+		mountit=yes
+		;;
+	r )
+		readonly=-r
+		;;
+	\? )
+		echo >&2 "Usage:  `basename $0` [ -p pattern ] [ -r ] [ -y ]
+-r	mount the removable medium file system read-only
+-y	mount the removable medium file system without asking any questions"
+		exit 1
+		;;
+	esac
+done
+
+shift `expr $OPTIND - 1`
+if [ $# != 0 ]
+then
+	echo >&2 "Usage:  `basename $0` [ -p pattern ] [ -r ] [ -y ]
+-r	mount the removable medium file system read-only
+-y	mount the removable medium file system without asking any questions"
+	exit 1
+fi
+
+dir=${0}.d
+if [ -z "${patterns}"  -a  -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+: ${disklabelarg:="-n${ndrive}"}
+l=`disklabel "${disklabelarg}" $$ ${ddrive}`
+trap "	trap '' 1 2
+	echo You may remove the medium from the ${ndrive}." 0
+eval `labelfsname "${l}"`
+
+if [ -z "${fsname}" ]
+then
+	echo '	This medium was not properly initialized as a file system.
+	It will not be mounted.
+	Suggestions:  1)  this medium may have been used for backup or some
+		          other purpose.
+		      2)  use "makefsys" to create a file system on this
+			  medium.'
+	exit 0
+fi
+makedir=
+if [ ! -d /${fsname} ]
+then
+	makedir="
+(There is not currently a /${fsname} directory,
+but this procedure will make one.)
+"
+fi
+
+if  test ${mountit}  ||  checkyn ${flags} -f \
+	"Disk '${label}', file system '/${fsname}'.${makedir}  Mount it${readonly:+ read-only}?"
+then
+	trap "" 0 1 2 15
+	if [ ! -d /${fsname} ]
+	then
+		mkdir /${fsname}
+		madedir=yes
+	fi
+	chmod 777 /${fsname}
+	if  mountmsg=`/etc/mount ${ddrive} /${fsname} ${readonly} 2>&1`
+	then
+		echo "/${fsname} mounted.  DO NOT REMOVE THE MEDIUM UNTIL IT IS UNMOUNTED!"
+		exit 0
+	fi
+	if [ ${madedir} ]
+	then
+		rmdir /${fsname}
+	else
+		chmod 0 /${fsname}
+	fi
+	echo '\tThe mount failed.'
+	case "${mountmsg}" in
+	*'needs checking'* )
+		echo '\tThe file system on this medium needs to be checked.
+	Suggestion:  use "checkfsys" to look for and repair file system damage.'
+		;;
+	*write-protected* )
+		echo '\tThe medium is write protected and cannot be mounted for update.
+	Suggestions:  1)  remove the write protection.
+		      2)  use "mountfsys -r" to mount it for reading only.'
+		;;
+	* )
+		echo "\\t${mountmsg}"
+	esac
+	echo You may remove the medium from the ${ndrive}.
+fi
+exit 0

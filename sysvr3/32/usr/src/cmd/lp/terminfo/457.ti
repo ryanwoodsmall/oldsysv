@@ -1,0 +1,39 @@
+#ident	"@(#)nlp:terminfo/457.ti	1.3"
+#10-30-87
+
+457|att457|AT&T 457; Daisy printer;parallel,
+
+	daisy,
+
+	bufsz#1024,
+	cols#132,
+	lines#66,
+	orc#12,
+	orhi#120,
+	orl#8,
+	orvi#48,
+	cps#55,
+
+	cr=^M,
+	lpi=%?%p1%{2}%=%t\EL24%e%p1%{3}%=%t\EL16%e%p1%{4}%=%t\EL12%e%p1%{6}%=%t\EL08%e%p1%{8}%=%t\EL06%e%p1%{12}%=%t\EL04%;,
+	chr=\EE%p1%02d,
+	cvr=\EL%p1%02d,
+	cud1=^J,
+	cuf1=\s,
+	smul=\EI,
+	rmul=\EJ,
+	ff=^L,
+	.is1,
+
+#Auto CR/LF on, Auto LF off, Right Margin Control off,Undeline Bold and Shadow  off, no print off, clear tabs, graphics off, wps off,6 lpi
+
+	is2=\E\rP^M\EW\E.\E2\EL08\E%\EJ\ER\ET\E4\EY\EE12\E<,
+	smgb=\E-,
+	smgl=\E9,
+	smgr=\E0,
+	smgt=\E+,
+	ht=^I,
+
+458|att458|AT&T 458; Daisy printer;serial,
+
+	use=457,

@@ -1,0 +1,33 @@
+
+\S tabs \S:  Examples
+
+       tabs
+
+    Sets your tab stops every 8 columns.
+
+    ----------------------------------------------------------------------
+
+       tabs +m3
+
+    Moves all tab stops 3 columns to the right.
+
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+       tabs -4, 3, 3, 3, 10
+
+    Sets your tab stops every 4 columns for four tab stops and sets the last
+    tab  stop in column 26.
+
+    ----------------------------------------------------------------------
+
+       tabs --format
+
+    Sets your tabs according to the tab specification on the first line of the
+    file "format".  The first line of format might look like this <:t -c2 m6
+    d:>.  this sets the tabs for COBOL compact format with a left margin of 6
+    spaces.

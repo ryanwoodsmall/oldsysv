@@ -1,0 +1,35 @@
+
+   The  REMOVE  SERVICES  opens  a  menu  in which you can select the
+   service  to  be  removed.  Once  a  service is selected the REMOVE
+   SERVICES form is opened.
+
+   The  REMOVE  SERVICES form  allows you  to remove any services you
+   have  added to your Services menu.  The following list defines the
+   fields included in this form.
+
+      - SERVICE  MENU NAME - This  field  allows  you to enter in the
+      name of the menu item as it appears in the Services menu.
+
+
+     Function  Keys active  for  this form  (in  addition to PREV-FRM,
+     NEXT-FRM, CMD-MENU, and HELP) are:
+
+           - SAVE -- Saves all the field values entered in  the  form,
+             closes  the  frame,  and returns you to the point in the
+             interface  that you  were at prior to accessing the form.
+	     Saving the form causes your services menu to be modified.
+
+           - CANCEL -- Cancels the  form without  saving the new field
+             values  entered  in  the  form,  closes  the  frame,  and
+             returns you to the point in the interface that  you  were
+             at prior to accessing the form.
+
+           - CHOICES  --  For  the  field  where  the  cursor  resides
+             pressing  CHOICES  either  toggles  between  the possible
+             values for the  field,  or  displays  a  pop-up  menu  of
+             available  choices.  For fields requiring you to set your
+             own values a definition of  the  field  requirement  will
+             appear on the message line.
+
+           - RESET - resets the field back to the value(s)  in  effect
+             at the beginning of the current editing session.

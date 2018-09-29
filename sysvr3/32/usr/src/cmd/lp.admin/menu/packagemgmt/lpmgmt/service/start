@@ -1,0 +1,13 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/service/start	1.3"
+## IDOC:   SCREEN 2.52: START PRINT SERVICE
+#menu# Start the print service
+
+##+++ (help _H142)
+#help#        You use the "start" command in the "service" menu  to  start
+#help#        the  LP  Print  Service after it has been stopped.  Normally
+#help#        the print services are automatically started when you  start
+#help#        the  UNIX  system,  so  you generally don't need to use this
+#help#        command.
+##--- (help _H142)
+
+/usr/lib/lpsched

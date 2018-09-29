@@ -1,0 +1,123 @@
+.TH STSTAT 1
+.SH NAME
+ststat \- report synchronous terminal facilities status
+.SH SYNOPSIS
+.B ststat\^
+[ options ]
+.SH DESCRIPTION
+.I Ststat\^
+prints certain information about synchronous terminal facilities.
+The information that is displayed is controlled by
+.IR options :
+.PP
+.PD 0
+.TP 12
+.B \-a
+Use all print
+.IR options .
+(This is shorthand notation for
+.BR \-g ,
+.BR \-l ,
+.BR \-p ,
+and
+.BR \-t .)
+.TP
+.BI \-c " corefile\^"
+Use the file
+.I corefile\^
+in place of
+.BR /dev/kmem .
+.TP
+.B \-g
+Print information about gen paramaters.
+(Number of synchronous lines,
+number of printer ports,
+number of terminal ports,
+number of message headers,
+and sizes of receive and transmit buffer areas.)
+.TP
+.B \-l
+Print information about synchronous lines.
+(For each synchronous line,
+whether or not the protocol script is running and
+whether or not it has established communications with a controller on the line.)
+.TP
+.BI \-n " namelist\^"
+The argument will be taken as the name of an alternate
+.I namelist\^
+.RB ( /unix
+is the default).
+.TP
+.B \-p
+Print printer port status information.
+(For each assigned printer port,
+give the assigned path name and the synchronous line number and device code
+for the assigned printer.)\ 
+If none of the print
+.I options\^
+.BR \-a ,
+.BR \-g ,
+.BR \-l ,
+or
+.B \-t
+are specified,
+.B \-p
+is supplied as a default.
+.TP
+.B \-t
+Print terminal port status information.
+(For each active terminal port,
+give the path name of the terminal device and
+tell whether an open is waiting to be assigned to a terminal,
+open to an active terminal,
+or open to a device that has hung up.)
+.PE
+.SH FILES
+.ta \w'/dev/kmem   'u
+/dev	searched to find terminal (``tty'') names
+.br
+/dev/kmem	memory
+.br
+/unix	system namelist
+.SH SEE ALSO
+st(1M),
+st(7).
+.SH DIAGNOSTICS
+.PD 0
+.TP
+Can't read system namelist.
+.br
+Unable to find system name entries in the
+.I namelist\^
+file.
+.TP
+No synchronous terminal lines in \fInamelist\fP.
+.br
+Synchronous terminals are not configured in the system in the
+.I namelist\^
+file.
+.TP
+Can't open \fIcorefile\fP.
+.br
+Unable to open the specified
+.I corefile\^
+file.
+.TP
+Can't read \fIcorefile\fP.
+.br
+A read failed on the
+.I corefile\^
+file.
+.TP
+/dev/?????
+.br
+The name of an active terminal port could not be found in the
+.B /dev
+directory.
+.PD
+.SH BUGS
+Things can change while
+.I ststat\^
+is running;
+the picture it gives is only a close apporoximation to reality.
+.\"	@(#)ststat.1	5.2 of 5/18/82

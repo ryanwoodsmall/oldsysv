@@ -1,0 +1,286 @@
+#ident	"@(#)curses:screen/llib-lcurses	1.9.1.3"
+
+/* LINTLIBRARY */
+
+# include	"curses.ext"
+# include	<varargs.h>
+
+static char	*sp;
+static WINDOW	*wp;
+static SCREEN	*scp;
+
+int	baudrate() { return 0; }
+	beep() {}
+	box(win, vert, hor) WINDOW *win; chtype vert, hor; {}
+	cbreak() {}
+	clearok(win,bf) WINDOW *win; int bf; {}
+int	copywin(Srcwin,Dstwin,minRowSrc,minColSrc,
+	    minRowDst,minColDst,maxRowDst,maxColDst,overlay)
+	    WINDOW *Srcwin,*Dstwin;
+	    int minRowSrc,minColSrc,minRowDst,minColDst,maxRowDst,maxColDst,
+		overlay;
+	    { return 0; }
+	crmode() {}
+int	curs_set(vis) int vis; { return 0; }
+	def_prog_mode() {}
+int	delay_output(ms) int ms; { return 0; }
+	delwin(win) WINDOW *win; {}
+int	del_curterm(old) TERMINAL *old; { return 0; }
+int	doupdate() { return 0; }
+int	draino(ms) int ms; { return 0; }
+	echo() {}
+	endwin() {}
+char	erasechar() { return 'a'; }
+	filter() {}
+	fixterm() {}
+	flash() {}
+	flushinp() {}
+	garbagedlines (win, beg, num) WINDOW *win; int beg, num; {}
+	_getsyx(y,x) int *y, *x; {}
+	gettmode() {}
+	halfdelay(tenths) int tenths; {}
+int	has_ic() { return 0; }
+int	has_il() { return 0; }
+	idlok(win,bf) WINDOW *win; int bf; {}
+WINDOW*	initscr() { return wp; }
+	intrflush(win,bf) WINDOW *win; int bf; {}
+char*	keyname(key) int key; { return sp; }
+	keypad(win,bf) WINDOW *win; int bf; {}
+char	killchar() { return 'a'; }
+	leaveok(win,bf) WINDOW *win; int bf; {}
+char*	longname() { return sp; }
+int	m_addch(c) chtype c; { return 0; }
+int	m_addstr(str) char *str; { return 0; }
+	m_clear() {}
+	m_erase() {}
+WINDOW*	m_initscr() { return wp; }
+	m_move(row, col) int row, col; {}
+SCREEN*	m_newterm(type, ofd, ifd) char *type; FILE *ofd, *ifd; { return scp; }
+int	m_refresh() { return 0; }
+	m_tstp() {}
+int	meta(win,bf) WINDOW *win; int bf; { return 0; }
+	mvcur(ly, lx, y, x) int ly, lx, y, x; {}
+	/* VARARGS3 */
+int	mvprintw(y, x, fmt, args) int y, x; char *fmt; { return 0; }
+	/* VARARGS3 */
+int	mvscanw(y, x, fmt, args) int y, x; char *fmt; { return 0; }
+int	mvwin(win, by, bx) WINDOW *win; { return 0; }
+	/* VARARGS4 */
+int	mvwprintw(win, y, x, fmt, args) WINDOW *win; int y, x; char *fmt; { return 0; }
+	/* VARARGS4 */
+int	mvwscanw(win, y, x, fmt, args) WINDOW *win; int y, x; char *fmt; { return 0; }
+int	napms(ms) int ms; { return 0; }
+WINDOW*	newpad(nlines, ncols) int nlines, ncols; { return wp; }
+SCREEN*	newterm(type, ofd, ifd) char *type; FILE *ofd, *ifd; { return scp; }
+WINDOW*	newwin(num_lines, num_cols, begy, begx) int num_lines, num_cols, begy, begx; { return wp; }
+	nl() {}
+	nocbreak() {}
+	nocrmode() {}
+	nodelay(win,bf) WINDOW *win; int bf; {}
+	noecho() {}
+	nonl() {}
+	noraw() {}
+int	overlay(Src, Dst) WINDOW *Src, *Dst; { return 0; }
+int	overwrite(Src, Dst) WINDOW *Src, *Dst; { return 0; }
+int	pechochar(pad, ch) WINDOW *pad; chtype ch; { return 0; }
+int	pnoutrefresh(pad, pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol)
+		WINDOW *pad;
+		int pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol;
+		{ return 0; }
+int	prefresh(pad, pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol)
+		WINDOW *pad;
+		int pminrow, pmincol, sminrow, smincol, smaxrow, smaxcol;
+		{ return 0; }
+	putp(str) char * str; {}
+	/* VARARGS1 */
+int	printw(fmt, args) char *fmt; { return 0; }
+	raw() {}
+	reset_prog_mode() {}
+	reset_shell_mode() {}
+	resetterm() {}
+	resetty() {}
+	restartterm(term, file, err) char *term; int file, *err; {}
+	ripoffline(line, init) int line, (*init)(); {}
+	saveterm() {}
+	savetty() {}
+	/* VARARGS1 */
+int	scanw(fmt, args) char *fmt; { return 0; }
+int	scr_dump(file) char *file; { return 0; }
+int	scr_init(file) char *file; { return 0; }
+int	scr_restore(file) char *file; { return 0; }
+int	scroll(win) WINDOW *win; { return 0; }
+int	scrollok(win,bf) WINDOW *win; int bf; { return 0; }
+SCREEN*	set_term(new) SCREEN *new; { return scp; }
+TERMINAL* set_curterm(new) TERMINAL *new; { return (TERMINAL *)0; }
+	setsyx(y,x) int y, x; {}
+int	setterm(type) char *type; { return 0; }
+int	setupterm(term, file, err) char *term; int file; int *err;
+		{ return 0; }
+	slk_clear() {}
+	slk_init(fmt) int fmt; {}
+char*	slk_label(num) int num; {}
+	slk_noutrefresh() {}
+int	slk_refresh() {}
+	slk_restore() {}
+int	slk_set(num, lab, fmt) int num, fmt; char *lab; { return 0; }
+	slk_touch() {}
+WINDOW*	subwin(orig, nlines, ncols, by, bx) WINDOW *orig; int nlines, ncols, by, bx; { return wp; }
+WINDOW* subpad(orig, nlines, ncols, by, bx) WINDOW *orig; int nlines, ncols, by, bx; { return wp; }
+int	tgetent(bp, name) char *bp; char *name; { return 0; }
+int	tgetflag(id) char *id; { return 0; }
+int	tgetnum(id) char *id; { return 0; }
+char *	tgetstr(id, area) char *id; char **area; { return sp; }
+char *	tgoto(cap, col, row) char *cap; int col, row; { return sp; }
+int	tigetflag(id) char *id; { return 0; }
+int	tigetnum(id) char *id; { return 0; }
+char *	tigetstr(id) char *id; { return sp; }
+	touchwin(win) WINDOW *win; {}
+	touchline(win, fline, num) WINDOW *win; int fline, num; {}
+	/* VARARGS2 */
+char *	tparm(instring, parms)
+		char *instring; int parms;
+		{ return sp; }
+	tputs(cp, affcnt, outc) char *cp; int affcnt; int (*outc)(); {}
+	traceoff() {}
+	traceon() {}
+	_tstp() {}
+int	typeahead(fd) int fd; { return fd; }
+	ungetch(key) int key; {}
+	vidattr(newmode) int newmode; {}
+	vidputs(nmode, outc) int nmode, (*outc)(); {}
+int	vwscanw(win, fmt, ap) WINDOW *win; char *fmt; va_list ap; { return 0; }
+int	vwprintw(win, fmt, ap) WINDOW *win; char *fmt; va_list ap; { return 0; }
+int	waddch(win, c) WINDOW *win; chtype c; { return 0; }
+int	waddstr(win, str) WINDOW *win; char *str; { return 0; }
+int	wattroff(win, attrs) WINDOW *win; int attrs; { return 0; }
+int	wattron(win, attrs) WINDOW *win; int attrs; { return 0; }
+int	wattrset(win, attrs) WINDOW *win; chtype attrs; { return 0; }
+int	wclear(win) WINDOW *win; { return 0; }
+int	wclrtobot(win) WINDOW *win; { return 0; }
+int	wclrtoeol(win) WINDOW *win; { return 0; }
+int	wdelch(win) WINDOW *win; { return 0; }
+	wdeleteln(win) WINDOW *win; {}
+int	wechochar(win, ch) WINDOW *win; chtype ch; { return 0; }
+	werase(win) WINDOW *win; {}
+int	wgetch(win) WINDOW *win; { return 0; }
+int	wgetstr(win, str) WINDOW *win; char *str; { return 0; }
+int	winsch(win, c) WINDOW *win; chtype c; { return 0; }
+int	winsertln(win) WINDOW *win; { return 0; }
+int	wmove(win, y, x) WINDOW *win; int y, x; { return 0; }
+int	wnoutrefresh(win) WINDOW *win; { return 0; }
+	/* VARARGS2 */
+int	wprintw(win, fmt, args) WINDOW *win; char *fmt; { return 0; }
+int	wrefresh(win) WINDOW *win; { return 0; }
+	/* VARARGS2 */
+int	wscanw(win, fmt, args) WINDOW *win; char *fmt; { return 0; }
+int	wstandend(win) WINDOW *win; { return 0; }
+int	wstandout(win) WINDOW *win; { return 0; }
+
+int	LINES, COLS;
+char	*UP, *BC, PC;
+short ospeed;
+WINDOW	*stdscr, *curscr;
+
+TERMINAL *cur_term;
+struct _bool_struct	*cur_bools;
+struct _num_struct	*cur_nums;
+struct _str_struct	*cur_strs;
+
+TERMINAL		_first_term;
+struct _bool_struct	_frst_bools;
+struct _num_struct	_frst_nums;
+struct _str_struct	_frst_strs;
+
+char *boolnames[], *boolcodes[], *boolfnames[],
+     *numnames[], *numcodes[], *numfnames[],
+     *strnames[], *strcodes[], *strfnames[];
+
+/*
+ * Various tricks to shut up lint about things that are perfectly fine.
+ */
+
+char *Def_term, ttytype[1];
+char *_unctrl[];
+chtype *acs_map;
+
+static
+_dummy_init()
+{
+	Def_term[0] = ttytype[0] = 0;
+	_unctrl[0] = "abc";
+	_dummy_init();
+	LINES = COLS = 1;
+	stdscr = curscr = NULL;
+}
+
+/* internal routines and variables that no one else should be using */
+int	outchcount;
+SCREEN *SP;
+int _use_slk;
+struct _ripdef _ripstruct[];
+int _ripcounter;
+char *curses_version;
+FILE *outf;
+
+int	_chk_input() { return 0; }
+int	_delay(delay, outc) int delay; int (*outc)(); { return 0; }
+	_ec_quit(msg, parm) char *msg, *parm; {	/* NOTREACHED */ }
+	_fixdelay(old, new) bool old, new; {}
+	_outch(ch) chtype ch; {}
+	__cflush() {}
+	_setbuffered(fd) FILE *fd; {}
+struct map *_init_keypad() {}
+	_id_char(old, new, ln) struct line *old, *new; int ln; {}
+int	InputPending;
+	_id_line(first, last) int first, last; {}
+	_chk_typeahead() {}
+int	_ll_echochar(y, x, c, at, rc) int y, x; chtype c, at, rc; { return 0; }
+	_init_costs() {}
+	_init_acs() {}
+char *_c_why_not;
+SCREEN *_new_tty(type, fd) char *type; FILE *fd; { return scp; }
+int	_num_lines() { return 0; }
+int	didntdobotright;
+int	_ll_refresh(idl) int idl; { return 0; }
+	_scrdown() {}
+static struct line *lp;
+struct line *_line_alloc() { return lp; }
+	_line_free(lp) struct line *lp; {}
+	_ll_endmove() {}
+	_ll_setyx(r,c) int r, c; {}
+	_ll_move(r, c) int r, c; {}
+	_comphash(lp) struct line *lp; {}
+	_syncmodes() {}
+	_hlmode(on) int on; {}
+	_kpmode(mode) int mode; {}
+	_sethl() {}
+	_setmode() {}
+	_setwind() {}
+	_window(t, b, l, r) int t, b, l, r; {}
+void	_absmovehome() {}
+	_reset() {}
+WINDOW* _makenew(l, c, y, x) int l, c, y, x; { return wp; }
+void	memSset(s, c, n) chtype *s; chtype c; int n; {}
+	_pos(row, col) int row, col; {}
+int	_outchar(ch) char ch; { return 0; }
+int	_tscroll(win, must) WINDOW *win; int must; {}
+struct term *cur_term;
+int _called_before;
+	_slk_init() {}
+	/* VARARGS1 */
+	_sprintw(win) WINDOW *win; {}
+	/* VARARGS1 */
+	__sscans(win) WINDOW *win; {}
+	_insmode(new) int new; {}
+	_forcehl() {}
+	_clearhl() {}
+	_inslines(n) int n; {}
+	_dellines(n) int n; {}
+	_scrollf(n) int n; {}
+	_writechars(start, end, leftch) char *start, *end; chtype leftch; {}
+	_blanks(n) {}
+	_clrline(ln, p, olen) int ln, olen; chtype *p; {}
+int	_clrbol(fnb, fd, ln, ob) int fnb, fd, ln; chtype *ob; { return 0; }
+	_clreol() {}
+	_inschars(n) int n; {}
+	_delchars(n) int n; {}

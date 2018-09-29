@@ -1,0 +1,13 @@
+
+\Ssleep\S:  Description
+
+Syntax Summary:  sleep seconds
+
+         where:  seconds  is the number of seconds the process is to pause.
+
+Description:
+     \Ssleep\S causes shell programs to pause and wait for a specified amount
+     of time.  You specify the time you want the process to wait in seconds, 
+     but in practice the actual delay is only approximate. \Ssleep\S is 
+     normally used in shell programs.
+

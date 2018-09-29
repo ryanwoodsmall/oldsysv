@@ -1,0 +1,18 @@
+
+\S command:  command line \S
+
+A command is the name of a file that contains an "executable program"\S*\S
+or "shell  script"\S*\S.  Commands can be programs or shell scripts that
+you created, or they can be standard UNIX system programs.  To execute
+the command, you usually type the command name first followed by any
+"arguments"\S*\S.  This is called a command line.  For example, the
+command line
+
+      pr -t temp
+
+
+executes the pr(1), or print program for the file "temp" with a particular
+form of output specified by the "t" "option"\S*\S.  A command line can be
+typed from the terminal or stored in a shell script.
+
+\S*\S defined in the \Sglossary\S

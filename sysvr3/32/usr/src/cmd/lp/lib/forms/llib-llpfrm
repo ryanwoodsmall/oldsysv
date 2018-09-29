@@ -1,0 +1,131 @@
+/*LINTLIBRARY*/
+
+/*	from file delform.c */
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include "lp.h"
+#include "fs.h"
+#include "form.h"
+int delform(formname)
+char *formname;
+{	static int  _returned_value;
+	return _returned_value;
+}
+int formtype(formname)
+char *formname;
+{	static int  _returned_value;
+	return _returned_value;
+}
+
+/*	from file getform.c */
+#include <fcntl.h>
+#include <string.h>
+#include <sys/stat.h>
+int getform(form,formp,alertp,alignfilep)
+char *form;
+FORM *formp;
+FALERT *alertp;
+FILE **alignfilep;
+{	static int  _returned_value;
+	return _returned_value;
+}
+
+/*	from file putform.c */
+int putform(form,formp,alertp,alignfilep)
+char *form;
+FORM *formp;
+FALERT *alertp;
+FILE **alignfilep;
+{	static int  _returned_value;
+	return _returned_value;
+}
+FILE *formfopen(formname,file,type,dircreat)
+char *formname;
+char *file;
+char *type;
+register int dircreat;
+{	static FILE * _returned_value;
+	return _returned_value;
+}
+
+/*	from file rdform.c */
+#include <ctype.h>
+int addform(form_name,formp,usrfp)
+char *form_name;
+FORM *formp;
+FILE *usrfp;
+{	static int  _returned_value;
+	return _returned_value;
+}
+int chform(form_name,cform,usrfp)
+char *form_name;
+FORM *cform;
+FILE *usrfp;
+{	static int  _returned_value;
+	return _returned_value;
+}
+int chfalert(old,new)
+FALERT *new,*old;
+{	static int  _returned_value;
+	return _returned_value;
+}
+int nscan(s,var)
+char *s;
+SCALED *var;
+{	static int  _returned_value;
+	return _returned_value;
+}
+int stripnewline(line)
+char *line;
+{	static int  _returned_value;
+	return _returned_value;
+}
+char *getbasedir(formname) 
+char *formname;
+{	static char * _returned_value;
+	return _returned_value;
+}
+char *mkcmd_usr(cmd)
+char *cmd;
+{	static char * _returned_value;
+	return _returned_value;
+}
+char *mkformdir(formname)
+char *formname;
+{	static char * _returned_value;
+	return _returned_value;
+}
+int scform(form_nm,formp,fp,LP_FORM,opttag)
+char *form_nm;
+FORM *formp;
+FILE *fp;
+short LP_FORM;
+int *opttag;
+{	static int  _returned_value;
+	return _returned_value;
+}
+
+/*	from file wrform.c */
+int wrform(formp,fp)
+FORM *formp;
+FILE *fp;
+{	static int  _returned_value;
+	return _returned_value;
+}
+int wralign(where,fp)
+FILE *where;
+FILE *fp;
+{	static int  _returned_value;
+	return _returned_value;
+}
+void wralert(alertp)
+FALERT *alertp;
+{
+}
+int printcmt(where,comment)
+FILE *where;
+char *comment;
+{	static int  _returned_value;
+	return _returned_value;
+}

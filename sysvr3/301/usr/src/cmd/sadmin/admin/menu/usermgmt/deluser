@@ -1,0 +1,68 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/deluser	2.2"
+#menu# delete a user from the system
+#help# 
+#help#	Deluser allows you to remove users from the computer.  The
+#help#	deleted user's files are removed from the file systems and their
+#help#	logins are removed from the /etc/passwd file.
+
+minuid=100	# minimum user ID number that is deletable
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+echo '
+This function COMPLETELY REMOVES THE USER, their mail file, home directory
+and all files below their home directory from the machine.
+Once this is done, there is no way guaranteed to get them all back.
+		BE SURE THIS IS WHAT YOU WANT TO DO!
+'
+while true
+do
+	loginid=`checkre ${flags} -fe 'Enter login ID you wish to remove [q]:' \
+		'.' 'You must enter at least one character.'`
+	idline=`grep "^${loginid}:" /etc/passwd`
+	if [ -n "${idline}" ]
+	then
+		eval `echo "${idline}"  |
+			sed 's/[^:]*:[^:]*:\([^:]*\):[^:]*:\([^:]*\):\([^:]*\).*/uid="\1" text="\2" home="\3"/'`
+		echo "\\t'${loginid}' belongs to '${text}'
+	whose home directory is ${home}"
+		if [ "${uid}" -lt ${minuid} ]
+		then
+			echo "\\tThat login has user ID ${uid} which is less than ${minuid}.
+This procedure will not delete that login ID."
+		elif [ -n "`who  |  grep \"^${loginid} \"" ]
+		then
+			echo "\\tThat user is currently logged on.  This procedure will not delete it."
+		elif  checkyn ${flags} -H"
+	If you answer  y  all files under ${home} will be removed." \
+			-f "Do you want to remove login ID '${loginid}'?"
+		then
+			ed - /etc/passwd <<-!
+				H
+				/^${loginid}:/d
+				w
+				q
+			!
+			if [ $? -ne 0 ]
+			then
+				admerr $0 'Failure attempting to delete user password entry'
+				exit 1
+			fi
+			if [ ! -d ${home} ]
+			then
+				echo "\\t${home} does not exist."
+			else
+				rm -rf ${home}
+				echo '\n' ${home} 'and all files under it have been removed.'
+			fi
+			rm -f /usr/mail/${loginid}
+			echo '\n' ${loginid} 'has been completely removed.'
+		fi
+
+	else
+		echo "\\t'${loginid}' is not an existing login.
+\\tThis is the current list:"
+		cut -d: -f1 /etc/passwd  |  sort  |  pr -t -w80 -6
+	fi
+done

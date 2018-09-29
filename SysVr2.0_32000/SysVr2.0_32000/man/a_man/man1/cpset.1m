@@ -1,0 +1,113 @@
+.TH CPSET 1M
+.SH NAME
+cpset \- install object files in binary directories
+.SH SYNOPSIS
+.B cpset
+.B [-o]
+object directory [mode owner group]
+.SH DESCRIPTION
+.I Cpset
+is used to install the specified
+.I object
+file in the given
+.IR directory .
+The
+.IR mode ,
+.IR owner ,
+and
+.IR group ,
+of the destination file may be specified on the command line.
+If this data is omitted, two results are possible:
+.TP
+\&
+If the user of
+.I cpset
+has administrative permissions (that is, the user's numerical
+.SM ID
+is less than 100), the following defaults are provided:
+.IP "" 10
+mode \- 0755
+.IP "" 10
+owner \- bin
+.IP "" 10
+group \- bin
+.br
+.TP 5
+\&
+If the user is not an administrator, the default, owner, and group of the
+destination file will be that of the invoker.
+.P
+An optional argument of
+.B \-o
+will force
+.I cpset
+to move
+.I object
+to 
+\f3\s-1OLD\s+1\f2object\fR
+in
+the destination directory before installing the new object.
+.P
+For example:
+.P
+.IP
+cpset echo /bin 0755 bin bin
+.IP
+cpset echo /bin
+.IP
+cpset echo /bin/echo
+.P
+All the examples above have the same effect (assuming the user
+is an administrator).
+The file
+.B echo
+will be copied into
+.B /bin
+and will be given
+.B 0755,
+.B bin,
+.B bin
+as the mode, owner, and group, respectively.
+.P
+.I Cpset
+utilizes the file
+.B /usr/src/destinations
+to determine the final destination of a file.
+The locations file contains pairs of pathnames separated by spaces
+or tabs.
+The first name is the "official" destination (for example:
+.BR /bin/echo ).
+The second name is the new destination.
+For example, if
+.I echo
+is moved from
+.B /bin
+to
+.BR /usr/bin ,
+the entry in
+.B /usr/src/destinations
+would be:
+.P
+.IP
+/bin/echo	/usr/bin/echo
+.P
+When the actual installation happens,
+.I cpset
+verifies that the "old" pathname does not exist.
+If a file exists at that location,
+.I cpset
+issues a warning and continues.
+This file does not exist on a distribution tape; it is used by sites
+to track local command movement.
+The procedures used to build the source will be responsible for defining the
+"official" locations of the source.
+.SS "Cross Generation"
+The environment variable
+.SM
+.B ROOT
+will be used to locate the destination file (in the form
+.BR $\s-1ROOT\s+1/usr/src/destinations ).
+This is necessary in the cases where cross generation is being done
+on a production system.
+.SH "SEE ALSO"
+install(1M), make(1), mk(8).

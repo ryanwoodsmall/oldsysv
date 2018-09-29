@@ -1,0 +1,16 @@
+
+\S locate \S:  Examples
+
+       locate
+
+    Prints a menu screen that prompts you to enter a set of keywords related to
+    the command you want to find.
+
+    ----------------------------------------------------------------------
+
+       locate print file format
+
+    Prints a screen containing a list of UNIX system commands whose functions
+    are related to the keywords "print", "file", and "format". It also prints a
+    menu that allows you to enter new keywords, or request detailed information
+    about any command.

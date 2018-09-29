@@ -1,0 +1,29 @@
+.TH MEM 7
+.SH NAME
+mem, kmem \- core memory
+.SH DESCRIPTION
+.I Mem\^
+is a special file that is an image of the core memory
+of the computer.
+It may be used, for example, to examine,
+and even to patch the system.
+.PP
+Byte addresses in
+.I mem\^
+are interpreted as memory addresses.
+References to non-existent locations cause errors to be returned.
+.PP
+Examining and patching device registers is likely
+to lead to unexpected results when read-only or write-only
+bits are present.
+.PP
+The file
+.I kmem\^
+is the same as 
+.I mem\^
+except that kernel virtual memory
+rather than physical memory is accessed.
+.SH FILES
+/dev/mem,
+/dev/kmem
+.\"	@(#)mem.7	6.2 of 9/6/83

@@ -1,0 +1,12 @@
+
+\Spwd\S:  Description
+
+Syntax Summary:  pwd
+
+Description:
+     \Spwd\S stands for "print working directory."  Use \Spwd\S to print the
+     full path name of the current working directory.  \Spwd\S tells you your
+     current position within the UNIX system file structure.  Users often
+     execute \Spwd\S in shell scripts, as shown in the examples.  See also:
+     cd(1) for a command that might be used with \Spwd\S.
+

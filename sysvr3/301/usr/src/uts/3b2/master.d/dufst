@@ -1,0 +1,15 @@
+*#ident	"@(#)kern-port:master.d/dufst	10.4"
+*
+* DUFST
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+oxj	-	du	-	-	-	du
+						duflag(%l) ={FLAGDU}
+						duname(%12c)= {NAMEDU}
+						dunotfy (%l) = {NOTFYDU}
+
+$$$
+
+FLAGDU =  1
+NAMEDU = "DUFST"
+NOTFYDU = 0x4

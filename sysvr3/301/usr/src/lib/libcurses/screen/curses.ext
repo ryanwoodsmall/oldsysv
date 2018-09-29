@@ -1,0 +1,21 @@
+#ident	"@(#)curses:screen/curses.ext	1.4.1.1"
+/*
+ * External variables for the library
+ *
+ * @(#)curses.ext	1.2 (Berkeley) 3/5/81
+ * @(#)curses.ext	1.3	(MRH)	10/27/82
+ */
+
+/* LINTLIBRARY */
+
+# define CURSES	/* We are internal to curses */
+
+# ifdef NONSTANDARD
+#  include "RecStruct.h"
+#  include "VTio.h"
+# endif 
+
+# include "curses.h"
+# include "term.h"
+# include "curshdr.h"
+# include "unctrl.h"

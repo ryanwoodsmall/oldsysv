@@ -1,0 +1,50 @@
+.TH CB 1
+.SH NAME
+cb \- C program beautifier
+.SH SYNOPSIS
+.B cb
+[
+.B \-s
+] [
+.B \-j
+] [
+.B \-l
+leng
+] [ file ... ]
+.SH DESCRIPTION
+.I Cb
+reads C programs either from its arguments or from the
+standard input
+and writes them
+on the standard output with spacing and indentation
+that displays the structure of the code.
+Under default options,
+.I cb
+preserves all user new-lines.
+Under the
+.B \-s
+flag
+.I cb
+canonicalizes the code to the style of
+Kernighan and Ritchie in
+.IR "The C Programming Language" .
+The
+.B \-j
+flag
+causes split lines to be put back together.
+The
+.B \-l
+flag causes
+.I cb
+to split lines that are longer than
+.IR leng .
+.SH "SEE ALSO"
+cc(1).
+.br
+.sp
+.I "The C Programming Language"
+by B. W. Kernighan and D. M. Ritchie.
+.SH BUGS
+Punctuation that is hidden in
+preprocessor statements will cause indentation errors.
+.\"	@(#)cb.1	6.2 of 9/2/83

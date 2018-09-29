@@ -1,0 +1,18 @@
+
+\S relative pathname : . : dot \S
+
+A relative pathname is a sequenced list of the directories between
+the current working directory and any other directory or file.  Each
+directory in the list, except for the first, is preceded by a slash
+(/). When the directory or file is subordinate to the current working 
+directory, the names of the directories are listed in the relative  
+pathname. If the directory or file of interest is not subordinate, the 
+relative pathname indicates this through the use of dot (.) and 
+dot dot (..).   Dot (.) represents the name of the current working 
+directory, and dot dot (..) represents the name of the "parent 
+directory"\S*\S. So, a file named "temp", in the parent directory of 
+your current working directory, would have the relative pathname "../temp".
+
+(see also:  full pathname)
+
+\S*\S defined in the \Sglossary\S

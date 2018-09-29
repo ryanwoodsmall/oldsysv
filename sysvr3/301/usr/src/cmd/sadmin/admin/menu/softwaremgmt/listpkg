@@ -1,0 +1,26 @@
+#ident	"@(#)sadmin:admin/menu/softwaremgmt/listpkg	2.4"
+#menu# list packages already installed
+#help#
+#help#	This subcommand shows you a list of currently installed optional
+#help#	software packages.
+
+unset c
+if [ -d /usr/options ]
+then
+	cd /usr/options
+	c=`ls *.name 2>/dev/null  |  sed 's/\.name$//'`
+	if [ -n "${c}" ]
+	then
+		echo '\n\tThe following software packages have been installed:'
+		for i in ${c}
+		do
+			echo "${i}\\c"
+			sed 's/^/	/' ${i}.name
+		done
+	fi
+fi
+if [ -z "${c}" ]
+then
+	echo '\n\tNo software packages have been installed.'
+fi
+echo ''

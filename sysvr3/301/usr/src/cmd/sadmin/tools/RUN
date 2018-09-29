@@ -1,0 +1,15 @@
+#ident	"@(#)sadmin:tools/RUN	1.2"
+#	run-without-installing procedure for Simple Administration
+
+pn=/install/install/packagename
+if [ -r ${pn} ]
+then
+	chkyn -f "This diskette contains:
+`cat ${pn}`
+Do you want to run it?"  ||  exit 0
+fi
+
+cd /install/new/usr/admin
+PATH=/install/new/usr/lbin:${PATH}
+export PATH
+exec ./sysadm

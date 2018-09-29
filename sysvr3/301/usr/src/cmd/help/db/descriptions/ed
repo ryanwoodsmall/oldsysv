@@ -1,0 +1,25 @@
+
+\Sed\S:  Description
+
+Syntax Summary:  ed [-] [-x] [-p string] [file_name]
+
+         where:  string  is a sequence of characters delimited by white
+                         space and/or double quotes.
+
+                 file_name  is the name of a file.
+
+Description:
+     \Sed\S stands for "editor," and it is a line editor for UNIX systems.
+     Use \Sed\S to change the contents of files.  \Sed\S is a line editor
+     because you type command lines to change the file.  When you type \Sed\S
+     you invoke the editor, which makes a copy of the file you want to edit and
+     puts the copy in a buffer.  Everything you type after you invoke the 
+     editor is interpreted as a command to move around or to change the text 
+     in the buffer. A typical command for \Sed\S might include a line number or 
+     regular expression that identifies the lines to be changed, a single
+     character for the type of change to be made, and parameters to the command
+     such as the text that will be substituted.  The commands in \Sed\S allow
+     you to add text as well as change and move text.  Details on \Sed\S are
+     available on the manual page and in the \Sed\S tutorial in the "UNIX
+     System User's Guide." See also:  ex(1), vi(1), and red(1) for commands
+     with function similar to ed(1).

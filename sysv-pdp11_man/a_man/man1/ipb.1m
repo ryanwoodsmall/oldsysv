@@ -1,0 +1,20 @@
+.TH IPB 1M "3B20S only"
+.SH NAME
+ipb \- read the \s-1EAI\s+1 Input Parameter Buffer
+.SH SYNOPSIS
+.B /etc/ipb
+.SH DESCRIPTION
+.I Ipb\^
+prints the settings of the various fields in the
+.SM EAI
+Input Parameter Buffer.
+Information displayed includes
+the method used to boot the system,
+whether the backup root file system is being used,
+whether certain hardware error checks are enabled
+and whether minimal configuration has been specified.
+.SH FILES
+/usr/include/sys/ipb.h
+.SH "SEE ALSO"
+3B20ops(8).
+.\"	@(#)ipb.1m	5.2 of 5/18/82

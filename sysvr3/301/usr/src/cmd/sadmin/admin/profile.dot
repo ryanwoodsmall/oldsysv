@@ -1,0 +1,33 @@
+trap 'exit' 1 2 3 15
+#ident	"@(#)sadmin:admin/profile.dot	2.4"
+#	The .profile file for the unixadmin set of utilities.
+
+set -f
+MENUTOP=`pwd`
+PATH=/bin:/usr/bin:/usr/lbin
+export PATH MENUTOP
+if [ ! -x ${LOGNAME:?} ]
+then
+	admerr ${LOGNAME} Program ${LOGNAME} not installed or not executable.
+	exit
+fi
+
+if [ "${SHELL}" = /bin/rsh ]
+then
+	# Invoked by login.  L0 through L5 are arguments from login line.
+	#	Permits shortcuts such as  "login:  sysadm adduser".
+	SHELL=/bin/sh
+	export SHELL
+	exec ./${LOGNAME} ${L0} ${L1} ${L2} ${L3} ${L4} ${L5}
+fi
+# invoked by command
+# Magic Here!
+#	File Descriptor 3 was set up by the calling command to be the
+#	arguments for this function.  We read the arguments from FD 3,
+#	close FD 3 so that it doesn't interfere with any child processes,
+#	and then invoke the command with the arguments.
+#	See the "unixadmin" command, linked to things such as "sysadm",
+#	for the end that sets up and feeds FD 3.
+read args 0<&3
+exec 3<&-
+exec ./${LOGNAME} ${args}

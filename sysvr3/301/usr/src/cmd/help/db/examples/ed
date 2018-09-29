@@ -1,0 +1,15 @@
+
+\Sed\S:  Examples
+
+        ed NAME/list
+
+   If you have a file "list" in the "NAME" directory, \Sed\S copies the file
+   and places it in a buffer.  You can edit the buffer using \Sed\S commands.
+
+   ---------------------------------------------------------------------------
+
+        ed -p ":;" NAME/list
+
+   If you have a file "list" in the "NAME" directory, \Sed\S copies the file
+   and places it in a buffer.  You edit the buffer using \Sed\S commands, and
+   \Sed\S uses ":;" to prompt you during editing.

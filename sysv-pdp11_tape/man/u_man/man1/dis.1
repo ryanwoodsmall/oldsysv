@@ -1,0 +1,136 @@
+.if '\*p'' \{\
+.ds N 3B20S
+.ds p 
+.ds P 
+.ds l libc.a\}
+.TH \*PDIS 1 "\*N only"
+.SH NAME
+\*pdis \- \*N disassembler
+.SH SYNOPSIS
+.B \*pdis
+.RB [ \-o ]
+.RB [ \-V ]
+.Rb [ \-V ]
+.RB [ \-L ]
+.RB [ \-d " sec]"
+.RB [ \-da " sec ]"
+.RB [ \-t " sec]"
+.RB [ \-l " string]"
+files
+.SH DESCRIPTION
+The 
+.I \*pdis
+command
+produces an assembly language listing
+of each of its
+object
+.IR file
+arguments.
+The listing includes
+assembly
+statements
+and the binary that
+produced those statements.
+.PP
+The following \fIoptions\fP are
+interpreted by the disassembler and may be specified in any order.
+.PP
+.TP 12
+.B \-o
+Will print numbers in octal.
+Default is hexadecimal.
+.PP
+.TP 12
+.B \-V
+Version number of the disassembler will be written to standard error.
+.PP
+.TP 12
+.B \-L
+Invokes a lookup of C source labels in the symbol table for
+subsequent printing.
+.PP
+.TP 12
+.BR \-d " sec"
+Disassembles the 
+named section as data,
+printing the offset of
+the data from the
+beginning of the section.
+.PP
+.TP 12
+.BR \-da " sec"
+Disassembles the 
+named section as data,
+printing the actual 
+address of the data.
+.PP
+.TP 12
+.BR \-t " sec"
+Disassembles the
+named section as text.
+.PP
+.TP 12
+.BR \-1 " string"
+Will disassemble the
+library file specified
+as
+.IR string .
+For example,
+one would issue the
+command
+.B "\*pdis \-l x \-l z"
+to disassemble
+.B libx.a
+and
+.B libz.a\c
+\&.
+All libraries are
+assumed to be in
+.ie '\*p'' .BR /usr/lib .
+.el .BR /usr/\*p/lib .
+.DT
+.br
+.PP
+If the
+.BR \-d ,
+.B \-da
+or
+.BR \-t
+options are specified,
+only those named
+sections from each
+user supplied file name
+will be disassembled.
+Otherwise, all sections
+containing text will
+be disassembled.
+.PP
+On output, a number enclosed in brackets
+at the beginning of a line,
+such as 
+.BR [5] ,
+represents that the C breakpointable line number,
+starts with the following instruction.
+An expression such as
+.B <40>
+in the operand field,
+following a relative displacement
+for control transfer instructions,
+is the computed address
+within the section to which
+control will be transferred.
+A C function name
+will appear in the first column,
+followed by
+.BR (\|) .
+.SH "SEE ALSO"
+\*pas(1),
+\*pcc(1),
+\*pld(1).
+.SH "DIAGNOSTICS"
+The self explanatory diagnostics
+indicate errors in
+the command line or problems
+encountered with the
+specified files.
+.\"	@(#)dis.1	5.2 of 5/18/82

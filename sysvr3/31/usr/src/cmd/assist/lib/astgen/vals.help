@@ -1,0 +1,108 @@
+0
+This validation is used for fields that take filenames as input. You
+will move to another screen where you may specify whether the user
+input string must be a directory, a file, or either.  In addition,
+you may specify the permissions the directory/file must have.
+1
+This validation is used for fields that take filenames as input.
+It will verify if the user input filename corresponds to an existing
+file.  If the user enters a filename with no directories, the current
+directory will be checked.  If the user specifies a full pathname,
+that pathname will be checked.
+2
+This validation is used for fields that take filenames as input.
+It will verify that the user input is not the name of an existing
+file.
+3
+This validation is used for fields that take file names as input.
+It will verify that the user input corresponds to an existing file
+name, or it matches one or more strings.  You might use this validation
+for a command like "cat" that expects either a file name, a hyphen, or
+no input.  You would specify the strings for this validation as a hyphen
+and <empty>.
+4
+This validation is used for fields that take file names as input.
+It will issue an error message if the user input string is the name
+of an existing file or directory that the user not have read and/or
+write permission for; it will issue a warning message if the user
+input string is the name of an existing file for which the user has
+write permission; it will verify that the user has write permissions
+in the directory specified.
+5
+This validation is used for fields that take file names as input.
+It verifies that the current user of ASSIST owns the specified file.
+You might use this validation for the "chmod" command, for example,
+since only the owner of a file may use this command.
+6
+This validation is used when the current field and immediately previous
+field both expect file names as input.  The validation ensures that
+the "i-node" corresponding to the file in this field is not the same as
+the "i-node" of the previous field.  You might use this validation to
+ensure that the source and destination files of a command are not the
+same (e.g. for the "cp" command).
+7
+This validation allows you to write your own customized validations.
+This validation takes as an argument a single shell script.  Any output
+from the shell script (e.g. from an "echo" command) will appear as an
+error message to the ASSIST user.  Thus, the script should return
+nothing if the shell validation is passed.  User input the field nn
+is referred to in the script as $Fnn.  See the documentation for more
+details.
+8
+This validation is used to indicate that a particular command argument
+is available only in UNIX System V Release 3.0, and that the ASSIST
+user's current system is not Release 3.0.
+9
+Use this validation to specify a complete list of valid strings that
+the user may enter in this field.  For example, the "-s" (speed) option
+to the "cu" command allows only 110, 150, 300, 600, 1200, 4800, or 9600
+as legal values.  You would select this validation and enter those
+speeds as legal strings, if you were designing the "cu" command form.
+10
+This validation is used to specify a list of strings that the user may
+NOT enter in this field.
+11
+This validation ensures that user input strings are not too long.  You
+specify how many characters are allowed.  For example, to make sure that
+only legal UNIX system file names are entered, this value should be set
+to 14.  You can also use this validation when the user is to enter
+single character only (e.g. the "-d" option of the "cut" command).
+NOTE: ASSIST has a length limit for input strings which is 65 characters
+minus the command name length.
+12
+This validation allows you to specify the format of user input.
+The following control characters have special meaning:
+^B one digit, ^N one or more digits, ^L one letter, ^E one or more
+letters, ^C one printing character, ^K one or more printing characters,
+and ^P represents a one character from a list you provide.
+Other characters are taken literally.  For example, -^B:^E  indicates
+that the user input begins with a hyphen, then one digit, followed
+by a colon and a string of letters.  If you use a ^P, you will also
+have to provide a string of characters to replace the ^P (e.g. "abcd").
+NOTE: Multi-character symbols (^N, ^E, and ^K) cannot be used when
+they are immediately followed by a literal character of the same class.
+For example, ^N9 is equivalent with ^N and ^N4.
+13
+This validation ensures that the user input string is a regular
+expression.  You might use this validation for commands like "grep"
+that take a regular expression as one of its arguments.
+14
+This validation is used for fields that take strings as input.
+You supply a list of prefixes and/or suffixes.  The validation ensures
+that each user string begins with at least one of the prefixes, and
+ends with at least one of the suffixes.
+15
+This validation is used for fields that take strings as input.
+You supply a list of prefixes and/or suffixes.  The validation ensures
+that user input neither begins with any of the specified prefixes,
+nor ends with any of the specified suffixes.
+16
+This validation is used for fields that take strings as input.
+The validation checks user input strings for any special characters
+that need to be quoted.  This validation requires two lists from you.
+Both lists have on character on each line.  On the first list you specify
+a list of characters that require quoting by the ASSIST user.  On the
+second list you provide a list of quote characters.  These are usually,
+",', and \.  When the user tries to use one of the characters from the
+first list, s/he will be informed that s/he must quote the character
+with a member from the second list.

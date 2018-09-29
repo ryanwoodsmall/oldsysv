@@ -1,0 +1,12 @@
+
+\S process group leader \S
+
+Process	group leader is	the "process"\S*\S that started other processes.
+For example, when you login, a process starts.  The process is the command
+sh(1).  This shell is the process that all other processes within your
+login environment start from.  You have	a program that executes	a command,
+your login shell is the process	group leader for that command, too.
+A process is a process group leader to its children and its children's
+children, and so on.
+
+\S*\S defined in the \Sglossary\S

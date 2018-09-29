@@ -1,0 +1,12 @@
+
+\S file name:  simple file name \S
+
+A file name is a "string"\S*\S of characters that identifies a file.  A
+file name can be a simple file name which is the name of the file when the
+file is in your current working directory.  A simple file name can not be
+more than 14 characters long, and can not contain a "pipe (|)"\S*\S
+character.  A file name can also be the relative pathname or full pathname 
+of a file.  Files with the same name can exist in different
+directories, but file names within the same directory must be unique.
+
+\S*\S defined in the \Sglossary\S

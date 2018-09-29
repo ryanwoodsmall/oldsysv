@@ -1,0 +1,17 @@
+
+\Sls\S:  Description
+
+Syntax Summary:  ls [-CFRabcdfgilmnopqrstux] [name ...]
+
+         where:  name  is a file or directory name.
+
+Description:
+     \Sls\S stands for "list."  Use \Sls\S to list the names of files and
+     subdirectories in a directory.  Without arguments, \Sls\S lists the files
+     in the current working directory.  When you use a file name as an argument
+     to \Sls\S, it prints the name of that file.  \Sls\S accepts multiple
+     arguments, and they can be a mixture of directory names and file names.
+     The output is listed in alphabetical order by default.  The options to 
+     \Sls\S change the kind of information that is printed and the order in
+     which the information is printed.  See also:  echo(1) for a command with
+     a function similar to \Sls\S.

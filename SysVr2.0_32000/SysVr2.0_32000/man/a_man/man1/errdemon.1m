@@ -1,0 +1,44 @@
+.TH ERRDEMON 1M
+.SH NAME
+errdemon \- error-logging daemon
+.SH SYNOPSIS
+.BR /usr/lib/errdemon " [ file ]"
+.SH DESCRIPTION
+The error logging daemon
+.I errdemon\^
+collects error records from the operating system
+by reading the special file
+.B /dev/error
+and places them in
+.IR file .
+If
+.I file\^
+is not specified when the daemon is activated,
+.B /usr/adm/errfile
+is used.
+Note that
+.I file\^
+is created if it does not exist;
+otherwise, error records are appended to it,
+so that no previous error data is lost.
+No analysis of the error records is done by
+.IR errdemon ;
+that responsibility is left to
+.IR errpt (1M).
+The error-logging daemon is terminated by sending
+it a software kill signal [see
+.IR kill (1)].
+Only the super-user may start the daemon, and only one
+daemon may be active at any time.
+.SH FILES
+.ta \w'/usr/adm/errfile   'u
+/dev/error	source of error records
+.br
+/usr/adm/errfile	repository for error records
+.SH DIAGNOSTICS
+The diagnostics produced by 
+.I errdemon\^
+are intended to be self-explanatory.
+.SH "SEE ALSO"
+errpt(1M), errstop(1M), kill(1), err(7).
+.\"	@(#)errdemon.1m	6.2 of 9/2/83

@@ -1,0 +1,25 @@
+
+\S pr \S:  Examples
+
+       pr listing
+
+    Prints the file named "listing" on the standard output.  Output is
+    paginated, and each page has a heading consisting of the time and date, the
+    file name, and the page number.
+
+    ----------------------------------------------------------------------
+
+       pr -2 -h users personnel
+
+    Prints the contents of the file "personnel" in two columns on standard
+    output.  Each page has a header consisting of the time and date, the word
+    "users" and the page number.
+
+
+    ----------------------------------------------------------------------
+
+       pr -t -5 listing | pr -t -e > lists.column
+
+    Formats the file "listing" in five columns without including a header and
+    trailer.  The second \S pr \S command expands tabs that are in the file to
+    eight spaces and prints out the spaces.

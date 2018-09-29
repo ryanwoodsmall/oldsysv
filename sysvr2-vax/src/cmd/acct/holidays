@@ -1,0 +1,18 @@
+* @(#)holidays	1.4 of 1/9/84
+* Prime/Nonprime Table for UNIX Accounting System
+*
+* Curr	Prime	Non-Prime
+* Year	Start	Start
+*
+  1984	0830	1700
+*
+* Day of	Calendar	Company
+* Year		Date		Holiday
+*
+   51		Feb 20		Wash. Birthday
+  149		May 28		Memorial Day
+  186		Jul 4		Indep. Day
+  247		Sep 3		Labor Day
+  327		Nov 22		Thanksgiving Day
+  328		Nov 23		day after Thanksgiving
+  360		Dec 25		Christmas

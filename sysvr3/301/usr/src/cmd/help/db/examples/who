@@ -1,0 +1,23 @@
+
+\S who \S:  Examples
+
+       who
+
+    Prints a list of all current system users on the standard output.
+
+    ----------------------------------------------------------------------
+
+       who -T
+
+    Prints users' names, line numbers, times when they logged in, and the state
+    of the write permissions for each person's terminal.
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+       who | wc -l
+
+    Prints the number of people currently using the system.

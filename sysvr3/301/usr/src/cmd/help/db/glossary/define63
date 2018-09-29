@@ -1,0 +1,9 @@
+
+\S user ID:  user ID number \S
+
+For each login name, the system administrator arbitrarily assigns a number
+called the user ID or user ID number.  User IDs are listed in the
+/etc/passwd file and are used by the system to identify "owners"\S*\S of
+files and directories.
+
+\S*\S defined in the \Sglossary\S

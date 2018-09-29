@@ -1,0 +1,16 @@
+#ident	"@(#)cmd-3b2:inst/bin/fstab	1.2"
+#
+# fstab
+#
+# Extract integral hard disk entries from an fstab. Ignores
+# comments, blank lines and references to external devices.
+#
+
+while read dev dir ronly junk
+do
+	case "${dev}" in
+	/dev/dsk/c1d*s* | /dev/idsk* )
+		echo "${dev} ${dir} ${ronly}"
+		;;
+	esac
+done

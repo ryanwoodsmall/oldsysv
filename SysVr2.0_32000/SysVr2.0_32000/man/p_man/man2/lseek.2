@@ -1,0 +1,82 @@
+.TH LSEEK 2 
+.SH NAME
+lseek \- move read/write file pointer
+.SH SYNOPSIS
+.B long lseek (fildes, offset, whence)
+.br
+.B int fildes;
+.br
+.B long offset;
+.br
+.B int whence;
+.SH DESCRIPTION
+.I Fildes\^
+is a
+file descriptor
+returned from a
+.IR creat ,
+.IR open ,
+.IR dup ,
+or
+.I fcntl\^
+system call.
+.I Lseek\^
+sets the file pointer associated with
+.I fildes\^
+as follows:
+.RS
+.HP 6
+If
+.I whence\^
+is 0, the pointer is set to
+.I offset\^
+bytes.
+.HP 6
+If
+.I whence\^
+is 1, the pointer is set to its current location plus
+.IR offset .
+.HP 6
+If
+.I whence\^
+is 2, the pointer is set to the size of the
+file plus
+.IR offset .
+.RE
+.PP
+Upon successful completion, the resulting pointer location,
+as measured in bytes from the beginning of the file, is returned.
+.PP
+.I Lseek\^
+will fail
+and the file pointer will remain unchanged
+if one or more of the following are true:
+.TP 15
+\%[EBADF]
+.I Fildes\^
+is not an open file descriptor.
+.TP
+\%[ESPIPE]
+.I Fildes\^
+is associated with a pipe or fifo.
+.TP
+\%[EINVAL and SIGSYS signal]
+.I Whence\^
+is not 0, 1, or 2.
+.TP
+\%[EINVAL]
+The resulting file pointer would be negative.
+.PP
+Some devices are incapable of seeking.
+The value of the file pointer associated with such a device
+is undefined.
+.SH "RETURN VALUE"
+Upon successful completion, a non-negative integer
+indicating the file pointer value
+is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+creat(2), dup(2), fcntl(2), open(2).
+.\"	@(#)lseek.2	6.2 of 9/6/83

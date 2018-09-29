@@ -1,0 +1,62 @@
+set x $*
+. ./.param
+
+NULL=/dev/null
+
+if [ ! -f $TMPDIR/names1 ]; then
+	echo "$0: $TOOLS/prnames has not been run!"
+	exit 1
+fi
+
+cp $TMPDIR/names1 /tmp/cmdnames.$$
+
+trap "rm -f /tmp/cmdnames.$$; exit 1" 0 1 2 3 9 15
+
+
+echo "`date`\n" > $TMPDIR/cmds.lost
+echo "`date`\n" > $TMPDIR/cmds.bin
+echo "`date`\n" > $TMPDIR/cmds.usrbin
+echo "`date`\n" > $TMPDIR/cmds.etc
+echo "`date`\n" > $TMPDIR/cmds.usrlib
+echo "`date`\n" > $TMPDIR/cmds.dgnbin
+
+ed - /tmp/cmdnames.$$ <<\!
+1,2d
+g/ \\-.*/s///
+g/, /s//\
+/g
+w
+q
+!
+
+cat /tmp/cmdnames.$$ | while read cmdname
+do
+	ls /bin/$cmdname > $NULL 2>&1
+	if [ $? = 0 ]; then
+		echo "$cmdname" >> $TMPDIR/cmds.bin
+		continue
+	fi 
+	ls /usr/bin/$cmdname > $NULL 2>&1
+	if [ $? = 0 ]; then
+		echo "$cmdname" >> $TMPDIR/cmds.usrbin
+		continue
+	fi 
+	ls /etc/$cmdname > $NULL 2>&1
+	if [ $? = 0 ]; then
+		echo "$cmdname" >> $TMPDIR/cmds.etc
+		continue
+	fi 
+	ls /usr/lib/$cmdname > $NULL 2>&1
+	if [ $? = 0 ]; then
+		echo "$cmdname" >> $TMPDIR/cmds.usrlib
+		continue
+	fi 
+	ls /dgn/bin/$cmdname > $NULL 2>&1
+	if [ $? = 0 ]; then
+		echo "$cmdname" >> $TMPDIR/cmds.dgnbin
+		continue
+	fi 
+
+	echo "$cmdname" >> $TMPDIR/cmds.lost
+done
+#	@(#)ckcmds	5.2 of 5/19/82

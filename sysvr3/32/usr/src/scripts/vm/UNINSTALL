@@ -1,0 +1,48 @@
+#
+# Copyright  (c) 1985 AT&T
+#       All Rights Reserved
+#
+#ident	"@(#)pkg.vm:UNINSTALL	1.5"
+#
+# This command will remove portions of previously installed command set.
+
+PKGNAME=`cat /install/install/vm.name`
+
+export logname
+
+removethem() {
+	logname="$1"
+	x=`sed -n -e "/^$logname:/s/^.*:\([^:][^:]*\):[^:]*\$/\1/p" < /etc/passwd`
+	if [ -z "$x" ]
+	then
+		echo "Can't find HOME directory of $logname" >&2
+		return 1
+	fi
+	echo "removing files under ${x}"
+	rm -rf $x/*
+
+	echo "Removing login $logname" 
+	rm -rf "$x"
+	if [ -x /usr/bin/passmgmt ]
+	then
+		/usr/bin/passmgmt -d ${logname}
+	else
+		rm -f /etc/Opasswd
+		> /etc/Opasswd
+		chmod 444 /etc/Opasswd
+		cp /etc/passwd /etc/Opasswd
+		chmod 644 /etc/passwd
+		grep -v "^$logname:" /etc/Opasswd > /etc/passwd
+		chmod 444 /etc/passwd
+	fi
+	return 0
+}
+
+echo "Removing the ${PKGNAME}."
+rm -f /usr/options/vm.name
+rm -rf /usr/admin/menu/packagemgmt/FACE
+removethem vmsys
+removethem oasys
+x= 
+echo "The ${PKGNAME} has $x been uninstalled."
+exit 0

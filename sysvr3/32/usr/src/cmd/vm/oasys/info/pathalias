@@ -1,0 +1,9 @@
+OBJECTS=$WISHROOT/OBJECTS
+HELP=$WISHROOT/HELP
+filecabinet=$HOME/FILECABINET
+wastebasket=$HOME/WASTEBASKET
+preferences=$WISHROOT/OBJECTS/Menu.pref
+services=$WISHROOT/OBJECTS/Menu.serve
+office=$WISHROOT/OBJECTS/Menu.office
+other_users=$WISHROOT/OBJECTS/Menu.users
+other users=$WISHROOT/OBJECTS/Menu.users

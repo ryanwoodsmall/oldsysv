@@ -1,0 +1,251 @@
+*#ident	"@(#)kern-port:master.d/kernel	10.25"
+*
+* KERNEL
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+none	 -	  -	 -	  -	 -
+						init_tbl(%l%l%l%l%l%l%l%l%l%l)
+							={
+							  &cinit,
+							  &binit,
+							  &inoinit,
+							  &fsinit,
+							  &finit,
+							  &iinit,
+							  &flckinit,
+							  &strinit,
+							  &debuginit,
+							  0}
+						buf[NBUF] (%0x34)
+						buffers	[(NBUF+1)*1024] (%c)
+						pbuf[NPBUF] (%0x34)
+						hbuf[NHBUF] (%0xC)
+						file[NFILE] (%0xC)
+						inode[NINODE] (%0x44)
+						s5inode[NS5INODE] (%0x40)
+						proc[NPROC] (%0xA8)
+						region[NREGION] (%0x24)
+						callout[NCALL] (%0x10)
+						mount[NMOUNT] (%0x24)
+						sptmap[SPTMAP] (%0x8)
+						putbuf[PUTBUFSZ] (%c)
+						putbufsz(%i) = {PUTBUFSZ}
+						v(%i%i%i%i%l%i%l%i%l%i%l%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i%i)
+							={NBUF,
+							  NCALL,
+							  NINODE,
+							  &inode+NINODE*#inode,
+							  NFILE,
+							  &file+NFILE*#file,
+							  NMOUNT,
+							  &mount+NMOUNT*#mount,
+							  NPROC,
+							  &proc+NPROC*#proc,
+							  NREGION,
+							  NCLIST,
+							  MAXUP,
+							  NHBUF,
+							  NHBUF-1,
+							  NPBUF,
+							  SPTMAP,
+							  VHNDFRAC,
+							  MAXPMEM,
+							  NAUTOUP,
+							  NOFILES,
+							  NQUEUE,
+							  NSTREAM,
+							  NBLK4096,
+							  NBLK2048,
+							  NBLK1024,
+							  NBLK512,
+							  NBLK256,
+							  NBLK128,
+							  NBLK64,
+							  NBLK16,
+							  NBLK4,
+							  NS5INODE}
+*tuneable.h
+						tune(%i%i%i%i%i%i%i%i%i%i%i)
+						={	GPGSLO,
+							GPGSHI,
+							GPGSMSK,
+							VHANDR,
+							VHANDL,
+							MAXSC,
+							MAXFC,
+							MAXUMEM,
+							BDFLUSHR,
+							MINARMEM,
+							MINASMEM
+						}
+
+* file and record locking *
+						flckinfo(%l%l%l%l)
+							= {FLCKREC}
+						flox[FLCKREC] (%0x1c)
+* shared libraries *
+						shlbinfo(%l%l%l)
+							= {SHLBMAX, 0, 0}
+* uname
+						utsname(%8c%c%8c%c%8c%c%8c%c%8c%c)
+							={SYS,0,
+							  NODE,0,
+							  REL,0,
+							  VER,0,
+							  "3B2",0}
+* Line Discipline Switch Table
+*   order: open close read write ioctl rxint txint modemint
+						linesw (%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l%l)
+							={
+*						tty -------------
+							&ttopen,
+							 &ttclose,
+							 &ttread,
+							 &ttwrite,
+							 &ttioctl,
+							 &ttin,
+							 &ttout,
+							 &nulldev,
+*						xt -------------
+							 &nulldev,
+							 &nulldev,
+							 &nulldev,
+							 &nulldev,
+							 &nulldev,
+							 &xtin,
+							 &xtout,
+							 &nulldev,
+*						sxt -------------
+							 &nulldev,
+							 &nulldev,
+							 &nulldev,
+							 &nulldev,
+							 &nulldev,
+							 &sxtin,
+							 &sxtout,
+							 &nulldev,
+							 }
+					linecnt (%i) ={3}
+* Streams
+						queue[NQUEUE] (%l%l%l%l%l%l%s%s%s%s%s%s)
+						streams[NSTREAM] (%l%l%l%l%l%l%s%s%s%c%i%l%l%l%l)
+						mblock[NBLK4096+NBLK2048+NBLK1024+NBLK512+NBLK256+NBLK128+NBLK64+NBLK16+NBLK4 + ((NBLK4096+NBLK2048+NBLK1024+NBLK512+NBLK256+NBLK128+NBLK64+NBLK16+NBLK4)/4)] (%l%l%l%l%l%l)
+						dblock[NBLK4096+NBLK2048+NBLK1024+NBLK512+NBLK256+NBLK128+NBLK64+NBLK16+NBLK4] (%l%l%l%c%c%c)
+						linkblk[NMUXLINK] (%l%l%i)
+						nmuxlink (%i) ={NMUXLINK}
+						nstrpush (%i) ={NSTRPUSH}
+						strevent[NSTREVENT] (%l%l%l)
+						nstrevent (%i) ={NSTREVENT}
+						maxsepgcnt (%i) ={MAXSEPGCNT}
+						strmsgsz (%i) ={STRMSGSZ}
+						strctlsz (%i) ={STRCTLSZ}
+						strlofrac (%c) ={STRLOFRAC}
+						strmedfrac (%C) ={STRMEDFRAC}
+						nmblock (%i) ={NBLK4096+NBLK2048+NBLK1024+NBLK512+NBLK256+NBLK128+NBLK64+NBLK16+NBLK4 + ((NBLK4096+NBLK2048+NBLK1024+NBLK512+NBLK256+NBLK128+NBLK64+NBLK16+NBLK4)/4)}
+
+* DU
+						srmount[NSRMOUNT] (%0x1c)
+						nsrmount (%i) ={ NSRMOUNT }
+						nservers (%i) ={ 0 }
+						idleserver (%i) ={ 0 }
+						msglistcnt (%i) ={ 0 }
+
+* Debugging (inode logging)
+						ilogs[ILOGSIZE] (%0x2c)
+						ilogsize (%i) ={ILOGSIZE}
+						ipid[NINODE] (%s)
+$$$
+
+SYS ="unix"
+NODE ="unix"
+REL  = "3.0"
+VER  = "2"
+
+*
+* The following entries form the tunable parameter table.
+*
+
+NINODE = 150
+NS5INODE = 150
+NFILE = 150
+NMOUNT = 25
+NCALL = 30
+NPROC = 60
+NCLIST = 120
+
+* The following stuff is for streams.
+
+NQUEUE = 0
+NSTREAM = 0
+NBLK4096 = 0
+NBLK2048 = 0
+NBLK1024 = 0
+NBLK512 = 0
+NBLK256 = 0
+NBLK128 = 0
+NBLK64 = 0
+NBLK16 = 0
+NBLK4 = 0
+NMUXLINK = 0
+NSTRPUSH = 9
+NSTREVENT = 0
+MAXSEPGCNT = 0
+STRLOFRAC = 80
+STRMEDFRAC = 90
+STRMSGSZ = 4096
+STRCTLSZ = 1024
+
+* maxup is the maximum number of processes per user
+
+MAXUP = 25
+
+* hashbuf must be a power of 2
+
+NHBUF = 64
+NPBUF = 20
+
+* File region locking
+
+FLCKREC = 100
+
+* Shared Libraries:  Maximum number of libraries that can be
+*                    attached to a process at one time.
+
+SHLBMAX = 2
+
+* Delay for delayed writes
+
+NAUTOUP = 10
+
+* Maximum number of open files per process.  Now a configurable
+* parameter but only applies to direct open and close calls (i.e
+* stdio, sh, etc will not make use of more than 20 in this release).
+
+NOFILES = 20
+
+* added for paging
+
+NREGION = 210
+SPTMAP = 50
+VHNDFRAC = 16
+MAXPMEM = 0
+GPGSLO = 25
+GPGSHI = 40
+GPGSMSK = 0x00000220
+VHANDR = 1
+VHANDL = 10
+MAXSC = 1
+MAXFC = 1
+MAXUMEM = 8192
+BDFLUSHR = 1
+MINARMEM = 25
+MINASMEM = 25
+PUTBUFSZ = 2000
+
+* DU
+
+NSRMOUNT = 0
+
+* Debugging (inode logging)
+
+ILOGSIZE	= 0

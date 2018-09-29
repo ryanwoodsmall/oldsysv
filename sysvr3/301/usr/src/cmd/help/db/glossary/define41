@@ -1,0 +1,18 @@
+
+\S non-printing character \S
+
+Non-printing characters are characters that do not print on your terminal
+the way that they exist in your file.  There are two types of non-printing
+characters:  1) those that an editor inserts into a file; and 2) those that
+you insert into a file.
+
+The first kind occur when you edit a file and you type a space, tab, or
+carriage return.  The editor puts a character in to represent that
+keystroke.  When you print the file, you see a space, tab, or your file
+starts printing on a new line.  You do not see the character the editor
+uses.
+
+The second type of non-printing characters are those that you use in a
+shell program.  You can ring the bell on your terminal by inserting a \07
+in a shell program or file.  The \07 never prints.
+(see:  tab)

@@ -1,0 +1,24 @@
+.TH SYNC 1
+.SH NAME
+sync \- update the super block
+.SH SYNOPSIS
+.B sync
+.SH DESCRIPTION
+.I Sync\^
+executes the
+.I sync\^
+system primitive.
+If the system is to be stopped,
+.I sync\^
+must be called to insure
+file system integrity.
+It will flush all previously unwritten system buffers out to disk,
+thus assuring that all file modifications up to that point will be
+saved.
+See
+.IR sync (2)
+for details.
+.SH SEE ALSO
+sync(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)sync.1	6.2 of 9/2/83

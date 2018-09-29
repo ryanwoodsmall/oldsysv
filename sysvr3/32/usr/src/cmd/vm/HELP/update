@@ -1,0 +1,16 @@
+
+   The UPDATE command is used to update the contents of  a  frame  to
+   reflect  changes  made  since  the  frame  was  originally opened.
+   Currently, the only FACE frames that this  command  has  any
+   meaning for are the FIND command "Objects Found" menu.  All  other
+   frames  are automatically updated if any changes have been made to
+   the contents of the frame.
+
+   To use the UPDATE command, do one of the following  options.  If a
+   frame  is  not  specified,  the  current frame is assumed.  In the
+   "typed command" syntax, the frame number is the number in the left
+   corner of the frame label.
+
+      - Command Menu - Select UPDATE + RETURN
+
+      - Typed Command - Type update [ frame_number] + RETURN

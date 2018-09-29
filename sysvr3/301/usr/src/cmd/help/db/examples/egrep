@@ -1,0 +1,26 @@
+
+\S egrep \S:  Examples
+
+       egrep fs2 /etc/passwd
+
+    Searches through the file "/etc/passwd" and prints all lines containing the
+    pattern "fs2" on the standard output.
+
+    ----------------------------------------------------------------------
+
+       egrep -l -e -ooutfile src/*
+
+    Searches through all the files in the subdirectory "src" for all lines
+    containing the regular expression "-ooutfile".  Prints the names of the
+    files containing the pattern.
+
+
+
+    ----------------------------------------------------------------------
+
+       egrep 'int|long' prog.c
+
+    Searches through the file "prog.c" in the current working directory for all
+    lines containing the patterns "int" or "long".  The "|" character stands 
+    for logical "or".  Prints all of the lines that contain "int" or "long" 
+    on the standard output.

@@ -1,0 +1,14 @@
+
+\S time \S:  Examples
+
+       time ps -af
+
+    ps(1) prints a full listing of information about all processes running on
+    the system and then, \S time \S prints the time it took for "ps -af" to run.
+
+    ----------------------------------------------------------------------
+
+       time nroff -mm text > text.mm
+
+    Sends the output of the nroff(1) command to "text.mm" and then prints the
+    time it took to format the file.

@@ -1,0 +1,291 @@
+'\" t
+.TH EMULIO 7 "3B20S only"
+.SH NAME
+emulio \- 3270 emulation interface
+.SH SYNOPSIS
+.B #include <sys/file.h>
+.SH DESCRIPTION
+3270 emulation makes use of the \s-1UN\s+153 driver and associated \s-1VPM\s+1
+software to simulate a 3270-type controller (e.g., a 40/4 controller).
+Users may communicate with a remote host as a 3270-type peripheral
+(e.g., a 40/4 terminal) through terminal emulation special files.
+3270 emulation consists of two UNIX System drivers and a protocol script.
+The
+.I emc
+driver provides an administrative interface to the "controller".
+The
+.I em
+driver provides the users interface to the remote system.
+The protocol script runs in the \s-1UN\s+153 and handles the line protocol.
+Both \s-1ASCII\s+1
+.RB ( /lib/a3270scr ),
+and \s-1EBCDIC\s+1
+.RB ( /lib/e3270scr )
+scripts are available.
+All structures described here are defined in
+.BR <sys/em.h> .
+.PP
+.SS "Administrative Interface"
+This section describes the interface to the
+.I emc
+driver.
+Each emulated controller is represented by a character special file
+.RB ( /dev/emc? ).
+To use 3270 emulation the
+.I emc
+device must be associated (using
+.IR vpmset )
+with the physical device to be used.
+For example to associate controller 2 and device 3:
+.PP
+.RS
+/etc/vpmset \|/dev/emc2 \|/dev/un53.3
+.RE
+.PP
+The appropriate protocol script must also be loaded (using
+.IR vpmstart )
+on the physical device.
+For example, to load the \s-1EBCDIC\s+1 script on device 3:
+.PP
+.RS
+/etc/vpmstart \|/dev/un53.3 \|6 \|/lib/e3270scr
+.RE
+.PP
+The remaining administrative functions are performed using
+.IR ioctl (2)
+calls on the
+.I emc
+device.
+The valid
+.I ioctl
+.I requests
+and the corresponding
+.I arg
+are as follows:
+.PP
+.TP \w'EMSELECT\ \ \ 'u
+.SM EMCNTRS
+Return script error counters.
+.I Arg
+must be the address of a counters structure (see below).
+.TP
+.SM EMINFO
+Return information about this controller.
+.I Arg
+must be the address of a information structure (see below).
+.TP
+.SM EMPOLL
+Set the polling character to
+.IR arg .
+The default is
+.I space
+(controller 0).
+.TP
+.SM EMSELECT
+Set the selection character to
+.IR arg .
+The default is
+.RI " \- "
+(controller 0).
+.TP
+.SM EMEOTD
+Set the time delay before transmitting \s-1EOT\s+1's to
+.IR arg /10
+seconds.
+The default is 2 seconds.
+.TP
+.SM EMSTART
+Start the corresponding protocol script.
+.TP
+.SM EMHALT
+Halt the corresponding protocol script.
+.TP
+.SM EMSETFL
+Set the controller flags as specified in
+.IR arg .
+.TP
+.SM EMCLRFL
+Clear the controller flags as specified in
+.IR arg .
+.PP
+If
+.I request
+is
+.SM EMCNTRS\*S,
+.I arg
+must be the address of a structure with the following format:
+.PP
+.RS
+.br
+.ne 17v
+.TS
+l1 l1 l1 l.
+struct	emcntrs {
+	short	rtmout;	/\(** 3 sec rcv timeouts \(**/
+	short	xtmout;	/\(** 1.5 sec timeouts, getxbuf \(**/
+	short	ptmout;	/\(** 1.5 sec timeout on \s-1POLL\s+1 \(**/
+	short	rcvnak;	/\(** \s-1NAK\s+1's received \(**/
+	short	xmtnak;	/\(** \s-1NAK\s+1's transmitted \(**/
+	short	rcvenq;	/\(** \s-1ENQ\s+1's received \(**/
+	short	xmtenq;	/\(** \s-1ENQ\s+1's transmitted \(**/
+	short	crcerrs;	/\(** \s-1CRC\s+1 errors \(**/
+	short	roflo;	/\(** receive blocks to large \(**/
+	short	rgarb;	/\(** Junk receive messages \(**/
+	short	xgarb;	/\(** Garbage xmit buffers \(**/
+	short	rparerr;	/\(** Bad parity on rcv blocks \(**/
+	short	xparerr;	/\(** Bad parity on xmit bufs \(**/
+	short	lrcerrs;	/\(** \s-1LRC\s+1 errors \(**/
+	short	eotrmsg;	/\(** \s-1EOT\s+1's when block expected \(**/
+	short	cmgarb;	/\(** Junk in \s-1LISTEN\s+1 state \(**/
+	short	gmgarb;	/\(** Junk in \s-1TRASH\s+1 state \(**/
+};
+.TE
+.RE
+.PP
+If
+.I request
+is
+.SM EMINFO\*S,
+.I arg
+must be the address of a structure with the following format:
+.PP
+.RS
+.br
+.ne 8v
+.TS
+l1 l1 l1 l.
+struct	eminfo {
+	short	em_flags;	/\(** Flags \(**/
+	short	em_code;	/\(** Code \(**/
+	char	em_staid;	/\(** Polling character \(**/
+	char	em_termid;	/\(** Selection character \(**/
+	char	em_rdev;	/\(** Real device \(**/
+};
+.TE
+.RE
+.PP
+The values used in the
+.I em_flags
+field are:
+.PP
+.RS
+.br
+.ne 9v
+.TS
+l lp-1 l l.
+#define	EM_ASC	0x01	/\(** The controller is \s-1ASCII\s+1 \(**/
+#define	EM_RUN	0x02	/\(** The controller is usable \(**/
+#define	EM_STATS	0x04	/\(** The cntrs are available \(**/
+#define	EM_RBUF	0x08	/\(** Rcv buffers are needed \(**/
+#define	EM_SCERR	0x10	/\(** Script error \s-1(ERRTERM)\s+1 \(**/
+#define	EM_STERR	0x20	/\(** Startup error \(**/
+#define	EM_TRACE	0x40	/\(** Script tracing flag \(**/
+#define	EM_STOK	0x80	/\(** Started OK \(**/
+.TE
+.RE
+.PP
+In general, all administrative functions can be performed from user
+level by using the
+.IR emulcntrl (1M)
+and
+.IR emulstat (1M)
+commands.
+.PP
+.SS "User Interface"
+This section describes the interface to the
+.I em
+driver.
+The
+.I em
+driver represents each terminal on a controller as a character special file
+.RI ( /dev/emt\(** ).
+Up to 32 terminals are allowed per controller.
+The minor device number of each terminal specifies the controller and terminal;
+The low-order 8 bits specify the terminal number,
+and the remaining high-order bits specify the controller number.
+The id character for each terminal is determined as follows:
+.PP
+.TS
+center box ;
+c | c | c | c
+n | c | n | c .
+Term	Id	Term	Id
+=
+0	SP	16	&
+1	A	17	J
+2	B	18	K
+3	C	19	L
+4	D	20	M
+5	E	21	N
+6	F	22	O
+7	G	23	P
+8	H	24	Q
+9	I	25	R
+10	[ \(ct	26	] !
+11	.	27	$
+12	<	28	*
+13	(	29	)
+14	+	30	;
+15	! |	31	^ \(no
+.TE
+.PP
+Where 2 characters appear, the second is \s-1EBCDIC\s+1.
+\s-1UNIX\s+1 System user processes use the terminal files to simulate active terminals.
+To start a terminal the appropriate device is opened.
+Data transfers are performed using
+.IR read (2),
+and
+.IR write (2).
+The \s-1EMCNTRS\s+1 and \s-1EMINFO\s+1
+.IR ioctl (2)
+requests described in the previous section can be used in the same way
+with terminal files.
+The general operations are performed as follows:
+.PP
+.TP \w'\fITransfers\fP\ \ 'u
+.I Starting
+The
+.IR open (2)
+call will wait for a physical connection to be established before returning.
+Immediate return is obtained using the \s-1FNDELAY\s+1
+.I open
+flag.
+This call will fail if the connection is not available (with
+\s-1FNDELAY\s+1 flag), or the terminal is already in use.
+.TP
+.I Transfers
+Once a terminal has been opened, a user process may transmit a ``screen'' using
+.IR write (2).
+Data written must be in the expected form (control fields, etc.) and
+must be surrounded by the start-of-text (\s-1STX\s+1) and
+end-of-text (\s-1ETX\s+1) or end-of-block (\s-1ETB\s+1) characters.
+When using the \s-1ETB\s+1 end character, subsequent writes must complete the block
+according to the block protocol (i.e., the last block must end in \s-1ETX\s+1).
+The two bytes following the \s-1STX\s+1 character (in the first block of a message)
+are reserved for the station and device identification characters.
+The proper values of these bytes are inserted by the driver, however the
+space in the block must be provided by the user.
+All block check characters are added internally.
+Remote messages are received using
+.IR read (2).
+The format of these blocks is the same as received from the remote system
+(i.e., the blocks are passed directly).
+All line protocol, and verification is performed internally.
+Reads and writes will fail if the communications line has dropped.
+.TP
+.I Stopping
+To deactivate a terminal, the corresponding device is simply closed.
+Currently, any messages to be received by a deactivated (closed)
+terminal device are discarded.
+.SH FILES
+.nf
+/dev/emc?		3270 emulation controller devices
+/dev/emt*		3270 emulation terminals
+/lib/a3270scr	\s-1ASCII\s+1 3270 script
+/lib/e3270scr	\s-1EBCDIC\s+1 3270 script
+.SH "SEE ALSO"
+emulcntrl(1M),
+emulload(1M),
+emulstat(1M),
+vpmset(1M).
+.\"	@(#)emulio.7	5.2 of 5/18/82

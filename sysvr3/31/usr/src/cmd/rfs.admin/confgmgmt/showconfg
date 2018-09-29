@@ -1,0 +1,123 @@
+#ident	"@(#)rfs.admin:confgmgmt/showconfg	1.12"
+#menu# show current RFS domain configuration
+
+#help# 
+#help#	The subcommand "showconfg" shows you the current RFS 	
+#help# 	configuration for your machine.  This includes machine 
+#help#	node name, domain name, transport provider, and names
+#help#	and addresses of the primary and secondary name server
+#help# 	machines for your domain. 
+#help#
+
+#set trap
+trap '/bin/rm -f /usr/tmp/rfmaster$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo "\n\n\t\tCURRENT RFS CONFIGURATION\n"
+
+#get rid of comment lines
+/bin/grep -v "^\#" /usr/nserve/rfmaster 2>/dev/null |
+	/usr/bin/awk  "
+	#determine if an entry ends with a backslash
+		/\\\\$/ {
+			#put the entry into an array
+			x[0]=\$0
+			#print all characters of entry except the last
+			#one, which is a backslash, and no new line.
+			printf substr(x[0],0,length-1)
+		}
+
+	#determine if an entry does NOT end with a backslash
+		!/\\\\$/ {
+			#print all chars of the entry followed by a new line.
+			print \$0
+		}" |
+	# format to normal standards
+	/usr/bin/awk '{
+		for ( i = 1; i <= NF; i++) {
+			if ( i == NF )
+				printf "%s\n", $i
+			else
+				printf "%s ", $i
+		}
+	}' >/usr/tmp/rfmaster$$ 2>/dev/null
+
+# Determine machine name
+machname=`/bin/uname -n 2>/dev/null`
+if [ "$machname" = "" ]
+then
+	machname="***not set***"
+fi
+
+# Determine the domain name
+domname=`/usr/bin/dname 2>/dev/null`
+if [ "$domname" = "" ]
+then
+	domname="***not set***"
+fi
+
+# Determine the net_spec
+netname=`/usr/bin/dname -n 2>/dev/null`
+if [ "$netname" = "" ]
+then
+	netname="***not set***"
+fi
+
+# get the primary and its configurations
+primdom=`/bin/grep "^$domname[ 	][ 	]*[Pp]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^$domname[	 ][ 	]*[pP][	 ][	 ]*//" 2>/dev/null | /usr/bin/cut -d"." -f1`
+
+prim=`/bin/grep "^$domname[ 	][ 	]*[Pp]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//" 2>/dev/null`
+
+if [ "$prim" = "" ]
+then
+	prim="***not set***"
+fi
+
+addr=`/bin/grep "^$primdom.$prim[ 	][ 	]*[Aa]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^$primdom.$prim[ 	][ 	]*[Aa][ 	]*//" 2>/dev/null`
+
+if [ "$addr" = "" ]
+then
+	addr="***not set***"
+fi
+
+# Print info.
+echo "\tNode name:                       $machname"
+echo "\tDomain name:                     $domname"
+echo "\tTransport provider:            	 $netname"
+echo "\tPrimary name server:             $prim\c"
+if [ "$domname" != "$primdom" -a "$primdom" != "" ]
+then
+	echo " ($primdom)"
+else
+	echo
+fi
+echo "\tAddress of primary:              $addr"
+
+# Get secondary and print informat
+sec=`/bin/grep "^$domname[ 	][ 	]*[Ss]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//" 2>/dev/null`
+if [ "$sec" != "" ]
+then
+	for name in $sec
+	do
+		# get secondary domain
+		secdom=`/bin/grep "^$domname[ 	][ 	]*[Ss].*\.$name" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^$domname[	 ][ 	]*[Ss][	 ][	 ]*//" 2>/dev/null | /usr/bin/cut -d"." -f1`
+
+		# get secondary address
+		addr=`/bin/grep "^$secdom.$name[ 	][ 	]*[Aa]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^$secdom.$name[ 	][ 	]*[Aa][ 	]*//" 2>/dev/null`
+
+		if [ "$addr" = "" ]
+		then
+			addr="***not set***"
+		fi
+
+		echo "\tSecondary name server:    	 $name\c"
+		if [ "$domname" != "$secdom" -a "$secdom" != "" ]
+		then
+			echo " ($secdom)"
+		else
+			echo 
+		fi
+		echo "\tAddress of $name:		 $addr"
+	done
+fi
+echo

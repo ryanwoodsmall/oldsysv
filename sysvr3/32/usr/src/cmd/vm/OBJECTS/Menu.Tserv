@@ -1,0 +1,15 @@
+menu="Help Facility: Services"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=current
+begcol=current
+
+name="Services Overview"
+action=OPEN TEXT OBJECTS/Text.help T.h54.serve 'Services Overview'
+
+name="Mail Services"
+action=OPEN MENU OBJECTS/Menu.Tmail 'Mail Services'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

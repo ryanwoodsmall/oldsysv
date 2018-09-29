@@ -1,0 +1,32 @@
+#
+#  GENERAL INSTALL SCRIPT (for other than disk 1 of multi-floppy installation)
+#
+#
+# Save mount device and mount directory at entry point.
+#
+
+if
+       test -b "$1"
+then
+       mntdev=$1
+elif
+       test -b /dev/diskette
+then
+       mntdev=/dev/diskette
+elif
+       test -b /dev/install
+then
+       mntdev=/dev/install
+else
+       echo "**ERROR**   Can't find mount device"
+       exit
+fi
+mntname=${2:-/install}
+
+PKGINFO=`cat ${mntname}/install/packagename`
+ORDER=`cat ${mntname}/install/ORDER`
+
+echo "\nThis is floppy  # ${ORDER} of
+ ${PKGINFO}"
+echo "\nPlease start with floppy  # 1\n"
+exit 1

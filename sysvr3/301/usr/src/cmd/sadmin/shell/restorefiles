@@ -1,0 +1,53 @@
+#ident	"@(#)sadmin:shell/restorefiles	1.2"
+#	restore a file from the save area to the regular file systems
+
+flags="-qq -k$$"
+trap 'exit' 1 2  15
+
+sfile=`checkre ${flags} -fe 'Enter full path name of file to be restored [q]:
+	' \
+	'.' ' ' \
+	'^[^ ;	][^ ;	]*$' 'Blanks or tabs not permitted in the file name.' \
+	'^/' 'A full path name must begin with "/".' \
+	'[^/]$' 'No trailing "/" in the file name.' \
+	'/[^/]\{1,14\}$' 'No more than 14 characters in a file name.'`
+echo 'Enter path name of where restored file is to be placed or
+press RETURN if restored file is to be put to its original place:\n\t\c'
+read rfile
+if [ -z "${rfile}" ]
+then
+	rfile=${sfile}
+fi
+
+trap 'exit 1' 1 2  15
+trap "rm -f /tmp/$$restorefiles /tmp/$$Xrestorefiles" 0
+(
+	cd /save/list
+	fgrep -x ${sfile} /dev/null */*  |  tail -1 >/tmp/$$restorefiles
+)
+if [ ! -s /tmp/$$restorefiles ]
+then
+	echo "File '${sfile}' not in save area."
+	exit
+fi
+ed - /tmp/$$restorefiles <<-!
+	t.
+	s;^;cp '/save/files/;
+	s;:;';
+	s;$; /tmp/$$Xrestorefiles;
+	-s/:.*//
+	s;\(..\).\(..\).\(..\).\(.*\);echo Found '${sfile}' saved \4 \2/\3/\1.;
+	w
+	q
+!
+sh /tmp/$$restorefiles 2>/dev/null  ||
+{
+	echo >&2 "Unable to restore '${sfile}'.  Wrong permission."
+	exit 1
+}
+if  mv /tmp/$$Xrestorefiles ${rfile}
+then
+	echo "'${sfile}' now restored as\\n'${rfile}'."
+else
+	echo "'${sfile}' not restored."
+fi

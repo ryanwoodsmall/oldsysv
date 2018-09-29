@@ -1,0 +1,36 @@
+menu="Help Facility: Office Overview"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=current
+begcol=current
+
+name="filecabinet"
+action=OPEN TEXT OBJECTS/Text.help T.h51.file 'filecabinet'
+
+name="other_users"
+action=OPEN TEXT OBJECTS/Text.help T.h52.other 'other_users'
+
+name="preferences"
+action=OPEN MENU OBJECTS/Menu.h53.pr
+
+name="services"
+action=OPEN MENU OBJECTS/Menu.Tserv
+
+name="wastebasket"
+action=OPEN TEXT OBJECTS/Text.help T.h55.waste 'wastebasket'
+
+name="Exit FACE"
+action=OPEN TEXT OBJECTS/Text.help T.exit 'Exit FACE'
+
+name="Services Administration"
+action=OPEN MENU OBJECTS/Menu.sadm
+
+name="System Administration"
+action=OPEN TEXT OBJECTS/Text.help T.adm 'System Administration'
+
+name="UNIX_System"
+action=OPEN TEXT OBJECTS/Text.help T.h56.unix 'UNIX_System'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

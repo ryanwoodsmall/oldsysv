@@ -1,0 +1,18 @@
+
+\S ` `:  grave accents \S
+
+Grave accents  delimit a command line whose output is returned as a
+value.  The output of the command  replaces the accents and the
+command line within the accents.  This output can be used as an
+"argument"\S*\S for another command or it can be assigned to a 
+"shell variable"\S*\S.  For example, if you wanted to do work in
+many different directories, but you wanted to remember which
+directory you started in, you could begin by doing the following
+command substitution:
+			ORIGINAL=`pwd`
+
+The pathname of your original directory is then printed when you type 
+
+			echo $ORIGINAL
+
+\S*\S defined in the \Sglossary\S

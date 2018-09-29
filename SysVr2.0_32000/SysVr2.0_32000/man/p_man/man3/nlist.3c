@@ -1,0 +1,72 @@
+.TH NLIST 3C 
+.SH NAME
+nlist \- get entries from name list
+.SH SYNOPSIS
+.B #include <nlist.h>
+.PP
+.B int nlist (file-name, nl)
+.br
+.B char \(**file-name;
+.br
+.B "struct nlist \(**nl;"
+.SH DESCRIPTION
+.I Nlist\^
+examines the name list in
+the executable file whose name is pointed to by
+.IR file-name ,
+and selectively extracts a
+list of values and puts them in the array of nlist structures pointed to by
+.IR nl .
+The name list
+.I nl\^
+consists of
+an array of structures containing names of variables,
+types and values.
+The list is terminated with a null name;
+that is, a null string is in the name position of the structure.
+Each variable name is
+looked up in the name list of
+the file.
+If the name is found, the type and value of the
+name are inserted in the next two fields.
+The type field will be set to 0 unless the
+file was compiled with the \-g option.
+If the name is not found, both entries are set to 0.
+See
+.IR a.out (4)
+for a discussion of the symbol table structure.
+.PP
+This function is useful for
+examining the system name list kept in
+the file
+.BR /unix .
+In this way programs can obtain system addresses
+that are up to date.
+.SH NOTES
+The
+.I <nlist.h>\^
+header file is automatically
+included by
+.I <a.out.h>\^
+for compatability.
+However, if the only information needed from
+.I <a.out.h>\^
+is for use of 
+.IR nlist ,
+then including
+.I <a.out.h>\^
+is discouraged.
+If
+.I <a.out.h>\^
+is included, the line
+``#undef n_name'' may need to follow it.
+.SH SEE ALSO
+a.out(4).
+.SH DIAGNOSTICS
+All
+value entries are set to 0 if the file cannot be read
+or if it does not contain a valid name list.
+.PP
+.I Nlist\^
+returns \-1 upon error; otherwise it returns 0.
+.\"	%W% of %G%

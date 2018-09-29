@@ -1,0 +1,115 @@
+#ident	"@(#)sadmin:shell/lightenfs	1.4"
+#	"lighten the ship" routine to clean up file systems
+
+#!	chmod +x ${file}
+
+{ exitcode_=0
+while getopts d:lt:v c
+do
+	case $c in
+	\?)
+		exitcode_=1
+		break;;
+	*)	if [ "$OPTARG" ]
+		then
+			arg="$arg -$c '$OPTARG'"
+		else
+			arg="$arg -$c"
+		fi;;
+	esac
+done
+shift `expr $OPTIND - 1`
+arg="$arg --"
+for i in "$@"
+do
+	arg="$arg '$i'"
+done
+eval set -- "$arg"
+test  $exitcode_ = 0 ;}  ||  exec $0
+
+days=4
+listonly=
+threshold=4000
+verbose=
+for flag
+{
+	case "${flag}" in
+	-d )
+		days=$2
+		shift
+		;;
+	-l )
+		listonly=yes
+		;;
+	-t )
+		threshold=$2
+		shift
+		;;
+	-v )
+		verbose=yes
+		;;
+	-- )
+		shift
+		break
+		;;
+	-* )
+		admerr $0 "Bad flag argument '${flag}'."
+		exit
+		;;
+	* )
+		continue
+	esac
+	shift
+}
+
+if [ $# -ne 2 ]
+then
+	echo >&2 "Usage:  $0 [-d<days>] [-t<threshold>] [-v] [-l] filesystem patternfile
+For more detail type:	prtdoc syscmd.`basename $0`"
+	exit 1
+fi
+
+fs=$1
+patternfile=$2
+blocks=`expr "\`df ${fs}\`" : '.*[^0-9]\([0-9]\{1,\}\) blocks '`
+if [ ${blocks} -ge ${threshold} ]
+then
+	if [ ${verbose} ]
+	then
+		echo ${blocks} blocks greater than threshold ${threshold}
+	fi
+	exit 0
+fi
+if [ ${verbose} ]
+then
+	echo ${blocks} blocks free, need ${threshold}
+fi
+patterns=`sed 's/.*/\\\\;&;p/' ${patternfile}`
+
+find ${fs} -type f -mtime +${days} -print 2>/dev/null  |
+	sed -n "${patterns}"  |
+	xargs ls -tr  |
+	while read f
+	do
+		if [ ${listonly} ]
+		then
+			echo ${f}
+			continue
+		fi
+		rm -f ${f}
+		blocks=`expr "\`df ${fs}\`" : '.*[^0-9]\([0-9]\{1,\}\) blocks '`
+		if [ ${verbose} ]
+		then
+			echo rm ${f} -- now ${blocks} blocks free
+		fi
+		if [ ${blocks} -ge ${threshold} ]
+		then
+			if [ ${verbose} ]
+			then
+				echo Threshold met.
+			fi
+			#	swallow the rest of the ls
+			cat >/dev/null
+			exit 0
+		fi
+	done

@@ -1,0 +1,883 @@
+2 0 0 #ident
+12 
+15 
+705 3 8 42
+                  ADDING TEXT
+
+Sometimes you will want to add text to an
+existing file or to begin a new file.
+
+To do this in vi, you must first tell vi
+to start adding text.  Next, you enter the 
+the desired text.  Finally, you must tell
+vi to stop adding text.
+706 
+15 
+520 arrow
+520 redraw
+705 0 0 28
+To be or to be?
+That is the question.
+Whe tis ner in the mind
+tosuffer the slingsand arrows
+of outrageous fortune
+706 
+8 16 7 In this part, you will add the word "not"
+8 17 7 to the first line.
+15 
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION: The command 
+30 
+3 i
+31 
+8 1000 1002 adds text to the left of the cursor.
+8 1001 20 (Remember i for insert)
+15 
+520 instruct
+8 1000 1002 Enter the command i to start adding text to the 
+8 1001 10 left of the cursor.
+2 0 9
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+520 clear1
+520 instruct
+8 1000 1002 Now type the letters 
+30 
+3 not
+31 
+2 2000 2000
+253 not
+520 ansloopins
+520 clear1
+520 instruct
+8 1000 1002 Now type a space
+256 32
+254 the <SPACEBAR> key
+2 2000 2000
+25 
+520 ansloop
+2 2000 2000
+6 32 1
+15 
+18 
+1 1
+520 clear1
+8 16 7 Now you have to tell vi that you have finished inputing text.
+8 17 7 To do this, you strike the <ESCAPE> key. 
+520 instruct
+8 1000 1002 Strike the <ESCAPE> key to return to the command level.
+2 2000 2000
+256 27
+254 the <ESCAPE> key
+25 
+520 ansloop
+520 nomode
+520 clear1
+8 16 7 Good. Striking <ESCAPE> ended the text input and put you back
+8 17 7 at the command level of vi.
+2 2000 2000
+15 
+520 arrow
+520 clear1
+520 instruct 
+18 
+8 1000 1002 Add the letters 
+30 
+3 ther
+31 
+8 1000 1001 to complete the word whether
+8 2001 2002 Remember to exit the input mode when you have finished.
+2 2 3
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+253 ther
+520 ansloopins
+256 27
+254 the <ESCAPE> key to return to the command level
+520 ansloop
+520 nomode
+520 clear1
+2 2000 2000
+520 arrow
+520 clear1
+520 instruct 
+18 
+8 1000 1002 Add the letters 
+30 
+3 obl
+31 
+8 1000 1001 to complete the word "nobler"
+2 2 13
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+253 obl
+520 ansloopins
+256 27
+254 the <ESCAPE> key to return to the command level
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 clear1
+8 16 7 You insert spaces just like any other character.
+520 instruct
+8 1000 1001 Insert a blank space between "to" and "suffer"
+2 3 2
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+256 32
+254 the <SPACEBAR> key to insert a blank space
+520 ansloop
+2 2000 2000
+6 32 1
+15 
+256 27
+254 the <ESCAPE> key to return to the command level
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 clear1
+520 instruct
+8 1000 1001 Insert a blank space between "slings" and "and"
+2 3 20
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+256 32
+254 the <SPACEBAR> key to insert a blank space
+520 ansloop
+2 2000 2000
+6 32 1
+256 27
+254 the <ESCAPE> key to return to the command level
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 clear1
+520 redraw
+8 0 0 Some people say that their compositions are more 
+8 1 0 interesting and when they write with a computer.
+8 16 7 This section shows how to correct typing
+8 17 7 errors while you are inputing text.
+520 arrow
+520 clear1
+8 16 7 The sentence should read "interesing and 
+30 
+3 creative
+31 
+3 " .  We
+8 17 9 will input "creative" but will make some typing errors.
+8 18 9 Then we will correct the errors by backspacing.
+520 arrow
+520 clear1
+520 instruct
+3 Add the word 
+30 
+3 creAttivbre
+31 
+6 32 1
+3 to the left of the cursor.
+2 1 16
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+253 creAttivbre
+520 ansloopins
+18 
+520 clear1
+8 16 7 Hmmm! There are typing mistakes.  The <BACKSPACE> key will erase the
+8 17 7 character to the left of the cursor when vi is in input mode.
+520 instruct
+3 Strike the <BACKSPACE> key to erase the e
+256 8
+254 the <BACKSPACE> key
+2 2000 2000
+25 
+520 ansloop
+2 2000 2000
+520 movebackward
+15 
+1 1
+520 clear1
+8 16 7 The <BACKSPACE> erased the letter e , but the screen
+8 17 7 doesn't show the erasure yet.
+2 2000 2000
+15 
+520 instruct
+3 Continue striking the <BACKSPACE> key until you have erased the
+8 1001 8 letter A .  (Remember that you won't see the erasures yet.)
+2 2000 2000
+256 8
+25 
+520 ansloop
+2 2000 2000
+520 movebackward
+520 ansloop
+2 2000 2000
+520 movebackward
+520 ansloop
+2 2000 2000
+520 movebackward
+520 ansloop
+2 2000 2000
+520 movebackward
+520 ansloop
+2 2000 2000
+520 movebackward
+520 ansloop
+2 2000 2000
+520 movebackward
+520 ansloop
+2 2000 2000
+520 movebackward
+520 clear1
+8 16 7 The characters Attivirbe are erased (but the screen doesn't
+8 17 7 show the erasure yet).
+520 instruct
+3 Type the correct spelling followed by a space.  Then return to
+8 1001 10 the command level.
+253 ative
+2 2000 2000
+520 ansloopover
+18 
+256 32
+254 the <SPACEBAR> key
+520 ansloop
+2 2000 2000
+10 1
+6 32 1
+15 
+18 
+256 27
+254 the <ESCAPE> key to exit the input mode
+2 2000 2000
+520 ansloop
+2 2000 2000
+10 2
+520 nomode
+520 clear1
+705 16 7 55
+Notice that the erased characters disappeared when
+you typed a charcter over them.  Any that were not typed
+over were removed when you used <ESCAPE> to return to
+the command level.
+706 
+520 arrow
+520 clear1
+520 redraw
+8 13 0 "letter" [New file]
+705 16 7 64
+This part shows how to start a new file; in other words, you will
+learn how to add text to an empty file.  You will also learn how 
+to add lines to a file.
+706 
+520 arrow
+520 clear1
+8 16 7 When you have finished, the screen will look like this.
+8 0 0 Mr. Jones:
+2 1 0
+11 
+2 2 0
+11 
+8 2 5 I will not be able to attend the UUCP
+8 3 0 meeting on the 14th of July since our divisional 
+8 4 0 review is scheduled for the same day.
+520 arrow
+520 redraw
+16 
+8 13 0 "letter" [New file]
+520 instruct
+3 Start by entering the line 
+30 
+3 Mr. Jones:
+31 
+520 asshelp
+15 
+256 105 97
+254 i to start adding text
+2 0 0
+10 1
+18 
+25 
+520 ansloop
+520 mode
+253 Mr. Jones:
+2 0 0
+18 
+520 ansloopins
+18 
+520 instruct
+3 Now type a <RETURN> to insert a carriage return.
+256 13
+254 <RETURN> to insert a carriage return in the text.
+2 2000 2000
+25 
+520 ansloop
+2 1 0
+11 
+15 
+8 16 7 Now you want a blank line.  You get that by just typing
+8 17 7 another carriage return.
+520 instruct
+3 Enter a blank line.
+11 
+2 1 0
+25 
+520 ansloop
+2 2 0
+11 
+15 
+18 
+520 clear1
+520 instruct
+3 Type five spaces to indent the first line of the paragraph.
+2 2000 2000
+256 32
+254 the SPACEBAR to enter a space.
+25 
+520 ansloop
+2 2000 2001
+18 
+520 ansloop
+2 2000 2001
+18 
+520 ansloop
+2 2000 2001
+18 
+520 ansloop
+2 2000 2001
+18 
+520 ansloop
+2 2000 2001
+18 
+15 
+520 clear1
+520 instruct
+3 Now type:  
+11 
+30 
+3 I will not be able to attend the UUCP
+31 
+8 1001 9 followed by a <RETURN>
+2 2000 2000
+253 I will not be able to attend the UUCP
+520 ansloopins
+256 13
+254 <RETURN> key
+520 ansloop
+2 3 0
+11 
+18 
+15 
+520 clear1
+30 
+8 16 3 -->
+31 
+8 1000 7 Now type the rest of the letter and return to
+8 1001 9 the command level.
+30 
+8 18 7 meeting on the 14th of July since our divisional
+8 19 7 review is scheduled for the same day.
+31 
+2 3 0
+253 meeting on the 14th of July since our divisional
+520 ansloopins
+256 13
+520 ansloop
+2 4 0
+11 
+18 
+253 review is scheduled for the same day.
+520 ansloopins
+256 27
+254 ESCAPE to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 redraw
+8 13 0 "colornames" [New file]
+8 16 7 Let's try another new file.  This one is a
+8 17 9 list of colors.  (Don't forget to return to the
+8 18 9 command mode when you have finished.)
+15 
+520 arrow
+520 clear1
+30 
+8 16 3 -->
+31 
+8 16 7 Copy the following text:
+2 17 0
+6 32 50
+15 
+30 
+8 17 10 red orange yellow
+8 18 10 green blue violet
+8 19 10 black white
+31 
+15 
+2 0 0
+18 
+11 
+256 105 97
+254 i to start adding text to the left of the cursor.
+25 
+520 ansloop
+520 mode
+253 red orange yellow
+520 ansloopins
+256 13
+254 <RETURN>
+520 ansloop
+2 1 0
+18 
+11 
+253 green blue violet
+520 ansloopins
+256 13
+254 <RETURN>
+520 ansloop
+2 2 0
+18 
+11 
+253 black white
+520 ansloopins
+256 27
+254 ESCAPE to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 redraw
+705 0 0 16
+one two
+four five
+nine ten
+thirteen fourteen
+706 
+705 16 7 62
+The command i adds text to the left of the cursor, but
+sometimes you need to add text to the right of the cursor. 
+For example, this happens when you want to add text to the
+end of a line (such as adding "three" to the first line above).
+706 
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION:  The letter 
+30 
+3 a
+31 
+8 1000 1001 adds text to the right of the cursor.
+8 17 21 (Remember a for add)
+520 instruct
+3 Enter the command a to start inputting text to the right
+8 20 10 of the cursor.
+256 97
+254 a to input text to the right of the cursor.
+2 0 6
+18 
+25 
+520 ansloop
+520 mode
+2 2000 2000
+18 
+15 
+256 32
+254 <SPACEBAR> to input a space.
+520 clear1
+520 instruct
+3 Now a space and the word "three" and then return 
+8 1001 10 to the command level.
+2 2000 2001
+18 
+25 
+520 ansloop
+2 2000 2001
+18 
+253 three
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 instruct
+3 Add the word six to the right of the word five
+256 97
+254 a to input text to the right of the cursor.
+2 1 8
+18 
+25 
+520 ansloop
+520 mode
+2 2000 2000
+18 
+15 
+256 32
+254 <SPACEBAR> to input a space.
+2 2000 2001
+15 
+18 
+520 ansloop
+2 2000 2001
+18 
+253 six
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+2 0 0
+12 
+705 3 8 51
+Sometimes you will want to open a new line and start
+adding text on that new line.  This part will
+show you how to open new lines easily in vi.
+706 
+15 
+520 arrow
+520 redraw
+705 0 0 16
+one two three
+four five six
+nine ten
+thirteen fourteen
+706 
+8 17 7 First, I will show you how to add the line 
+8 1001 7 "seven eight" between the second and third lines.
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION:  The letter 
+30 
+3 o
+31 
+8 1000 1001 opens a line for input below the current line.
+8 17 21 (Remember the lower-case o for open-lower )
+520 instruct
+3 Enter the command o to open a line below the current
+8 1001 7 line for text input.
+256 111
+254 o to open a line below the current line for text input
+2 1 7
+18 
+25 
+520 ansloop
+2 8 0
+27 
+2 2001 2000
+28 
+15 
+18 
+520 mode
+520 clear1
+520 instruct
+3 Now type the text "seven eight" and then return
+8 1001 10 to the command level.
+2 2000 0
+18 
+15 
+253 seven eight
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 instruct
+3 Move down to the next line and then add a line
+8 1001 7 with the text "eleven twelve"
+2 2000 2000
+256 106 258 10
+254 j to move the cursor down a line. 
+25 
+520 ansloop
+2 2001 7
+18 
+256 111
+254 o to open a line below the current line for text input
+2 2000 2000
+520 ansloop
+2 8 0
+27 
+2 2001 2000
+28 
+15 
+18 
+520 mode
+2 2000 0
+18 
+15 
+253 eleven twelve
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+8 17 7 The o command is useful when you want to add text
+8 1001 7 to the end of a file
+520 arrow
+520 clear1
+30 
+8 16 3 -->
+31 
+8 1000 1001 Move down to the last line and then add the two lines
+30 
+8 1001 7 fifteen sixteen
+8 1001 7 seventeen eighteen
+31 
+2 2000 2000
+256 106 258 10
+254 j to move the cursor down a line. 
+25 
+520 ansloop
+520 movedown
+18 
+256 111
+254 o to open a line below the current line for text input
+2 2000 2000
+520 ansloop
+2 10 0
+27 
+2 2001 2000
+28 
+15 
+18 
+520 mode
+2 2000 0
+18 
+15 
+253 fifteen sixteen
+520 ansloopins
+18 
+256 13
+254 <RETURN> to insert a carriage return in the text.
+520 ansloop
+2 10 0
+27 
+2 2001 2000
+28 
+2 1000 0
+15 
+18 
+253 seventeen eighteen
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+8 16 7 DESCRIPTION:  The letter 
+30 
+3 O
+31 
+8 1000 1001 opens a line for input above the current line.
+8 17 21 (Remember the upper-case O for Open-upper )
+520 instruct
+3 Enter the command O to open a line above the current
+8 1001 7 line for text input.
+256 79
+254 O to open a line above the current line for text input
+2 0 3
+18 
+25 
+520 ansloop
+2 12 0
+27 
+2 2000 2000
+28 
+15 
+18 
+520 mode
+520 clear1
+520 instruct
+3 Now type the text "zero" and then return
+8 1001 10 to the command level.
+2 2000 0
+18 
+15 
+253 zero
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+2 0 0
+12 
+30 
+8 3 20 A REVIEW OF ADDING TEXT COMMANDS
+31 
+705 6 8 46
+You have learned four commands for adding text:
+
+   i  insert text to left of cursor
+   a  add text to right of cursor
+   o  open a line below the current line
+   O  Open a line above the current line
+
+This section will use each of these commands.
+706 
+520 arrow
+520 redraw
+705 0 0 24
+went up the
+to fetch a pail of water.
+Jack fell down
+his crown,
+and Jill came
+706 
+520 instruct
+3 Put the words "Jack and Jill" on a line before the first line.
+2 1 4
+18 
+256 107 16 259
+254 k to move the cursor up one line.
+25 
+520 ansloop
+256 79
+254 O to open a line above the current line for text input
+2 0 4
+15 
+18 
+520 ansloop
+2 8 0
+27 
+2 2000 2000
+28 
+15 
+18 
+520 mode
+2 2000 0
+18 
+15 
+253 Jack and Jill
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 instruct
+3 Add the word "hill"
+256 97
+254 a to input text to the right of the cursor.
+2 1 10
+18 
+25 
+520 ansloop
+520 mode
+2 2000 2000
+18 
+15 
+256 32
+254 <SPACEBAR> to input a space.
+2 2000 2001
+15 
+18 
+520 ansloop
+2 2000 2001
+18 
+253 hill
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 instruct 
+3 Add the words "and broke " 
+2 4 0
+18 
+256 105
+254 i to start adding text
+25 
+520 ansloop
+520 mode
+253 and broke
+520 ansloopins
+18 
+256 32
+254 <SPACEBAR> to insert a space betwen the words
+520 ansloop
+2 2000 2000
+6 32 1
+15 
+256 27
+254 the <ESCAPE> key to return to the command level
+520 ansloop
+520 nomode
+520 clear1
+520 instruct
+3 Make a new last line saying "tumbling after."
+256 111
+254 o to open a line below the current line for text input
+2 5 0
+18 
+25 
+520 ansloop
+2 8 0
+27 
+2 2001 2000
+28 
+15 
+18 
+520 mode
+2 2000 0
+18 
+15 
+253 tumbling after.
+520 ansloopins
+256 27
+254 <ESCAPE> to return to the command level.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+2 0 0
+12 
+30 
+8 3 20 SUMMARY OF ADDING TEXT COMMANDS
+31 
+8 6 18 i .... insert text to left of cursor
+8 1001 18 a .... add text to right of cursor
+8 1001 18 o .... open a line below the current line
+8 1001 18 O .... Open a line above the current line
+8 1002 8 <BACKSPACE> .... erace characters while in input mode
+8 1002 11 <ESCAPE> .... stop inputting text; return to the
+8 1001 29 command level of vi
+15 

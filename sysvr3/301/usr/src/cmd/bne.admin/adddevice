@@ -1,0 +1,220 @@
+#ident	"@(#)bne.admin:adddevice	2.14"
+
+# This shell is used to construct Devices file entries
+#
+# Direct contty - 4800 direct
+# ACU Develcon vent 1200 develcon vent ventel
+# Develcon contty - Any develcon
+#
+PACKAGE="Basic Networking Utilities"
+FIRST=true
+
+DEVICES=/usr/lib/uucp/Devices
+DEVCONFIG=/usr/lib/uucp/Devconfig
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+defdevice=penril
+devicelist='
+	 1 801
+	 2 direct
+	 3 develcon
+	 4 hayes
+	 5 micom
+	 6 penril
+	 7 rixon
+	 8 ventel
+	 9 att2212c
+	10 att2224
+	11 att4000
+	12 TLI network
+'
+flags="-qq -k$$"
+trap exit 1 2 15
+
+
+if [ -f "$DEVICES" -a \( ! -w "$DEVICES" -o ! -r "$DEVICES" \) ]; then
+	admerr $0 "Can't write and read '$DEVICES'\nCan't do add operation!\n"
+	exit
+fi
+
+echo "
+This procedure is used to add entries to the
+$PACKAGE '$DEVICES' file.
+"
+
+while $FIRST || chkyn ${flags} -f 'Add another entry to the Devices file?' || break
+do
+FIRST=false
+
+LINE=
+DEV=`chkyn ${flags} -fer -Dcontty "Enter the port name (for /dev/contty enter-  contty).
+(default contty)[q]:  "  \
+	'^[0-9a-z]\{1,14\}$' 'Port name is 1-8 lower case letters and digits '`
+
+if [ ! -c /dev/$DEV ]; then
+	echo "
+**WARNING** There is no '/dev/$DEV' on this system!
+SEE your Owners Manual to see how
+to add '/dev/$DEV' before adding the device to
+the '$DEVICES' file.
+"
+	exit
+fi
+
+
+grep "^[^# 	].*[ 	]$DEV[ 	]" $DEVICES >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+echo "\nThe following entries currently exist for $DEV in '$DEVICES':\n"
+grep "^[^# 	].*[ 	]$DEV[ 	]" $DEVICES | while read a
+		do /bin/sh _deviceprint $a
+	done
+
+    if `chkyn ${flags} -f "
+Do you want to delete them before continuing"`
+    then
+	echo
+	ed $DEVICES <<-! > /dev/null 2>&1
+		H
+		g/$DEV/d
+		w
+		q
+	!
+    fi
+
+fi
+
+TYPE=`chkyn ${flags} -fec -D${defdevice} "Enter the device type to call on.
+Select one from the list:
+${devicelist}
+(default ${defdevice})[q]:  "  ${devicelist}`
+
+
+case "$TYPE" in
+	1) TYPE=801 ;;
+	2) TYPE=direct ;;
+	3) TYPE=develcon ;;
+	4) TYPE=hayes ;;
+	5) TYPE=micom ;;
+	6) TYPE=penril ;;
+	7) TYPE=rixon ;;
+	8) TYPE=ventel ;;
+	9) TYPE=att2212c ;;
+	10) TYPE=att2224 ;;
+	11) TYPE=att4000 ;;
+	12) TYPE=TLIS ;;
+esac
+
+case "$TYPE" in
+rixon | penril | hayes | ventel | att2212c | att2224 | att4000 | TLIS)
+;;
+
+*)
+SPEED=`chkyn ${flags} -efc -D1200 "
+Enter the speed at which you want to call:
+1200 300 1800 2400 4800 9600 19200
+(default 1200):  "  1200 300 1800 2400 4800 9600 19200`
+;;
+
+esac
+
+
+case "$TYPE" in
+rixon | penril | hayes | ventel | att2212c | att4000)
+LINE="ACU $DEV - 1200 $TYPE
+ACU $DEV - 300 $TYPE"
+;;
+
+att2224 )
+LINE="ACU $DEV - 2400 $TYPE
+ACU $DEV - 1200 $TYPE
+ACU $DEV - 300 $TYPE"
+;;
+
+801)
+DDEV=`chkyn ${flags} -fer "Enter the 801 dialer port name (for /dev/cua0 enter cua0) [q]:  "  \
+	'^[0-9a-z]\{1,14\}$' 'Port name is 1-8 lower case letters and digits '`
+
+LINE="ACU $DEV $DDEV $SPEED $TYPE \\T"
+;;
+
+develcon)
+LINE="Develcon $DEV - $SPEED develcon \\D"
+;;
+
+micom)
+LINE="Micom $DEV - $SPEED micom \\D"
+;;
+
+direct)
+LINE="Direct $DEV - $SPEED direct \\D"
+;;
+
+TLIS)
+NAME=`chkyn ${flags} -ref -h'?' -H"
+This is the name of the network associated with device '${DEV}'.
+This network must conform to the AT&T Transport Interface." \
+		"
+Enter the name of the TLI network associated with device '${DEV}'.
+Network name: [?]" \
+		'[a-zA-Z].*' 'The network name must begin with a letter.'`
+
+LINE="$NAME,eg $DEV - - TLIS \\D" ;;
+
+*)
+echo "**WARNING** Unsupported type: ${TYPE}\n"
+continue
+;;
+
+esac
+
+
+echo "\nThis is the Device entry generated for device '$DEV':"
+cat <<! | while read a; do /bin/sh _deviceprint $a; done
+$LINE
+!
+
+if  chkyn ${flags} -f \
+	'Do you want to add this entry to the Devices file?'
+then
+	cat <<-! >>$DEVICES
+		$LINE
+	!
+	echo "**** Device '$DEV' has been added to the '$DEVICES' file ****\n"
+	grep "^[^#].*device=${NAME}" $DEVCONFIG >/dev/null  2>&1
+	if [ $? != 0 ]
+	then
+		echo "
+
+If the '${NAME}' network is a STREAMS network, you should edit the file
+'${DEVCONFIG}' and, following the examples in that file, create
+an entry describing the STREAMS modules to be pushed for the '${NAME}' network."
+	fi
+
+else
+	continue
+fi
+
+if [ "$TYPE" = "TLIS" ]
+then
+	continue
+else
+	chown uucp /dev/$DEV 2>/dev/null
+	chmod 644 /dev/$DEV 2>/dev/null
+	entry=`grep "[ 	]$DEV[ 	]" $INITTAB 2>/dev/null`
+	if [ $? -ne 0 ]; then
+	echo "\nThere is no entry for $DEV in $INITTAB.
+If '$DEV' is to be used for bidirectional traffic,
+an entry will be required in '$INITTAB'.\n"
+
+	chkyn ${flags} -f "
+Do you want to add an entry for '$DEV' now?" || continue
+echo "
+Entering add port operation for '$DEV'\n"
+	/bin/sh addport $DEV
+	fi
+fi
+
+done

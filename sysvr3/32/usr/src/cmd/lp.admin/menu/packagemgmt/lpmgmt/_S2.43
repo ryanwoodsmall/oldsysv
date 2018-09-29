@@ -1,0 +1,464 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/_S2.43	1.6"
+## IDOC:   SCREEN 2.43: SPECIFY FILTER
+
+##+++ (functions)
+chk_printer_type_list () {
+# listof: printer-type
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!printer-type-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+ 	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_printer_type >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid printer type.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_type_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!type-name!}" \
+		'^[-a-zA-Z0-9]\{1,14\}$' \
+			'A type name can contain only 1 to 14 letters, digits, and dashes.' \
+	`
+}
+chk_template () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!template!}" \
+		'[^ ].*' 'You must give a response. Try again.' \
+	`
+}
+chk_install_edit_skip () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!install-edit-skip!}" \
+		'^install$' -o '^i$' -o '^edit$' -o '^ed$' -o '^e$' -o '^skip$' -o '^s$' \
+			'You must answer with "install", "edit", or "skip".' \
+	`
+}
+chk_printer_list () {
+# listof: printer-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!printer-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid printer name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_pattern () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!pattern!}" \
+		'^[^ ][^ ]*$' 'You must enter a response (no blanks allowed). Try again.' \
+	`
+}
+chk_printer_type () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!printer-type!}" \
+		'^[-a-zA-Z0-9]\{1,14\}$' \
+			'A printer type name can contain only 1 to 14 letters, digits, and dashes.' \
+	`
+}
+chk_keyword () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!keyword!}" \
+		'^INPUT$' -o '^OUTPUT$' -o '^TERM$' -o '^CPI$' -o '^LPI$' -o '^LENGTH$' -o '^WIDTH$' -o '^PAGES$' -o '^CHARSET$' -o '^FORM$' -o '^MODES$' -o '^COPIES$' -o '^done$' -o '^delete$' \
+			'You must give one of  
+		INPUT, OUTPUT, TERM, CPI, LPI, LENGTH, WIDTH, 
+		PAGES, CHARSET, FORM, MODES, or COPIES,
+		done, delete.' \
+	`
+}
+chk_simple_command () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!simple-command!}" \
+		'[^ ].*' 'You must enter a simple command. Try again.' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_content_type_list () {
+# listof: content-type
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!content-type-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			|  ( flags="-m1"; chk_type_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid content type name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+##--- (functions)
+
+DEF=${DEF_input_types}
+##+++ (2.43.1)
+chk_content_type_list \
+	"Input types it can convert:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to give the list of file types this  filter
+        can  recognize  and  convert.   Simple filters probably only
+        recognize one type, which is fine.  But if your  filter  can
+        handle  several types, enter their names separated by spaces
+        or commas.  Choose the names freely, but remember  that  the
+        users  of  the  print  service  will be using these names to
+        describe the types of files they will be printing.  You  are
+        limited  to 14 characters per name, and they must be made up
+        of only letters, digits, and DASHES (not underscores).  Just
+        press  return  if  the filter can recognize any type of file
+        (which is unlikely) or if  you  don't  want  to  change  the
+        default shown.  \
+"
+OPT_input_types=${RESP}
+##--- (2.43.1)
+
+DEF=${DEF_output_types}
+##+++ (2.43.2)
+chk_content_type_list \
+	"Output types it can produce:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the list of file types this filter
+        can  GENERATE.   Most  simple  filters can probably generate
+        just one file type which is fine.  But if  your  filter  can
+        handle  several types, enter their names separated by spaces
+        or commas.  Choose the names freely, but remember that these
+        names  must  match  up with the names of the file types your
+        printers can accept, or file types other filters can accept.
+        You  are limited to 14 characters per name, and they must be
+        made  up  of  only  letters,   digits,   and   DASHES   (not
+        underscores).
+
+        In the next field you  can  enter  the  printer  types  this
+        filter  is  restricted  to.   If  that's  the only type this
+        filter can generate then just enter that name  here  and  in
+        the  next  field.   If  the printer types can accept several
+        file types, enter all those file types here.
+
+        Just press return if the filter can produce any type of file
+        (which  is  unlikely)  or  if  you  don't want to change the
+        default shown.  \
+"
+OPT_output_types=${RESP}
+##--- (2.43.2)
+
+DEF=${DEF_printer_types}
+##+++ (2.43.3)
+chk_printer_type_list \
+	"Printer types it is restricted to:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the printer types this filter will
+        work  with.   It's  hard to say whether it matters or not if
+        your filter is restricted to a few printer  types.   If  the
+        filter  is  a  general  one  that  manipulates the file in a
+        simple fashion (like reverses  the  pages  or  adds  a  left
+        margin),  then it will probably work with most printers.  If
+        the filter produces printer-specific control sequences, then
+        it  is  likely  to work with only a few printer types.  Just
+        press return if the filter works with all printer  types  or
+        if you don't want to change the default shown.  \
+"
+OPT_printer_types=${RESP}
+##--- (2.43.3)
+
+DEF=${DEF_printers}
+##+++ (2.43.4)
+chk_printer_list \
+	"Printers it is restricted to:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the names of the printers that are
+        the  only  ones  this filter should be used with.  Generally
+        limiting the filter to certain printer types in the previous
+        prompt should be adequate.  However, if some printers of the
+        same type won't work  adequately  (maybe  they're  an  older
+        model or don't have enough memory capacity, etc.)  or if use
+        of this filter on a printer will slow down  the  through-put
+        and  you  don't want this to happen for some printers, or if
+        for any other reason you don't want this  filter  used  with
+        some  printers, enter their names here.  (The printers don't
+        have to exist yet in the print service configuration.)
+
+        Just press return if  this  filter  can  be  used  with  any
+        printer  of the types listed before, or if you don't want to
+        change the default shown.  \
+"
+OPT_printers=${RESP}
+##--- (2.43.4)
+
+if [ "slow" = "${OPT_type}" ]
+then
+	DEF="yes"
+else
+	DEF="no"
+fi
+##+++ (2.43.5)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        Enter a \"y\" (for yes) if this filter MUST be run  separately
+        from  the printer, or enter \"n\" (for no) if this filter MUST
+        NOT be run  separately  from  the  printer.   The  LP  Print
+        Service  will  run  slow  filters  in the background without
+        tying up a printer, to allow print requests that don't  need
+        filtering to print.  However, some filters must be run while
+        connected to the printer because they need  to  control  the
+        printer or check for responses from the printer.  \
+" \
+	"Is this a slow filter?${DEF:+ (default: ${DEF})}"
+then
+	OPT_type="slow"
+else
+	OPT_type="fast"
+fi
+##--- (2.43.5)
+
+##+++ (line 6)
+echo \
+"Enter the filter command and any fixed options:"
+##--- (line 6)
+
+DEF=${DEF_command}
+OPT_command=
+while [ -z "${OPT_command}" ]
+do
+##+++ (2.43.7)
+chk_simple_command \
+	"${DEF:+(default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the command to run to  invoke  the
+        filter.   You  can  include  command line options, but enter
+        only fixed options that are always needed to run this filter
+        correctly.   In  the next fields you can enter those options
+        that  should  be  in  effect  only  under  certain  printing
+        conditions.  Use  full  path names for commands not found in
+        standard places (like /usr/bin, /bin).  Just press return if
+        there's a default shown that's adequate.  \
+"
+OPT_command=${RESP}
+##--- (2.43.7)
+
+	if [ -z "${OPT_command}" ]
+	then
+		echo \
+"You have to identify a program name for a filter.
+Please try again:"
+	fi
+done
+
+if [ -z "${DEF_options}" ]; then
+##+++ (line 8)
+echo \
+"
+Now you will be asked to define option-templates that will be used  to map the
+characteristics  of each print request into options that the filter will  need
+to properly process a user's files.  There are  three components:
+
+A \"keyword\" identifies the characteristic.  For example INPUT  is  the keyword
+that identifies the input file type, MODES is the keyword that identifies  the
+print modes (type ? when asked for a keyword to get the complete list).
+
+A \"pattern\"  identifies  the value  of the characteristic that applies in each
+case.  For  example, \"2sided\" is a  pattern that you might use to identify the
+two-sided mode of printing   (keyword: MODES).  An  asterisk is a pattern that
+matches ALL possible values.
+
+A \"template\" provides the option as it should be given to  the  filter program
+For  example, \"-2\" is a  template that  you might need as the  option to  your
+filter program when two-sided printing is  called  for.  An asterisk  ANYWHERE
+in the template is a place-holder for the value  of the  print characteristic.
+For example, \"-l *\" is a  template  that you  might  need for  specifying  the
+page  length  to your filter program  (keyword: LENGTH); if the user had asked
+for an 11 inch (11i) page, the template \"-l *\" would be turned into \"-l 11i\"."
+
+##--- (line 11)
+fi
+
+echo \
+"
+Enter the keyword \"done\" when finished with the option templates."
+if [ -n "${DEF_options}" ]
+then
+	echo \
+"Enter the keyword \"delete\" to delete an option template."
+fi
+
+shift $#
+
+IFS=",="; set -- `echo "${DEF_options}" | tr '*' '~'`
+IFS=" "
+
+# set up array of variables to avoid 2.0 problem of resetting $1 $2 ..
+# when calling a function
+
+n=0
+while [ $# -gt 0 ]
+do
+	n=`expr $n + 1`
+	eval hold$n=\"$1\"
+	shift
+done
+nplus1=1
+nplus2=2
+
+OPT_options=
+RESP=
+while true
+do
+	if [ $n -gt 1 ]
+	then
+		eval holda=\"\$hold$nplus1\"
+		eval holdb=\"\$hold$nplus2\"
+		DEF_keyword=`expr "$holda" : '[ ]*\([^ ]*\) '`
+		DEF_pattern=`expr "$holda" : '[ ]*[^ ]* \(.*\)[ ]*$' | tr '~' '*'`
+		DEF_template=`expr "$holdb" : '[ ]*\(.*\)[ ]*$' | tr '~' '*'`
+		n=`expr $n - 2`
+		nplus1=`expr $nplus1 + 2`
+		nplus2=`expr $nplus2 + 2`
+	else
+		DEF_keyword= DEF_pattern= DEF_template=
+	fi
+
+DEF=${DEF_keyword}
+##+++ (2.43.12)
+chk_keyword \
+	"Keyword:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter one of the keywords in upper  case
+        or one of the lower case commands:
+
+        INPUT   File type to convert   OUTPUT  File type to produce
+        TERM    Printer type           MODES   Special print modes
+        CPI     Character spacing      LPI     Line spacing
+        LENGTH  Page length            WIDTH   Page width
+        PAGES   Pages to print         COPIES  Copies to print
+        FORM    Form to print on       CHARSET Character set to use
+        done    (Finished)             delete  (Delete this entry)
+
+        Just press return to skip over an existing entry.  \
+"
+OPT_keyword=${RESP}
+##--- (2.43.12)
+
+	case "${OPT_keyword}" in
+	"done" )
+		break
+		;;
+	"delete" )
+		if [ -z "${DEF}" ]
+		then
+			echo "Nothing to delete."
+		fi
+		continue
+		;;
+	esac
+
+DEF=${DEF_pattern}
+##+++ (2.43.13)
+chk_pattern \
+	"Pattern:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter either a literal pattern that will
+        be  matched against the value of a  print characteristic, or
+        an asterisk, \"*\", as a wild-card that will match any value.
+
+        For example, enter
+
+                                  portrait
+
+        if this entry must match a print mode of \"portrait\".  \
+"
+OPT_pattern=${RESP}
+##--- (2.43.13)
+
+DEF=${DEF_template}
+##+++ (2.43.14)
+chk_template \
+	"Template:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the option template that is to  be
+        used   to  construct  an  option  for  the  filter  command.
+        Anything you give here will be used as  is,  except  for  an
+        asterisk,  \"*\",  that will be replaced with the value of the
+        print characteristic.  \
+"
+OPT_template=${RESP}
+##--- (2.43.14)
+
+	echo
+	OPT_options="${OPT_options}${OPT_options:+, }${OPT_keyword} ${OPT_pattern} = ${OPT_template}"
+done
+
+##+++ (line 15)
+echo \
+""
+##--- (line 15)
+
+DEF="install"
+##+++ (2.43.16)
+chk_install_edit_skip \
+	"install, edit, or skip this filter:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        If you enter \"i\" (or \"install\") the filter you just  defined
+        will be put in the system.  If you enter \"e\" (or \"edit\") you
+        can go back and fix the filter definition.  If you enter \"s\"
+        (or \"skip\") the filter will not be put in the system.  \
+"
+#OPT=${RESP}
+##--- (2.43.16)
+
+case "${RESP}" in
+i | install )
+	OPT_install="install";;
+e | ed | edit )
+	OPT_install="edit";;
+s | skip )
+	OPT_install="skip";;
+esac

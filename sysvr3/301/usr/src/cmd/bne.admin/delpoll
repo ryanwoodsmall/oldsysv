@@ -1,0 +1,82 @@
+#ident	"@(#)bne.admin:delpoll	2.2"
+#	This shell is used to delete poll entries from /usr/lib/uucp/Poll
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -f "$POLL" -a \( ! -w "$POLL" -o ! -r "$POLL" \) ]; then
+	admerr $0 "Can't write and read '$POLL'\nCan't do delete operation!\n"
+	exit
+fi
+
+if [ ! -r $POLL ]; then 
+	echo "**WARNING** There is no '$POLL' file
+Use pollmgmt 'add' operation to add entries.\n"
+	exit
+fi
+
+while $FIRST || chkyn -f ${flags} '
+Do you want to delete any other poll entry?'  ||  exit
+do
+FIRST=false
+
+syslist=`cut -f1 $POLL 2>/dev/null | sort -u  | grep '^[A-Za-z0-9]'`
+if [ -z "${syslist}" ]; then
+	echo "**WARNING** There are no entries in the '$POLL' file
+Use pollmgmt 'add' operation to add entries.\n"
+	exit
+fi
+
+echo "\nThis is the current list of systems that are polled:\n"
+echo "${syslist}"  |  pr -t -w80 -6
+
+pollname=`chkyn ${flags} -fer '
+Which system name do you want to delete? [q]' \
+	'.' 'You must enter at least one character.' \
+	'^[a-zA-Z0-9]' 'First character must be a letter or number.'`
+
+
+idline=`grep "^${pollname}[ 	]" $POLL`
+if [ -n "${idline}" ]; then
+cat <<-!
+	Found the following entry for ${pollname}:
+
+	${idline}
+
+!
+
+	if  chkyn ${flags} -h'?' -H"
+	If you answer  y  '${pollname}' will no longer be polled." \
+		-f "Do you want to delete name '${pollname}'?"
+	then
+		ed - $POLL <<-!
+			H
+			g/^${pollname}[ 	]/d
+			w
+			q
+		!
+
+		if [ $? != 0 ]; then
+			admerr $0 Could not edit $POLL
+			exit 1
+		fi
+
+		echo  "*** ${pollname} has been deleted from '$POLL'. ***\n"
+
+
+	fi
+else
+echo "\n\\t'${pollname}' does not currently exist in '$POLL'.\n"
+fi
+
+done

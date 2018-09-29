@@ -1,0 +1,72 @@
+.TH STARTER 1
+.SH NAME
+starter \- information about the UNIX system for beginning users
+.SH SYNOPSIS
+[
+.B help
+]
+.B starter
+.SH DESCRIPTION
+.PP
+The UNIX System \fIhelp\fP Facility command
+.I starter
+provides five categories of information
+about the UNIX system to assist new users.
+.PP
+The five categories are:
+.PD 0
+.TP 11
+- commands a new user should learn first
+.TP
+- UNIX system documents important for beginners
+.TP
+- education centers offering UNIX system courses
+.TP
+- local environment information
+.TP
+- on-line teaching aids installed on the UNIX system
+.PD
+.PP
+The user may choose one of the above categories by entering
+its corresponding letter (given in the menu), or may
+exit to the shell by typing
+.B q
+(for ``quit'').
+When a category is chosen, the user will receive one or more
+pages of information pertaining to it.
+.PP
+From any screen in the facility, a user may execute a command via the
+shell (\fBsh(1)\fP) by typing a \fB!\fP and the command to be executed.
+The screen will be redrawn if the command that was executed
+was entered at a first level prompt.
+If entered at any other prompt level, only the prompt will be redrawn.
+.PP
+By default, the \fIhelp\fP facility scrolls the data that is
+presented to the user.  If a user prefers to have
+the screen clear before printing the data (non-scrolling), 
+a variable must be defined in the user's \fB.profile\fP file called
+\fBSCROLL\fP.  The variable \fBSCROLL\fP must be set to \fBno\fP and exported
+for non-scrolling to occur.
+If the user later decides that scrolling is desired, the variable \fBSCROLL\fP
+must be set to \fByes\fP or deleted from the user's \fB.profile\fP file.
+.PP
+Further information on the UNIX System \fIhelp\fP Facility can be
+found on the
+.IR help (1),
+.IR usage (1),
+.IR locate (1),
+and
+.IR glossary (1)
+manual pages.
+.SH SEE ALSO
+help(1),
+locate(1),
+usage(1),
+glossary(1).
+.SH WARNINGS
+.PP
+If the \fBTERM\fP variable is not set in the user's \fB.profile\fP file,
+then \fBTERM\fP will default to the terminal value type \fB450\fP 
+( a hardcopy terminal ).  For a list of valid terminal types, refer to
+\fIterm(5)\fP in the UNIX Programmer's Manual.
+The \fIhelp\fP facility assumes that tabs are set on the user's terminal.

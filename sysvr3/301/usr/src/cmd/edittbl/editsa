@@ -1,0 +1,152 @@
+#ident	"@(#)edittbl:editsa	1.2"
+
+# Editsa - a program which updates the data table read by filledt
+#          to map hardware board names to software application
+#          names.
+#
+#
+
+
+# first verify presence of data file, if its not there we are sunk
+
+if test ! -r /dgn/.edt_swapp
+then
+	echo "editsa: ERROR, missing software application file \"/dgn/.edt_swapp\""
+	exit 1
+fi
+
+# set up trap to remove temp file
+trap 'rm -f /tmp/editsa.i' 0 2 3 15
+
+# now verify command line and do argument processing
+
+case $1 in
+
+-i)
+# pick off positional parameters and assign to variables.
+	slot=$2
+	hwname=$3
+	swname=$4
+
+	if [ $# -ne 4 ]
+	then
+		echo "usage: editsa -i slot HWNAME SWNAME"
+		exit 1
+	fi
+
+# now verify the slot number is within normal range for a 400.
+# Note an invalid number for a 300 (i.e. 7) could slip by here
+# but it will be caught by filledt.
+
+	case "$slot" in
+
+	[0-9] | 10 | 11 | 12 )
+		;;
+	*)
+		echo "editsa: ERROR, slot number \"$slot\" is invalid"
+		exit 1
+		;;
+	esac
+
+# now verify that the hardware to be renamed actually exists in the
+# slot specified. Use getmajor to return all the slots that this
+# board is installed in. Check this against the slot number given.
+
+	FLAG="ERR"
+	for i in `/etc/getmajor $hwname`
+	do
+		if [ "$i" = "$slot" ]
+		then
+			FLAG="OK"
+			break
+		fi
+	done
+	if [ "$FLAG" = "ERR" ]
+	then
+		echo "editsa: WARNING, \"$hwname\" does not match EDT entry for slot \"$slot\""
+	fi
+
+# verify the driver is in /boot, otherwise lboot will complain.
+
+	if test ! -r /boot/$swname
+	then
+		echo "editsa: ERROR, driver \"$swname\" not found in /boot"
+		exit 1
+	fi
+
+# verify that the hwname and swname are different. i.e. "editsa -i slot x x"
+# doesn`t make sense and is probably an error.
+	
+	if [ "$swname" = "$hwname" ]
+	then
+		echo "editsa: ERROR, HWNAME and SWNAME specified are identical"
+		exit 1
+	fi
+
+# now take out any entry which exists for the current slot. It will be replaced
+# by the new one. 
+
+	grep -v "^$slot	" /dgn/.edt_swapp >/tmp/editsa.i
+	echo "$slot	$swname		$hwname" >>/tmp/editsa.i
+	sort -n -o /tmp/editsa.i /tmp/editsa.i
+	cp /tmp/editsa.i /dgn/.edt_swapp
+
+	if [ "$FLAG" = "ERR" ]
+	then
+		exit 2
+	fi
+
+	;;
+
+# now do processing for the remove option (if specified)
+-r)
+	if [ $# -ne 2 ]
+	then
+		echo "usage: editsa -r swname"
+		exit 1
+	fi
+
+# pick off positional parameter and assign it to a variable.
+	swname=$2
+
+# do the actual removal with grep -v. Note the convention
+# is (tab)swname(tab). This will let us base removal on the
+# second column (swname) entries only which is what we want.
+# This prevents us from getting faked out by a hwname and
+# swname having the same name.
+
+	grep "	$swname	" /dgn/.edt_swapp >/dev/null 
+
+# check the return code from grep. If an error occurred, then we 
+# cannot do the removal requested. Flag it as an error.
+
+	if [ $? -ne 0 ]
+	then
+		echo "editsa: ERROR, \"$swname\" not found in software application file \"/dgn/.edt_swapp\""
+		exit 1
+	fi 
+	grep -v "	$swname	" /dgn/.edt_swapp >/tmp/editsa.i
+	cp /tmp/editsa.i /dgn/.edt_swapp
+	
+	;;
+
+# Process list option. The only trick here is to 
+# get the columns lined up
+# with the data file.
+
+-l)
+	echo "SLOT	SWNAME		HWNAME\n"
+	cat /dgn/.edt_swapp
+
+	;;
+ 
+# if we get here an invalid option was specified.
+# print a usage statement and exit.
+
+*)
+	echo "usage: 		editsa -i slot HWNAME SWNAME
+	        editsa -r SWNAME
+	        editsa -l"
+	exit 1
+	;;
+esac

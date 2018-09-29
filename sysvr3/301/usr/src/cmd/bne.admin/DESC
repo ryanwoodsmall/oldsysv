@@ -1,0 +1,22 @@
+#ident	"@(#)bne.admin:DESC	2.2"
+#head#			BASIC NETWORKING UTILITIES MANAGEMENT
+#menu# basic networking utilities menu
+#help# 
+#help#	These subcommands help you control the commands which exchange mail and
+#help#	files between this and other machines.  The subcommands allow you to
+#help#	list, add, delete, and modify entries in the following files:
+#help# Systems	(/usr/lib/uucp/Systems)
+#help#	This file contains the names of other machines and information needed
+#help#	to call and converse with them.  Use the 'systemmgmt' subcommand.
+#help# Devices	(/usr/lib/uucp/Devices)
+#help#	This file specifies the devices used when connecting to remote
+#help#	machines, including the device type, speed, and port name.  Use the
+#help#	'devicemgmt' subcommand.
+#help# inittab	(/etc/inittab)
+#help#	This file controls the direction of the ports used by the communication
+#help#	package.  Ports are designated as incoming, outgoing, or bidirectional.
+#help#	Use the 'portmgmt' subcommand.
+#help# Poll		(/usr/lib/uucp/Poll)
+#help#	This file specifies when this machine should call other remote machines
+#help#	checking for files and mail destined for local machine.
+#help#	Use the 'pollmgmt' subcommand.

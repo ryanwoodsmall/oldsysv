@@ -1,0 +1,64 @@
+.TH SCCSDIFF 1
+.SH NAME
+sccsdiff \- compare two versions of an \s-1SCCS\s+1 file
+.SH SYNOPSIS
+.B sccsdiff
+.BR \-r \s-1SID\s+1\&1
+.BR \-r \s-1SID\s+1\&2
+.RB [ \-p ]
+.RB [ \-s n]
+files
+.SH DESCRIPTION
+.I Sccsdiff\^
+compares two versions of an
+.SM SCCS
+file and generates the differences between the
+two versions.
+Any number of
+.SM SCCS
+files may be specified, but arguments apply to all files.
+.RS 5
+.TP 12
+.BI \-r \s-1SID\s+1?\^
+.IR \s-1SID\s+11 \ and \ \s-1SID\s+12 \ specify
+the deltas of an
+.SM SCCS
+file that are to be compared.
+Versions are passed to
+.IR bdiff (1)
+in the order given.
+.TP 12
+.B \-p
+pipe output for each file through
+.IR pr (1).
+.TP 12
+.BI \-s n\^
+\fIn\fP is the file segment size that
+.I bdiff\^
+will pass to
+.IR diff (1).
+This is useful when
+.I diff\^
+fails due to a high system load.
+.SH FILES
+.TP "\w'/tmp/get?????\ \ 'u"
+/tmp/get?????
+Temporary files
+.SH "SEE ALSO"
+bdiff(1), get(1), help(1), pr(1).
+.br
+.sp
+.I "Source Code Control System User Guide"
+in the
+.IR "\s-1UNIX\s+1 System V Support Tools Guide" .
+.SH DIAGNOSTICS
+.PD 0
+.TP 25
+.RI `` file ": No differences''"
+If the two versions are the same.
+.PP
+Use
+.IR help (1)
+for explanations.
+.PD
+.\"	@(#)sccsdiff.1	6.2 of 9/2/83

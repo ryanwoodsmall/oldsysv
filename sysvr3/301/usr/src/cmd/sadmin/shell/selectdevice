@@ -1,0 +1,98 @@
+#ident	"@(#)sadmin:shell/selectdevice	2.7"
+#	Select one of the simple administration names for a block or character
+#	device.
+
+#!	chmod +x ${file}
+
+question='Select which drive to use:'
+
+while [ $# -gt 1 ]
+do
+	case "$1" in
+	-b )	#	block device
+		type=-b
+		typename=block
+		r=
+		;;
+	-c )	#	character (aka raw) device
+		type=-c
+		typename=character
+		r=r
+		;;
+	-q )
+		question=$2
+		shift
+		;;
+	-* )
+		echo >&2 "Usage:  $0 -[b|c] [ -q question ] pid [ dir ] [ names... ]"
+		exit 1
+		;;
+	* )
+		break
+	esac
+	shift
+done
+
+pid=${1:?}
+shift
+
+if [ $# -lt 1 ]
+then
+	DIR=/dev/${r}SA
+else
+	DIR=$1
+	shift
+fi
+
+if [ ! -d $DIR ]
+then
+	admerr $0 $DIR nonexistent directory
+	kill ${pid}
+	exit 1
+fi
+
+cd $DIR
+patterns=`echo $*  |  sed 's/[^ ]\{1,\}/& &[!a-zA-Z]*/g'`
+devs=`ls ${patterns} 2>/dev/null`
+
+if [ -z "${devs}" ]
+then
+	admerr $0 Problems in $DIR, no valid ${typename} devices.
+	kill ${pid}
+	exit 1
+fi
+
+if [ `echo "${devs}"  |  wc -l` = 1 ]
+then	
+	if [ ! ${type} ${devs} ]
+	then
+		admerr $0 ${devs} is not of type ${typename}.
+		kill ${pid}
+		exit 1
+	fi
+
+	echo $DIR/${devs}
+	exit 0
+fi
+list=`echo "${devs}"  |  pr -t -n' ' -4`
+select=`checklist -q q -k "${pid}" -fep "${question}
+${list}
+Enter a number, a name, the initial part of a name, or
+? for HELP,  q to QUIT:" ${list}`
+case ${select} in
+'' )
+	exit 0
+	;;
+[1-9]  |  [1-9][0-9] )
+	DEV=${DIR}/`echo "${devs}" |  sed -n "${select}p"`
+	;;
+* )
+	DEV=${DIR}/${select}
+esac
+if [ ! ${type} ${DEV} ]
+then
+	admerr $0 ${DEV} is not of type ${typename}
+	kill ${pid}
+	exit 1
+fi
+echo ${DEV}

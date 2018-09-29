@@ -1,0 +1,52 @@
+.TH FSPLIT 1
+.SH NAME
+fsplit \- split f77, ratfor, or ef\&l files
+.SH SYNOPSIS
+.B fsplit
+options files
+.SH DESCRIPTION
+.I Fsplit
+splits the named \fIfile(s)\fP into separate files, with one procedure per
+file.
+A procedure includes \fIblockdata\fP, \fIfunction\fP, \fImain\fP, \fIprogram\fP,
+and \fIsubroutine\fP program segments.
+Procedure \fIX\fP is put in file
+.IB X .f,
+.IB X .r\fR,\fP
+or
+.IB X .e
+depending on the language
+option chosen, with the following exceptions: \fImain\fP is put in the file
+.IB MAIN .[efr]
+and unnamed \fIblockdata\fP segments in the files
+.IB blockdataN .[efr]
+where \fIN\fP is a unique integer value for each file.
+.PP
+The following
+.I options
+pertain:
+.TP 8
+.B \-f
+(default) Input files are
+.IR f77 .
+.TP
+.B \-r
+Input files are
+.IR ratfor .
+.TP
+.B \-e
+Input files are 
+.IR ef\&l .
+.TP
+.B \-s
+Strip
+.I f77
+input lines to 72 or fewer characters with trailing blanks
+removed.
+.SH SEE ALSO
+csplit(1),
+ef\&l(1),
+f77(1),
+ratfor(1),
+split(1).
+.\"	@(#)fsplit.1	6.2 of 9/2/83

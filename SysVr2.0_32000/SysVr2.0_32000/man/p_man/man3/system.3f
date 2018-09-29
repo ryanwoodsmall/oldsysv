@@ -1,0 +1,20 @@
+.TH SYSTEM 3F
+.SH NAME
+system \- issue a shell command from \s-1FORTRAN\s+1
+.SH SYNOPSIS
+.B "character\(**N c"
+.P
+.B "call system(c)"
+.SH DESCRIPTION
+.I System\^
+causes its character argument to be given to
+.IR sh (1)
+as input, as if the string had been typed at a terminal. The current
+process waits until the shell has completed.
+.SH SEE ALSO
+exec(2), system(3S).
+.br
+sh(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.br
+.\"	%W% of %G%

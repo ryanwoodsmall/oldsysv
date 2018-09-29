@@ -1,0 +1,13 @@
+
+\S terminal mode: standout mode: reverse video \S
+
+Terminal mode refers to the way your terminal prints characters.  Normally,
+it prints all characters the same way.  You can make certain characters or
+entire words stand out from the rest of the characters by marking them with
+a backslash character "\" followed by an "S".  The characters marked this 
+way will print in standout mode.  Paper printing terminals and some video 
+display terminals like the Hewlett- Packard 2621, show standout mode by 
+underlining the characters.  Other video display terminals like the 
+Hewlett-Packard 2640 terminal swap the background and character colors.  
+This form of standout mode is called reverse video.
+

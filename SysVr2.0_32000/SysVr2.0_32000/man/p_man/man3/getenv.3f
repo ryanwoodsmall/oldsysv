@@ -1,0 +1,17 @@
+.TH GETENV 3F
+.SH NAME
+getenv \- return \s-1FORTRAN\s+1 environment variable
+.SH SYNOPSIS
+.B "character\(**N c"
+.P
+.B getenv(~\s-1TMPDIR\s+1~, c)
+.SH DESCRIPTION
+.I Getenv\^
+returns the character-string value of the environment variable
+represented by its first argument
+into the character variable of its second argument.
+If no such environment variable
+exists, all blanks will be returned.
+.SH SEE ALSO
+getenv(3C), environ(5).
+.\"	%W% of %G%

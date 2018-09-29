@@ -1,0 +1,109 @@
+/*LINTLIBRARY*/
+
+/*	from file Mkdir.c */
+#include "fslib.h"
+
+/**
+ ** Mkdir() - SIMULATE/INVOKE SVR3 "mkdir()" SYSTEM CALL
+ **/
+int			Mkdir (path, mode)
+	char			*path;
+	int			mode;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file Readdir.c */
+/**
+ ** Readdir() - SIMULATE/INVOKE SVR3 "readdir()" SYSTEM CALL
+ **/
+struct dirent		*Readdir (dirp)
+	register DIR		*dirp;
+{	static struct dirent		* _returned_value;
+	return _returned_value;
+}
+
+/*	from file Rmdir.c */
+/**
+ ** Rmdir() - SIMULATE/INVOKE SVR3 "rmdir()" SYSTEM CALL
+ **/
+int			Rmdir (path)
+	char			*path;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file next.c */
+/**
+ ** next_dir() - GO TO NEXT DIRECTORY ENTRY UNDER PARENT DIRECTORY
+ ** next_file() - GO TO NEXT FILE ENTRY UNDER PARENT DIRECTORY
+ **/
+char			*next_dir (parent, lastdirp)
+	char			*parent;
+	long			*lastdirp;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+char			*next_file (parent, lastdirp)
+	char			*parent;
+	long			*lastdirp;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file s5getdents.c */
+/**
+ ** s5getdents() - SIMULATE "getdents()" FOR SVR2.1 OR EARLIER SYSTEMS
+ **/
+int			s5getdents (fildes, buf, nbytes)
+	int			fildes;
+	char			*buf;
+	unsigned		nbytes;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file s5mkdir.c */
+#include "errno.h"
+
+/**
+ ** s5mkdir() - SIMULATE "mkdir()" ON ``s5'' FILESYSTEM
+ **/
+int			s5mkdir (path, mode)
+	register char		*path;
+	register int		mode;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file s5readdir.c */
+/**
+ ** s5readdir() - SIMULATE "readdir()" ON ``s5'' TYPE FILESYSTEM
+ **/
+struct dirent *
+readdir(dirp)
+	register DIR		*dirp;
+{	static struct dirent *
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file s5rmdir.c */
+/**
+ ** s5rmdir() - SIMULATE "rmdir()" ON ``s5'' FILESYSTEM
+ **/
+int			s5rmdir (path)
+	register char		*path;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file see_if_SVR3.c */
+#include "setjmp.h"
+
+/**
+ ** see_if_SVR3() - SEE IF WE'RE RUNNING ON SVR3 OR LATER
+ **/
+void			see_if_SVR3 ()
+{
+}

@@ -1,0 +1,17 @@
+
+ \Sstarter\S:  General UNIX System User Information
+
+     \Sstarter\S provides general information for  system  users.  Enter
+     one of the choices below to proceed.
+
+
+              choices            description
+
+                \S c \S              Commands and terms to learn first
+                \S d \S              Documents for system users
+                \S e \S              Education centers for UNIX System training
+                \S l \S              Local UNIX System information
+                \S t \S              Teaching aids available on-line 
+
+                \S r \S              Redirect to a file or a command
+                \S q \S              Quit

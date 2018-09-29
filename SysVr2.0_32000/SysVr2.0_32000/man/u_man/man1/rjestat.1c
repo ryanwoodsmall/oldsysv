@@ -1,0 +1,115 @@
+.TH RJESTAT 1C
+.SH NAME
+rjestat \- \s-1RJE\s0 status report and interactive status console
+.SH SYNOPSIS
+.B rjestat
+.RI " [ " host " ]\|.\|.\|."
+.RI " [ \fB\-s\fP" host " ]"
+.RI " [ \fB\-c\fP" "host cmd" " ]" 
+.RI " [ \fB\-j\fP" "host jobname" " ]\|\|.\|."
+.SH DESCRIPTION
+.I Rjestat\^
+provides a method of determining the status of an \s-1RJE\s0 link
+and of simulating an \s-1IBM\s0 remote console (with \s-1UNIX\s0 system features added).
+When invoked with no arguments,
+.I rjestat\^
+reports the current status of all the \s-1RJE\s0 links connected to
+the \s-1UNIX\s0 system.  The options are:
+.PP
+.TP "\w'-chost cmd  'u"
+.I host\^
+Print the status of the line to
+.IR host .
+.I Host\^
+is the pseudonym for a particular \s-1IBM\s0 system.
+It can be any name that corresponds to one in the 
+first column of the \s-1RJE\s0 configuration file.
+.TP
+.BI \-s host\^
+After all the arguments have been processed, start an
+interactive status console to
+.IR host .
+.TP
+.BI \-c "host cmd\^"
+Interpret
+.I cmd\^
+as if it were entered in status console mode to
+.IR host .
+See below for the proper format of
+.IR cmd .
+.TP
+.BI \-j "host jobname\^"
+Print all status pertaining to a user job with name
+.I jobname\^
+that has been sent by the
+.I host\^
+system to the rje system.
+.PP
+In status console mode,
+.I rjestat\^
+prompts with the
+host pseudonym followed by
+.B :
+whenever it is ready to accept a command.
+Commands are terminated with a new-line.
+A line that begins with
+.B !
+is sent to the \s-1UNIX\s0 system shell for execution.
+A line that begins with the letter
+.B q
+terminates
+.IR rjestat .
+All other input lines are assumed to have the form:
+.PP
+.RS
+.IR ibmcmd " [ " redirect " ]"
+.RE
+.PP
+.I Ibmcmd\^
+is any \s-1IBM\s0 \s-1JES\s0 or \s-1HASP\s0 command.
+Only the super-user or
+.B rje
+login can send commands
+other than display or inquiry commands.
+.I Redirect\^
+is a pipeline or a redirection to a file
+(e.g., ``> file'' or `` \(or grep ...'').
+The \s-1IBM\s0 response is written to the pipeline or file.
+If
+.I redirect\^
+is not present, the response is written to the standard output of
+.IR rjestat .
+.PP
+An interrupt signal (\s-1DEL\s0 or \s-1BREAK\s0) will cancel the command
+in progress and cause
+.I rjestat\^
+to return to the command input mode.
+.SH EXAMPLE
+The following command reports the status of all the card
+readers attached to
+host A, remote 5.
+.SM JES\*S2
+is assumed.
+.PP
+.RS
+rjestat  \-cA  \(fm$du,rmt5  \(bv  grep  \s-1RD\s+1\(fm
+.RE
+.SH DIAGNOSTICS
+The message ``\s-1RJE\s0 error: ...'' indicates that
+.I rjestat\^
+found an inconsistency in the \s-1RJE\s0 system.
+This may be transient but should be reported to the site administrator.
+.SH FILES
+.TP "\w'/usr/rje/lines  'u"
+/usr/rje/lines
+\s-1RJE\s0 configuration file
+.TP
+resp
+host response file
+that exists in the
+.SM RJE
+subsystem directory (e.g.,
+.BR /usr/rje1 ).
+.SH SEE ALSO
+send(1C).
+.\"	@(#)rjestat.1c	6.2 of 9/2/83

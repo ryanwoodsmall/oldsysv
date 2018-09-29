@@ -1,0 +1,39 @@
+*#ident	"@(#)kern-port:master.d/sem	10.2"
+*
+* SEM
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ox	-	sem	-	-	-	ipc
+						semsys(){nosys}
+						semexit(){}
+						sema[SEMMNI] (%0x20)
+						sem[SEMMNS] (%8)
+						semmap[SEMMAP] (%i%i)
+						sem_undo[NPROC] (%l)
+						semu[((16+8*SEMUME)*SEMMNU+NBPW-1)/NBPW] (%i)
+						semtmp[(max(2*SEMMSL,max(0x20,8*SEMOPM))+NBPW-1)/NBPW] (%i)
+						seminfo(%i%i%i%i%i%i%i%i%i%i)
+						      ={SEMMAP,
+							SEMMNI,
+							SEMMNS,
+							SEMMNU,
+							SEMMSL,
+							SEMOPM,
+							SEMUME,
+							16+8*SEMUME,
+							SEMVMX,
+							SEMAEM}
+
+$$$
+
+NBPW	= 4
+
+SEMMAP	= 10
+SEMMNI	= 10
+SEMMNS	= 60
+SEMMNU	= 30
+SEMMSL	= 25
+SEMOPM	= 10
+SEMUME	= 10
+SEMVMX	= 32767
+SEMAEM	= 16384

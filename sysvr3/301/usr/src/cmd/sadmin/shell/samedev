@@ -1,0 +1,45 @@
+#ident	"@(#)sadmin:shell/samedev	1.2"
+#	Determine if any of the check_dev's are identical to the known_dev
+#	by comparing their block or character special file major/minor numbers.
+
+#!	chmod +x ${file}
+
+set -ue
+
+IFS="${IFS},"
+
+if [ $# -lt 2 ]
+then
+	echo "Usage: ${0} known_dev check_dev ..." >&2
+	exit 1
+fi
+
+eval `ls -l ${1} | \
+	(read perm links uid gid major minor month day when name ; \
+	echo perm=${perm} want=${major}/${minor})`
+
+case "${perm}" in
+b*)
+	type=b
+	;;
+c*)
+	type=c
+	;;
+*)
+	echo "${0}: ${1}: Not a block or character device" >&2
+	exit 1
+	;;
+esac
+
+shift
+
+ls -ld "$@" | while read perm links uid gid major minor month day when name
+do
+	case ${perm} in
+	${type}* )
+		if [ "${major}/${minor}" = "${want}" ]
+		then
+			echo "${name}"
+		fi
+	esac
+done

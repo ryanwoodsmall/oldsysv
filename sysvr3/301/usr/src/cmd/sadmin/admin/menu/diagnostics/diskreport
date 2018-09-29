@@ -1,0 +1,52 @@
+#ident	"@(#)sadmin:admin/menu/diagnostics/diskreport	2.3"
+#menu#	report on built-in disk errors
+#help#
+#help#	This subcommand shows you if the system has collected any information
+#help#	indicating that there have been errors while reading the built-in
+#help#	disks.  You can request either summary or full reports.
+#help#	The summary report provides sufficient information about disk errors
+#help#	to determine if repair should be attempted.  If the message
+#help#				no errors logged
+#help#	is part of the report, then there is probably no damage.  If a number
+#help#	of errors is reported, there is damage and you should call for service.
+#help#	The full report gives additional detail for the expert repair person
+#help#	trouble shooting complicated problems.
+#help#	NOTE:  Reports of disk errors most probably result in the loss of
+#help#	files and/or damage to data.  It will be necessary to restore the
+#help#	repaired disk from backup copies.
+
+flags="-qq -k$$"
+
+if [ ! -x /etc/hdelogger ]
+then
+	echo '
+	This machine does not have the necessary command, /etc/hdelogger, to
+	report bad blocks.  Hence, this feature is not available.'
+	exit 0
+fi
+
+echo '
+	WARNING:  This report is provided to advise you if your machine
+	needs the built-in disks repaired.  Only qualified repair people
+	should attempt to do the repair.
+	NOTE:  If disk errors are reported it probably means that files
+	and/or data have been damaged.  It may be necessary to restore the
+	repaired disk from backup copies.
+'
+case `checklist -fe ${flags} -p -H"!sed -n '/^#help#/s///p' $0" \
+	'Select "full" or "summary" disk error report [?, q]:' \
+	full summary` in
+full )
+	f=-f
+	;;
+summary )
+	f=-s
+	;;
+'' )
+	exit 0
+	;;
+* )
+	admerr $0 'Bad answer from checklist'
+	exit 1
+esac
+/etc/hdelogger ${f}

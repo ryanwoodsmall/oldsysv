@@ -1,0 +1,33 @@
+
+This tape consists of bootblocks, root image, and cpio dumps of root, usr, doc,
+man... I could find no machine or hardcopy of any sort for the installation
+manual, but it shouldn't be too hard. It has prebuilt kernels that support
+the general disk driver gd (RM02/03/05/80, RP04/06/06), rp (RP03/04),
+tm (TM11/TU10) and ht (TU16/TE16). It should support 11/45 or 70's, but predatesthe J11 (PDP11/73..). I read the boot blocks, and it seems to support booting
+from either a TM11 or TU16 controller, and then start an installation
+program that will setup for various disk configurations.
+
+	What is the most usefull way to send you the files? It can be
+either the extracted and named sections, or a special file created by
+a utility call 'copytape' that will recreate the original tape. The
+extracted sections are listed below (size in 1024 byte blocks) :-
+
+
+	   1 RJE.contents		extracted from cpio file
+	 128 RJE.cpio
+	  10 bootstrap			boot blocks (pdp11 code)
+	  22 cpio.binary		cpio binary loadable from bootstrap
+	   1 doc.contents		extracted from cpio file
+	 160 doc.cpio
+	   9 graphics.contents		extracted from cpio file
+	 384 graphics.cpio
+	  20 man.contents		extracted from cpio file
+	2368 man.cpio
+	   1 notes			this file
+	   3 root.contents		extracted from cpio file
+	2448 root.cpio
+	3512 root.image			root image (has boot blocks)
+	23296 sys_V_tape		'copytape' image of tape
+	  70 usr.contents		extracted from cpio file
+	14280 usr.cpio
+

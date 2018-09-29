@@ -1,0 +1,23 @@
+.TH NOHUP 1
+.SH NAME
+nohup \- run a command immune to hangups and quits
+.SH SYNOPSIS
+.B nohup
+command [ arguments ]
+.SH DESCRIPTION
+.I Nohup\^
+executes
+.I command\^
+with hangups
+and quits ignored.
+If output is not re-directed by the user,
+it will be sent to
+.BR nohup.out .
+If
+.B nohup.out
+is not writable in the current directory,
+output is redirected to
+.BR \s-1$HOME\s+1/nohup.out .
+.SH "SEE ALSO"
+nice(1), signal(2).
+.\"	@(#)nohup.1	5.2 of 5/18/82

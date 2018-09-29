@@ -1,0 +1,18 @@
+
+\Schgrp\S:  Description
+
+Syntax Summary:  chgrp group name ...
+
+         where:  group  is a valid group ID number or group name.
+
+                 name  is the name of a file or directory name.
+Description:
+     \Schgrp\S stands for "change group." Use \Schgrp\S to change the group
+     of users who have access to files or directories. You name a new group
+     using a numeric group ID from the /etc/passwd file or a group name from
+     the /etc/group file.  \Schgrp\S does not change the contents of the 
+     files and directories.  It only changes the people who have read, 
+     write, and execute permission.  You must own the files or directories 
+     or be the super-user to use \Schgrp\S.  See the glossary(1) for a 
+     discussion of access permissions and group.  See also: chmod(1) and 
+     chown(1) for commands with functions similar to \Schgrp\S.

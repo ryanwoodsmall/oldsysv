@@ -1,0 +1,12 @@
+
+\Srsh\S:  Examples
+
+This line is similar to the entries in the /etc/passwd file, which is the file
+that holds the records of the login names and passwords for users of the system.
+
+demo::666:ssss:4444-P.Smith(333)r222:/q14/usr/demo:/bin/\Srsh\S
+
+Because \Srsh\S appears in the listing the user with the login name "demo"
+must work in a restricted shell.  The user is forced to work in the directory
+"/q14/usr/demo".  He or she will not be able to change the PATH variable, and
+will not be able to redirect standard output or standard error output.

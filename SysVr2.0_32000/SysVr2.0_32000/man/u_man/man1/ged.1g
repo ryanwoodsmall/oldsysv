@@ -1,0 +1,511 @@
+.TH GED 1G
+.SH NAME
+ged \- graphical editor
+.SH SYNOPSIS
+.B ged
+.RB [ \-euRr n]
+.RB "[\s-1GPS~file\s+1" "~.\|.\|." ]
+.SH DESCRIPTION
+\fIGed\fR is an interactive graphical editor used to display, 
+construct, and edit \s-1GPS\s+1 files on
+\s-1TEKTRONIX\s+1 4010 series display terminals.
+If \s-1GPS\s+1 \fIfile\fR(s) are given, \fIged\fR reads them into an internal display
+buffer and displays the buffer.  The \s-1GPS\s+1 in the buffer can then be edited.
+If \fB\-\fR is given as a file name, \fIged\fR reads a \s-1GPS\s+1 from the standard input.
+.PP
+\fIGed\fR accepts the following command line options:
+.RS 5
+.TP 5
+\fBe\fR
+Do not erase the screen before the initial display.
+.TP 5
+\fBr\fR\fIn\fR
+Display region number \fIn\fR.
+.TP 5
+\fBu\fR
+Display the entire \s-1GPS\s+1 \fIuniverse\fR.
+.TP 5
+\fBR\fR
+Restricted shell invoked on use of \fB!\fR.
+.RE
+.PP
+A \s-1GPS\s+1 file is composed of instances of three graphical objects:  \fIlines\fR,
+\fIarc\fR, and \fItext\fR.
+\fIArc\fR and \fIlines\fR objects have a start point, 
+or \fIobject-handle\fR, followed by zero or more points, or
+\fIpoint-handles\fR.  \fIText\fR has only an object-handle.
+The objects are positioned
+within a Cartesian plane, or \fIuniverse\fR, 
+having 64K (\-32K to +32K) points, or \fIuniverse-units\fR, on each axis.
+The universe is divided into 25 equal sized areas called \fIregions\fR.
+Regions are arranged in five rows of five squares each, numbered 1 to 25 from
+the lower left of the universe to the upper right.
+.PP
+\fIGed\fR maps rectangular areas, called \fIwindows\fR, from the
+universe onto the display screen.
+Windows allow the user
+to view pictures from different locations and at different magnifications.
+The \fIuniverse-window\fR is the window with minimum magnification,
+i.e., the window that views the entire universe.
+The \fIhome-window\fR is the window that completely displays the
+contents of the display buffer.
+.SH COMMANDS
+.I Ged\^
+commands are entered in
+.IR stages .
+Typically each stage ends with a
+\fB<cr>\fR (return).
+Prior to the final \fB<cr>\fR the command may be 
+aborted by typing \fBrubout\fR.
+The input of a stage may be edited during the stage
+using the erase and kill characters of the calling shell.
+The prompt \fB\(**\fR indicates that \fIged\fR is waiting at stage 1.
+.sp
+Each command consists of a subset of the following stages:
+.TP 12
+1.  \fICommand line\fR
+A \fIcommand line\fR consists of a
+command \fIname\fR followed by \fIargument\fR(s) followed by a \fB<cr>\fR.
+A command \fIname\fR is a single character.
+Command \fIarguments\fR are either \fIoption\fR(s) or a \fIfile-name\fR.
+\fIOptions\fR are indicated by a leading \fB\-\fR.
+.TP 12
+2.   \fIText\fR
+\fIText\fR is a sequence of characters terminated by an unescaped \fB<cr>\fR.
+(120 lines of text maximum.)
+.TP 12
+3.   \fIPoints\fR
+\fIPoints\fR is a sequence of one or more screen locations (maximum of 30) indicated either
+by the terminal crosshairs or by name.
+The prompt for entering \fIpoints\fR is the appearance of the crosshairs.
+When the crosshairs are visible, typing:
+.RS 12
+.TP 5
+\fBsp\fR
+(space) enters the current location as a \fIpoint\fR.
+The \fIpoint\fR is identified with a number.
+.TP 5
+\fB$\fIn\fR
+enters the previous \fIpoint\fR numbered \fIn\fR.
+.TP 5
+\fB>\fIx\fR
+labels the last \fIpoint\fR entered with the upper case letter \fIx\fR.
+.TP 5
+\fB$\fIx\fR
+enters the \fIpoint\fR labeled \fIx\fR.
+.TP 5
+\&\fB.\fR
+establishes the previous \fIpoints\fR as the current \fIpoints\fR.
+At the start of a command the previous \fIpoints\fR
+are those locations given with the previous command.
+.TP 5
+\fB=\fR
+echoes the current \fIpoints\fR.
+.TP 5
+\fB$.\fIn\fR
+enters the \fIpoint\fR numbered \fIn\fR from the
+previous \fIpoints\fR.
+.TP 5
+\fB#\fR
+erases the last \fIpoint\fR entered.
+.TP 5
+\fB@\fR
+erases all of the \fIpoints\fR entered.
+.RE
+.TP 12
+4.   \fIPivot\fR
+The \fIpivot\fR is a single location,
+entered by typing \fB<cr>\fR
+or by using the \fB$\fR operator, and indicated with a \fB\(**\fR.
+.TP 12
+5.   \fIDestination\fR
+The \fIdestination\fR is a single location entered by typing \fB<cr>\fR
+or by using \fB$\fR.
+.RE
+.sp
+.SS "\s-1COMMAND SUMMARY\s+1"
+In the summary,
+characters typed by the user are printed in \fBbold\fP.
+Command stages are printed in \fIitalics\fP.
+Arguments surrounded by brackets
+.RB `` [\|] ''
+are optional.
+Parentheses
+.RB `` (\|) ''
+surrounding arguments separated by ``or''
+means that exactly one of the arguments must be given.
+.sp
+.SS Construct commands:
+.RS 5
+.TP 12
+\fBA\fRrc
+[\fB\-e\fRcho,\fBs\fRtyle,\fBw\fReight] \fIpoints\fR
+.TP 12
+\fBB\fRox
+[\fB\-e\fRcho,\fBs\fRtyle,\fBw\fReight] \fIpoints\fR
+.TP 12
+\fBC\fRircle
+[\fB\-e\fRcho,\fBs\fRtyle,\fBw\fReight] \fIpoints\fR
+.TP 12
+\fBH\fRardware
+[\fB\-e\fRcho] \fItext points\fR
+.TP 12
+\fBL\fRines
+[\fB\-e\fRcho,\fBs\fRtyle,\fBw\fReight] \fIpoints\fR
+.TP 12
+\fBT\fRext
+[\fB\-a\fRngle,\fBe\fRcho,\fBh\fReight,\fBm\fRid-point,\fBr\fRight-point,\fBt\fRext,\fBw\fReight] \fItext points\fR
+.RE
+.sp
+.SS "Edit commands:"
+.RS 5
+.TP 12
+\fBD\fRelete
+( \fB\-\fR (\fBu\fRniverse or \fBv\fRiew) or \fIpoints\fR )
+.TP 12
+\fBE\fRdit
+[\fB\-a\fRngle,\fBe\fRcho,\fBh\fReight,\fBs\fRtyle,\fBw\fReight] ( \fB\-\fR (\fBu\fRniverse or \fBv\fRiew) or \fIpoints\fR )
+.TP 12
+\fBK\fRopy
+[\fB\-e\fRcho,\fBp\fRoints,\fBx\fR] \fIpoints\fR \fIpivot\fR \fIdestination\fR
+.TP 12
+\fBM\fRove
+[\fB\-e\fRcho,\fBp\fRoints,\fBx\fR] \fIpoints\fR \fIpivot\fR \fIdestination\fR
+.TP 12
+\fBR\fRotate
+[\fB\-a\fRngle,\fBe\fRcho,\fBk\fRopy,\fBx\fR] \fIpoints\fR \fIpivot\fR \fIdestination\fR
+.TP 12
+\fBS\fRcale
+[\fB\-e\fRcho,\fBf\fRactor,\fBk\fRopy,\fBx\fR] \fIpoints\fR \fIpivot\fR \fIdestination\fR
+.sp
+.RE
+.SS "View commands:"
+.RS 5
+.TP 16
+\fBc\fRoordinates
+.I points\^
+.TP 16
+\fBe\fRrase
+.TP 16
+\fBn\fRew-display
+.TP 16
+\fBo\fRbject-handles
+( \fB\-\fR (\fBu\fRniverse or \fBv\fRiew) or \fIpoints\fR )
+.TP 16
+\fBp\fRoint-handles
+( \fB\-\fR (\fBl\fRabelled-points or \fBu\fRniverse or \fBv\fRiew) or \fIpoints\fR )
+.TP 16
+\fBv\fRiew
+( \fB\-\fR (\fBh\fRome or \fBu\fRniverse or \fBr\fRegion) or [\fB\-x\fR] \fIpivot destination\fR )
+.TP 16
+\fBx\fR
+[\fB\-v\fRiew] \fIpoints\fR
+.TP 16
+\fBz\fRoom
+[\fB\-o\fRut]  \fIpoints\fR
+.sp
+.RE
+.SS "Other commands:"
+.RS 5
+.TP 12
+\fBq\fRuit or \fBQ\fRuit
+.TP 12
+\fBr\fRead
+[\fB\-a\fRngle,\fBe\fRcho,\fBh\fReight,\fBm\fRid-point,\fBr\fRight-point,\fBt\fRext,\fBw\fReight
+.br
+\f2file-name\fR [\f2destination\fR]
+.TP 12
+\fBs\fRet
+[\fB\-a\fRngle,\fBe\fRcho,\fBf\fRactor,\fBh\fReight,\fBk\fRopy,\fBm\fRid-point,\fBp\fRoints,
+.br
+\fBr\fRight-point,\fBs\fRtyle,\fBt\fRext,\fBw\fReight,\fBx\fR]
+.TP 12
+\fBw\fRrite
+\fIfile-name\fR
+.TP 12
+\fB!\fR\fIcommand\fR
+.TP 12
+\fB?\fR
+.RE
+.sp
+.SS Options: 
+\fIOptions\fR specify parameters used to construct, edit, and view graphical objects.
+If a parameter used by 
+a command is not specifed as an \fIoption\fR, 
+the default value for the parameter
+will be used (see \fBs\fRet below).
+The format of command \fIoptions\fR is:
+.RS 5
+\fB\-\fR\fIoption\|\fR[,\fIoption\fR\|]
+.RE
+where \fIoption\fR is \fIkeyletter\fR[\fIvalue\fR].
+Flags take on the \fIvalues\fR of true or false indicated by \fB+\fR and \fB\-\fR
+respectively.
+If no \fIvalue\fR is given with a flag, true is assumed.
+.sp
+Object options:
+.RS 5
+.TP 12
+\fBa\fRngle\fIn\fR
+Angle of \fIn\fR degrees.
+.TP 12
+\fBe\fRcho
+When true, echo additions to the display buffer.
+.TP 12
+\fBf\fRactor\fIn\fR
+\fBS\fRcale factor is \fIn\fR percent.
+.TP 12
+\fBh\fReight\fIn\fR
+Height of \fItext\fR is \fIn\fR universe-units (0\^\(<=\^\fIn\fR\^<\^1280).
+.TP 12
+\fBk\fRopy
+When true, copy rather than move.
+.TP 12
+\fBm\fRid-point
+When true, mid-point is used to locate text string.
+.TP 12
+\fBp\fRoints
+When true, operate on points otherwise operate on objects.
+.TP 12
+\fBr\fRight-point
+When true, right-point is used to locate \fItext\fR string.
+.TP 12
+\fBs\fRtyle\fItype\fR
+Line style set to one of following \fItypes\fR\^:
+.br
+	\fBso\fR	solid
+.br
+	\fBda\fR	dashed
+.br
+	\fBdd\fR	dot-dashed
+.br
+	\fBdo\fR	dotted
+.br
+	\fBld\fR	long-dashed
+.TP 12
+\fBt\fRext
+When false, \fItext\fR strings are outlined rather than drawn.
+.TP 12
+\fBw\fReight\fItype\fR
+Sets line weight to one of following \fItypes\fR\^:
+.br
+	\fBn\fR	narrow
+.br
+	\fBm\fR	medium
+.br
+	\fBb\fR	bold
+.RE
+.bp
+Area options:
+.RS 5
+.TP 12
+\fBh\fRome
+Reference the home-window.
+.TP 12
+\fBo\fRut
+Reduce magnification.
+.TP 12
+\fBr\fRegion\fIn\fR
+Reference region \fIn\fR.
+.TP 12
+\fBu\fRniverse
+Reference the universe-window.
+.TP 12
+\fBv\fRiew
+Reference those objects currently in view.
+.TP 12
+\fBx\fR
+Indicate the center of the referenced area.
+.RE
+.sp
+.SS "\s-1COMMAND DESCRIPTIONS\s+1"
+.SS "Construct commands:"
+.TP 5
+\fBA\fRrc and \fBL\fRines
+behave similarly.
+Each consists of a
+.I "command line\^"
+followed by
+.IR points .
+The first
+.I point\^
+entered is the object-handle.
+Successive
+.I points\^
+are point-handles.
+\fBL\fRines connect the handles in numerical order.  \fBA\fRrc
+fits a curve to the handles (currently a maximum of 3 points
+will be fit with a circular arc; splines will be added in a later version).
+.TP 5
+\fBB\fRox and \fBC\fRircle
+are special cases of \fBL\fRines and \fBA\fRrc, respectively.
+\fBB\fRox generates a rectangle with sides parallel to the universe axes.
+A diagonal of the rectangle would connect the first \fIpoint\fR entered with the last
+\fIpoint\fR.
+The first
+.I point\^
+is the object-handle.
+Point-handles are created at each of the vertices.
+\fBC\fRircle generates a circular arc centered about 
+the \fIpoint\fR numbered zero and passing through
+the last \fIpoint\fR.  The circle's object-handle 
+coincides with the last \fIpoint\fR.
+A point-handle is
+generated 180 degrees around the circle from the object-handle.
+.TP 5
+\fBT\fRext and \fBH\fRardware 
+generate \fItext\fR objects.
+Each consists of a
+.IR "command line" ,
+.I text\^
+and
+.IR points .
+.I Text\^
+is a sequence of characters delimited by \fB<cr>\fR.
+Multiple lines of text may be entered by preceding a
+.B cr
+with a backslash (i.e., \fB\ecr\fR).
+The \fBT\fRext
+command creates software generated characters.
+Each line of software text is treated as a separate
+.I text\^
+object.
+The first
+.I point\^
+entered is the object-handle
+for the first line of text.
+The \fBH\fRardware command sends the characters
+in \fItext\fR uninterpreted to the terminal.
+.RE
+.sp
+.SS "Edit commands:"
+.sp
+Edit commands operate on portions of the display
+buffer called \fIdefined areas\fR.
+A defined area is referenced either with an area \fIoption\fR
+or interactively.
+If an area \fIoption\fR is not given,
+the perimeter of the defined area is indicated by
+.I points.\^
+If no \fIpoint\fR is entered,
+a small defined area is built around the location of the \fB<cr>\fR.
+This is useful to reference a single \fIpoint\fR.
+If only one \fIpoint\fR is entered,
+the location of the \fB<cr>\fR is taken in conjunction with the \fIpoint\fR
+to indicate a diagonal of a rectangle.
+A defined area referenced by \fIpoints\fR will
+be outlined with dotted lines.  
+.TP 5
+\fBD\fRelete 
+removes all objects whose object-handle lies
+within a defined area.  The \fBu\fRniverse option
+removes all objects and erases the screen.
+.bp
+.TP 5
+\fBE\fRdit 
+modifies the parameters of the objects within a defined area.
+Parameters that can be edited are:
+.br
+	\fBa\fRngle	angle of \fItext\fR
+.br
+	\fBh\fReight	height of \fItext\fR
+.br
+	\fBs\fRtyle	style of \fIlines\fR and \fIarc\fR
+.br
+	\fBw\fReight	weight of \fIlines\fR, \fIarc\fR, and \fItext\fR.
+.br
+.TP 5
+\fBK\fRopy (or \fBM\fRove) 
+copies (or moves) object-
+and/or point-handles within a
+defined area by the displacement from the
+\fIpivot\fR to the \fIdestination\fR.
+.TP 5
+\fBR\fRotate 
+rotates objects within a defined area
+around the \fIpivot\fR.
+If the \fBk\fRopy flag is true then the objects are copied rather than moved.
+.TP 5
+\fBS\fRcale 
+For objects whose object handles are within a defined area,
+point displacements from the \fIpivot\fR are scaled by \fBf\fRactor percent.
+If the \fBk\fRopy flag is true then the objects are copied rather than moved.
+.sp
+.SS "View commands:"
+.TP 5
+\fBc\fRoordinates
+prints the location of \fIpoint\fR(s) in universe- and screen-units.
+.TP 5
+\fBe\fRrase
+clears the screen (but not the display buffer).
+.TP 5
+\fBn\fRew-display
+erases the screen then displays the display buffer.
+.TP 5
+\fBo\fRbject-handles (or \fBp\fRoint-handles) 
+labels object-handles (and/or point-handles) that lie
+within the defined area with \fBO\fR (or \fBP\fR).
+\fBP\fRoint-handles identifies labeled points when the \fBl\fRabelled-points flag is true.
+.TP 5
+\fBv\fRiew 
+moves the window so that the universe point corresponding to the 
+\fIpivot\fR coincides with the screen point corresponding to the
+\fIdestination\fR.
+Options for \fBh\fRome, \fBu\fRniverse,
+and \fBr\fRegion display particular windows in the universe.
+.TP 5
+.B x
+indicates the center of a defined area.
+Option \fBv\fRiew indicates the center of the screen.
+.TP 5
+\fBz\fRoom 
+decreases (\fBz\fRoom \fBo\fRut) or increases the magnification of the viewing window based on the defined area.
+For increased magnification, the window is set to circumscribe the
+defined area.  For a decrease in magnification the current
+window is inscribed within the defined area.
+.sp
+.RE
+.SS "Other commands:"
+.TP 5
+\fBq\fRuit or \fBQ\fRuit
+exit from \fIged\fR.
+\fBQ\fRuit responds with \fB?\fR if the display buffer has not
+been written since the last modification.
+.TP 5
+\fBr\fRead
+inputs the contents of a file.
+If the file contains a \s-1GPS\s+1 it is read directly.
+If the file contains text it is converted into \fItext\fR object(s).
+The first line of a text file begins at \fIdestination\fR.
+.TP 5
+\fBs\fRet
+when given \fIoption\fR(s) resets default parameters,
+otherwise it prints current default values.
+.TP 5
+\fBw\fRrite
+outputs the contents of the display buffer to a file.
+.TP 5
+\fB!\fR
+escapes \fIged\fR to execute a \s-1UNIX\s+1 system command.
+.TP 5
+\fB?\fR
+lists \fIged\fR commands.
+.RE
+.SH "SEE ALSO"
+gdev(1G), graphics(1G), sh(1).
+.br
+gps(4) in the 
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+.sp
+.I "An Introduction to the Graphical Editor\^"
+in the
+.IR "\s-1UNIX\s+1 System V Graphics Guide" .
+.SH WARNING
+.PP
+See Appendix A of the
+.I "\s-1TEKTRONIX\s+1 4014 Computer Display Terminal User's Manual\^"
+for the proper
+terminal strap options.
+.tr ~~
+.\"	@(#)ged.1g	6.3 of 9/2/83

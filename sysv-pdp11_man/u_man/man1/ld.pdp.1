@@ -1,0 +1,214 @@
+.TH LD 1 "PDP-11 only"
+.SH NAME
+ld \- link editor
+.SH SYNOPSIS
+.B ld
+[
+.B \-sulxXrdnim
+] [
+.B \-o
+name ] [
+.B \-t
+name ] [
+.B \-V
+num ] file ...
+.SH DESCRIPTION
+.I Ld\^
+combines several
+object programs into one; resolves external
+references; and searches libraries (as created by
+.IR ar (1)).
+In the simplest case several object
+.I files\^
+are given, and
+.I ld\^
+combines them, producing
+an object module which can be either executed or
+become the input for a further
+.I ld\^
+run.
+(In the latter case, the
+.B \-r
+option must be given
+to preserve the relocation bits.)
+The output of
+.I ld\^
+is left on
+.BR a.out .
+This file is made executable
+if no errors occurred during the load
+and the
+.B \-r
+flag was not specified.
+.PP
+The argument routines are concatenated in the order
+specified.  The entry point of the output is the
+beginning of the first routine.
+.PP
+If any argument is a library, it is searched exactly once
+at the point it is encountered in the argument list.
+Only those routines defining an unresolved external
+reference are loaded.
+If a routine from a library
+references another routine in the library,
+the referenced routine must appear after the
+referencing routine in the library.
+Thus the order of programs within libraries
+is important.
+.PP
+The symbols \f3\_etext\fP, \f3\_edata\fP and \f3\_end\fP
+(\f3etext\fP, \f3edata\fP and \f3end\fP in C)
+are reserved, and if referred to,
+are set to the first location above the program,
+the first location above initialized data,
+and the first location above all data respectively.
+It is erroneous to define these symbols.
+.PP
+.I Ld\^
+understands several flag arguments which are written
+preceded by a \f3\-\fP.
+Except for
+.BR \-l ,
+they should appear before the file names.
+.TP
+.B  \-s
+``Strip'' the output, that is, remove the symbol table
+and relocation bits to save space (but impair the
+usefulness of the debugger).
+This information can also be removed by
+.IR strip (1).
+This option is turned off if
+there are any undefined symbols.
+.TP
+.B  \-u
+Take the following argument as a symbol and enter
+it as undefined in the symbol table.  This is useful
+for loading wholly from a library, since initially the symbol
+table is empty and an unresolved reference is needed
+to force the loading of the first routine.
+.TP
+.B  \-l
+This
+option is an abbreviation for a library name.
+.B  \-l
+alone stands for \f3/lib/libc.a\fP, which
+is the standard system library for C and assembly language
+programs.
+.BI \-l x\^
+stands for
+.BI /lib/lib x .a\fR,
+where
+.I x\^
+is a string.
+If that does not exist,
+.I ld\^
+tries
+.BI /usr/lib/lib x .a
+A library is searched when its name is encountered,
+so the placement of a
+.B  \-l
+is significant.
+.TP
+.B  \-x
+Do not preserve local
+.RB (non- .globl )
+symbols in the output symbol table; only enter
+external symbols.
+This option saves some space in the output file.
+.TP
+.B  \-X
+Save local symbols
+except for those whose names begin with
+.BR L .
+This option is used by
+.I cc\^
+to discard internally generated labels while
+retaining symbols local to routines.
+.TP
+.B  \-r
+Generate relocation bits in the output file
+so that it can be the subject of another
+.I ld\^
+run.
+This flag also prevents final definitions from being
+given to common symbols,
+and suppresses the ``undefined symbol'' diagnostics.
+.TP
+.B  \-d
+Force definition of common storage
+even if the
+.B \-r
+flag is present.
+.TP
+.B  \-n
+Arrange that
+when the output file is executed,
+the text portion will be read-only and shared
+among all users executing the file.
+This involves moving the data areas up to the first
+possible 4K word boundary following the
+end of the text.
+Use
+.B \-N
+to turn it off.
+.TP
+.B  \-i
+When the output file is executed, the program
+text and data areas will live in separate address spaces.
+The only difference between this option
+and
+.B \-n
+is that here the data starts at location 0.
+.TP
+.B  \-m
+The names of all files and archive members used
+to create the output file are written to the
+standard output.
+.TP
+.B  \-o
+The
+.I name\^
+argument after
+.B \-o
+is used as the name of the
+.I ld\^
+output file, instead of
+.BR a.out .
+.TP
+.B \-t
+The
+.I name\^
+argument is taken to be a symbol name, and any references to or definitions
+of that symbol are listed, along with their types.
+There can be up to 16 occurrences of
+.BI \-t name\^
+on the command line.
+.TP
+.B \-V
+The
+.I num\^
+argument is taken as a decimal version number identifying the
+.B a.out
+that is produced.
+.I Num\^
+must be in the range 0\-32767.
+The version stamp is stored in the
+.B a.out
+header; see
+.IR a.out (4).
+.SH FILES
+.PD 0
+.TP 1.1i
+/lib/lib?.a
+libraries
+.TP
+/usr/lib/lib?.a
+more libraries
+.TP
+a.out
+output file
+.PD
+.SH "SEE ALSO"
+ar(1), as(1), cc(1), a.out(4), ar(4).
+'\" \%W\%
+.\"	@(#)ld.pdp.1	5.2 of 5/18/82

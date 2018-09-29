@@ -1,0 +1,17 @@
+
+\Sline\S:  Examples
+
+     This example is a shell program that gathers information about users.
+
+        echo "ENTER YOUR NAME: \c"
+        NAME=`line`
+        echo "ENTER YOUR DEPARTMENT NUMBER: \c"
+        DEPT=`line`
+        echo "$NAME $DEPT >> personnel
+     
+     First, the program queries you for your name.  Because \Sline\S is
+     surrounded by grave accents, the program executes it, and \Sline\S 
+     reads the name and assigns the name to the variable "NAME".  Then 
+     the program asks for your department and office extension.  The 
+     program assigns these values to "DEPT" The last line
+     appends "NAME"and "DEPT" to the file "personnel".

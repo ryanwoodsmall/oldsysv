@@ -1,0 +1,11 @@
+#ident	"@(#)sadmin:admin/menu/machinemgmt/whoson	1.2"
+#menu#	print list of users currently logged onto the system
+#help#
+#help#	Whoson prints the login ID, terminal device number, and sign-on time
+#help#	of all users who are currently using the computer.
+echo '
+These users are currently logged in:
+
+   ID   terminal number  sign-on time
+------- --------------- --------------'
+who

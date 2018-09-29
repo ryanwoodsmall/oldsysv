@@ -1,0 +1,10 @@
+
+\S string \S
+
+A string is a sequence of characters that is treated as a unit.
+Strings are normally bounded by "white space"\S*\S or by a character
+that is designated as a "separator"\S*\S.  Any sequence of
+characters, including white space, that is bounded by "double
+quotes("")"\S*\S is also taken to be a string.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,184 @@
+.TH STAT 2
+.SH NAME
+stat, fstat \- get file status
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B #include <sys/stat.h>
+.PP
+.B int stat (path, buf)
+.br
+.B char \(**path;
+.br
+.B struct stat \(**buf;
+.PP
+.B int fstat (fildes, buf)
+.br
+.B int fildes;
+.br
+.B struct stat \(**buf;
+.SH DESCRIPTION
+.I Path\^
+points to a
+path name
+naming a file.
+Read, write, or execute permission of the named file is not required,
+but all directories
+listed in the
+path name
+leading to the file must be searchable.
+.I Stat\^
+obtains information about the named file.
+.PP
+Similarly,
+.I fstat\^
+obtains information about an open file
+known by the
+file descriptor
+.IR fildes ,
+obtained from a successful
+.IR open ,
+.IR creat ,
+.IR dup ,
+.IR fcntl ,
+or
+.I pipe\^
+system call.
+.PP
+.I Buf\^
+is a pointer to a
+.I stat\^
+structure into which information
+is placed concerning the file.
+.PP
+The contents of the structure pointed to by
+.I buf\^
+include the following members:
+.RS
+.ta 8n 20n
+ushort	st_mode;	/\(** File mode; see
+.IR mknod (2)
+\(**/
+.br
+ino_t	st_ino;	/\(** Inode number \(**/
+.br
+dev_t	st_dev;	/\(**
+.SM ID
+of device containing \(**/
+.br
+		/\(** a directory entry for this file \(**/
+.br
+dev_t	st_rdev;	/\(**
+.SM ID
+of device \(**/
+.br
+		/\(** This entry is defined only for \(**/
+.br
+		/\(** character special or block special files \(**/
+.br
+short	st_nlink;	/\(** Number of links \(**/
+.br
+ushort	st_uid;	/\(** User
+.SM ID
+of the file's owner \(**/
+.br
+ushort	st_gid;		/\(** Group
+.SM ID
+of the file's group \(**/
+.br
+off_t	st_size;	/\(** File size in bytes \(**/
+.br
+time_t	st_atime;	/\(** Time of last access \(**/
+.br
+time_t	st_mtime;	/\(** Time of last data modification \(**/
+.br
+time_t	st_ctime;	/\(** Time of last file status change \(**/
+.br
+		/\(** Times measured in seconds since \(**/
+.br
+		/\(** 00:00:00
+.SM GMT\*S,
+Jan. 1, 1970 \(**/
+.RE
+.DT
+.PP
+.TP 10
+.B st_atime
+Time when file data was last accessed.
+Changed by the following system calls:
+.IR creat (2),
+.IR mknod (2),
+.IR pipe (2),
+.IR utime (2),
+and
+.IR read (2).
+.TP 10
+.B st_mtime
+Time when data was last modified.
+Changed by the following system calls:
+.IR creat (2),
+.IR mknod (2),
+.IR pipe (2),
+.IR utime (2),
+and
+.IR write (2).
+.TP 10
+.B st_ctime
+Time when file status was last changed.
+Changed by the following system calls:
+.IR chmod (2),
+.IR chown (2),
+.IR creat (2),
+.IR link (2),
+.IR mknod (2),
+.IR pipe (2),
+.IR unlink (2),
+.IR utime (2),
+and
+.IR write (2).
+.PP
+.I Stat\^
+will fail if one or more of the following are true:
+.TP 15
+.SM
+\%[ENOTDIR]
+A component of the
+path prefix
+is not a directory.
+.TP
+.SM
+\%[ENOENT]
+The named file does not exist.
+.TP
+.SM
+\%[EACCES]
+Search permission is denied for a component of the
+path prefix.
+.TP
+.SM
+\%[EFAULT]
+.I Buf\^
+or
+.I path\^
+points to an invalid address.
+.PP
+.I Fstat\^
+will fail if one or more of the following are true:
+.TP 15
+.SM
+\%[EBADF]
+.I Fildes\^
+is not a valid open file descriptor.
+.TP
+.SM
+\%[EFAULT]
+.I Buf\^
+points to an invalid address.
+.SH "RETURN VALUE"
+Upon successful completion a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+chmod(2), chown(2), creat(2), link(2), mknod(2), pipe(2), read(2), time(2), unlink(2), utime(2), write(2).
+.\"	@(#)stat.2	6.2 of 9/6/83

@@ -1,0 +1,106 @@
+.TH CHECKALL 1M
+.SH NAME
+checkall \- faster file system checking procedure
+.SH SYNOPSIS
+.B /etc/checkall
+.SH DESCRIPTION
+The
+.I checkall
+procedure
+is a prototype and must be modified to suit local conditions.
+The following will serve as an example:
+.PP
+.RS
+.nf
+# check the root file system by itself
+fsck \|/dev/dsk/0s0
+
+# dual fsck of drives 0 and 1
+dfsck \|/dev/rdsk/0s[12345] \|\- \|/dev/rdsk/1s1
+.fi
+.RE
+.PP
+In the above example
+(where
+.B /dev/rdsk/1s1
+is 320K blocks and
+.B /dev/rdsk/0s[12345]
+are each 65K or less),
+a previous sequential
+.I fsck
+took 19 minutes.
+The
+.I checkall
+procedure takes 11 minutes.
+.PP
+.I Dfsck
+is a
+program that permits an operator to interact with two
+.IR fsck (1M)
+programs
+at once.
+To aid in this,
+.I dfsck
+will print the file system name for each
+message to the operator.
+When answering a question from
+.IR dfsck ,
+the operator must prefix the response with a
+.B 1
+or a
+.B 2
+(indicating that the answer refers to the first or second file system group).
+.PP
+Due to the file system load balancing required for dual checking, the
+.IR dfsck
+[see \f2fsck\f1(1M)]
+command should always be executed
+through the
+.I checkall
+shell procedure.
+.PP
+In a practical sense,
+the file systems are divided as follows:
+.PP
+.RS
+dfsck \|file_systems_on_drive_0 \|\- \|file_systems_on_drive_1
+.br
+dfsck \|file_systems_on_drive_2 \|\- \|file_systems_on_drive_3
+.br
+.B " \| \|. \|. \|."
+.RE
+.PP
+A three-drive system can be handled by this more concrete example
+(assumes two large file systems per drive):
+.PP
+.RS
+dfsck \|/dev/dsk/3s1 \|/dev/dsk/0s[14] \|\- \|/dev/dsk/1s[14] \|/dev/dsk/3s4
+.RE
+.PP
+Note that the first file system on drive 3 is first in the
+.I filesystems1
+list and is last in the
+.I filesystems2
+list assuring that references to that drive will not overlap
+at execution time.
+.SH WARNINGS
+.IP 1. 3
+Do not use \fIdfsck\fP to check the \fIroot\fP file system.
+.IP 2. 3
+On a check that requires a scratch file (see
+.B \-t
+above),
+be careful not to use the same temporary file for the two groups
+(this is sure to scramble the file systems).
+.IP 3. 3
+The
+.I dfsck
+procedure is useful only if the system is set up for multiple
+physical I/O buffers.
+.SH "SEE ALSO"
+dfsck(1M), fsck(1M).
+.br
+.sp
+\f2Setting Up the \s-1UNIX\s+1 System\fR in the
+.IR "\s-1UNIX\s+1 System V Administrator Guide" .
+.\"	@(#)checkall.1m	6.2 of 9/2/83

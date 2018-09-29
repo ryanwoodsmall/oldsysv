@@ -1,0 +1,40 @@
+#ident	"@(#)nlp:terminfo/495ibm.ti	1.5"
+#01-09-88
+
+495ibm|att495ibm|AT&T 495 ibm graphics emulation,
+
+	bufsz#1024,
+	cols#80,
+	it#8,
+	lines#63,
+	orc#12,
+	orhi#120,
+	orl#12,
+	orvi#72,
+	cps#800,
+
+	cr=^M,
+	cpi=%?%p1%{10}%=%t^R%e%p1%{17}%=%O%t^O%;,
+	cvr=%?%p1%{0}%>%p1%{86}%<%&%t\EA%p1%c\E2%;,
+	csnm=%?%p1%{0}%=%p1%{1}%=%O%tcharacter_set_1%e%p1%{2}%=%tcharacter_set_2%;,
+	cud1=^J,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+#CAN clears all unprinted characters on current line
+	is1=^X,
+
+#Remote reset set bottom margin skip perf off
+	is2=\E[0~\E[12~,
+	lpi=%?%p1%{2}%=%t\EA$\E2%e%p1%{3}%=%t\EA^X\E2%e%p1%{4}%=%t\EA^R\E2%e%p1%{6}%=%t\EA^L\E2%e%p1%{8}%=%t\E0%e%p1%{12}%=%t\EA^F\E2%;,
+	rsupm=\ET,
+	rwidm=\EW0,
+	rsubm=\ET,
+	rmul=\E-0,
+	swidm=\EW1,
+	smul=\E-1,
+	ssubm=\ES1,
+	ssupm=\ES0,
+	scs=%?%p1%{0}%=%p1%{1}%=%O%t\E7%e%p1%{2}%=%t\E6%;,
+#Set form length
+	u9=%?%p1%{0}%>%p1%{128}%<%&%t\EC%p1%c%;,

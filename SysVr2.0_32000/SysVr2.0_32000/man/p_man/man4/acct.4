@@ -1,0 +1,124 @@
+'\" t
+.TH ACCT 4
+.SH NAME
+acct \- per-process accounting file format
+.SH SYNOPSIS
+.B #include <sys/acct.h>
+.SH DESCRIPTION
+Files produced as a result of calling
+.IR acct (2)
+have records in the form defined by
+.BR <sys/acct.h> ,
+whose contents are:
+.PP
+.nf
+.lg 0
+typedef	ushort comp_t;	/\(** "floating point" \(**/
+		/\(** 13-bit fraction, 3-bit exponent  \(**/
+
+.TS
+l1 l1 l1 l.
+struct	acct
+{
+	char	ac_flag;	/\(** Accounting flag \(**/
+	char	ac_stat;	/\(** Exit status \(**/
+	ushort	ac_uid;		/\(** Accounting user ID \(**/
+	ushort	ac_gid;		/\(** Accounting group ID \(**/
+	dev_t	ac_tty;		/\(** control typewriter \(**/
+	time_t	ac_btime;	/\(** Beginning time \(**/
+	comp_t	ac_utime;	/\(** acctng user time in clock ticks \(**/
+	comp_t	ac_stime;	/\(** acctng system time in clock ticks \(**/
+	comp_t	ac_etime;	/\(** acctng elapsed time in clock ticks \(**/
+	comp_t	ac_mem;	/\(** memory usage in clicks \(**/
+	comp_t	ac_io;	/\(** chars trnsfrd by read/write \(**/
+	comp_t	ac_rw;	/\(** number of block reads/writes \(**/
+	char	ac_comm[8];	/\(** command name \(**/
+};	
+
+extern	struct	acct	acctbuf;
+extern	struct	inode	\(**acctp;  /\(** inode of accounting file \(**/
+
+#define	\s-1AFORK\s+1	01	/\(** has executed fork, but no exec \(**/
+#define	\s-1ASU\s+1	02	/\(** used super-user privileges \(**/
+#define	\s-1ACCTF\s+1	0300	/\(** record type: 00 = acct \(**/
+.TE
+.fi
+.lg
+.PP
+In
+.IR ac_flag ,
+the
+.SM AFORK
+flag is turned on by each
+.IR fork (2)
+and turned off by an
+.IR exec (2).
+The
+.I ac_comm\^
+field is inherited from the parent process and
+is reset by any
+.IR exec .
+Each time the system charges the process with a clock tick,
+it also adds to
+.I ac_mem\^
+the current process size, computed as follows:
+.IP
+(data size) + (text size) / (number of in-core processes using text)
+.PP
+The value of
+.I ac_mem\|/\|(ac_stime\|+\|ac_utime)
+can be viewed as an approximation to the
+mean process size, as modified by text-sharing.
+.PP
+.ne 20
+The structure
+.BR tacct.h ,
+which resides with the source files of the accounting commands,
+represents the total accounting format
+used by the various accounting commands:
+.PP
+.nf
+.lg 0
+.br
+.ne 16v
+/\(**
+ \(**  total accounting (for acct period), also for day
+ \(**/
+.TS
+l1 l1 l1 l.
+
+struct	tacct {
+	uid_t	ta_uid;	/\(** userid \(**/
+	char	ta_name[8];	/\(** login name \(**/
+	float	ta_cpu[2];	/\(** cum. cpu time, p/np (mins) \(**/
+	float	ta_kcore[2];	/\(** cum kcore-minutes, p/np \(**/
+	float	ta_con[2];	/\(** cum. connect time, p/np, mins \(**/
+	float	ta_du;	/\(** cum. disk usage \(**/
+	long	ta_pc;	/\(** count of processes \(**/
+	unsigned short	ta_sc;	/\(** count of login sessions \(**/
+	unsigned short	ta_dc;	/\(** count of disk samples \(**/
+	unsigned short	ta_fee;	/\(** fee for special services \(**/
+};
+.TE
+.fi
+.lg
+.SH SEE ALSO
+acct(2), exec(2), fork(2).
+.br
+acct(1M) in the
+\f2\s-1UNIX\s+1 System V Administrator Reference Manual\fR.
+.br
+acctcom(1) in the
+\f2\s-1\UNIX\s+1 System V User Reference Manual\fR.
+.SH BUGS
+The
+.I ac_mem\^
+value for a short-lived command gives little information about
+the actual size of the command,
+because
+.I ac_mem\^
+may be incremented while a different command
+(e.g., the shell)
+is being executed by the process.
+.DT
+.\"	%W% of %G%

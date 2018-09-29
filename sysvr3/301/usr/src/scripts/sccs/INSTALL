@@ -1,0 +1,77 @@
+#ident	"@(#)pkg.sccs:sccs/INSTALL	1.5"
+#
+# INSTALL script for the Source Code Control Utility Package.
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/sccs.name`
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1984 AT&T Technologies, Inc."
+echo "All Rights Reserved"
+
+#
+# Check that the necessary package has already been installed.
+#
+
+if
+	test ! -s /usr/options/dfm.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the Directory and File Management Utilities"
+	echo "to be installed first."
+	exit
+fi
+
+#
+# Verify that there is space for the Source Code Control Utility Package.
+#
+
+USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+
+
+USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+
+if
+	[ "$USRspace" -lt "$USRneeds" ]
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $USRspace blocks available"
+	echo "on the /usr file system --"
+	echo "$USRneeds blocks are needed."
+	exit
+elif
+	[ "$ROOTspace" -lt "$ROOTneeds" ]  
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $ROOTspace blocks available"
+	echo "on the / (root) file system --"
+	echo "$ROOTneeds blocks are needed."
+	exit
+fi
+
+cd ${INSPATH}
+echo "The following files are being installed:"
+
+#
+# Check to see if the help facility is installed before 
+# copying the SCCS help command.
+# 
+
+find . -print | cpio -pduvm /
+
+if
+	test ! -s /usr/options/help.name
+then
+	cp /usr/lib/help/lib/help /usr/bin/help	
+fi
+
+
+echo "Installation of the ${PKGNAME} is complete."
+exit

@@ -1,0 +1,23 @@
+#ident	"@(#)pkg.graph:graph/UNINSTALL	1.4"
+#
+# UNINSTALL the Graphics Utilities
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/graph.name`
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -fr $i
+done
+
+echo "The ${PKGNAME} has been removed."

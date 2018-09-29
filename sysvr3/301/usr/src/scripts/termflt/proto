@@ -1,0 +1,26 @@
+/dev/null
+1422 100
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/termflt/Rlist.term
+	UNINSTALL	---555 2 2	./install/termflt/UNINSTALL
+	INSTALL 	---555 2 2	./install/termflt/INSTALL
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		bin	d--775 2 2
+			300		---555 2 2	../usr/bin/300
+			300s		---555 2 2	../usr/bin/300s
+			4014		---555 2 2	../usr/bin/4014
+			450		---555 2 2	../usr/bin/450
+			greek		---555 2 2	../usr/bin/greek
+			hp		---555 2 2	../usr/bin/hp
+			hpio		---555 2 2	../usr/bin/hpio
+		$
+		options	d--775 2 2
+			term.name	---555 2 2	./install/termflt/term.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.termflt:termflt/proto	1.8"

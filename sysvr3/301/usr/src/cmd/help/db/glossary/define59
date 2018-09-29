@@ -1,0 +1,34 @@
+
+\S standard input : standard output : standard error output : \S  
+\S standard error \S
+
+When a user executes a program, the computer expects input for the
+program to come from the user's terminal keyboard, and expects the
+program to send the output and "error messages"\S*\S to the terminal
+display.  Normal input, output, and error messages are referred to
+as standard input, standard output, and standard error output, and
+they are implemented as files in UNIX systems.  If the user wants a
+command to take input from a file, or send output or error output to
+a file, then standard input, standard output, and standard error
+output must be redirected (see "redirection"\S*\S). A left arrow (<)
+is used to redirect standard input from an ordinary file.  For
+example, mail (1) would ordinarily take input that you would
+compose at the keyboard.
+
+The following command line, however, redirects  input from the file
+"letter" to the mail(1) command.  The contents of the file
+are then sent to the person with the login name "sandy",
+
+	mail sandy < letter
+
+Standard output and standard error output are redirected  using a
+right arrow (>).  For standard error output, the right arrow is
+preceded by the number 2.  In the example, 
+
+	pr memo > temp  2> temperror
+
+standard output of the print command, pr(1) is sent to "temp"
+and the error output is sent to "temperror" instead of being 
+printed on the display.
+
+\S*\S defined in the \Sglossary\S

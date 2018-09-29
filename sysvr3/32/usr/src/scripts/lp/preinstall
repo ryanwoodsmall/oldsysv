@@ -1,0 +1,164 @@
+#ident	"@(#)pkg.nlp:lp/preinstall	1.7"
+
+shutdown () {
+	if [ -x /usr/lib/lpshut ]
+	then
+		/usr/lib/lpshut >/dev/null 2>&1
+	fi
+}
+
+
+echo "
+Examining your system to see if you have the old LP Spooler Utilities."
+
+
+if [ ! -d "${SPOOLDIR}" ]
+then
+
+	echo \
+"You have neither old nor new version. Installation continues."
+
+	shutdown	# just in case
+
+
+elif [ -d "${SPOOLDIR}/admins" -a -d "${SPOOLDIR}/admins/lp" ]
+then
+
+	echo \
+"You already have a new version; that is okay. Installation continues."
+
+	shutdown
+
+
+elif [ ! -s "${SPOOLDIR}/pstatus" ]
+then
+
+	echo \
+"You appear to have had the old or new version installed at  one  time,
+but  there's no configuration information present now. Installation is
+continuing."
+
+	shutdown	# just in case
+	rm -rf ${SPOOLDIR}
+
+
+elif [ ! -s "${SPOOLDIR}/qstatus" -o ! -d "${SPOOLDIR}/interface" ]
+then
+
+	echo "
+The existing print service configuration looks odd.  Installation  can
+continue, but there may be problems in saving the configuration.
+"
+
+	if ${CHECKYN} ${flags} -f -Dn -H "
+        If you answer \"n\" (or \"no\") installation will stop  to  give
+        you  a  chance  to examine the existing configuration in the
+        directory ${SPOOLDIR}, and preserve by hand  any  existing
+        configuration  information.  If  you  answer  \"y\" (or \"yes\")
+        installation  will  proceed  but it may fail to preserve the
+        existing configuration." \
+		"Should installation continue?"
+	then
+		shutdown
+	else
+		exit 1
+	fi
+
+else
+
+	echo \
+"You have the old version installed; that is okay.  The  current  print
+service  configuration will be set aside now,  to let the installation
+proceed. Afterwards, the configuration will be automatically converted
+to the new form."
+
+
+	##########
+	#
+	# Check to see if there are any requests still queued.
+	##########
+	if ls ${SPOOLDIR}/request/*/* 1>/dev/null 2>&1
+	then
+		echo "
+There are still some print requests queued for printing.  Installation
+of the new Spooler over the old configuration will DESTROY them.
+"
+
+		if ${CHECKYN} ${flags} -f -Dn -H "
+        If you answer \"n\" (or \"no\") installation will stop to   give
+        a  chance  for the queued print requests to be printed.  (If
+        you suspect  that  there  really  are  no   requests   still
+        queued,  look  for  strange  files in the directories  under
+        ${SPOOLDIR}/request.)  If  you  answer   \"y\"   (or  \"yes\")
+        installation  will  proceed  WITHOUT  SAVING  any  currently
+        queued jobs." \
+			"Should installation continue?"
+		then
+			:
+		else
+			exit 1
+		fi
+	fi
+
+
+	if [ -f ${SPOOLDIR}/model/standard ]
+	then
+		echo "
+The existing print service configuration has a  printer  model  called
+\"standard\".   If installation continues it will be LOST.
+"
+
+		if ${CHECKYN} ${flags} -f -Dn -H "
+        If you answer \"n\" (or \"no\") installation will stop  to  give
+        you  a  chance  to  save the model \"standard\" in a different
+        place or under a different  name.  You'll  find  it  in  the
+        directory  ${SPOOLDIR}/model. If you answer \"y\" (or \"yes\")
+        installation will proceed  and  will  DESTROY  the  existing
+        model  called  \"standard\".  All  other  models  will be left
+        alone." \
+			"Should installation continue?"
+		then
+			rm -f ${SPOOLDIR}/model/standard
+		else
+			exit 1
+		fi
+	fi
+
+
+	shutdown
+
+
+	export safe_class safe_model
+	safe_class=
+	safe_model=
+
+	if [ -d "${SPOOLDIR}/class" ]
+	then
+		safe_class=${SPOOLDIR}/.SVR3.2.Oclass
+		rm -rf "${safe_class}"
+		mv ${SPOOLDIR}/class ${safe_class}
+	fi
+
+	if [ -d "${SPOOLDIR}/model" ]
+	then
+		safe_model=${SPOOLDIR}/.SVR3.2.Omodel
+		rm -rf "${safe_model}"
+		mv ${SPOOLDIR}/model ${safe_model}
+	fi
+
+	trap   'if [ -n "${safe_class}" ]
+		then
+			mv ${safe_class} ${SPOOLDIR}/class
+		fi
+		if [ -n "${safe_model}" ]
+		then
+			mv ${safe_model} ${SPOOLDIR}/model
+		fi
+		trap "" 0 1 2 3 15
+		exit 1' 0 1 2 3 15
+
+
+	echo "
+The old configuration has been saved. Installation continues."
+
+fi

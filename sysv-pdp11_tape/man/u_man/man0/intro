@@ -1,0 +1,795 @@
+'\"       To get a copy of the front matter (intro, table of contents,
+'\"	  index), on your terminal, type:
+'\"              nroff [ intro ] [ tocin ] [ ptxin ]
+'\"	  To typeset a copy via GCAT, use:
+'\"		 troff [ -rs1 ] -g [ intro ] [ tocin ] [ ptxin ] | gcat
+'\"	  ("-rs1" forces small -- 6x9 inches -- format).
+'\"	  If typesetter is on-line, omit the "-g" and the "| gcat".
+.bd S B 3
+.nr )s 0
+.if t .if \ns .nr )s 1\"register )s=1 iff troff & small format; 0 otherwise
+.nr )t 0
+.if t .if !\ns .nr )t 1\"register )t=1 iff troff & large format; 0 otherwise
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 9
+.	     vs 10 \}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 10
+.	     vs 12 \}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .463i
+'	 br \}
+.ds Dt\"
+.ds Ed\"
+.ds ET\"
+.de HD
+.if t \{.po 0
+.	 lt 7.5i
+.	 if \\n()s .tl @\l@0.25i@@@\l@0.25i@\h@1i@\l@0.25i@@
+.	 if \\n()t .tl @\l@0.25i@@@\l@0.25i@@
+.	 lt
+.	 po
+'	 br \}
+.ie \\n()s 'sp 2v
+.el 'sp 3v
+.if e .tl @\s9\\*(ET\s0@@@
+.if o .tl @@@\s9\\*(ET\s0@
+.ie \\n()s 'sp 1.5v
+.el 'sp 3v
+.ns
+..
+.de FO
+'bp
+..
+.wh 0 HD
+.if \n()s .wh -3.5v FO
+.if \n()t .wh -6v FO
+.if n .wh -7v FO
+.if \n(nl .bp
+.br
+.de PP
+.if n .sp
+.if t .sp .5v
+.ne 1.1v
+..
+.hw print-out photo-type-setter
+.tr ~
+.hy 0
+.if t \{.ds ` ``
+.	 ds ' ''
+.	 ds d \-
+'	 br \}
+.if n \{.ds ` ""
+.	 ds ' ""
+.	 ds d " -- \"
+.	 na
+.	 rm ad \}
+.br
+.rs
+.ce 1000
+.if \n()t \{.sp |2.5i
+.	 ps 36
+\h'.1m'\(bs
+.	 sp |4.2i
+.	 ps
+'	 br \}
+.if \n()s .sp |3i
+.if n .sp |4.2i
+.ss 18
+.ft 3
+.ps 24
+.vs 33p
+U\s-6NIX*\s+6 System
+User's Manual
+.ps
+.vs
+.sp 3.5v
+.ft
+.ps 14
+System V
+.if n .sp 4v
+.if t .sp 4v
+.ps 12
+.vs 15p
+'\"A. G. Petruccelli
+.sp .5v
+'\"W. J. Laauser
+.ce 1000
+.if \n()t .vs 12p
+.if \n()s .vs 10p
+.ft I
+'\"Editors
+.sp 4v
+.ft
+January 1983
+.br
+.ps 10
+.sp 4v
+.ft I
+.\" Not for use or disclosure outside the
+.\" Bell System except under written agreement.
+.br
+.ft
+.if n .sp \n(.tu-3v
+.if \n()t .sp \n(.tu-3v
+.if \n()s .sp \n(.tu-2.45v
+'\"Laboratory 4542
+'\"Bell Telephone Laboratories, Incorporated
+'\"Murray Hill, \s-1NJ\s+1 07974
+*\s-1UNIX\s+1 is a trademark of Bell Telephone Laboratories, Incorporated.
+.br
+.sp \n(.tu
+.ss 12
+.rs
+.if n .sp |3i
+.if \n()t .sp |3i
+.if \n()s .sp |2.45i
+Copyright \fB\^\s+8\v'.25m'\(co\v'-.25m'\s-8\|\fP1983 Western Electric Company, Incorporated.
+.br
+.sp 2v
+Portions of this document were copyrighted
+.br
+1979 Bell Telephone Laboratories, Incorporated.
+1980 Western Electric Company, Incorporated.
+.sp 1i
+.nf
+This document includes specific reference to the use of the UNIX
+System on a particular processor, the Western Electric Company 3B20S,
+which is not presently available except for internal use
+within the Bell System; however, the information contained herein is
+generally applicable to the use of the UNIX System on
+various processors which are available in the general trade.
+.fi
+.sp 1i
+PDP, VAX, DEC, UNIBUS, MASSBUS,
+.br
+and SBI are trademarks of Digital Equipment Corporation.
+.if n .sp \n(.tu-3v
+.if \n()t .sp \n(.tu-3v
+.if \n()s .sp \n(.tu-2.45v
+.ce 0
+.if \n()s .nr }I 0.97i
+.if \n()t .nr }I 1.62i
+.ll -\n(}Iu
+.in +\n(}Iu
+.ft I
+This manual was
+set on an \s-1AUTOLOGIC\s+1, Inc. \s-1APS\s+1-5
+phototypesetter driven by the \s-1TROFF\s+1
+formatter operating
+under the \s-1UNIX\s+1 system.\p
+.in -\n(}Iu
+.ll +\n(}Iu
+.ft
+.hy 14
+.ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i 6.5i
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 9
+.	     vs 10 \}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 10
+.	     vs 12 \}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .463i \}
+.if !\ns .ds Ed UNIX \|System \|V
+.if !\ns .ds Dt January \|1983
+.de FO
+.if \\n()s 'sp |\\n(.pu-1v-1p
+.if \\n()t 'sp |\\n(.pu-3v
+.if n 'sp |\\n(.pu-4v
+.if e .tl @\s9\\*(Dt@- % -@\\*(Ed\s0@
+.if o .tl @\s9\\*(Ed@- % -@\\*(Dt\s0@
+'bp
+..
+.pn 3\"INTRODUCTION
+.bp
+.ce
+\f3INTRODUCTION\fP
+.ds ET \s9\f2Introduction\fP\s0
+.sp 1v
+This manual describes the
+features of the \s-1UNIX\s+1 System.
+It provides neither a general
+overview of the \s-1UNIX\s+1 System
+(for that, see \*`The U\s-1NIX\s+1 Time-Sharing System,\*'
+\s-1\f2BSTJ\^\fP\s+1, Vol.~57, No.~6, Part~2, pp.~1905-29,
+by D.~M.~Ritchie and K.~Thompson),
+nor details of the implementation of the system
+(see \*`U\s-1NIX\s+1 Implementation,\*'
+\s-1\f2BSTJ\^\fP\s+1, same issue, pp.~1931-46).
+.PP
+Not all commands, features, and facilities described in this manual
+are available in every \s-1UNIX\s+1 System. 
+The entries not applicable for a particular hardware
+line will have an appropriate caveat stamped in the
+center of the mast of an entry.
+Also, programs or facilities being phased out will be marked
+as ``Obsolescent'' on the top of the entry.
+When in doubt, consult your system's administrator.
+.PP
+This manual is divided into
+six sections,
+some containing inter-filed sub-classes:
+.PP
+.nf
+.ta 2m +\w'\1.~~'u +\w'1M.~~'u
+	1.	Commands and Application Programs:
+		1.	General-Purpose Commands.
+		1C.	Communications Commands.
+		1G.	Graphics Commands.
+	2.	System Calls.
+	3.	Subroutines:
+		3C.	C and Assembler Library Routines.
+		3F.	FORTRAN Library Routines.
+		3M.	Mathematical Library Routines.
+		3S.	Standard I/O Library Routines.
+		3X.	Miscellaneous Routines.
+	4.	File Formats.
+	5.	Miscellaneous Facilities.
+	6.	Games.
+.ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i 6.5i
+.PP
+.fi
+\f3Section~1\fP (\f2Commands and Application Programs\^\fP)
+describes programs intended to be invoked directly by
+the user
+or by command language procedures,
+as opposed to subroutines, which are
+intended to be called by the user's programs.
+Commands generally reside in the directory
+\f3/bin\fP
+(for
+\f3bin\^\fPary programs).
+Some programs also reside in
+\f3/usr/bin\fP,
+to save space in
+\f3/bin\fP.
+These directories are searched automatically by the command interpreter
+called the
+\f2shell\^\fP.
+Sub-class 1C contains communication programs
+such as
+\f2cu\^\fP,
+\f2send\^\fP,
+\f2uucp\^\fP,
+etc.
+These entries may not apply from system to system
+depending upon the hardware included on your processor.
+Some \s-1UNIX\s+1 Systems may have a directory called
+\f3/usr/lbin\fP, containing local commands.
+.PP
+\f3Section~2\fP (\f2System Calls\^\fP)
+describes the entries into the \s-1UNIX\s+1 System kernel, including
+the C language
+interface.
+.PP
+\f3Section~3\fP (\f2Subroutines\^\fP) describes the available
+subroutines.
+Their binary versions reside in various system libraries
+in the directories
+\f3/lib\fP and \f3/usr/lib\fP.
+See \f2intro\^\fP(3) for descriptions of these libraries and the
+files in which they are stored.
+.PP
+\f3Section~4\fP
+(\f2File Formats\^\fP)
+documents the structure of particular
+kinds of files;
+for example, the format of the output of the link editor is given
+in \f2a\^\fP\f3.\^\fP\f2out\^\fP(4).
+Excluded are files used by only one command
+(for example, the assembler's intermediate files).
+In general, the C language \f3struct\fP
+declarations corresponding to these formats
+can be found in the directories \f3/usr/include\fP
+and \f3/usr/include/sys\fP.
+.PP
+\f3Section~5\fP (\f2Miscellaneous Facilities\^\fP) contains a variety of things.
+Included are descriptions of character sets, macro
+packages, etc.
+.PP
+\f3Section~6\fP (\f2Games\^\fP) describes the games and educational
+programs that, as a rule, reside
+in
+the directory
+\f3/usr/games\fP.
+.PP
+Each section consists of a number of independent
+entries of a page or so each.
+The name of the entry appears in the upper corners of its pages.
+Entries within each section are
+alphabetized,
+with the exception of the introductory entry
+that begins each section.
+The page numbers of each entry start at 1.
+Some entries may describe several routines, commands, etc.
+In such cases, the entry appears only once, alphabetized under
+its \*`major\*' name.
+.PP
+All entries are based on a common format,
+not all of whose parts always appear:
+.PP
+.in +2m
+The
+\f3\s-1NAME\s+1\fP
+part gives the name(s) of the entry and
+briefly
+states its purpose.
+.PP
+The
+\f3\s-1SYNOPSIS\s+1\fP
+part summarizes the use of the
+program being described.
+A few conventions are used, particularly in
+Section~1
+(\f2Commands\^\fP):
+.in +2m
+.PP
+\f3Boldface\fP
+strings are literals and
+are to be typed just as they appear.
+.PP
+\f2Italic\^\fP strings usually represent
+substitutable argument prototypes
+and program names found elsewhere in the manual (they are
+underlined
+in
+the typed version of the entries).
+.PP
+Square brackets \f3[\|]\fP around an argument prototype
+indicate that the argument is optional.
+When an argument prototype is given as
+\*`name\*' or \*`file\*',
+it always
+refers to a
+\f2file\^\fP
+name.
+.PP
+Ellipses \f3\^.\|.\|.\^\fP are used to show that the previous argument prototype
+may be repeated.
+.PP
+A final convention is used by the commands themselves.
+An argument beginning with a minus \f3\(mi\fP,
+plus \f3\(pl\fP,
+or equal sign \f3\(eq\fP
+is often taken to be some sort of flag argument,
+even if it appears in a position where a file name
+could appear.
+Therefore, it is unwise to have files
+whose names begin with \f3\(mi\fP,
+\f3\(pl\fP, or \f3\(eq\fP.
+.PP
+.in -2m
+The
+\f3\s-1DESCRIPTION\s+1\fP
+part discusses the subject at hand.
+.PP
+The
+\f3\s-1EXAMPLE(S)\s+1\fP
+part gives
+example(s) of usage, where appropriate.
+.PP
+The
+\f3\s-1FILES\s+1\fP
+part gives the file names that are
+built into the program.
+.PP
+The
+\f3\s-1SEE ALSO\s+1\fP
+part gives pointers to related information.
+.PP
+The
+\f3\s-1DIAGNOSTICS\s+1\fP
+part discusses
+the diagnostic indications that may be produced.
+Messages that are intended to be self-explanatory
+are not listed.
+.PP
+The
+\f3\s-1WARNINGS\s+1\fP
+part points out potential pitfalls.
+.PP
+The
+\f3\s-1BUGS\s+1\fP
+part gives
+known bugs and sometimes deficiencies.
+Occasionally, the suggested fix is
+also described.
+.in -2m
+.PP
+A table of contents
+and a permuted index derived from that table
+precede Section~1.
+On each
+\f2index\^\fP
+line, the title
+of the
+entry to which
+that line refers is followed by the appropriate section number in parentheses.
+This is important because there is considerable
+duplication of names among the sections,
+arising principally from commands that
+exist only to exercise a particular system call.
+.PP
+On most systems, all entries are available \%on-line via the \f2man\^\fP(1)
+command, q.v.
+.if t .pn 5\"HOW TO GET STARTED
+.if n .pn 6\"HOW TO GET STARTED
+.ds ET\"
+.bp
+.ce
+\f3HOW~\|TO~\|GET~\|STARTED\fP
+.ds ET \s9\f2How To Get Started\fP\s0
+.sp 1v
+This discussion provides the basic information
+you need to get started on the \s-1UNIX\s+1 System:
+how to log in and log out,
+how to communicate through your terminal,
+and how to run a program.
+(See the \f2U\s-1NIX\s+1 System User's Guide\^\fP
+for a more complete introduction
+to the system.)
+.PP
+\f3Logging in.\fP
+You must dial up the \s-1UNIX\s+1 System from an appropriate terminal.
+The \s-1UNIX\s+1 System supports full-duplex \s-1ASCII\s+1 terminals.
+You must also have a valid user name,
+which may be obtained
+(together with the telephone number(s) of your \s-1UNIX\s+1 System)
+from the administrator
+of your system.
+Common terminal speeds are 10, 15, 30, and 120 characters per second
+(110, 150, 300, and 1,200 baud);
+occasionally, speeds of 240, 480, and 960 characters per second
+(2,400, 4,800, and 9,600 baud)
+are also available.
+On some \s-1UNIX\s+1 Systems, there are separate telephone numbers
+for each available terminal speed, while on other
+systems several speeds may be served by a single telephone number.
+In the latter case, there is one ``preferred'' speed;
+if you dial in from a terminal set to a different speed, you will
+be greeted by a string of meaningless characters
+(the \f3login:\fP message at the wrong speed).
+Keep hitting the ``break'' or ``attention'' key until the \f3login:\fP
+message appears.
+Hard-wired terminals usually are set to the correct speed.
+.PP
+Most terminals have a speed
+switch that should be set to the appropriate speed
+and a half-/full-duplex switch that should be set to
+full-duplex.
+When a connection (at the speed of the terminal)
+has been established, the system
+types \f3login:\fP and you then type your
+user name followed by the \*`return\*' key.
+If you have a password (and you should!), the system asks for it,
+but does not print (\*`echo\*') it on the terminal.
+After you have logged in,
+the \*`return\*', \*`new-line\*', and \*`line-feed\*' keys
+will give exactly the same result.
+.PP
+It is important
+that you type your login name in lower case if possible; if you type
+upper-case letters, the \s-1UNIX\s+1 System
+will assume that your terminal cannot generate lower-case
+letters and that you mean all subsequent
+upper-case
+input to be treated as lower case.
+When you have logged in successfully,
+the shell
+will type a \f3$\fP to you.
+(The shell is described below under
+\f2How to run a program.\^\fP)
+.PP
+For more information, consult
+\f2login\^\fP(1),
+which discuss the login sequence in more
+detail, and \f2stty\^\fP(1), which tells you how to describe the
+characteristics of your terminal to the system
+(\f2profile\^\fP(4) explains how to accomplish this last task
+automatically every time you log in).
+.PP
+\f3Logging out.\fP
+There are two ways to log out:
+.PP
+.in 2m+\w'1.  'u
+.ti -\w'1.  'u
+1.  You can simply hang up the phone.
+.br
+.ti -\w'1.  'u
+2.  You can log out by typing an end-of-file indication
+(\s-1ASCII\s+1 \s-1\f3EOT\fP\s+1 character,
+usually typed as \*`control-d\*') to the shell.
+The shell will terminate and the \f3login:\fP message
+will appear again.
+.in -2m+\w'1.  'u
+.PP
+\f3How to communicate through your terminal.\fP
+When you type to the \s-1UNIX\s+1 System, a gnome deep in the system
+is gathering your characters and saving them.
+These
+characters will not be given to a program
+until you type a \*`return\*' (or \*`new-line\*'), as described above
+in
+\f2Logging in.\^\fP
+.PP
+The \s-1UNIX\s+1 System terminal input/output is full-duplex.
+It has full read-ahead, which means that you can
+type at any time,
+even while a program is
+typing at you.
+Of course, if you type during output, the output will
+have interspersed in it the input characters.
+However, whatever you type will be saved and
+interpreted in the correct sequence.
+There is a limit to the amount of read-ahead,
+but it
+is generous and not likely to be exceeded unless
+the system is in trouble.
+When the read-ahead limit is exceeded, the system
+throws away
+\f2all\^\fP
+the saved characters.
+.PP
+On an input line from a terminal, the character \f3@\fP
+``kills'' all the characters typed before it.
+The character \f3#\fP erases the last character typed.
+Successive uses of \f3#\fP will erase characters back to, but
+not beyond, the beginning of the line;
+\f3@\fP and \f3#\fP can be typed as themselves
+by preceding them with \f3\e\fP
+(thus, to erase a \f3\e\fP, you need two \f3#\fPs).
+These default erase and kill characters can be changed; see \fIstty\fR(1).
+.PP
+The \s-1ASCII\s+1 \s-1\f3DC3\fP\s+1 (control-s)
+character can be used to temporarily
+stop output.
+It is useful with \s-1CRT\s+1 terminals to prevent output from
+disappearing before it can be read.
+Output is resumed when a
+\s-1\f3DC1\fP\s+1 (control-q) or a second \s-1\f3DC3\fP\s+1 (or any other character, for that matter)
+is typed.
+The \s-1\f3DC1\fP\s+1 and \s-1\f3DC3\fP\s+1
+characters are not passed to any other program when used
+in this manner.
+.PP
+The \s-1ASCII\s+1 \s-1\f3DEL\fP\s+1 (a.k.a. \*`rubout\*') character is not passed to programs,
+but instead generates
+an
+\f2interrupt signal,\^\fP
+just like the \*`break\*', \*`interrupt\*', or \*`attention\*' signal.
+This signal
+generally causes whatever program
+you are running to terminate.
+It is typically used to stop a long printout that
+you don't want.
+However, programs can arrange either to ignore
+this signal altogether,
+or to be notified when it happens (instead
+of being terminated).
+The editor \f2ed\^\fP(1), for example, catches interrupts and
+stops what \f2it\^\fP is doing,
+instead of terminating, so that an interrupt can
+be used to halt an editor printout without
+losing the file being edited.
+.PP
+The \f2quit\^\fP signal is generated
+by typing the \s-1ASCII\s+1 \s-1\f3FS\fP\s+1 character.
+It not only causes a running program to terminate,
+but also generates a file with the ``core image''
+of the terminated process.
+\f2Quit\^\fP
+is useful
+for debugging.
+.PP
+Besides adapting to the speed of the terminal,
+the \s-1UNIX\s+1 System tries to be intelligent as to whether
+you have a terminal with the \*`new-line\*' function,
+or whether it must be simulated with a \*`carriage-return\*' and \*`line-feed\*' pair.
+In the latter case, all
+\f2input\^\fP
+\*`carriage-return\*' characters
+are changed to \*`line-feed\*' characters (the standard
+line delimiter),
+and a \*`carriage-return\*' and \*`line-feed\*' pair
+is echoed to the terminal.
+If you get into the wrong mode, the \f2stty\^\fP(1) command
+will rescue you.
+.PP
+Tab characters are used freely in the \s-1UNIX\s+1 System source programs.
+If your terminal does not have the tab function,
+you can arrange to have tab characters changed into spaces
+during output, and echoed as spaces
+during input.
+Again, the \f2stty\^\fP(1) command
+will set or reset this mode.
+The system assumes
+that tabs are set every eight character positions.
+The \f2tabs\^\fP(1) command will set
+tab stops on your terminal, if that is possible.
+.PP
+\f3How to run a program.\fP
+When you have successfully logged into the \s-1UNIX\s+1 System, a program
+called the shell is listening to your terminal.
+The shell reads the lines you type, splits them
+into a command name and its arguments, and executes the command.
+A command is simply an executable program.
+Normally, the shell looks first in your current directory
+(see
+\f2The current directory\^\fP
+below)
+for a program with the given name,
+and if none is there, then in system directories.
+There is nothing special about system-provided
+commands except that they are kept in directories
+where the shell can find them.
+You can also keep commands in your own directories and arrange for the
+shell to find them there.
+.PP
+The command name is the first word on an input line to the shell;
+the command and its arguments are separated from one another by
+space and/or tab characters.
+.PP
+When a program terminates, the shell will ordinarily regain control and type
+a \f3$\fP at you to indicate that it is ready for another command.
+The shell has many other capabilities, which are described in detail in
+\f2sh\^\fP(1).
+.PP
+\f3The current directory.\fP
+The \s-1UNIX\s+1 file system is arranged in a hierarchy of directories.
+When the system administrator gave you a user name,
+he or she also created a directory for you (ordinarily
+with the same name as your user name,
+and known as your \f2login\^\fP or \fIhome\^\fP directory).
+When you log in,
+that directory becomes your \f2current\^\fP or \f2working\^\fP directory, and
+any file
+name you type is by default
+assumed to be in that directory.
+Because you are the owner of this directory, you have
+full permissions to read, write, alter, or destroy
+its contents.
+Permissions to have your will with other directories
+and files will have been granted or denied to you
+by their respective owners, or by the system administrator.
+To change the
+current directory
+use \f2cd\^\fP(1).
+.PP
+\f3Path names.\fP
+To refer to files not in the current directory, you must
+use a path name.
+Full path names begin with \f3/\fP, which is the name of the \f2root\^\fP directory of the
+whole file system.
+After the slash comes the name of each directory containing the next
+sub-directory (followed by a \f3/\fP), until finally the
+file name is reached
+(e.g.,
+\f3/usr/ae/filex\fP
+refers to file
+\f3filex\fP
+in directory
+\f3ae\fP, while \f3ae\fP
+is itself a subdirectory of
+\f3usr\fP\^; \f3usr\fP
+springs directly from the root directory).
+See \f2intro\^\fP(2) for a formal definition of \f2path name\^\fP.
+.PP
+If your current directory contains subdirectories,
+the path names of files therein begin with
+the name of the corresponding subdirectory (\f2without\^\fP a prefixed \f3/\fP).
+Without important exception,
+a path name may be used anywhere a file name is
+required.
+.PP
+Important commands that modify the contents of files
+are \f2cp\^\fP(1), \f2mv\^\fP, and \f2rm\^\fP(1),
+which respectively copy, move (i.e., rename), and remove files.
+To find out the status of files or directories, use \f2ls\^\fP(1).
+Use \f2mkdir\^\fP(1) for making directories and \f2rmdir\^\fP(1) for destroying them.
+.PP
+For a fuller discussion of the file system, see
+the references cited at the beginning of the
+\s-1\f2INTRODUCTION\^\fP\s+1 above.
+It may also be useful to glance through
+Section~2 of this manual, which discusses
+system calls, even if you don't intend
+to deal with the system at that level.
+.PP
+\f3Writing a program.\fP
+To enter the text of a source program into a \s-1UNIX\s+1 System file, use \f2ed\^\fP(1).
+The principal languages available under the \s-1UNIX\s+1 System are
+C (see
+\f2cc\^\fP(1)), Fortran (see
+\f2f77\^\fP(1)),
+and assembly language (see \f2as\^\fP(1)).
+After the program text has been entered with
+the editor
+and written into a file (whose name has the appropriate suffix),
+you can give the name of that file
+to the appropriate language processor as an argument.
+Normally, the output of the language processor
+will be left in a file in the current directory named \f3a.out\fP
+(if that output is precious,
+use
+\f2mv\^\fP(1)
+to give it a less vulnerable name).
+If the program is written in assembly language, you will probably
+need to load with it library subroutines (see
+\f2ld\^\fP(1)).
+Fortran and C call
+the loader automatically.
+.PP
+When you have finally gone through this entire process
+without provoking any diagnostics, the resulting program
+can be run by giving its name to the shell
+in response to the \f3$\fP prompt.
+.PP
+If any execution (run-time) errors occur, you will need \f2sdb\^\fP(1)
+to examine the remains of your program.
+.PP
+Your programs can receive arguments from the command line
+just as system programs do;
+see \f2exec\^\fP(2).
+.PP
+\f3Text processing.\fP
+Almost all text is entered through the editor \f2ed\^\fP(1).
+The commands most often used to write text on a terminal are
+\f2cat\^\fP(1), \f2pr\^\fP(1), and \f2nroff\^\fP.
+The \f2cat\^\fP(1) command simply dumps \s-1ASCII\s+1 text
+on the terminal, with no processing at all.
+The \f2pr\^\fP(1) command paginates the text, supplies headings,
+and has a facility for multi-column output.
+\f2Nroff\^\fP
+is an elaborate text formatting program,
+and requires careful forethought
+in entering both the text and the formatting commands
+into the input file; it
+produces output on a typewriter-like terminal.
+\f2Troff\^\fP(1)
+is very similar to \f2nroff\^\fP, but
+produces its output on a
+.if t phototypesetter (it was used to typeset this manual).
+.if n phototypesetter.
+There are several ``macro'' packages  (especially the so-called
+\f2mm\^\fP package) that significantly ease the effort
+required to use
+\f2nroff\^\fP and \f2troff\^\fP(1);
+Section~5 entries for these packages indicate where you can find their
+detailed descriptions.
+.PP
+\f3Surprises.\fP
+Certain commands provide
+\f2inter-user\^\fP
+communication.
+Even if you do not plan to use them, it would be
+well to learn something about them, because someone else may
+aim them at you.
+To communicate with another user currently logged in,
+\f2write\^\fP(1)
+is used;
+\f2mail\^\fP(1)
+will leave a message whose presence will be announced
+to another user when he or she next logs in.
+The corresponding entries in this manual also suggest how to respond to
+these two commands if you are their target.
+.PP
+When you log in, a message-of-the-day may greet you
+before the first \f3$\fP.
+.\"	@(#)intro	5.2 of 5/18/82

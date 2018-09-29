@@ -1,0 +1,124 @@
+.TH RELOC 4
+.SH NAME
+reloc \- relocation information for a common object file
+.SH SYNOPSIS
+.B
+#include  <reloc.h>
+.SH DESCRIPTION
+Object files have one relocation entry for each
+relocatable reference in the text or data.
+If relocation information is present, it will
+be in the following format.
+.PP
+.if t .RS
+.ta \w'#define\ \ 'u +\w'R_DIR32S\ \ 'u +\w'r_symndx\ ;\ \ 'u
+.nf
+.lg 0
+struct	reloc
+{
+	long	r_vaddr ;	/\(** (virtual) address of reference \(*\(**/
+	long	r_symndx ;	/\(** index into symbol table \(*\(**/
+	short	r_type ;	/\(** relocation type \(*\(**/
+} ;
+
+/\(**
+ *	The r_type field is partitioned into four subfields
+ *	given by the following bit mask definitions:
+ \(**/
+
+#define	\s-1R_ADDRTYPE\s+1	0x000f
+#define	  \s-1R_NOTHING\s+1	  0x0000
+#define	  \s-1R_ADDRESS\s+1	  0x0001
+#define	  \s-1R_LINKENTRY\s+1	  0x0002
+#define	\s-1R_RELTO\s+1		0x00f0
+#define	  \s-1R_ABS\s+1		  0x0000
+#define	  \s-1R_PCREL\s+1		  0x0010
+#define	  \s-1R_SBREL\s+1		  0x0020
+#define	\s-1R_FORMAT\s+1		0x0f00
+#define	  \s-1R_NUMBER\s+1	  0x0000
+#define	  \s-1R_DISPL\s+1		  0x0100
+#define	  \s-1R_PROCDES\s+1	  0x0200
+#define	  \s-1R_IMMED\s+1		  0x0300
+#define	\s-1R_SIZESP\s+1		0xf000
+#define	  \s-1R_S_08\s+1		  0x0000
+#define	  \s-1R_S_16\s+1		  0x1000
+#define	  \s-1R_S_32\s+1		  0x2000
+
+.fi
+.lg
+.if t .RE
+.PP
+As the link editor reads each input section
+and performs relocation, the relocation entries are read. They
+direct how references found within the input section are treated.
+.TP 12
+\s-1R_ADDRTYPE\s+1
+The type of relocation item.
+.TP 12
+\s-1R_NOTHING\s+1
+The entry is to be ignored.
+.TP 12
+\s-1R_ADDRESS\s+1
+The entry is a reference to a symbol's virtual address.
+.TP 12
+\s-1R_LINKENTRY\s+1
+The entry is a reference to a symbol's link table index.
+.TP 12
+\s-1R_RELTO\s+1
+The action to perform when relocating.
+.TP 12
+\s-1R_ABS\s+1
+Keep symbol's address as such.
+.TP 12
+\s-1R_PCREL\s+1
+Subtract the pc address of hole.
+.TP 12
+\s-1R_SBREL\s+1
+Subtract the static base start of this section's module.
+.TP 12
+\s-1R_FORMAT\s+1
+Relocation item format.
+.TP 12
+\s-1R_NUMBER\s+1
+Retain as two's complement value.
+.TP 12
+\s-1R_DISPL\s+1
+Convert to displacement.
+.TP 12
+\s-1R_PROCDES\s+1
+Convert to procedure descriptor.
+.TP 12
+\s-1R_IMMED\s+1
+Convert to immediate operand.
+.TP 12
+\s-1R_SIZESP\s+1
+Relocation item size.
+.TP 12
+\s-1R_S_08\s+1
+Relocate 8 bits.
+.TP 12
+\s-1R_S_16\s+1
+Relocate 16 bits.
+.TP 12
+\s-1R_S_32\s+1
+Relocate 32 bits.
+.PP
+A symbol index of -1 indicates that
+the relative difference between the current segment's start address and
+the program's load address is added to the relocatable address.
+\}
+.PP
+Other relocation types will be defined as they are needed.
+.PP
+Relocation entries are generated automatically by the
+assembler and automatically utilized by the link editor. A link editor
+option exists for removing the relocation entries from an object
+file.
+.SH "SEE ALSO"
+a.out(4), syms(4).
+.br
+\*pld(1), \*pstrip(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.br
+'\" \%W\%
+.\"	%W% of %G%

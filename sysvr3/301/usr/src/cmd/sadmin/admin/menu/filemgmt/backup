@@ -1,0 +1,167 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/backup	2.6"
+#menu# backup files from built-in disk to removable media
+#help# 
+#help#	Backup saves copies of files from the built-in disk file systems to
+#help#	removable media.  There are two kinds of backups: COMPLETE
+#help#	(copies all files; useful in case of serious file system damage)
+#help#	and  INCREMENTAL (copies files changed since the last backup).
+#help#	The normal usage is to do a complete backup of each file system
+#help#	and then periodically do incremental backups.  We recommend keeping
+#help#	2 cycles (one set of complete backups and several incrementals to
+#help#	each cycle).
+#help#	Files backed up with "backup" are restored using "restore".
+
+SAVEDIR=/etc/save.d
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+fslist=`/etc/mount  |  sed '	s/ .*//
+				\;^/save$;d
+				'  |  tr '\012' ' '`
+fs=`checklist ${flags} -fe -l ' ' -H '
+	You may list more than one file system and the special answer "ALL"
+	will backup all the file systems listed.' \
+	"
+Available file systems:
+${fslist} ALL
+Enter file system(s) you want to backup [?, q]:" ${fslist} ALL`
+case "${fs}" in
+ALL )
+	fs=${fslist}
+	;;
+?*ALL | ALL*? )
+	echo >&2 '	ALL must be used by itself.  Please try again.'
+	exec sh $0
+esac
+
+mode=`checklist ${flags} -h\? \
+		-H'
+	A complete backup copies everything in case of a complete  loss  of
+	information and an incremental backup copies files recently changed
+	in case a file or a few files are lost.' \
+	-pfe 'Select complete or incremental backup [c, i, ?, q]:' \
+	complete incremental`
+case "${mode}" in
+complete )
+	mode=c
+	;;	
+incremental )
+	mode=i
+	;;
+* )
+	admerr $0 "Bad answer '${mode}'"
+	exit 1
+esac
+
+verbose=
+if  checkyn ${flags} -f -h\? -H'
+	If you answer "yes" to this question, each file will be listed as it
+	is being copied to the removable media.  This could be useful
+	should you need to find a particular file later.
+	If you answer "no", then only a dot, ".", will be printed for each file
+	copied.' \
+	'Print each file name as it is copied?'
+then
+	verbose=-v
+fi
+
+if [ ! -d ${SAVEDIR}/timestamp ]
+then
+	mkdir ${SAVEDIR} ${SAVEDIR}/timestamp 2>/dev/null
+fi
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+ncpiocmd=ncpio
+ncpioargs=
+
+ddrive=`selectdevice -c $$ /dev/rSA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+case "${mode}" in
+i )
+	btype=Incremental
+	cd ${SAVEDIR}/timestamp
+	for f in ${fs}
+	{
+		if [ ${f} = / ]
+		then
+			f=:root:
+		fi
+		if [ ! -f ./${f}  -o  ! -s ./${f} ]
+		then
+			if [ ${f} = :root: ]
+			then
+				f=/
+			fi
+			echo >&2 "	A complete backup of '${f}' needs to be run before the first
+	incremental backup.  Please try again."
+			exit 0
+		fi
+	}
+	today=`date +"%a. %D, %r"`
+	msg=`echo "
+Before inserting the next medium into the ${ndrive}, mark it:
+"
+	for f in ${fs}
+	{
+		if [ ${f} = / ]
+		then
+			fname=:root:
+		else
+			fname=${f}
+		fi
+		echo "	Incremental Backup of ${f},
+	\`cat ./${fname}\` to
+	${today}"
+		}
+	echo '		part %d\n'`
+	;;
+c )
+	btype=Complete
+	msg=`date +"
+Before inserting the next medium into the ${ndrive}, mark it:
+
+	Complete Backup of ${fs},
+	%a. %D, %r
+		part %%d
+ "`
+esac
+
+echo "${msg}"  |  sed '	s/the next /the first /
+			s/%d/1/'
+l=`disklabel -n "${ndrive}" $$ ${ddrive}`
+eval `labelfsname "${l}"`
+if [ -n "${fsname}" -a -d "/${fsname}" ]
+then
+	echo "
+This is file system '${fsname}', labeled '${label}'."
+	if  checkyn ${flags} -f 'Do you wish to overwrite it? [q]'
+	then
+		:
+	else
+		echo "\\tGet another and start over."
+		exit 0
+	fi
+fi
+
+if  /etc/savecpio -d "${ddrive}" -n "${ndrive}" -${mode} ${verbose} \
+	-C "${ncpiocmd} ${ncpioargs}" -M "${msg}" ${fs}
+then
+	echo "\\n${btype} backup of " ${fs} " finished."
+else
+	echo "\\t${btype} backup of " ${fs} " did not work.
+\\tSee the Owner/Operator manual for help."
+fi
+echo 'You may now remove the medium.'

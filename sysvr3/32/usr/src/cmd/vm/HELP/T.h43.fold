@@ -1,0 +1,20 @@
+
+   File folder objects are the containers for your files.  Just as the
+   normal office uses filecabinets, folders and files, FACE uses
+   the same objects.
+
+   A folder is a named object that contains  one  or  more  files  and
+   other  folders.   Folders  can be created, deleted, redescribed, or
+   renamed, by using keyboard keys or  commands.   Deleting  a  folder
+   will also delete any objects contained within it.
+
+   You can change the way objects in a folder are displayed (order  of
+   presentation  and  amount  of  information)  by  using the ORGANIZE
+   command for an individual folder, or  by  using  preferences/folder
+   options for your entire Filecabinet and Wastebasket.
+
+   By using  preferences/permissions you may control who has access to
+   your  files and  folders.  This  allows  you  to determine  who has
+   READ,  WRITE,  and  RUN/SEARCH permissions for yourself, your group
+   (check with your system administrator), and anyone  with access to
+   the system.

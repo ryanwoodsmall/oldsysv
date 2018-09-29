@@ -1,0 +1,160 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/users/priority_u	1.5"
+## IDOC:   SCREEN 2.48: PRIORITY LIMITS
+#menu# Set highest priority allowed
+
+##+++ (help _H139)
+#help#        You use the "priority" command in the "users" menu to assign
+#help#        the  default priority level, the default priority limit, and
+#help#        the per-user priority limits.
+##--- (help _H139)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_user_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!user-name!}" \
+		'^[a-z0-9]\{1,8\}$' \
+			'A user name can contain no more than 8 lower case letters and digits.' \
+	`
+}
+chk_priority_level () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!priority-level!}" \
+		'^[0-9]$' -o '^[0-3][0-9]$' -o '^done$' \
+			'Priority levels range from 0 (highest) to 39 (lowest).' \
+	`
+}
+chk_user_list () {
+# listof: user-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!user-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo ${RESP} | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then : ; else if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			|  ( flags="-m1"; chk_user_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid user name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"When entering more than one answer or value,
+separate them with a space or comma.
+
+Remember: Higher priorities have lower numeric values."
+##--- (line 7)
+
+while true
+do
+
+DEF_q=20
+##+++ (2.48.8)
+chk_priority_level \
+	"
+Enter a priority level that you wish to assign as the highest
+priority (lowest value) for a set of users. Enter the word
+\"done\" if you have no more limits to assign:${DEF_q:+ (default: ${DEF_q})}" \
+	"${DEF_q}" \
+	"\
+        You are expected to enter the highest priority allowed for a
+        particular  set of users.  You will enter the names of these
+        users in the next field.
+
+                                  REMEMBER
+Priority levels are given numbers from 0 to 39, with  0  being  the  HIGHEST
+priority and 39 the LOWEST.
+
+        Enter the word \"done\" if you have no more limits to  assign.
+        \
+"
+OPT_q=${RESP}
+##--- (2.48.8)
+
+	if [ "done" = "${OPT_q}" ]
+	then
+		break
+	fi
+
+##+++ (line 9)
+echo \
+"
+Enter the list of users for whom this limit applies.
+This list will be added to the list, if any, of users already
+assigned this priority limit."
+##--- (line 12)
+
+DEF_u=rest
+##+++ (2.48.13)
+chk_user_list \
+	"${DEF_u:+(default: ${DEF_u})}" \
+	"${DEF_u}" \
+	"\
+        You are expected to enter one or more user names,  separated
+        by  spaces  or  commas.   These  users  will be assigned the
+        priority limit you entered above.   Please  give  the  login
+        names  of the users, not their proper names.  Enter the word
+        \"rest\", or just return, to assign the priority limit to
+        the  balance  of the users not given a personal limit.  This
+        is the default limit.  \
+"
+OPT_u=${RESP}
+##--- (2.48.13)
+
+	if [ "rest" = "${OPT_u}" ]
+	then
+		/usr/lib/lpusers -q ${OPT_q}
+	else
+		/usr/lib/lpusers -q ${OPT_q} -u "${OPT_u}"
+	fi
+
+done
+
+echo \
+"
+Enter a priority level that you wish to assign as the DEFAULT"
+
+#DEF_d=`/usr/lib/lpusers -l | sed -n -e '/Default priority is /s///p'`
+DEF_d=20
+chk_priority_level \
+	"priority for all users:${DEF_d:+ (default: ${DEF_d})}" \
+	"${DEF_d}" \
+	"\
+        You are expected to enter the default priority  to  be  used
+        when a user does not give a priority to a print request.
+
+                                  REMEMBER
+Priority levels are given numbers from 0 to 39, with  0  being  the  HIGHEST
+priority and 39 the LOWEST. \
+"
+OPT_d=${RESP}
+
+if [ "done" != "${OPT_d}" ]
+then
+	/usr/lib/lpusers -d ${OPT_d}
+fi

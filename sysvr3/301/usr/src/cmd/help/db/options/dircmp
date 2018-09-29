@@ -1,0 +1,10 @@
+
+\Sdircmp\S:  Options
+
+     -d   prints scripts that ed(1) uses to create identical files from two
+          files with the same name but different contents.
+
+     -s   suppresses the printing of the names of identical files.
+
+     -width   changes the width of the output lines from 72 characters to
+              <width> characters.

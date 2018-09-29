@@ -1,0 +1,30 @@
+if [ $# != 2 ]; then
+	echo "Usage: $0 edit-mandir sccs-mandir"
+	exit 1
+fi
+
+if [ -d $1 ]; then
+	EDITMAN=$1
+else
+	echo "$0: $1 not a directory"
+	exit 1
+fi
+
+if [ -d $2 ]; then
+	SCCSMAN=$2
+else
+	echo "$0: $2 not a directory"
+	exit 1
+fi
+
+echo "Enter reason for delta: \c"
+read reason
+reason=${reason:-"editor changes"}
+
+for editdir in $EDITMAN/?_man/man? $EDITMAN/tools
+do
+	cd $editdir
+	sccsdir=`echo $editdir | sed "s:$EDITMAN:$SCCSMAN:"`
+	delta -y"$reason" ${sccsdir}
+done
+#	@(#)delta.manual	5.2 of 5/19/82

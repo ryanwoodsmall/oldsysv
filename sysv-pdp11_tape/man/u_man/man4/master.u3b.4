@@ -1,0 +1,198 @@
+.TH MASTER 4 "3B20S only"
+.SH NAME
+master \- master device information table
+.SH DESCRIPTION
+This file is used by the
+.IR config (1M)
+program to obtain device information that enables
+it to generate the
+configuration
+file.
+.I Master\^
+contains lines of various forms
+for controlling the configuration of hardware devices,
+software drivers, parameters and aliases.
+.PP
+Hardware devices
+and software drivers
+are defined as follows:
+.PP
+.RS
+.PD 0
+.TP "\w'Field 99:  'u"
+Field 1:
+device name (8 chars maximum).
+.TP
+Field 2:
+element type
+.RB ( dev ,
+.BR mhd ,
+.B pc
+or
+.BR sw )
+.TP
+Field 3:
+functions for this device:
+.RS
+.TP
+\fBo\fP 
+open handler
+.TP
+\fBc\fP 
+close handler
+.TP
+\fBr\fP 
+read handler
+.TP
+\fBw\fP 
+write handler
+.TP
+\fBi\fP 
+ioctl handler
+.TP
+\fBd\fP 
+diagnostic handler
+.TP
+\fBs\fP
+startup routine
+.TP
+\fBf\fP
+fork
+.TP
+\fBe\fP
+exec
+.TP
+\fBx\fP
+exit
+.RE
+.TP
+Field 4:
+element characteristics:
+.RS
+.TP
+\fBo\fP 
+specify only once
+.TP
+\fBs\fP 
+supress count field
+.TP
+\fBr\fP 
+required device
+.TP
+\fBb\fP 
+block device
+.TP
+\fBc\fP 
+character device
+.RE
+.TP
+Field 5:
+handler prefix
+.TP
+Field 6:
+major device number if block-type device
+.TP
+Field 7:
+major device number if character-type device
+.TP
+Field 8:
+number of sub-devices per device
+.TP
+Field 9:
+diagnostic port number if diagnosable device
+.TP
+Field 10:
+configuration table structure
+.RE
+.PD
+.PP
+Parameters
+are defined as follows:
+.PP
+.RS
+.PD 0
+.TP "\w'Field 99:  'u"
+Field 1:
+parameter name
+.TP
+Field 2:
+element type
+.RB ( param )
+.TP
+Field 3:
+element characteristics, as defined above
+.TP
+Field 4:
+parameter name to appear in
+.B conf.c
+file
+.RE
+.PD
+.PP
+\s-1UNIX\s+1 System devices and \s-1UNIX\s+1 System devices with arguments
+are defined as follows:
+.PP
+.RS
+.PD 0
+.TP "\w'Field 99:  'u"
+Field 1:
+device name
+.TP
+Field 2:
+element type
+.RB ( udev
+or
+.BR udeva )
+.TP
+Field 3:
+element characteristics, as defined above
+.TP
+Field 4:
+device name to appear in
+.B conf.c
+file
+.RE
+.PD
+.PP
+Aliases for names are defined as follows:
+.PP
+.RS
+.PD 0
+.TP "\w'Field 99:  'u"
+Field 1:
+alias name
+.TP
+Field 2:
+element type
+.RB ( alias )
+.TP
+Field 3:
+reference name of device
+.RE
+.PD
+.br
+.if \n()s .bp
+.PP
+Lines to be ignored by the
+.I config\^
+program,
+but are necessary to the diagnostic system,
+are defined as follows:
+.PP
+.RS
+.PD 0
+.TP "\w'Field 99:  'u"
+Field 1:
+name to be ignored
+.TP
+Field 2:
+element type
+.RB ( ignore )
+.RE
+.PD
+.br
+.ne 3v
+.PD
+.SH SEE ALSO
+config(1M) sysdef(1M).
+.\"	@(#)master.u3b.4	5.2 of 5/18/82

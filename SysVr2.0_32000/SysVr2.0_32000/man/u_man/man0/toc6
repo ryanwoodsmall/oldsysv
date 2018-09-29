@@ -1,0 +1,13 @@
+.xx "intro" "introduction to games"
+.xx "arithmetic" "provide drill in number facts"
+.xx "back" "the game of backgammon"
+.xx "bj" "the game of black jack"
+.xx "craps" "the game of craps"
+.xx "hangman" "guess the word"
+.xx "jotto" "secret word game"
+.xx "maze" "generate a maze"
+.xx "moo" "guessing game"
+.xx "quiz" "test your knowledge"
+.xx "ttt" "tic-tac-toe"
+.xx "wump" "the game of hunt-the-wumpus"
+.bp

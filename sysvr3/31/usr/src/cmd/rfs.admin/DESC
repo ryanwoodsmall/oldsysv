@@ -1,0 +1,14 @@
+#ident	"@(#)rfs.admin:DESC	1.2"
+#menu# remote file sharing management menu
+
+#head# 			REMOTE FILE SHARING MANAGEMENT
+#help#
+#help# 	Remote File Sharing Management Menus help you set up and
+#help#	maintain the UNIX Remote File Sharing (RFS) feature.  
+#help#	Remote File Sharing allows computers to selectively share 
+#help#	resources over a transport provider.  Resources are directories
+#help#	that may contain files, subdirectories, devices, and / or 
+#help#	named pipes.  These submenus and subcommands help you to set up
+#help#	and manage a group of machines, share your local resources,
+#help#	connect to remote resources, and start and stop RFS.
+#help# 	

@@ -1,0 +1,128 @@
+.TH FTYPE 3F
+.SH NAME
+int, ifix, idint, real, float, sngl, dble, cmplx, dcmplx, ichar, char \- explicit \s-1FORTRAN\s+1 type conversion
+.SH SYNOPSIS
+.nf
+.B "integer i, j"
+.B "real r, s"
+.B "double precision dp, dq"
+.B "complex cx"
+.B "double complex dcx"
+.B "character\(**\fI1\fP ch"
+.P
+.nf
+.B "i = int(r)"
+.B "i = int(dp)"
+.B "i = int(cx)"
+.B "i = int(dcx)"
+.B "i = ifix(r)"
+.B "i = idint(dp)"
+.P
+.nf
+.B "r = real(i)"
+.B "r = real(dp)"
+.B "r = real(cx)"
+.B "r = real(dcx)"
+.B "r = float(i)"
+.B "r = sngl(dp)"
+.P
+.nf
+.B "dp = dble(i)"
+.B "dp = dble(r)"
+.B "dp = dble(cx)"
+.B "dp = dble(dcx)"
+.P
+.nf
+.B "cx = cmplx(i)"
+.B "cx = cmplx(i, j)"
+.B "cx = cmplx(r)"
+.B "cx = cmplx(r, s)"
+.B "cx = cmplx(dp)"
+.B "cx = cmplx(dp, dq)"
+.B "cx = cmplx(dcx)"
+.P
+.nf
+.B "dcx = dcmplx(i)"
+.B "dcx = dcmplx(i, j)"
+.B "dcx = dcmplx(r)"
+.B "dcx = dcmplx(r, s)"
+.B "dcx = dcmplx(dp)"
+.B "dcx = dcmplx(dp, dq)"
+.B "dcx = dcmplx(cx)"
+.P
+.nf
+.B "i = ichar(ch)"
+.B "ch = char(i)"
+.SH DESCRIPTION
+.P
+These functions perform conversion from one data type to another.
+.P
+The function
+.B int\^
+converts to \fIinteger\fP form its \fIreal\fP, \fIdouble precision\fP,
+\fIcomplex\fP, or \fIdouble complex\fP argument.
+If the argument is \fIreal\fP or \fIdouble precision\fP,
+.B int\^
+returns the integer whose magnitude is the largest integer that does
+not exceed the magnitude of the argument and whose sign is the same
+as the sign of the argument (i.e. truncation). For complex types,
+the above rule is applied to the real part.
+.B ifix\^
+and
+.B idint\^
+convert only \fIreal\fP and \fIdouble precision\fP arguments respectively.
+.P
+The function
+.B real\^
+converts to \fIreal\fP form an \fIinteger\fP, \fIdouble
+precision\fP, \fIcomplex\fP, or \fIdouble complex\fP argument.
+If the argument is \fIdouble precision\fP or \fIdouble complex\fP,
+as much precision is kept as is possible. If the argument is one of the
+complex types, the real part is returned.
+.B float\^
+and
+.B sngl\^
+convert only \fIinteger\fP and \fIdouble precision\fP arguments respectively.
+.P
+The function
+.B dble\^
+converts any \fIinteger\fP, \fIreal\fP, \fIcomplex\fP, or \fIdouble complex\fP
+argument to \fIdouble precision\fP form.
+If the argument is of a complex type, the real part is returned.
+.P
+The function
+.B cmplx\^
+converts its \fIinteger\fP, \fIreal\fP, \fIdouble precision\fP, or \fIdouble
+complex\fP argument(s) to \fIcomplex\fP form.
+.P
+The function
+.B dcmplx\^
+converts to \fIdouble complex\fP form its \fIinteger\fP, \fIreal\fP,
+\fIdouble precision\fP, or \fIcomplex\fP argument(s).
+.P
+Either one or two arguments may be supplied to
+.B cmplx\^
+and
+.B dcmplx .
+If there is only one
+argument, it is taken as the real part of the complex type and an imaginary
+part of zero is supplied. If two arguments are supplied, the first is
+taken as the real part and the second as the imaginary part.
+.P
+The function
+.B ichar\^
+converts from a character to an integer depending on the character's
+position in the collating sequence.
+.P
+The function
+.B char\^
+returns the character in the \fIi\fPth position in the processor
+collating sequence where \fIi\fP is the supplied argument.
+.P
+For a processor capable of representing \fIn\fP characters,
+.DS
+.sp 1v
+\fBichar\fP(\fBchar\fP(i)) = i for 0 \(<= i < \fIn\fP, and
+.sp 1v
+\fBchar\fP(\fBichar\fP(ch)) = ch for any representable character \fIch\fP.
+.\"	%W% of %G%

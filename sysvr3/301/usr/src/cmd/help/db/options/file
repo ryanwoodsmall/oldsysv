@@ -1,0 +1,11 @@
+
+\Sfile\S:  Options
+
+     -c   prints the <type_file> with column headings. \Sfile\S will not
+          print any file types with this argument.  (See the "m" option.)
+
+     -f list_file   examines files taken from the list in <list_file>.
+
+     -m type_file    use <type_file> instead of the default "/etc/magic" to
+        check for strings at the beginning of files to determine
+        what type of files they are.

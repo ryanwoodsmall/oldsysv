@@ -1,0 +1,80 @@
+.\"%W%
+.TH PCLDAEMON 1C "DEC only"
+.SH NAME
+pcldaemon \- \s-1PCL\s+1 link monitor
+.SH SYNOPSIS
+.B /usr/lib/pcldaemon
+[ pcl_file ... ]
+.SH DESCRIPTION
+.I Pcldaemon\^
+monitors the
+.IR pcl (7)
+control channel,
+servicing requests as they arrive.
+Requests are transmitted via
+.IR net (1C),
+and passed to a user's default shell
+executing in the user's home directory.
+Before execution starts,
+the user's environment is extracted from the \fB.profile\fR
+file, if any.
+.P
+.I Pcldaemon
+will ignore requests from remote super-users.
+(This is the default, but is a compile-time option).
+.P
+The optional arguments are the names of
+.I pcl
+special files which will be opened and then immediately closed.
+It is advisable to invoke
+.I pcldaemon
+with the names of all
+.I pcl
+files to close any channels
+that might be open at the remote end
+after a local system crash.
+.P
+The system names in
+.B /dev/pcl
+must be some subset of the systems'
+.BR nodenames .
+.I Pcldaemon
+will attempt first to use the remote system's full
+.I  nodename
+to open a channel for a request.
+If unsuccessful, it will then try subsequent names by truncating the
+.I  nodename 
+from the left.
+.SH FILES
+.PD 0
+.TP "\w'/dev/pcl/*[0-7]  'u"
+/dev/pcl/\fI*\fP[0-7]
+\s-1PCL\s+1 channel interfaces for system
+.BR * .
+.TP
+/dev/pcl/ctrl
+\s-1PCL\s+1 control channel.
+.TP
+/usr/adm/pcllog
+activity log.
+.PD
+.SH SEE ALSO
+net(1C),
+pcl(7).
+.SH DIAGNOSTICS
+.TP
+.I cannot open pcl control channel
+Another
+.I pcldaemon\^
+is running.
+.TP
+.I cannot fork
+Try again.
+.TP
+.I cannot open/create log file
+Check directories leading to activity log file.
+.SH WARNINGS
+Running
+.I pcldaemon\^
+may present security hazards.
+Login names should be unique across systems.

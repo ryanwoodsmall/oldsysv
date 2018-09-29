@@ -1,0 +1,36 @@
+#ident	"@(#)sadmin:etc/profile	2.3"
+#	The profile that all logins get before using their own .profile.
+
+trap ""  2 3
+export LOGNAME
+
+. /etc/TIMEZONE
+
+#	Login and -su shells get /etc/profile services.
+#	-rsh is given its environment in its .profile.
+case "$0" in
+-su )
+	export PATH
+	;;
+-sh )
+	export PATH
+
+	#	Allow the user to break the Message-Of-The-Day only.
+	trap "trap '' 2"  2
+	cat -s /etc/motd
+	trap "" 2
+
+	if mail -e
+	then
+		echo "you have mail"
+	fi
+
+	if [ ${LOGNAME} != root ]
+	then
+		news -n
+	fi
+	;;
+esac
+
+umask 022
+trap  2 3

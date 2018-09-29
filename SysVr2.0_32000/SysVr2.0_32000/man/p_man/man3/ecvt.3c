@@ -1,0 +1,69 @@
+.TH ECVT 3C 
+.SH NAME
+ecvt, fcvt, gcvt \- convert floating-point number to string
+.SH SYNOPSIS
+.nf
+.B char \(**ecvt (value, ndigit, decpt, sign)
+.B double value;
+.B int ndigit, \(**decpt, \(**sign;
+.PP
+.B char \(**fcvt (value, ndigit, decpt, sign)
+.B double value;
+.B int ndigit, \(**decpt, \(**sign;
+.PP
+.B char \(**gcvt (value, ndigit, buf)
+.B double value;
+.B int ndigit;
+.B char \(**buf;
+.SH DESCRIPTION
+.I Ecvt\^
+converts 
+.I value\^
+to a null-terminated string of
+.I ndigit\^
+digits
+and returns a pointer thereto.
+The high-order digit is non-zero, unless the value is zero.
+The low-order digit is rounded.
+The position of the decimal point relative to the
+beginning of the string is stored indirectly
+through
+.I decpt\^
+(negative means to the left of the
+returned digits). The decimal point is not
+included in the returned string.
+If the sign of the result is negative,
+the word pointed to by
+.IR sign ""
+is non-zero, otherwise
+it is zero.
+.PP
+.IR Fcvt " is identical to " "ecvt\fR, except that the correct digit"
+has been rounded for printf ``%f''
+(\s-1FORTRAN\s+1 F-format) output of the number
+of digits specified by
+.IR ndigit .
+.PP
+.I Gcvt\^
+converts the
+.I value\^
+to a null-terminated string in
+the array pointed to by
+.I buf\^
+and returns
+.IR buf .
+It attempts to produce
+.I ndigit\^
+significant digits in \s-1FORTRAN\s+1 F-format if
+possible, otherwise E-format, ready for
+printing. A minus sign, if there is one, or a decimal point will be
+included as part of the returned string.
+Trailing zeros are suppressed.
+.SH "SEE ALSO"
+printf(3S).
+.SH BUGS
+The values returned by
+.IR ecvt " and " fcvt
+point to a single static data array
+whose content is overwritten by each call.
+.\"	%W% of %G%

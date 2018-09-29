@@ -1,0 +1,10 @@
+
+   Use of the UNIX system  is  recommended  only  for  users  who  are
+   familiar with UNIX system commands.
+
+   Selecting UNIX_System from  the Office menu invokes the  default
+   shell. Your screen  will be cleared and the shell prompt "UNIX:"
+   will appear. When you wish to return to FACE, either type
+   "exit" and press RETURN, or hold down the control key (CTRL) and
+   press d. You will be prompted to press RETURN to return to
+   FACE.

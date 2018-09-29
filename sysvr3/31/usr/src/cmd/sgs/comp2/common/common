@@ -1,0 +1,291 @@
+#ident	"@(#)pcc2:common/common	1.7"
+
+# ifndef EXIT
+# define EXIT exit
+# endif
+
+int nerrors = 0;  /* number of errors */
+
+extern char * malloc();
+
+#ifdef STATSOUT
+# undef INI_TREESZ
+# define INI_TREESZ 1
+#endif
+
+#define	CLUSTERSIZE INI_TREESZ		/* size of a cluster */
+
+/* number of expansions before panic */
+#ifndef	WATCHDOG
+#define WATCHDOG ((1000/CLUSTERSIZE) <= 0 ? 1 : (1000/CLUSTERSIZE))
+#endif
+
+/*Number of the lowest node*/
+/*Only made nonzero by cg*/
+#ifndef FIRST_NODENO       
+#define FIRST_NODENO 0
+#endif                
+
+struct nNODEcluster {
+    struct nNODEcluster * next;
+    nNODE nNODEs[CLUSTERSIZE];
+};
+
+typedef struct nNODEcluster NCLUST;
+
+/* static */ NCLUST basecluster;	/* initial, statically allocated hunk */
+
+#ifndef STATSOUT
+static
+#endif
+	int nclusters = 0;		/* number of clusters dynamically alloc. */
+int watchdog;
+
+static nNODE *lastfree;  /* pointer to last free node; (for allocator) */
+static NCLUST * lastcluster;		/* last cluster on chain */
+static NCLUST * curcluster;		/* cluster currently allocating from */
+
+# ifndef MYWHERE
+where(c)
+{
+	 /* print location of error. c is either 'u', 'c', or 'w' */
+	fprintf( stderr, "%s, line %d: ", ftitle, lineno );
+}
+# endif
+
+/* VARARGS1 */
+uerror( s, a )
+char *s; 
+{
+	/* nonfatal error message 
+	** the routine where is different for pass 1 and pass 2;
+	** it tells where the error took place 
+	*/
+	++nerrors;
+	where('u');
+	fprintf( stderr, s, a );
+	fprintf( stderr, "\n" );
+	if( nerrors > 30 ) cerror( "too many errors");
+	fflush(stderr);
+}
+
+/* VARARGS1 */
+cerror( s, a, b, c )
+char *s; 
+{
+	 /* compiler error: die */
+	where('c');
+	if( nerrors && nerrors <= 30 )
+	{
+		/* give the compiler the benefit of the doubt */
+		fprintf( stderr,
+		"cannot recover from earlier errors: goodbye!\n" );
+	}
+	else 
+	{
+		fprintf( stderr, "compiler error: " );
+		fprintf( stderr, s, a, b, c );
+		fprintf( stderr, "\n" );
+		fflush( stdout );
+	}
+	EXIT(2);
+}
+
+/* VARARGS1 */
+werror( s, a, b )
+char *s; 
+{
+	/* warning */
+	where('w');
+	fprintf( stderr, "warning: " );
+	fprintf( stderr, s, a, b );
+	fprintf( stderr, "\n" );
+}
+
+tinit()
+{
+	 /* initialize expression tree search */
+	register nNODE *p;
+	register NCLUST * clp;
+	register int nodeno = FIRST_NODENO;
+
+	for (clp = &basecluster; clp; clp = clp->next) {
+	    for (p = clp->nNODEs; p < &clp->nNODEs[CLUSTERSIZE]; ++p) {
+		p->node.in.op = FREE;
+		p->_node_no = nodeno++;
+	    }
+	    lastcluster = clp;
+	}
+	curcluster = &basecluster;
+	lastfree = &basecluster.nNODEs[CLUSTERSIZE-1];
+
+}
+
+# define TNEXT(p) (p == last_in_clust ? &curcluster->nNODEs[0] : p+1)
+
+NODE *
+talloc()
+{
+	register nNODE *p, *q;
+	register nNODE * last_in_clust;
+	NCLUST * startcluster = curcluster;
+	NCLUST * newclust;
+	int nodeno;
+
+	do {
+	    last_in_clust = &curcluster->nNODEs[CLUSTERSIZE-1];
+	    q = lastfree;
+	    p = TNEXT(q);
+	    do {
+		if( p->node.in.op == FREE ) {
+/*		    fprintf(stderr, "## alloc %d %#x\n", node_no(p), p); */
+#ifdef	CG
+		    p->node.in.strat = 0;
+#endif
+		    return((NODE *) (lastfree=p));
+		}
+		p = TNEXT(p);
+	    } while( p != q );
+
+	    /* ran out in current cluster; wrap around */
+	    if (!(curcluster = curcluster->next)) curcluster = &basecluster;
+	    lastfree = &curcluster->nNODEs[CLUSTERSIZE-1];
+	} while ( curcluster != startcluster);
+
+	++nclusters;			/* count a new cluster */
+	if (++watchdog > WATCHDOG)
+	    cerror( "out of tree space; simplify expression");
+
+/*	fprintf(stderr, "new cluster %d\n", nclusters); */
+	/* add new cluster; link on list */
+	nodeno = lastcluster->nNODEs[CLUSTERSIZE-1]._node_no + 1;
+	newclust = (NCLUST *) malloc(sizeof(NCLUST));
+/*	printf("node malloc() returns %#lx\n", newclust); */
+	lastcluster->next = newclust;
+	newclust->next = (NCLUST *) 0;
+	lastcluster = newclust;
+	curcluster = newclust;
+	/* initialize new cluster */
+	for (p = newclust->nNODEs; p < &newclust->nNODEs[CLUSTERSIZE]; ++p) {
+	    p->node.in.op = FREE;
+	    p->_node_no = nodeno++;
+	}
+/*	fprintf(stderr, "## alloc %d %#x\n", node_no(newclust->nNODEs),
+**		newclust->nNODEs);
+*/
+	return( (NODE *) (lastfree = newclust->nNODEs) );
+}
+
+tcheck()
+{
+	 /* ensure that all nodes have been freed */
+	register nNODE *p;
+	register NCLUST * clp;
+	int count = 0;
+
+	if( !nerrors ) {
+	    for (clp = &basecluster; clp; clp = clp->next) {
+		for (p = clp->nNODEs; p < &clp->nNODEs[CLUSTERSIZE]; ++p) {
+		    if( p->node.in.op != FREE )
+#ifdef	CG
+			count++;
+#else
+			cerror( "wasted space: %d", node_no(&(p->node)) );
+#endif
+		}
+	    }
+	}
+	else
+	    tinit();
+	freestr();
+	return count;
+}
+
+#ifdef	CG
+tshow()
+{
+		/*print all nodes that have not been freed*/
+	register nNODE *p;
+	register NCLUST * clp;
+
+	for (clp = &basecluster; clp; clp = clp->next)
+	{
+		for (p = clp->nNODEs; p < &clp->nNODEs[CLUSTERSIZE]; ++p)
+		{
+			if( p->node.in.op != FREE )
+			{
+				fprintf(outfile,"At %#x: ", p);
+				e222print(0,p,"NODE");
+			}
+		}
+	}
+}
+#endif
+
+#ifndef	NODBG
+
+static void
+nt_print()
+{
+    register NCLUST * clp;
+
+    for (clp = &basecluster; clp; clp = clp->next) {
+	printf("nodes	%#lx - %#lx\n",
+		    (char *) clp->nNODEs, (char *) &clp->nNODEs[CLUSTERSIZE]);
+    }
+    printf("%d clusters\n", nclusters);
+}
+#endif
+
+tfree(p)
+register NODE *p; 
+{
+	/* allow tree fragments to be freed, also */
+	if( !p ) return;
+	switch( optype( p->tn.op ) )
+	{
+	case BITYPE:
+		tfree( p->in.right );
+	case UTYPE:
+		tfree( p->in.left );
+	}
+	p->in.op = FREE;
+}
+
+
+char	ftitle[100] = "\"\"";	/* title of the file */
+extern int	lineno;		/* line number of the input file */
+
+
+#define NTSTRBUF	40
+#define TSTRSZ		2048
+char	itstrbuf[TSTRSZ];
+char	*tstrbuf[NTSTRBUF] = { itstrbuf };
+char	**curtstr = tstrbuf;
+int	tstrused;
+
+char *
+tstr( cp )			/* place copy of string into temp storage */
+	register char *cp;	/* strings longer than TSTRSZ will break tstr */
+{
+	register int i = strlen( cp );
+	register char *dp;
+	extern char * strcpy();
+
+	if ( tstrused + i >= TSTRSZ )
+	{
+		if ( ++curtstr >= &tstrbuf[NTSTRBUF] )
+			cerror( "out of temporary string space" );
+		tstrused = 0;
+		if ( *curtstr == 0 )
+		{
+			if ( ( dp = (char *) malloc( TSTRSZ ) ) == 0 )
+				cerror( "out of memory [tstr()]" );
+			*curtstr = dp;
+		}
+	}
+	strcpy( dp = *curtstr + tstrused, cp );
+	tstrused += i + 1;
+	return ( dp );
+}
+#include "dope.h"

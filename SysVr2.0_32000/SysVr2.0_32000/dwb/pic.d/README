@@ -1,0 +1,42 @@
+To make a new pic,
+	make -f pic.mk
+
+The output should be something like
+	yacc -d picy.y
+
+conflicts: 40 shift/reduce
+	mv y.tab.c picy.c
+	cc -O -c picy.c
+	lex picl.l
+1230/1300 nodes(%e), 3519/4000 positions(%p), 535/600 (%n), 27715 transitions
+, 42/100 packed char classes(%k), 1278/1400 packed transitions(%a), 1004/1200 output slots(%o)
+	mv lex.yy.c picl.c
+	cc -O -c picl.c
+	cc -O -c main.c
+	cc -O -c print.c
+"print.c", line 46: warning: statement not reached
+	cc -O -c misc.c
+	cc -O -c symtab.c
+	cc -O -c blockgen.c
+	cc -O -c boxgen.c
+	cc -O -c circgen.c
+	cc -O -c arcgen.c
+	cc -O -c linegen.c
+	cc -O -c movegen.c
+	cc -O -c troffgen.c
+	cc -O -c textgen.c
+	cc -O -c pic2.c
+	cc -O -c pltroff.c
+	cc -o pic -i -s picy.o picl.o main.o print.o misc.o symtab.o\
+		blockgen.o boxgen.o circgen.o  arcgen.o linegen.o movegen.o\
+		troffgen.o textgen.o  pic2.o pltroff.o -lm
+
+You may have some trouble with Lex -- older versions of Lex have
+default sizes of arrays set poorly, and the pic lexical phase
+strains them.  If it complains about out of space in various ways,
+such as "calloc returns 0" or more specific messages,
+look at the output lines that say things like
+"1230/1300 nodes(%e)" and decrease the corresponding %e line
+at the top of picl.l to make the limit tighter.
+I have done this fairly tightly already, but you might
+squeeze a bit more if necessary.

@@ -1,0 +1,184 @@
+.if t .ds ' \h@.05m@\s+4\v@.333m@\'\v@-.333m@\s-4\h@.05m@
+.if n .ds ' '
+.if t .ds ` \h@.05m@\s+4\v@.333m@\`\v@-.333m@\s-4\h@.05m@
+.if n .ds ` `
+.TH SAR 1M
+.nh
+.SH NAME
+sa1, sa2, sadc \- system activity report package
+.SH SYNOPSIS
+.B /usr/lib/sa/sadc
+[t n]
+[\|ofile\|]
+.PP
+.B /usr/lib/sa/sa1
+[t n]
+.PP
+.B /usr/lib/sa/sa2
+.RB [ \-ubdycwaqvwprA ]
+.RB [ \-s 
+time\|]
+.RB [ \-e
+time\|]
+.RB [ \-i
+sec\|]
+.SH DESCRIPTION
+System activity data can be accessed at the special request
+of a user
+[see
+.IR sar (1)]
+and automatically on a routine basis as described here.
+The operating system contains a number of
+counters that are incremented as various system actions occur.
+These include
+.SM CPU
+utilization counters,
+buffer usage counters,
+disk and tape
+.SM I/O
+activity counters,
+.SM TTY
+device
+activity counters, switching
+and system-call counters, file-access counters,
+queue activity counters, and counters for interprocess communications.
+.PP
+.I Sadc
+and
+shell procedures,
+.I sa1
+and
+.IR sa2 ,
+are used to sample,
+save, and process this data.
+.PP
+.IR Sadc ,
+the data collector,
+samples system data
+.I n
+times every
+.I t
+seconds and writes in binary format to
+.I ofile
+or to standard output.
+If
+.I t
+and
+.I n
+are omitted,
+a special record is written.
+This facility is used at system boot time
+to mark the time at which the counters restart from zero.
+The
+.BR /etc/rc
+entry:
+.RS
+.sp
+su sys \|\-c "/usr/lib/sa/sadc /usr/adm/sa/sa`date +%d`"
+.sp
+.RE
+writes the special record to the daily data file
+to mark the system restart.
+.PP
+The shell script
+.IR sa1 ,
+a variant of
+.IR sadc ,
+is used to collect and store data in binary file
+.BI /usr/adm/sa/sa dd
+where
+.I dd
+is the current day.
+The arguments
+.I t
+and
+.I n
+cause records to be written
+.I n
+times at an interval of
+.I t
+seconds, or once if omitted.
+The
+.B /usr/spool/cron/crontabs/sys
+entries
+[see
+.IR cron (1M)]:
+.RS
+.sp
+0 \(** \(** \(** 0,6 /usr/lib/sa/sa1
+.br
+0 8\-17 \(** \(** 1\-5 /usr/lib/sa/sa1 1200 3
+.br
+0 18\-7 \(** \(** 1\-5 /usr/lib/sa/sa1
+.sp
+.RE
+will produce records every 20 minutes during working hours and hourly
+otherwise.
+.PP
+The shell script
+.IR sa2 ,
+a
+variant of
+.IR sar (1),
+writes a daily report
+in file
+.BI /usr/adm/sa/sar dd\fR.\fP
+The options are explained in
+.IR sar (1).
+The
+.B /usr/spool/cron/crontabs/sys 
+entry:
+.PP
+.RS
+5 18 \(** \(** 1\-5 /usr/lib/sa/sa2 \-s 8:00 \-e 18:01 \-i 3600 \-A
+.RE
+.PP
+will report important activities hourly during the working day.
+.br
+.ne 26
+.PP
+The structure of the binary daily data file
+is:
+.PP
+.ta 3.0m +\w'struct sysinfo si;\ \ 'u +4
+.nf
+struct sa {
+	struct sysinfo si;	/\(** see /usr/include/sys/sysinfo.h \(**/
+	struct minfo mi;	/\(** defined in /usr/include/sys/sysinfo.h \(**/
+	int  szinode;	/\(** current size of inode table  \(**/
+	int  szfile;	/\(** current size of file table  \(**/
+	int  szproc;	/\(** current size of proc table  \(**/
+	int   szlckf;	/\(** current size of file record header table \(**/
+	int   szlckr;	/\(** current size of file record lock table \(**/
+	int  mszinode;	/\(** size of inode table  \(**/
+	int  mszfile;	/\(** size of file table  \(**/
+	int  mszproc;	/\(** size of proc table  \(**/
+	int   mszlckf;	/\(** maximum size of file record header table \(**/
+	int   mszlckr;	/\(** maximum size of file record lock table \(**/
+	long  inodeovf;	/\(** cumulative overflows of inode table  \(**/
+	long  fileovf;	/\(** cumulative overflows of file table  \(**/
+	long  procovf;	/\(** cumulative overflows of proc table  \(**/
+	time_t  ts;	/\(** time stamp  \(**/
+	int   apstate;
+	long  devio[\s-1NDEVS\s+1][4];		/\(** device unit information \(**/
+#define \s-1IO_OPS\s+1	0	/\(** cumulative \s-1I\s+1/\s-1O\s+1 requests  \(**/
+#define \s-1IO_BCNT\s+1	1	/\(** cumulative blocks transferred \(**/
+#define \s-1IO_ACT\s+1	2	/\(** cumulative drive busy time in ticks  \(**/
+#define \s-1IO_RESP\s+1	3	/\(** cumul. \s-1I\s+1/\s-1O\s+1 resp time in ticks since boot  \(**/
+};
+.fi
+.SH FILES
+.RI /usr/adm/sa/sa "dd	"
+daily data file
+.br
+.RI /usr/adm/sa/sar "dd	"
+daily report file
+.br
+.RB /tmp/sa . "adrfl	"
+address file
+.SH SEE ALSO
+cron(1M),
+sag(1G),
+sar(1),
+timex(1).
+.\"	@(#)sar.1m	6.2 of 9/2/83

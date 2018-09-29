@@ -1,0 +1,60 @@
+.TH SETMNT 1M
+.SH NAME
+setmnt \- establish mount table
+.SH SYNOPSIS
+.B /etc/setmnt
+.SH DESCRIPTION
+.I Setmnt\^
+creates the
+.B /etc/mnttab
+table [see
+.IR mnttab (4)],
+which is needed for both the
+.IR mount (1M)
+and
+.I umount
+commands.
+.I Setmnt\^
+reads standard input
+and creates a
+.I mnttab\^
+entry for each line.
+Input lines have the format:
+.PP
+.RS
+filesys node
+.RE
+.PP
+where
+.I filesys\^
+is the name of the file system's
+.I "special file\^"
+(e.g., ``dsk/?s?'')
+and
+.I node\^
+is the root name of that file system.
+Thus
+.I filesys\^
+and
+.I node\^
+become the first two strings
+in the
+.IR mnttab (4)
+entry.
+.SH FILES
+/etc/mnttab
+.SH SEE ALSO
+mount(1M),
+mnttab(4).
+.SH BUGS
+Evil things will happen if
+.I filesys\^
+or
+.I node\^
+are longer than 32 characters.
+.br
+.I Setmnt\^
+silently enforces an upper limit on the maximum number of
+.I mnttab\^
+entries.
+.\"	@(#)setmnt.1m	6.2 of 9/2/83

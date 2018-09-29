@@ -1,0 +1,68 @@
+.TH BRC 1M
+.SH NAME
+brc, bcheckrc, rc, powerfail \- system initialization shell scripts
+.SH SYNOPSIS
+.B /etc/brc
+.PP
+.B /etc/bcheckrc
+.PP
+.B /etc/rc
+.PP
+.B /etc/powerfail
+.SH DESCRIPTION
+Except for
+.IR powerfail ,
+these shell procedures are executed via
+entries in
+.I /etc/inittab
+by
+.IR init (1M)
+when the system is changed out of
+.SM
+.I "SINGLE USER"
+mode.
+.I Powerfail
+is executed whenever a system power failure is detected.
+.PP
+The
+.I brc
+procedure clears the mounted file system table,
+.B /etc/mnttab
+[see
+.IR mnttab (4)],
+and loads any programmable micro-processors with
+their appropriate scripts.
+.PP
+The
+.I bcheckrc
+procedure performs all the necessary consistency checks to
+prepare the system to change into multi-user mode.
+It will prompt to set the system date and
+to check the file systems with
+.IR fsck (1M).
+.PP
+The
+.I rc
+procedure starts all system
+daemons before the terminal
+lines are enabled for multi-user mode.
+In addition, file systems are mounted and
+accounting, error logging, system activity logging and
+the Remote Job Entry (\s-1RJE\s+1) system are
+activated in this procedure.
+.PP
+The
+.I powerfail
+procedure is invoked when the system detects a power
+failure condition.
+Its chief duty is to reload any
+programmable micro-processors with their appropriate scripts,
+if suitable.
+It also logs the fact that a power failure occurred.
+.SH SEE ALSO
+fsck(1M),
+init(1M),
+shutdown(1M),
+inittab(4),
+mnttab(4).
+.\"	@(#)brc.1m	6.2 of 9/2/83

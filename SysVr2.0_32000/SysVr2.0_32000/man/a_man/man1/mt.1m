@@ -1,0 +1,27 @@
+.TH MT 1M
+.SH NAME
+mt \- cartridge tape manipulating program
+.SH SYNOPSIS
+\f3mt\f1 \fBcommand\fR
+.SH DESCRIPTION
+\f2Mt\fR is used to do basic functions on the tape drive.  There are
+no options and only three commands are available.  They are:
+.DS 1
+     rewind
+     rewind tape
+     erase
+     erase entire tape
+     retension
+     retension tape
+.DE
+.SH FILES
+/usr/nsc/mt     executable program
+.br
+/dev/rmt/0mn    always opened as the tape device
+.br
+.SH BUGS
+The rewind option does not always totally rewind the
+tape.  A more reliable way to rewind the tape
+is
+.BR </dev/rmt/0m .
+.\"	@(#)mt.1m	5.2 of 10/15/84

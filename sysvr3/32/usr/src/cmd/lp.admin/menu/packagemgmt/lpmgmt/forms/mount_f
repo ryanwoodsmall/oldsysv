@@ -1,0 +1,211 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/mount_f	1.4"
+## IDOC:   SCREEN 2.34: MOUNT FORM OR FONT
+#menu# Mount a form or font on a printer
+
+##+++ (help _H87)
+#help#        You use the "mount" command under either the "printers" menu
+#help#        or "forms" menu to mount a form or print wheel on a printer.
+#help#        You must do this before print requests queued for  the  form
+#help#        or print wheel will be printed.  (You don't have to manually
+#help#        mount character sets.  The LP  Print  Service  automatically
+#help#        selects  the  correct  character  set  on printers that have
+#help#        selectable character sets.)
+#help#
+#help#        When you mount a form, you  can  get  an  alignment  pattern
+#help#        printed  (if one has been defined).  This will help you line
+#help#        up the form  in  the  printer  for  proper  registration  of
+#help#        printed data.
+#help#
+#help#                                  WARNING
+#help# It is assumed that you have disabled the printer before you mount a form  or
+#help# print  wheel  or font cartridge, and the the form, print wheel, or cartridge
+#help# are already in place when you finish the  "mount"  command.   The  LP  Print
+#help# Service  will  immediately ready print requests for printing when it is told
+#help# that the mount is finished.  If you want to disable the printer  first  (you
+#help# don't HAVE to) use the "disable" command in the "printers" menu.
+#help#
+##--- (help _H87)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+DEF_p=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+DEF_f=`cat ${TMPDIR:-/tmp}/FRM.\`basename \\\`tty\\\`\` 2>/dev/null`
+DEF_f=${DEF_f:-none}
+while true
+do
+	while true
+	do
+##+++ (2.34.1)
+chk_name \
+	"Enter the name of the printer:${DEF_p:+ (default: ${DEF_p})}" \
+	"${DEF_p}" \
+	"\
+        You are expected to enter the name of the printer  on  which
+        you  want to mount a form or print wheel.  If you don't know
+        the name, enter \"q\" and select the \"status\" command from the
+        \"printers\" menu, to get a list of known printers.  \
+"
+OPT_p=${RESP}
+##--- (2.34.1)
+
+	if ls -d /usr/spool/lp/admins/lp/printers/${OPT_p} 2>/dev/null 1>&2
+	then
+		break
+	else
+		echo "You did not specify an existing printer. Try again."
+	fi
+
+	done
+
+	while true
+	do
+##+++ (line 2)
+echo \
+"Enter the name of the form you are mounting:"
+##--- (line 2)
+
+##+++ (2.34.3)
+chk_name \
+	"${DEF_f:+(default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of a the  form  you  want
+        mounted  on  the  printer.  If you are only mounting a print
+        wheel or font cartridge, just press return or enter the word
+        \"none\" to skip the form.  \
+"
+OPT_f=${RESP}
+
+	if [ "none" = "${OPT_f}" ]
+	then
+		break
+	else
+		if ls -d /usr/spool/lp/admins/lp/forms/${OPT_f} 2>/dev/null 1>&2
+		then
+			break
+		else
+			echo "You did not specify an existing form. Try again."
+		fi
+	fi
+
+	done
+
+##--- (2.34.3)
+	if [ "none" = "${OPT_f}" ]
+	then
+		OPT_f=
+	fi
+
+TERM=`sed -n -e '/Printer type: /s///p' /usr/spool/lp/admins/lp/printers/${OPT_p}/configuration`
+
+	export TERM
+	if tput daisy 2>/dev/null
+	then
+##+++ (line 4)
+echo \
+"Enter the name of the print wheel you are mounting:"
+##--- (line 4)
+
+DEF_S=none
+##+++ (2.34.5)
+chk_name \
+	"${DEF_S:+(default: ${DEF_S})}" \
+	"${DEF_S}" \
+	"\
+        You are expected to enter the name of  the  print  wheel  or
+        font cartridge  you  want mounted.  If you are only mounting
+        a form, just press return to skip the  print  wheel.   Note:
+        The  print  wheel or font cartridge should already be IN the
+        printer when you answer this question.  \
+"
+OPT_S=${RESP}
+##--- (2.34.5)
+		if [ "none" = "${OPT_S}" ]
+		then
+			OPT_S=
+		fi
+
+		if [ -z "${OPT_f}" -a -z "${OPT_S}" ]
+		then
+			echo \
+"It seems you aren't mounting anything!"
+			break
+		fi
+	else
+		if [ -z "${OPT_f}" ]
+		then
+			echo \
+"It seems you aren't mounting anything!"
+			break
+		fi
+		OPT_S=any
+	fi
+
+	if [ -n "${OPT_f}" -a -s /usr/spool/lp/admins/lp/forms/${OPT_f}/align_ptrn ]
+	then
+##+++ (2.34.6)
+if checkyn ${flags} -f \
+	${DEF_a:+"-D${DEF_a}"} -H \
+	"\
+        Enter a \"y\" (for yes) to get an alignment  pattern  printed,
+        or  a  \"n\"  (for no) otherwise.  The first alignment pattern
+        may take several seconds, to give the LP Print Service  time
+        to  call  the  interface  program  that  will initialize the
+        printer.   Subsequent  alignment   patterns   should   print
+        directly.   This  question  will be repeated so that you can
+        get additional alignment patterns printed; enter a \"n\"  when
+        you are done.  \
+" \
+	"Print an alignment pattern?${DEF_a:+ (default: ${DEF_a})}"
+then
+	OPT_a="-a"
+else
+	OPT_a=
+fi
+##--- (2.34.6)
+
+	else
+		OPT_a=
+	fi
+
+	opts="${OPT_f:+-f ${OPT_f}} ${OPT_S:+-S ${OPT_S}} ${OPT_a}"
+	/usr/lib/lpadmin -p ${OPT_p} -M ${opts} && break
+done

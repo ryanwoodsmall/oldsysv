@@ -1,0 +1,225 @@
+.TH MALLOC 3X 
+.SH NAME
+malloc, free, realloc, calloc, mallopt, mallinfo \- fast main memory allocator
+.SH SYNOPSIS
+.nf
+.B #include <malloc.h>
+.P
+.B char \(**malloc (size)
+.B unsigned size;
+.PP
+.B void free (ptr)
+.B char \(**ptr;
+.PP
+.B char \(**realloc (ptr, size)
+.B char \(**ptr;
+.B unsigned size;
+.PP
+.B char \(**calloc (nelem, elsize)
+.B unsigned nelem, elsize;
+.PP
+.B int mallopt (cmd, value)
+.B int cmd, value;
+.PP
+.B struct mallinfo mallinfo (max)
+.B int max;
+.SH DESCRIPTION
+.I Malloc\^
+and
+.I free\^
+provide a simple general-purpose memory allocation package,
+which runs considerably faster than the 
+.IR malloc (3C)
+package.
+It is found in the library ``malloc'', and
+is loaded if the option ``\-lmalloc'' is used
+with 
+.IR cc (1)
+or
+.IR ld (1).
+.PP
+.I Malloc\^
+returns a pointer to a block of at least
+.I size\^
+bytes suitably aligned for any use.
+.PP
+The argument to
+.I free\^
+is a pointer to a block previously allocated by
+.IR malloc ;
+after
+.I free\^
+is performed this space is made available for further allocation,
+and its contents have been destroyed (but see 
+.I mallopt\^
+below for a way to change this behavior).
+.PP
+Undefined results will occur if the space
+assigned by
+.I malloc\^
+is overrun or if some random number is handed to
+.IR free .
+.PP
+.I Realloc\^
+changes the size of the block pointed to by
+.I ptr\^
+to
+.I size\^
+bytes and returns a pointer to the (possibly moved)
+block.
+The contents will be unchanged up to the
+lesser of the new and old sizes.
+.PP
+.I Calloc\^
+allocates space for an array of
+.I nelem\^
+elements of size
+.IR elsize .
+The space is initialized to zeros.
+.PP
+.I Mallopt\^
+provides for control over the allocation algorithm.
+The available values for 
+.I cmd\^
+are:
+.TP .90i
+.SM M_MXFAST
+Set 
+.IR maxfast
+to 
+.IR value. 
+The algorithm allocates all blocks below the size
+of 
+.IR maxfast
+in large groups and then doles them out very quickly.
+The default value for
+.IR maxfast
+is 0.
+.TP
+.SM M_NLBLKS
+Set 
+.IR numlblks
+to 
+.IR value .
+The above mentioned ``large groups'' each contain
+.I numlblks\^
+blocks.  
+.I Numlblks\^
+must be greater than 0.
+The default value for 
+.I numlblks\^
+is 100.
+.TP
+.SM M_GRAIN
+Set 
+.I grain\^
+to 
+.IR value .
+The sizes of all blocks smaller than 
+.I maxfast\^
+are considered to be rounded up to the nearest multiple of 
+.IR grain .
+.I Grain\^
+must be greater than 0.
+The default value of 
+.I grain\^
+is the smallest number of bytes
+which will allow alignment of any data type.
+Value
+will be rounded up to a multiple of the default
+when
+.I grain\^
+is set.
+.TP
+.SM M_KEEP
+Preserve data in a freed block until the next
+.IR malloc ,
+.IR realloc ,
+or
+.IR calloc .
+This option is provided only for compatibility with the old
+version of 
+.I malloc
+and is not recommended.
+.PP
+These values are defined in the 
+.RI < malloc.h >
+header file.
+.PP
+.I Mallopt
+may be called repeatedly, but may not be called after
+the first small block is allocated.
+.PP
+.I Mallinfo\^
+provides instrumentation describing space usage.
+It returns the structure:
+.PP
+.ds HZ	:::::int:kepcost;::::
+.nf
+struct mallinfo  {
+        int arena;	\h'|\w'\*(HZ'u'/* total space in arena */
+        int ordblks;	\h'|\w'\*(HZ'u'/* number of ordinary blocks */
+        int smblks;	\h'|\w'\*(HZ'u'/* number of small blocks */
+        int hblkhd;	\h'|\w'\*(HZ'u'/* space in holding block headers */
+        int hblks;	\h'|\w'\*(HZ'u'/* number of holding blocks */
+        int usmblks;	\h'|\w'\*(HZ'u'/* space in small blocks in use */
+        int fsmblks;	\h'|\w'\*(HZ'u'/* space in free small blocks */
+        int uordblks;	\h'|\w'\*(HZ'u'/* space in ordinary blocks in use */
+        int fordblks;	\h'|\w'\*(HZ'u'/* space in free ordinary blocks */
+        int keepcost;	\h'|\w'\*(HZ'u'/* space penalty if keep option */
+			\h'|\w'\*(HZ'u'/* is used */
+}
+.fi
+.PP
+This structure is defined in the
+.RI < malloc.h >
+header file.
+.PP
+Each of the allocation routines returns a pointer
+to space suitably aligned (after possible pointer coercion)
+for storage of any type of object.
+.SH SEE ALSO
+brk(2), malloc(3C).
+.SH DIAGNOSTICS
+.IR Malloc\^,
+.I realloc\^
+and
+.I calloc\^
+return a
+.SM NULL
+pointer if there is not enough available memory.
+When 
+.I realloc\^
+returns 
+\s-1NULL\s+1, the block pointed to by
+.I ptr\^
+is left intact.
+If 
+.I mallopt\^
+is called after any allocation or if
+.I cmd\^ 
+or 
+.I value\^
+are invalid, non-zero is returned.
+Otherwise, it returns zero.
+.SH WARNINGS
+This package usually uses more data space than
+.IR malloc (3C).
+.br
+The code size is also bigger than
+.IR malloc (3C).
+.br
+Note that unlike 
+.IR malloc (3C),
+this package does not preserve
+the contents of a block when it is freed, unless 
+the 
+.SM M_KEEP
+option of
+.I mallopt\^
+is used.
+.br
+Undocumented features of 
+.IR malloc (3C)
+have not been duplicated.
+.\"	%W% of %G%

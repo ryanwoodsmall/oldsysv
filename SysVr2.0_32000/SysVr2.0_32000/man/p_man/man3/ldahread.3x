@@ -1,0 +1,60 @@
+.TH LDAHREAD 3X
+.SH NAME
+ldahread \- read the archive header of a member of an archive file 
+.SH SYNOPSIS
+.nf
+.ta \w'\s-1LDFILE\s+1\ \ \ 'u
+.ft B
+#include <stdio.h>
+#include <ar.h>
+.ie '\*p'' \{\
+#include <filehdr.h>
+#include <ldfcn.h>
+\}
+.el \{\
+#include "INCDIR\/filehdr.h"
+#include "INCDIR\/ldfcn.h"
+\}
+.PP
+.B int ldahread (ldptr, arhead)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B \s-1ARCHDR\s+1 \(**arhead;
+.ft R
+.fi
+.DT
+.SH DESCRIPTION
+If 
+.BI \s-1TYPE\s+1( ldptr )
+is the archive file magic number,
+.I ldahread
+reads the archive header of the common object file 
+currently associated with
+.I ldptr
+into the area of memory beginning at
+.IR arhead .
+.PP
+.I Ldahread
+.RB "returns " \s-1SUCCESS\s+1 " or " \s-1FAILURE\s+1 .
+.I Ldahread
+will fail if 
+.BI \s-1TYPE\s+1( ldptr )
+does not represent an archive file,
+or if it cannot read the archive header.
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a .
+\}
+.PP
+.ie !'\*p'' \{\
+.IR Intro (4)
+describes
+.BR \s-1LIBDIR\s+1  and  \s-1INCDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie !'\*p'' ldclose (3X), ldopen(3X), intro(4), ldfcn(4), path.h(4).
+.el ldclose(3X), ldopen(3X), ldfcn(4), ar(4).
+.\"	%W% of %G%

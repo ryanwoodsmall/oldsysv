@@ -1,0 +1,3 @@
+#	@(#)root	1.1
+0 5 * * 1 /etc/errstop 2>/dev/console;/bin/mv /usr/adm/errfile /usr/adm/oerrfile;/usr/lib/errdemon 2> /dev/console; /usr/bin/errpt /usr/adm/oerrfile | /bin/mail adm
+0 2 * * 1-6 /usr/lib/acct/dodisk

@@ -1,0 +1,41 @@
+.TH SPUTL 3X
+.SH NAME
+sputl, sgetl \- access long integer data in a machine-independent fashion.
+.SH SYNOPSIS
+.nf
+.B void sputl (value, buffer)
+.B long value;
+.B char \(**buffer;
+.PP
+.B long sgetl (buffer)
+.B char \(**buffer;
+.fi
+.SH DESCRIPTION
+.I Sputl\^
+takes the four bytes of the long integer
+.I value\^
+and places them in memory starting at the address pointed to by 
+.IR buffer .
+The ordering of the bytes is the same across all machines.
+.PP
+.I Sgetl\^
+retrieves the four bytes in memory starting at the address
+pointed to by 
+.I buffer\^
+and returns the long integer value in the byte ordering of the host machine.
+.PP
+The combination of 
+.I sputl\^
+and
+.I sgetl\^
+provides a machine-independent way of storing long numeric
+data in a file in binary form without conversion to characters.
+.PP
+A program which uses these functions must be loaded with the object-file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a .
+\}
+.\"	%W% of %G%

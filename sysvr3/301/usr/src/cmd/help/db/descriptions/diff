@@ -1,0 +1,23 @@
+
+\Sdiff\S: Description
+
+Syntax Summary:
+      diff [-b] [-e] [-f] [-h] file_name1 file_name2
+
+         where:  file_names  are names of files.
+
+Description:
+     \Sdiff\S stands for "differential file comparator."  Use \Sdiff\S to
+     compare the contents of two text files.  \Sdiff\S lists the lines that
+     are different and lines that must be changed to make the files identical.
+     \Sdiff\S marks the lines that are only in <file_name1> with a "<", and
+     those in <file_name2> with a ">".  The output also includes lines that
+     resemble ed(1) commands that show the changes you must make to convert
+     <file_name1> to <file_name2>.  \Sdiff\S can take a directory as an
+     argument if the directory contains a file with the same name as the file
+     that you list as the second argument.  \Sdiff\S will compare the two
+     files with the same name. \Sdiff\S can compare standard input to a file
+     if one argument is "-" and the other is the name of a file.  See also:
+     bdiff(1), cmp(1), comm(1), diff3(1), and sdiff(1) for commands with
+     functions similar to \Sdiff\S, and ed(1) for a command that might be used
+     with \Sdiff\S.

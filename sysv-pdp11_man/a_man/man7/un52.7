@@ -1,0 +1,85 @@
+.TH UN52 7 "3B20S only"
+.SH NAME
+un52 \- magnetic tape interface
+.SH DESCRIPTION
+The files
+.BR tp? ,
+.BR tp?h ,
+.B tp?n
+and
+.B tp?hn
+refer to the
+.SM UN\*S52
+magnetic tape controllers and associated transports.
+Only 1600bpi is available
+on the
+.SM UN\*S52,
+while 1600/6250bpi densities are available on the
+.SM UN\*S52B.
+The files
+are designated
+.B tp?
+for 1600bpi rewind-on-close,
+.B tp?n
+for 1600bpi no-rewind on close,
+.B tp?h
+for 6250bpi rewind-on-close, and
+.B tp?hn
+for 6250bpi no-rewind on close.
+.PP
+The tape is assumed to be positioned as desired when opened.
+If the file was opened for writing a double file mark is
+written on the tape when closed;
+if the file was normal-rewind, the tape is rewound,
+otherwise the tape is positioned before the second file mark.
+If the file was opened read-only, and if the file was normal-rewind, the
+tape is rewound, otherwise the tape is positioned after the file mark
+following the data just read.
+Once opened, reading is restricted to
+between the position when opened and the next
+file mark or the last write.
+A file mark is returned as a zero-length read.
+.PP
+A standard tape consists of
+several 512 byte records terminated by a file mark.
+To the extent possible, the system makes
+it possible to treat the tape like any other file.
+Seeks have their usual meaning and it is possible
+to read or write a byte at a time (although inadvisable).
+.PP
+The
+.B tp
+files discussed above are useful
+when it is desired to access the tape in a way
+compatible with ordinary files.
+When foreign tapes are to be dealt with, or
+when large records are to be read or written, the
+``raw'' interface is appropriate.
+The associated files are named
+.BR rtp? ,
+.BR rtp?n ,
+.B rtp?h
+and
+.BR rtp?hn .
+Each
+.I read\^
+or
+.I write\^
+call reads or writes the next record on the tape.
+During a write, the record has the same length as the
+buffer given.
+During a read, the record size is passed
+back as the number of bytes read,
+up to the buffer size specified.
+If the record was larger than the buffer size, the extra
+data is discarded.
+The buffer must begin on a word boundary,
+and the count must be an even
+number and cannot be greater than 6144 bytes.
+Seeks are ignored.
+.SH FILES
+/dev/tp\(**, /dev/rtp\(**
+.SH BUGS
+Once a file mark or any drive error is encountered, it refuses to do
+anything more until closed.
+.\"	@(#)un52.7	5.2 of 5/18/82

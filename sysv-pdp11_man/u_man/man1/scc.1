@@ -1,0 +1,77 @@
+.TH SCC 1 "DEC only"
+.SH NAME
+scc \- C compiler for stand-alone programs
+.SH SYNOPSIS
+.B scc
+[
+.B +\c
+[ lib ] ] [ option ] ... [ file ] ...
+.SH DESCRIPTION
+.I Scc\^
+prepares the named files for stand-alone execution.
+The
+.I option\^
+and
+.I file\^
+arguments may be anything that can legally
+be used with the
+.I cc\^
+command;
+it should be noted, though, that the
+.B \-p
+(profiling) option, as well as any object module
+that contains system calls, will cause
+the executable not to run.
+.PP
+.I Scc\^
+defines the compiler constant,
+.BR \s-1STANDALONE\s+1 ,
+so that sections of C programs may be compiled
+conditionally when the executable will be run
+stand-alone.
+.PP
+The first argument specifies an auxiliary library
+that defines the device configuration of the \s-1PDP\s+1-11
+computer for which the stand-alone executable is
+being prepared.
+.I Lib\^
+may be one of the following:
+.TP 8
+.B A
+.SM RP\*S04/05/06
+disk and
+.SM TU\*S16
+magnetic tape, or equivalent on the \s-1PDP\s+1-11
+plus \s-1RM\s+105 and \s-1RM\s+180 disks, and
+\s-1TU\s+178 and \s-1TS\s+111 tapes, or equivalent on the \s-1VAX\s+1
+.TP
+.B B
+\s-1RK\s+111/\s-1RK\s+105 disk, \s-1RP\s+111/\s-1RP\s+103 disk,
+and \s-1TM\s+111/\s-1TU\s+116
+magnetic tape, or equivalent
+.PP
+If no
+.BI + lib\^
+argument is specified,
+.B +A
+is assumed.
+If the
+.B +
+argument is specified alone, no configuration library
+is loaded unless the user supplies his own.
+.SH FILES
+.nr t1 \w'/usr/lib/lib2A.a   '
+.nr t2 \n(t1+\w'+A configuration library   '
+.ta \n(t1u \n(t2u
+/lib/crt2.o	execution start-off
+.br
+/usr/lib/lib2.a	stand-alone library
+.br
+/usr/lib/lib2A.a	+A configuration library	(\s-1PDP\s+1-11 only)
+.br
+/usr/lib/lib2B.a	+B configuration library	(\s-1PDP\s+1-11 only)
+.SH SEE ALSO
+cc(1),
+ld(1),
+a.out(4).
+.\"	@(#)scc.1	5.2 of 5/18/82

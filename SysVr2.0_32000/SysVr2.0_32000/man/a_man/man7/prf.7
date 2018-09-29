@@ -1,0 +1,29 @@
+.TH PRF 7
+.SH NAME
+prf \- operating system profiler
+.SH DESCRIPTION
+The file
+.B prf
+provides access to activity information
+in the operating system.
+Writing the file
+loads the measurement facility with text addresses to be monitored.
+Reading the file returns these 
+addresses and a set of counters
+indicative of activity between adjacent text addresses.
+.PP
+The recording mechanism is driven by the system clock
+and samples the program counter at line frequency.
+Samples that catch the operating system
+are matched against the stored text addresses
+and increment corresponding counters for later processing.
+.PP
+The file
+.B prf
+is a pseudo-device
+with no associated hardware.
+.SH FILES
+/dev/prf
+.SH "SEE ALSO"
+config(1M), profiler(1M).
+.\"	@(#)prf.7	6.2 of 9/6/83

@@ -1,0 +1,28 @@
+
+\Sshl\S:  Description
+
+Syntax Summary:  shl
+
+Description:
+     \Sshl\S stands for "shell layer" manager.  Use \S shl \S to create new
+     shells that run simultaneously without interacting with each other.  This
+     allows you to do work within many shells at one time without changing
+     terminals and without worrying that the work you're doing in one shell 
+     will affect the processes that are going on in another shell.  This 
+     command is similar to and cannot be used with the layers program that 
+     is available on the Teletype* 5620 Dot-Mapped Display terminal.  
+     (See the 5620 Dot-Mapped Display User Guide for an explanation of the 
+     layers program.)
+
+     \Sshl\S has its own language that you use to create up to seven shells,
+     and that you use to move from one shell to another.  When you create a new
+     shell and are working there, it is referred to as your current layer.  The
+     current layer is the only shell that receives input from you.  Hitting the
+     control key and the character "z" simultaneously, control-z, prints the
+     prompt ">>>".  You can exit \Sshl\S by typing "quit" or, type the name of
+     another layer you would like to move to.  The new shell becomes your
+     current layer.  Unless you redirect or block a shell's output, the output
+     for all processes that you are running in a shell is sent to your terminal.
+     This occurs even if the shell is not your current layer.  See the manual
+     page for \Sshl\S for the details on its language.  See also:  sh(1) for a
+     command with a function similar to \Sshl\S.

@@ -1,0 +1,21 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/status/fonts	1.3"
+## IDOC:   SCREEN 2.54: STATUS OF FONTS
+#menu# List available character-sets/print-wheels
+
+##+++ (help _H144)
+#help#        You use the "fonts" command in the "status" menu  to  get  a
+#help#        list  of  print  wheels,  character  sets, and loadable font
+#help#        cartridges that you have defined on your system.  This  will
+#help#        be  a  summary report made by examining all the printers for
+#help#        which you've defined these.   The  report  will  include  an
+#help#        indication  of  which  printers  the  print  wheels  or font
+#help#        cartridges are currently mounted on.
+##--- (help _H144)
+
+##+++ (line 1)
+echo \
+"
+Character sets and print wheels currently available:"
+##--- (line 4)
+
+lpstat -S all -l

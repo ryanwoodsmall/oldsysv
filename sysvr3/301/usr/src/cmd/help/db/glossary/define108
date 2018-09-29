@@ -1,0 +1,18 @@
+
+\S source code:  source file:  object code:  object file: a.out file:\S
+\Sexecutable \S
+
+On UNIX systems, computer programs written in "high-level languages"\S*\S
+like C, FORTRAN, COBOL, and PASCAL have three forms.  The first form is the
+program you write.  This form is called the source colde and the file it is
+in is called the source file.  The second form of the program is created by
+the "compiler"\S*\S.  This form contains "machine language"\S*\S instructions 
+which are readable by the computer.  It is called the object code and it is 
+stored in an object file.  The third form of the program is created by 
+the "link editor"\S*\S.  This form contains object files that are combined 
+to create a complete program.  It is called an a.out file.  Before you can 
+execute the a.out file, you have to change the permissions for the file so 
+that it is executable.  You do this using the chmod(1) command.  When you 
+have execute permission for an a.out file, the file is called an executable.
+
+\S*\S defined in the \Sglossary\S

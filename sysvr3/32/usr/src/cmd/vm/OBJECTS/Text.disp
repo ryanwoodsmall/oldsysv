@@ -1,0 +1,11 @@
+Title=$ARG2
+help=OPEN TEXT OBJECTS/Text.mfhelp display display
+rows=8
+columns=69
+lifetime=longterm
+text="`readfile $ARG1`"
+
+
+name=
+button=8
+action=nop

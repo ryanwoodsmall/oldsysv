@@ -1,0 +1,113 @@
+.TH STRIP 1 "not on PDP-11"
+.SH NAME
+\*pstrip \- strip symbol and line number information from a common object file
+.SH SYNOPSIS
+.B \*pstrip
+.RB [ \-l ]
+.RB [ \-x ]
+.RB [ \-r ]
+.RB [ \-s ]
+.RB [ \-V ]
+file-names
+.SH DESCRIPTION
+The 
+.I \*pstrip
+command
+strips the symbol table and line number information from
+common object files,
+including archives.
+Once this has been done, no symbolic debugging access
+will be available for that file; therefore, this command is
+normally run only on production modules that have
+been debugged and tested.
+.PP
+The amount of information stripped from the symbol table
+can be controlled by using any of the 
+following  options:
+.PP
+.TP 9
+.BR \-l
+Strip line number information only;
+do not strip any symbol table information.
+.PP
+.TP 9
+.B \-x
+Do not strip static or external symbol information.
+.PP
+.TP 9
+.B \-r
+Reset the relocation indexes into the symbol table.
+.PP
+.TP 9
+.B \-s
+Reset the line number indexes into the symbol table (do not remove).
+reset the relocation indexes into the symbol table.
+.PP
+.TP 9
+.B \-V
+Version of \*pstrip command executing.
+.DT
+.br
+.PP
+If there are any relocation entries in the object file and any symbol
+table information is to be stripped,
+.I \*pstrip
+will complain and terminate without stripping
+.I file-name
+unless the
+.B \-r
+flag is used.
+.PP
+If the 
+.IR strip
+command is executed on a common archive file (see
+.IR ar (4))
+the archive symbol table will be removed.  The archive
+symbol table must be restored by executing the
+.IR ar (1)
+command with the 
+.B s
+option before the archive can be
+link edited by the 
+.IR ld (1)
+command.  
+.IR Strip (1)
+will instruct the user with appropriate warning messages when this
+situation arises.
+.PP
+The purpose of this command is to reduce the file storage
+overhead taken by the object file.
+.SH "FILES"
+/usr/tmp/strp??????
+.SH "SEE ALSO"
+\*pas(1),
+\*pcc(1),
+\*pld(1),
+ar(4),
+a.out(4).
+.SH "DIAGNOSTICS"
+.TP 13
+\*pstrip:  name:  cannot open
+.br
+	if
+.I name
+cannot be read.
+.PP
+.TP 13
+\*pstrip:  name:  bad magic 
+.br
+	if
+.I name
+is not an appropriate common object file.
+.PP
+.TP 13
+\*pstrip:  name:  relocation entries present; cannot strip 
+.br
+	if
+.I name
+contains relocation entries and the
+.B \-r 
+flag is not used,
+the symbol table information cannot be stripped.
+'\" \%W\%
+.\"	@(#)strip.1	5.2 of 5/18/82

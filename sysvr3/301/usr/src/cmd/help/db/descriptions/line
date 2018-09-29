@@ -1,0 +1,13 @@
+
+\Sline\S:  Description
+
+Syntax Summary:  line
+
+Description:
+     \Sline\S copies a line of text from standard input.  The text is sent to
+     standard output unless you assign it to a variable.  Use \Sline\S in
+     shell programs to read information from the terminal or a file and store
+     the text for later use.  \Sline\S copies text from the beginning until
+     the end of a line.  The end of a line is marked by a new line character.
+     When \Sline\S reaches the end of a file or reads an end-of-file
+     character, it sets the exit status to 1.

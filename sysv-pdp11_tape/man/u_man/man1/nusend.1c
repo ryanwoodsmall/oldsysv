@@ -1,0 +1,222 @@
+.if t .ds ' \h@.05m@\s+4\v@.333m@\'\v@-.333m@\s-4\h@.05m@
+.if n .ds ' '
+.if t .ds ` \h@.05m@\s+4\v@.333m@\`\v@-.333m@\s-4\h@.05m@
+.if n .ds ` `
+.TH NUSEND 1C
+.SH NAME
+nusend \- send files to another \s-1UNIX\s+1 System on the \s-1NSC\s+1 network
+.SH SYNOPSIS
+.B nusend
+.BR \-d "\ dest"
+.RB [ \-n "\ netname]"
+.RB [ \-a "\ acct]"
+.RB [ \-m ]
+.RB [ \-e ]
+.RB [ \-s ]
+.RB [ \-c ]
+.RB [ \-x ]
+.RB [ \-u "\ destuser]"
+.RB [\|[ \-f "\ destfile] srcfile]"
+.RB [ \-! cmd
+[cmdfile]\|]
+.B .\|.\|.
+.SH DESCRIPTION
+.I Nusend
+sends copies of the named files or command to another
+.SM UNIX
+system
+via the
+.SM NSC
+network.
+If the file name
+.B \-
+is given, the standard input is read
+at that point.
+.TP \w'\fB\-d\fP\ dest\ \ 'u
+.BR \-d " dest"
+Destination.
+.I Dest
+can be any one of
+the
+.SM UNIX
+systems
+on the
+.SM NSC
+local network.
+See
+.B /usr/nsc/rvchan
+for an up-to-date list of valid \s-1NSC\s+1 destinations.
+.TP
+.BR \-n " netname"
+Network name.
+.I Netname
+can be any one of the networks known to the local system
+(see
+.IR nscmon (1M)
+for the definition of a network.
+This option is only needed when sending to your own system.
+See
+.B /usr/nsc/nets
+for the up-to-date list of valid networks).
+.TP
+.BR \-a " acct"
+Use
+.I acct
+as the account number for the
+job.
+By default, the account number is read from the password file.
+.TP
+.B \-s
+Silent.
+Suppress the one-line message which contains the submitted job name.
+.TP
+.B \-c
+Copy.
+Make a copy of the file.
+Default is to set up a
+pointer to the file in the user's directory.
+If any changes are made to the file before
+transmission, the changes will be sent to the
+destination unless the
+.B \-c
+option is used.
+.TP
+.B \-x
+Generate checksums on all data tranmissions.
+.PP
+Mail will normally be sent to the receiving login(s) to report the
+receipt of the file(s).  Mail will be sent to both sending and
+receiving logins if there were errors in transmission.
+The default may be overridden with the following switches:
+.TP \w'\fB\-d\fP\ dest\ \ 'u
+.B \-m
+Report by
+.IR mail (1)
+when the file transfer is complete.
+The mail is sent from the remote system via
+.IR nusend .
+.TP
+.B \-e
+Report by
+.IR mail (1)
+only when an error occurred during the transfer.  No other mail will be sent.
+.PP
+Normally, the login name under which the new file will appear
+on the destination system
+is the same as the login name of the person who issues the command.
+.PP
+The following options, each as a separate argument, may be interspersed
+with file name arguments:
+.TP \w'\fB\-d\fP\ dest\ \ 'u
+.B \-u
+Use the next argument as the destination user's login name for
+all succeeding files.
+.TP
+.B \-f
+Use the next argument as the destination file name
+for the succeeding file.
+.I Srcfile
+must be specified.
+The destination path name is assumed to be relative
+to the destination login directory if there is no leading
+.BR / .
+In either case, the target directory must be mode 777, or
+if the file already exists, the file must be writable by others.
+By default, files are delivered to directory
+.B rje
+under the destination login directory.
+.B Rje
+must have been previously created in mode 777 for everything to work.
+The name of the destination file is ordinarily the same as the last
+component of the original file.
+When the standard input is sent, the destination file name is normally
+taken to be
+.BR pipe.end .
+If
+.B \-
+is used, the standard input is taken.
+.TP
+.BR \-! cmd
+.I Cmd
+is sent to the remote machine for execution.
+A file name or
+.B \-
+can be used as standard input to the command.
+If no file is specified,
+.B /dev/null
+is used.
+.SH EXAMPLES
+Assuming \s-1XXAAA\s+1, \s-1XXBBB\s+1 and \s-1XXCCC\s+1 are machines on the
+.B \s-1NSC\s+1
+network, then:
+.PP
+To send files
+.IR file1 ,
+.IR file2 ,
+and
+.IR file3
+to
+.SM XXAAA
+(assuming the source and destination logins are the same):
+.PP
+.RS
+nusend \|\-d \|\s-1XXAAA\s+1 \|file1 \|file2 \|file3
+.RE
+.PP
+To send file
+.B cprog.c
+to login name
+.B dave
+on
+.SM XXBBB
+and to get confirmation mail returned:
+.PP
+.RS
+nusend \|\-d \|\s-1XXBBB\s+1 \|\-m \|\-u \|dave \|cprog.c
+.RE
+.PP
+To send file
+.B myfile
+to \s-1XXCCC\s+1
+and rename it to
+.B yourfile
+(assuming the source and destination logins are the same):
+.PP
+.RS
+nusend \|\-d \|\s-1XXCCC\s+1 \|\-f \|yourfile \|myfile
+.RE
+.PP
+To send file
+.B a.out
+from \s-1XXAAA\s+1 to login name
+.B debbie
+on \s-1XXBBB\s+1 via
+remote execution:
+.PP
+.RS
+nusend \-d \|\s-1XXAAA\s+1 \
+.RS
+\|\-!\*'nusend \|\-d \|XXBBB \|\-u \|debbie \|\*`logdir \|debbie\*`/a.out\*'
+.RE
+.RE
+.SH FILES
+.PD 0
+.TP \w'/usr/nsc/log/usendlog\ \ 'u
+/etc/passwd
+account number for \s-1NSC\s+1 job
+.TP
+/usr/nsc/jobs/\s-1C\s+1\(**
+job queue area
+.TP
+/usr/nsc/rvchan
+table of known destinations
+.TP
+/usr/nsc/nets
+table of known networks
+.TP
+/usr/nsc/log/nusend
+usage log
+.PD
+.SH SEE ALSO
+mail(1), nscstat(1C).
+.\"	@(#)nusend.1c	5.2 of 5/18/82

@@ -1,0 +1,47 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775	2 2
+	INSTALL	---700	2 2	./install/windowing/INSTALL
+	Rlist	---600	2 2	./install/windowing/Rlist.window
+	UNINSTALL	---700	2 2	./install/windowing/UNINSTALL
+	setup	---700	2 2	./install/windowing/setup
+	unsetup	---700	2 2	./install/windowing/unsetup
+$
+new	d--775	2 2
+	boot	d--775	0 3
+		xt.o	---555 2 2	../usr/src/uts/3b2/io/xt.o
+	$
+	etc	d--775	0 3
+		master.d	d--775	0 3
+			xt	---444	0 0	../usr/src/uts/3b2/master.d/xt
+		$
+	$
+	usr	d--775	0 3
+		bin	d--775	2 2
+			ismpx	---755	2 2	../usr/bin/ismpx
+			jterm	---755	2 2	../usr/bin/jterm
+			jwin	---755	2 2	../usr/bin/jwin
+			layers	---755	2 2	../usr/bin/layers
+			xtd	---755	2 2	../usr/bin/xtd
+			xts	---755	2 2	../usr/bin/xts
+			xtt	---755	2 2	../usr/bin/xtt
+		$
+		include	d--775	2 2
+			windows.h	---444	2 2	../usr/include/windows.h
+		$
+		lib	d--775	0 3
+			layersys	d--755	2 2
+				lsys.8;7;3	---755	2 2	../usr/lib/layersys/lsys.8;7;3
+				relogin	---755	2 2	../usr/lib/layersys/relogin
+				set_enc.j	---755	2 2	../usr/lib/layersys/set_enc.j
+				wtinit	---755	2 2	../usr/lib/layersys/wtinit
+			$
+			libwindows.a	---644	2 2	../usr/lib/libwindows.a
+		$
+		options	d--775	0 3
+			windowing.name	---644	2 2	./install/windowing/windowing.name
+		$
+	$
+$
+$

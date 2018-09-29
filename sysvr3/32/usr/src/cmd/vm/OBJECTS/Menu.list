@@ -1,0 +1,13 @@
+menu=Personal Services
+help=OPEN TEXT OBJECTS/Text.mfhelp T.list "Personal Services"
+
+
+`regex -v "${ARG1}" '^-d$' 'message "Select Service to remove"'
+                    '^-m$' 'message "Select Service to modify"' | set -l CMD;$CMD`
+
+`$VMSYS/bin/listserv ${ARG1} ${ARG2}`
+
+
+name=UPDATE
+button=8
+action=return update

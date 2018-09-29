@@ -1,0 +1,19 @@
+.TH AIMAG 3F
+.SH NAME
+aimag, dimag \- Fortran imaginary part of complex argument
+.SH SYNOPSIS
+.nf
+.B "real r"
+.B "complex cxr"
+.B "double precision dp"
+.B "double complex cxd"
+.P
+.B "r = aimag(cxr)"
+.P
+.B "dp = dimag(cxd)"
+.SH DESCRIPTION
+.I Aimag\^
+returns the imaginary part of its single-precision complex argument.
+.I Dimag\^
+returns the double-precision imaginary part of its double-complex argument.
+.\"	@(#)aimag.3f	5.2 of 5/18/82

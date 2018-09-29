@@ -1,0 +1,33 @@
+.TH ERRSTOP 1M
+.SH NAME
+errstop \- terminate the error-logging daemon
+.SH SYNOPSIS
+.BR /etc/errstop " [ namelist ]"
+.SH DESCRIPTION
+The error-logging daemon
+.IR errdemon (1M)
+is terminated by using
+.IR errstop .
+This is accomplished by  executing
+.IR ps (1)
+to determine the daemon's identity and then sending
+it a software kill signal [see
+.IR signal (2)];
+.B /unix
+is used as the system namelist if
+none is specified.
+Only the super-user may use
+.IR errstop .
+.SH FILES
+.ta \w'/unix      'u
+/unix	default system namelist
+.SH DIAGNOSTICS
+The diagnostics produced by 
+.I errstop\^
+are intended to be self-explanatory.
+.SH "SEE ALSO"
+errdemon(1M),
+ps(1),
+kill(2),
+signal(2).
+.\"	@(#)errstop.1m	6.2 of 9/2/83

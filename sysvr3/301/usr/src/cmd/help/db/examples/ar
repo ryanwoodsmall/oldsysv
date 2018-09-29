@@ -1,0 +1,24 @@
+
+\Sar\S:  Examples
+
+        ar -r library.A book.1 book.2
+
+    Replaces the old files called "book.1" and "book.2" in the archive file
+    "library.A".  If "book.1" and "book.2" do not exist in the archive, \Sar\S
+    adds them to the end.  If "library.A" is not an archive file that already
+    exists, \Sar\S creates it and "book.1" and "book.2" are the only files in
+    it.
+
+    ---------------------------------------------------------------------------
+
+        ar -xv library.A book.3 book.4
+
+    Extracts copies of the files "book.3" and "book.4" from the archive file
+    "library.A" and prints the file names as it extracts the files.
+
+    ---------------------------------------------------------------------------
+        ar -ri report.V Report.a report.4
+
+    Archives a file named "report.4" and inserts it into the archive
+    "report.a".  "report.4" is inserted before the file "report.5".
+

@@ -1,0 +1,65 @@
+# This procedure runs all necessary checks against the User's Manual.
+#
+# The procedures are run sequentially and NOT in parallel as they tend
+# to consume lots of process table slots and mucho CPU time.
+#
+# Allow approximately 10 hours for the procedures to complete on a
+# fairly idle processor.
+#
+# The typical invocation would be:
+#
+#	cd /usr/man/tools
+#	nohup runcks >> $TMPDIR/runcks.o&
+#
+# For more information regarding the below procedures, see
+# /usr/man/tools/TOOLKIT
+
+set x $*
+. ./.param
+
+OLDMAN=/usr/4.1man/u_man
+MANDIR=/usr/man/u_man
+TMPDIR=/usr/man/tmp
+
+echo "\n\nSTARTING RUNCKS"
+date
+#echo "============== mcmp ${OPTS} -m $OLDMAN -o $MANDIR"
+#mcmp ${OPTS} -m $OLDMAN -o $MANDIR
+#date
+#echo "============== mcmp -l ${OPTS} -m $OLDMAN -o $MANDIR"
+#mcmp -l ${OPTS} -m $OLDMAN -o $MANDIR
+#date
+echo "============== ckcrefs"
+ckcrefs ${OPTS} -m $MANDIR -t $TMPDIR
+date
+echo "============== ckfrefs"
+ckfrefs ${OPTS} -m $MANDIR -t $TMPDIR
+date
+echo "============== cknames"
+cknames ${OPTS} -m $MANDIR -t $TMPDIR
+date
+echo "============== ckso"
+ckso ${OPTS} -m $MANDIR -t $TMPDIR
+date
+##echo "============== ckspell"
+##ckspell
+##date
+##echo "============== mklinks"
+##mklinks ${OPTS} -m $MANDIR -t $TMPDIR
+##date
+echo "============== prnames"
+prnames ${OPTS} -m $MANDIR -t $TMPDIR
+date
+echo "============== find.funny"
+find.funny ${OPTS} -m $MANDIR -t $TMPDIR
+date
+##echo "============== prsynops"
+##prsynops ${OPTS} -m $MANDIR -t $TMPDIR
+##date
+echo "============== tocrc all"
+tocrc ${OPTS} -m $MANDIR -t $TMPDIR all
+date
+echo "============== cleanup"
+cleanup ${OPTS} -m $MANDIR -t $TMPDIR
+date
+#	@(#)runcks	5.2 of 5/19/82

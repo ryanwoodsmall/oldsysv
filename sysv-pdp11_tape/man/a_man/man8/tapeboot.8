@@ -1,0 +1,65 @@
+.TH "TAPE BOOT" 8 "PDP-11 only"
+.SH NAME
+tapeboot \- magnetic tape bootstrap program
+.SH DESCRIPTION
+.I Tapeboot\^
+handles the problem of booting
+a \s-1PDP\s+1-11/45 or \s-1PDP\s+1-11/70
+from a \s-1TU\s+1\&10 or \s-1TU\s+1\&16 tape transport.
+In both cases, the tape density is 800 bpi.
+The complete program fits in one 512 byte block, but is duplicated
+so that one copy resides in block 0 and another in block 1.
+Thus, both the standard \s-1DEC ROM\s+1 bootstrap loaders and the special
+.SM ROM
+loaders will work.
+.ne 2
+For example,
+to create a boot tape, execute:
+.PP
+.RS
+cat \|/stand/tapeboot \|\fIprogram-to-boot\fR \|>/dev/mt0
+.RE
+.PP
+To boot from magnetic tape, read the first record
+of the tape into memory starting
+at address 0 and then jump to address 0,
+using a special
+.SM ROM
+or some manual procedure (toggle in the program).
+The bootstrap program
+relocates itself to high core as specified when
+assembled (typically 24K words, maximum of 28K).
+It then determines whether to use the \s-1TU\s+1\&10 code
+or the \s-1TU\s+1\&16 code.
+The \s-1TU\s+1\&10 is used if the \s-1TM\s+1\&11
+command register (772\ 522) exists
+and the function (bits\ <3:1>) is non-zero,
+otherwise the \s-1TU\s+1\&16 is used.
+It then types on the console
+.SM
+.BR "UNIX\*S tape boot loader" ,
+rewinds the tape,
+reads two blocks to skip past itself on the tape,
+clears memory,
+and reads the rest of the tape,
+to the tape mark, into memory starting at address 0.
+If address 0 contains 000\ 407, a
+.SM UNIX
+.B a.out
+program is assumed and the first 8 words are stripped off by
+relocating the loaded program toward address 0.
+Finally, a jump to address 0 is done by executing \fBjsr\ \|pc,\(**$0\fP.
+.PP
+If there is an error while reading the tape, the bootstrap
+program will type \fBtape\ \|error\fP and attempt to read the record again.
+.SH FILES
+.PD 0
+.TP "\w'/stand/tapeboot\ \ 'u"
+/stand/tapeboot
+\s-1TU\s+1\&10/\s-1TU\s+1\&16 magtape bootstrap
+.TP
+/usr/src/stand
+source directory
+.SH SEE ALSO
+unixboot(8).
+.\"	@(#)tapeboot.8	5.2 of 5/18/82

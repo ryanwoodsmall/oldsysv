@@ -1,0 +1,120 @@
+.TH ACU 7
+.SH NAME
+acu, dn \- Automatic Call Unit (\s-1ACU\s+1) interface
+.SH DESCRIPTION
+The
+.SM ACU
+drivers support
+.IR open,
+.IR close,
+and
+.IR write
+system calls.
+In addition, the \fIUN56\fR driver on the 3B20S supports an
+.IR ioctl
+system call.
+The
+.B acu?
+and
+.B dn?
+files are write-only.
+The
+.I write\^
+system call sends the telephone number to be dialed to the
+.SM ACU.
+The permissible codes are:
+.PP
+.RS
+.PD 0
+.TP .75i
+.BR 0 - 9
+dial 0-9
+.TP
+.BR \(** " or " :
+dial
+.B \(**
+.TP
+.BR # " or " ;
+dial
+.B #
+.TP
+.B \-
+4 second delay for second dial tone
+.TP
+.BR e " or " <
+end-of-number
+.TP
+.BR w " or " =
+wait for secondary dial tone
+.TP
+.B f
+flash off hook for 1 second
+.RE
+.PD
+.PP
+The entire telephone number must be
+presented in a single
+.I write\^
+system call.
+.PP
+The
+.I ioctl
+system call (\fIUN56\fR only) is invoked as follows:
+.PP
+.RS
+#include \|<sys/un56\f3.\fPh>
+.br
+int fildes, cmd;
+.br
+struct acutab *acutp;
+.br
+ioctl (fildes, cmd, acutp);
+.RE
+.PP
+.I Acutab\^
+is a table specifying the connections between
+\s-1ACU\s+1 minor devices and communication lines:
+.PP
+.RS
+.nf
+struct acutab {
+	int minor;
+	int unit;
+	int port;
+	int line;
+} acutab[];
+.fi
+.RE
+.PP
+The
+.IR ioctl
+.I cmds
+are:
+.HP 7
+\s-1ACUSDEV\s+1\-Specify a connection
+between an \s-1ACU\s+1 minor device
+and a telephone line.
+This command makes an entry in 
+.IR acutab ,
+the table that specifies associations between 
+\s-1ACU\s+1 minor devices and dial-out lines.
+Before the \s-1ACU\s+1s can be used,
+and after any \s-1ACU\s+1 reconfiguration,
+this table must be sent to the \s-1ACU\s+1 
+peripheral controller via the \s-1ACUSTART\s+1
+command.
+.HP 7
+\s-1ACUSTART\s+1\-Connect \s-1ACU\s+1 minor devices
+to telephone lines.
+This command informs the \s-1ACU\s+1 peripheral controller
+of the connections set up by the \s-1ACUSDEV\s+1 command
+and enables it.
+.SH SEE ALSO
+acuset(1M).
+.SH FILES
+/dev/acu*	(3B20S only)
+.br
+/dev/un56	(3B20S only)
+.br
+/dev/dn*	(\s-1DEC\s+1 only)
+.\"	@(#)acu.7	5.2 of 5/18/82

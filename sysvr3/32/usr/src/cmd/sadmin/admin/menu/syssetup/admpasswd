@@ -1,0 +1,83 @@
+#ident	"@(#)sadmin:admin/menu/syssetup/admpasswd	2.6"
+#menu# assign or change administrative passwords
+#help# 
+#help#	Admpasswd lets you set or make changes to passwords for
+#help#	administrative commands and logins such as setup and sysadm.
+
+cd ${MENUTOP:?}
+admlogins=`ls -p`
+admlogins=`cut -d: -f1 /etc/passwd  |  fgrep -x "${admlogins}"`
+
+flags="-f -qq -k$$"
+
+trap 'exit 0' 1 2 15
+
+if  checkyn ${flags} -H'
+	There are several administrative logins, also available as commands,
+	that allow you to change the way the machine works.  You may want to
+	protect against unauthorized use of them by giving them passwords.
+	If you do not, anyone can make these changes, including putting
+	passwords on these logins.' \
+	'Do you want to give passwords to administrative logins?'
+then
+	for login in ${admlogins}
+	{
+		if /bin/passwd -s $login 2>/dev/null | grep "^${login}  *NP" 2>/dev/null 1>&2
+		then
+			if  checkyn ${flags} \
+			-H "!echo \"
+	What is '${login}' used for?\"
+				sed -n '/^#help#/s///p' ${login} 2>/dev/null" \
+				"
+The login '${login}' does not have a password.
+Do you want to give it one?"
+			then
+				/bin/passwd ${login}
+			fi
+		else
+			a=`checklist ${flags} -efp \
+			-H "!echo \"
+	What is '${login}' used for?\"
+				sed -n '/^#help#/s///p' ${login} 2>/dev/null" \
+				"
+The login '${login}' already has a password.
+Do you want to change the password, delete it, or skip it? [c, d, s, q, ?]" \
+				change delete skip`
+			case ${a} in
+			change )
+				/bin/passwd ${login}
+				;;
+			delete )
+				/bin/passwd -d ${login}
+				;;
+			skip )
+				echo 'Password unchanged.'
+			esac
+		fi
+	}
+fi
+
+admlogins=`
+	for adm in $admlogins
+	do
+		if /bin/passwd -s $adm 2>/dev/null | grep "^$adm  *NP" >/dev/null
+		then
+			echo $adm
+		fi
+	done`
+
+if [ -n "${admlogins}" ]
+then
+	echo "${admlogins}" | sort  |
+	sed '1i\
+	echo "\\nThe following administrative logins still do not have passwords:"\
+	pr -t -5 -o5 -w75 <<!
+	$a\
+!
+	'  |  sh
+fi
+
+echo '\nFor more information about passwords and their use,
+read the SECURITY chapter of the Owner/Operator Manual.
+For more about assigning passwords,
+see the chapter on SIMPLIFIED SYSTEM ADMINISTRATION.'

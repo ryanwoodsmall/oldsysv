@@ -1,0 +1,68 @@
+#	@(#):mkhead	1.12
+
+wd=`pwd`
+sd=${SRC-$ROOT/usr/src}/head
+id=$ROOT/usr/include
+ls $id > usrlist
+trap "rm -f usrlist headlist;cd $wd;exit" 0 1 2 3 15
+if [ "$1" ]
+then
+	args=`echo $* | sed -e 's;sys\.[^ ]*;;g'`
+else
+	args=`ls $sd | sed -e 's;sys\.[^ ]*;;g'`
+	ls $sd > headlist
+	rem=`comm -23 usrlist headlist | tr -s "\012" " "`
+	echo "Removing:\n$rem"
+	(cd $id; rm -f $rem)
+fi
+index=0
+echo "Copying:"
+echo "sys.s \c"
+if vax
+then
+	cp $sd/sys.vax $id/sys.s
+	chown bin $id/sys.s
+	chgrp bin $id/sys.s
+elif pdp11
+then
+	cp $sd/sys.pdp $id/sys.s
+	chown bin $id/sys.s
+	chgrp bin $id/sys.s
+elif u3b5 || u3b2
+then
+	cp $sd/sys.u3b5 $id/sys.s
+	chmod 664 $id/sys.s
+	if [ "$ROOT" = "" ]
+	then
+		chgrp bin $id/sys.s
+		chown bin $id/sys.s
+	fi
+fi
+for i in $args
+do
+	if [ -d $i ]
+	then
+		if test $index -gt 6
+		then echo
+		     index=0
+		else index=`expr $index + 1`
+		fi
+		echo "(directory $i) \c"
+		cp $sd/$i/* $id/$i
+	else
+		echo "$i \c"
+		if test $index -gt 6
+		then echo
+		     index=0
+		else index=`expr $index + 1`
+		fi
+		cp $sd/$i $id
+		chmod 664 $id/$i
+		if [ "$ROOT" = "" ]
+		then
+			chgrp bin $id/$i 
+			chown bin $id/$i
+		fi
+	fi
+done
+echo

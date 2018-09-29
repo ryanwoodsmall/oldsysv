@@ -1,0 +1,76 @@
+.TH FUSER 1M
+.SH NAME
+fuser \- identify processes using a file or file structure
+.SH SYNOPSIS
+.B /etc/fuser
+.RB [ \|\-ku\| ]
+files
+.RB [ \|\-\| ]
+.RB [\|[ \|\-ku\| "] files\|]"
+.SH DESCRIPTION
+.I Fuser
+lists the process \s-1ID\s+1s of the processes
+using the \fIfiles\fP specified as arguments.
+For block special devices, all processes using any file on that device are
+listed.
+The process \s-1ID\s+1 is followed by
+.BR c ,
+.B p
+or
+.B r
+if the process is using the
+file as its current directory, the parent of its current directory
+(only when in use by the system), or its \fBr\fPoot directory, respectively.
+If the 
+.B \-u
+option is specified, the login name, in parentheses,
+also follows the process \s-1ID\s+1.
+In addition, if the
+.B \-k
+option is specified, the 
+.SM
+.B \s-1SIGKILL\s+1
+signal is sent to each process.
+Only the super-user can terminate another user's process
+[see 
+.IR kill (2)].
+Options may be respecified between groups of files.
+The new set of options replaces the old set, with a lone dash canceling any
+options currently in force.
+.PP
+The process \s-1ID\s+1s are printed as a single line on the standard output,
+separated by spaces and terminated with a single new line.
+All other output is written on standard error.
+.SH EXAMPLES
+.TP
+fuser \-ku /dev/dsk/1s?
+will terminate all processes that are preventing disk drive one from being
+unmounted if typed by the super-user,
+listing the process \s-1ID\s+1 and login name
+of each as it is killed.
+.TP
+fuser \-u /etc/passwd
+will list process \s-1ID\s+1s and login names
+of processes that have the password
+file open.
+.TP
+fuser \-ku /dev/dsk/1s? \-u /etc/passwd
+will do both of the above examples in a single command line.
+.SH FILES
+.PD 0
+.TP \w'/dev/kmem\ \ \ \ 'u
+/unix
+for namelist
+.TP
+/dev/kmem
+for system image
+.TP
+/dev/mem
+also for system image
+.PD
+.SH SEE ALSO
+mount(1M),
+ps(1),
+kill(2),
+signal(2).
+.\"	@(#)fuser.1m	6.2 of 9/2/83

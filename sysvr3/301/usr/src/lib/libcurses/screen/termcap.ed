@@ -1,0 +1,45 @@
+e caps
+g/^#/d
+/--- begin bool/+,/--- end bool/-w bool
+/--- begin num/+,/--- end num/-w num
+/--- begin str/+,/--- end str/-w str
+w /dev/null
+e bool
+1,$s/"/'/
+1,$s/"/'/
+1,$s/[ 	]*'[^	]*'	*"//
+1,$s/".*//
+1,$s/\(.*\),\(.\)\(.\)/	case two('\2','\3'): rv = \1; break;/
+w
+e num
+1,$s/"/'/
+1,$s/"/'/
+1,$s/[ 	]*'[^	]*'	*"//
+1,$s/".*//
+1,$s/\(.*\),\(.\)\(.\)/	case two('\2','\3'): rv = \1; break;/
+w
+e str
+1,$s/"/'/
+1,$s/"/'/
+1,$s/[ 	]*'[^	]*'	*"//
+1,$s/".*//
+1,$s/\(.*\),\(.\)\(.\)/	case two('\2','\3'): rv = \1; break;/
+240a
+	default: rv = NULL; break;
+	}
+	if (rv == NULL)
+		switch (two_id) {
+.
+245,$s/^/	/
+w
+e termcap.form
+/BOOLS/d
+-r bool
+/NUMS/d
+-r num
+/STRS/d
+-r str
+0r copyright.h
+/screen\/copyright\.h/d
+w termcap.c
+q

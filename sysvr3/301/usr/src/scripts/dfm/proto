@@ -1,0 +1,54 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/dfm/Rlist.dfm
+	UNINSTALL	---555 2 2	./install/dfm/UNINSTALL
+	INSTALL		---555 2 2	./install/dfm/INSTALL
+	setup		---555 2 2	./install/dfm/setup
+$
+new	d--775 0 3
+	bin	d--775 2 2
+		ar		---555 2 2	../bin/ar
+		od		---555 2 2	../bin/od
+		sum		---555 2 2	../bin/sum
+		tail		---555 2 2	../bin/tail
+		touch		---555 2 2	../bin/touch
+	$
+	etc	d--775 0 3
+	$
+	usr	d--775 0 3
+		bin	d--775 2 2
+			awk		---555 2 2	../usr/bin/awk
+			bdiff		---555 2 2	../usr/bin/bdiff
+			bfs		---555 2 2	../usr/bin/bfs
+			col		---555 2 2	../usr/bin/col
+			comm		---555 2 2	../usr/bin/comm
+			csplit		---555 2 2	../usr/bin/csplit
+			cut		---555 2 2	../usr/bin/cut
+			diff3		---555 2 2	../usr/bin/diff3
+			dircmp		---555 2 2	../usr/bin/dircmp
+			egrep		---555 2 2	../usr/bin/egrep
+			fgrep		---555 2 2	../usr/bin/fgrep
+			join		---555 2 2	../usr/bin/join
+			newform		---555 2 2	../usr/bin/newform
+			nl		---555 2 2	../usr/bin/nl
+			pack		---555 2 2	../usr/bin/pack
+			paste		---555 2 2	../usr/bin/paste
+			pg		---555 2 2	../usr/bin/pg
+			sdiff		---555 2 2	../usr/bin/sdiff
+			split		---555 2 2	../usr/bin/split
+			tr		---555 2 2	../usr/bin/tr
+			uniq		---555 2 2	../usr/bin/uniq
+			unpack		---555 2 2	../usr/bin/unpack
+		$
+		lib	d--775 0 3
+			diff3prog	---555 2 2	../usr/lib/diff3prog
+		$
+		options	d--775 0 3
+			dfm.name	---555 2 2	./install/dfm/dfm.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.dfm:dfm/proto	1.9"

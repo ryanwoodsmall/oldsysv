@@ -1,0 +1,171 @@
+#
+# Copyright  (c) 1986 AT&T
+#	All Rights Reserved
+#
+#ident	"@(#)pkg.fmli:INSTALL	1.6"
+#
+# Multiple Floppy or Cartridge Tape INSTALL Script
+# Invoked as INSTALL diskette/tape-drive mount-point
+# Mount point is normally /install as called from
+# the sysadm package.
+#
+# Save mount point of diskette (INSPATH) and package name (PKGNAME)
+#
+#	The format of the diskettes is as follows:
+#	On diskette 1:
+#		/install/install/INSTALL	Installation shell script
+#
+
+PATH=$PATH:/usr/lbin export PATH
+ddrive="${1:-/dev/install}"
+mount="${2:-/install}"
+INSPATH="${mount}/new"
+INSINS="${mount}/install"
+export PKGNAME
+PKGNAME=`cat ${INSINS}/fmli.name`
+
+
+	
+device=`basename "$ddrive" | sed s/[0-9]*$//p`		# ctape or diskette
+if [ "$device" = "ctape" ]
+then
+	device="cartridge tape"				# more readable
+	echo >&2 "Installation from $device not supported at this time"
+	exit 1
+fi
+ndrive="$device drive"					# name of drive used
+
+echo "\n\nInstalling the ${PKGNAME}."
+echo "Copyright (c) 1988 AT&T"
+echo "All Rights Reserved\n"
+
+cd "${INSINS}"
+# Check to see if running System V Release 2.0 or greater
+VER=`uname -r`
+VER=`expr "$VER" : '\([0-9]*\)\.'`
+if u3b2 && test "${VER}" -ge 2
+then
+	:
+else
+	echo >&2 "\\t You must be running UNIXtm System V Release 2.0. 
+Please contact your UNIX administrator to update your system. "
+	exit 1
+fi
+
+# Check to see if the required utilities are installed on the system
+errflg=false
+for option in dfm terminf
+do
+	if [ ! -s "/usr/options/$option.name" ]
+	then
+		echo "\007\007\007**ERROR** ${PKGNAME} cannot be installed --"
+		echo "It requires the \c"
+		case "$option" in
+		dfm)	echo "Directory File Management Utilities" ;;
+		terminf) echo "Terminfo Utilities" ;;
+		esac
+		echo "to be installed first."
+		errflg=true
+	fi
+done
+if $errflg
+then
+	exit 1
+fi
+
+#
+# Now see if the package fits!
+# Inform the user and exit immediately, if not.
+#
+
+checkfit() {
+	if [ "$1" -lt "$2" ]
+	then
+		echo "\007\007\007**ERROR**   ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are $1 blocks available"
+		echo "on the $3 file system --"
+		echo "$2 blocks are needed."
+		exit 1
+	fi
+	return 0
+}
+
+trap 'rm -rf /tmp/$$* /usr/options/fmli.name; \
+	cd /; /etc/umount ${ddrive} 2> /dev/null ; exit 0'  0 1 2 3 15
+
+echo "\n\nInstalling work files - please wait.\n\n"
+cp fmli.name /usr/options/fmli.name
+
+numdisks=`expr "1" + 0`
+cd /
+
+# start reading software from diskettes
+curdisk=1
+while [ "$curdisk" -le "$numdisks" ]
+do
+
+	if [ "$curdisk" -gt 1 ]
+	then
+		echo "\n\007\007\007\nReady to install diskette for the ${PKGNAME}\n"
+		while :
+		do
+			fulllabel=`disklabel $$ ${ddrive}`
+			fsname=
+			eval `labelfsname "${fulllabel}"`
+			case "${fsname}" in
+			instal | install )
+				/etc/umount ${ddrive} 2>/dev/null
+				chmod 700 ${mount}
+				if /etc/mount ${ddrive} ${mount} -r
+				then
+					if [ "`cat ${INSINS}/ORDER`" -eq "$curdisk" ]
+					then
+						break
+					fi
+					cd /
+					/etc/umount ${ddrive} 2>/dev/null
+					echo "You have inserted the wrong diskette!"
+					echo "The diskettes must be installed in sequence"
+				else
+					echo >&2 "mount of ${ddrive} failed"
+				fi
+				;;
+			'' )
+				echo >&2 '
+				This removable medium is not labeled and will not work.
+				Try another.'
+				;;
+			* )
+				echo >&2 "
+				This removable medium is labeled '${label}' and will not work.
+				The full label is:
+					${fulllabel}
+				Try another."
+				;;
+			esac
+		done
+	fi
+
+	USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+	ROOTneeds=`expr "\`du -s ${INSPATH}\~" : "\([0-9]*\).*"`
+	ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+
+	USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+	ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+	checkfit "$USRspace" "$USRneeds" "/usr"
+	checkfit "$ROOTspace" "$ROOTneeds" "/ (root)"
+
+	echo "\nInstalling files for the ${PKGNAME}"
+	cd ${INSPATH}
+	echo "The following files are being installed:"
+	find . -print | cpio -pdumv /
+	cd /
+	diskumount -n "${ndrive}" "${ddrive}" 
+	curdisk=`expr "${curdisk}" + 1`
+done
+
+trap 'rm -rf /tmp/$$*; cd /; exit'  0 1 2 3 15
+echo "File copies have completed."
+exit 0

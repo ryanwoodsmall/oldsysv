@@ -1,0 +1,35 @@
+
+\Smail\S:  Options
+
+     -F   forwards mail messages.  Start forwarding using "F" and one or more
+          <login_name>.  Messages will be forwarded to the user with
+          <login_name>.  Mail can be forwarded to a user on a remote system by
+          preceding <login_name> by <system_name!> which is the system name of
+          a remote system followed by a "!".  End forwarding using the "F" and
+          double quotes " ".  Note:  Before you can forward your mail, your
+          /usr/mail file must be empty.
+
+     -o   turns off path optimization. Normally, \Smail\S delivers mail 
+          using the path that requires the fewest network hops.  This option
+          turns off that function.
+
+     -t   prints a "TO:" list that precedes the mail message.  The list 
+          contains the names of all the users who received the mail.
+
+     -e   tests for the presence of mail and sets the exit code to 0 if you 
+          have mail and 1 if you do not.
+
+     -h   prints the headers for the first 6 messages in your /usr/mail file.
+          After printing the headings, it leaves you in interactive mode where
+         you can choose to read mail messages.  See the interactive commands on
+         the manual page for \Smail\S.
+  
+     -p   prints mail without prompting you to save or dispose of it.  If you
+          have mail, it sets the exit code to 0.
+
+     -q   terminates mail after you hit the interrupt key.
+
+     -r   prints mail in first-in, first-out order.
+
+     -f file_name   prints mail from <file_name> rather than from file in the
+                    /usr/mail/ directory that is named by your login name.

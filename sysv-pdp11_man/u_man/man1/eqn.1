@@ -1,0 +1,378 @@
+'\" e
+.EQ
+delim $$
+.EN
+.if t .ds ^ \s+4\v@.3m@^\v@-.3m@\s-4
+.if n .ds ^ ^
+.if t .ds ~ \s+4\v@.3m@~\v@-.3m@\s-4
+.if n .ds ~ ~
+.TH EQN 1
+.SH NAME
+eqn, neqn, checkeq \- format mathematical text for nroff or troff
+.SH SYNOPSIS
+.B eqn
+[
+.BR \-d xy
+] [
+.BR \-p n
+] [
+.BR \-s n
+] [
+.BR \-f n
+]
+[ files ]
+.PP
+.B neqn
+[
+.BR \-d xy
+] [
+.BR \-p n
+] [
+.BR \-s n
+] [
+.BR \-f n
+]
+[ files ]
+.PP
+.B checkeq
+[ files ]
+.SH DESCRIPTION
+.I Eqn\^
+is a
+.IR troff (1)
+preprocessor
+for typesetting mathematical text
+on a phototypesetter,
+while
+.I neqn\^
+is used for the same purpose with
+.I nroff
+on typewriter-like terminals.
+Usage is almost always:
+.PP
+.RS
+eqn \|files \|\(bv \|troff
+.br
+neqn \|files \|\(bv \|nroff
+.PP
+.RE
+or equivalent.
+.PP
+If no files are specified
+(or if
+.B \-
+is specified as the last
+argument),
+these programs
+read the standard input.
+A line beginning with
+.SM
+.B \&.EQ
+marks the start of an equation;
+the end of an equation
+is marked by a line beginning with
+.SM
+.BR \&.EN\*S .
+Neither of these lines is altered,
+so they may be defined in macro packages
+to get
+centering, numbering, etc.
+It is also possible to designate two characters as
+.IR delimiters ;
+subsequent text between delimiters is then treated as
+.I eqn\^
+input.
+Delimiters may be set to characters
+.I x\^
+and
+.I y\^
+with the command-line argument
+.BI \-d xy\^
+or (more commonly) with
+.B delim
+.I xy\^
+between
+.SM
+.B \&.EQ
+and
+.SM
+.BR \&.EN\*S .
+The left and right delimiters may be the same character;
+the dollar sign
+is often used as such a delimiter.
+Delimiters are turned off by
+.BR "delim off" .
+All text that is neither between delimiters nor between
+.SM
+.B \&.EQ
+and
+.SM
+.B \&.EN
+is passed through untouched.
+.PP
+The program
+.I checkeq\^
+reports missing or unbalanced delimiters and
+\&\f3\s-1.EQ\s+1\fP/\f3\s-1.EN\s+1\fP pairs.
+.PP
+Tokens within
+.I eqn\^
+are separated by
+spaces, tabs, new-lines, braces, double quotes,
+tildes, and circumflexes.
+Braces {\|} are used for grouping;
+generally speaking,
+anywhere a single character such as
+.I x\^
+could appear, a complicated construction
+enclosed in braces may be used instead.
+Tilde
+(\*~)
+represents a full space in the output,
+circumflex
+(\*^)
+half as much.
+.br
+.if t .vs +1p
+.PP
+Subscripts and superscripts are produced with the keywords
+.B sub
+and
+.BR sup .
+Thus
+.I "x\ \^sub\ \^j\^"
+makes
+$x sub j$,
+.I "a\ \^sub\ \^k\ \^sup\ \^2\^"
+\%produces
+$a sub k sup 2$,
+while
+$e sup {x sup 2 + y sup 2}$
+is made with
+.IR "e\ sup\ \^{x\ \^sup\ \^2\ \^+\ \^y\ \^sup\ \^2\^}" .
+Fractions are made with
+.BR over :
+.I "a\ \^over\ \^b\^"
+yields $a over b$;
+.B sqrt
+makes square roots:
+.I "1\ \^over\ \^sqrt\ \^{ax\ \^sup\ \^2+bx+c\^}\^"
+results in
+$1 over sqrt {ax sup 2 +bx+c}$ .
+.PP
+The keywords
+.B from
+and
+.B to
+introduce lower and upper
+limits:
+$lim from {n -> inf} sum from 0 to n x sub i$
+is made with
+.IR "lim\ from\ \^{n\ \^\->\ \^inf\ \^}\ \^sum\ \^from\ \^0\ \^to\ \^n\ \^x\ \^sub\ \^i" .
+Left and right brackets, braces, etc., of the right height are made with
+.B left
+and
+.BR right :
+.I "left\ \^[\ \^x\ \^sup\ \^2\ \^+\ \^y\ \^sup\ \^2\ \^over\ \^alpha\ \^right\ \^]\ \^\*~=\*~\ \^1\^"
+\%produces
+.if t .vs +2p
+$left [ x sup 2 + y sup 2 over alpha right ] ~=~ 1$.
+Legal characters after
+.B left
+and
+.B right
+are braces, brackets, bars,
+.if t .vs -2p
+.B c
+and
+.B f
+for ceiling and floor,
+and \f3"\^"\fP for nothing at all (useful for a right-side-only bracket).
+A
+.B left
+.I thing\^
+need not have a matching
+.B right
+.IR thing .
+.PP
+.ne 4v
+Vertical piles of things are made with
+.BR pile ,
+.BR lpile ,
+.BR cpile ,
+and
+.BR rpile :
+.I "pile\ \^{a\ \^above\ \^b\ \^above\ \^c\^}\^"
+\%produces
+$pile {a above b above c}$.
+Piles may have arbitrary numbers of elements;
+.B lpile
+left-justifies,
+.B pile
+and
+.B cpile
+center (but with different vertical spacing),
+and
+.B rpile
+right justifies.
+Matrices are made with
+.BR matrix :
+.I "matrix { lcol { x sub i above y sub 2 } ccol { 1 above 2 } }\^"
+\%produces
+$matrix { lcol { x sub i above y sub 2 } ccol { 1 above 2 } }$.
+In\ addition, there is
+.B rcol
+for a right-justified column.
+.br
+.if t .vs -1p
+.PP
+Diacritical marks are made with
+.BR dot ,
+.BR dotdot ,
+.BR hat ,
+.BR tilde ,
+.BR bar ,
+.BR vec ,
+.BR dyad ,
+and
+.BR under :
+.I "x\ \^dot\ \^=\ \^f(t)\ \^bar\^"
+is
+$x dot = f(t) bar$,
+.I "y\ \^dotdot\ \^bar\ \^\*~=\*~\ \^n\ \^under\^"
+is
+$y dotdot bar ~=~ n under$,
+and
+.I "x\ \^vec\ \^\*~=\*~\ \^y\ \^dyad\^"
+is
+$x vec ~=~ y dyad$.
+.PP
+Point sizes and fonts can be changed with
+.B size
+.I n\^
+or
+.B size
+\f3\(+-\fP\f2n\^\fP,
+.BR roman ,
+.BR italic ,
+.BR bold ,
+and
+.BR font
+.IR n .
+Point sizes and fonts can be changed globally in a document by
+.B gsize
+.I n\^
+and
+.B gfont
+.IR n ,
+or by the command-line arguments
+.BI \-s n\^
+and
+.BI \-f n\fR.\fP
+.PP
+Normally, subscripts and superscripts are reduced by
+3 points from the previous size;
+this may be changed by the command-line argument
+.BI \-p n\fR.\fP
+.PP
+Successive display arguments can be lined up.
+Place
+.B mark
+before the desired lineup point in the first equation;
+place
+.B lineup
+at the place that is to line up vertically in subsequent equations.
+.PP
+Shorthands may be defined
+or existing keywords redefined with
+.BR define :
+.PP
+.RS
+define \|thing \|% \|replacement \|%
+.PP
+.RE
+defines a new token called
+.I thing\^
+that will be replaced by
+.I replacement\^
+whenever it appears thereafter.
+The
+.I %\^
+may be any character that does not occur in
+.IR replacement .
+.PP
+Keywords such as
+.B sum
+.EQ
+( sum ),
+.EN
+.B int
+.EQ
+( int ),
+.EN
+.B inf
+.EQ
+( inf ),
+.EN
+and shorthands such as
+>=
+.EQ
+(>=),
+.EN
+!=
+.EQ
+( != ),
+.EN
+and
+\->
+.EQ
+(->)
+.EN
+are recognized.
+Greek letters are spelled out in the desired case, as in
+.B alpha
+.EQ
+( alpha ),
+.EN
+or
+.SM
+.B GAMMA
+.EQ
+( GAMMA ).
+.EN
+Mathematical words such as
+.BR sin ,
+.BR cos ,
+and
+.B log
+are made Roman automatically.
+.IR Troff (1)
+four-character escapes such as
+\f3\e(dd\fP (\(dd)
+.if t and \f3\e(bs\fP (\(bs)
+may be used anywhere.
+Strings enclosed in double quotes (\f3"\^\fP.\|.\|.\^\f3"\fP)
+are passed through untouched;
+this permits keywords to be entered as text,
+and can be used to communicate
+with
+.IR troff (1)
+when all else fails.
+Full details are given in the manual cited below.
+.SH SEE ALSO
+.I "Typesetting Mathematics\-User's Guide\^"
+by B. W. Kernighan and L. L. Cherry.
+.br
+cw(1), mm(1), mmt(1), nroff(1), tbl(1), troff(1), eqnchar(5), mm(5), mv(5).
+.SH BUGS
+To embolden digits, parentheses, etc.,
+it is necessary to quote them,
+as in
+\f3bold "12.3"\fP.
+.br
+See also
+.SM
+.I BUGS\^
+under
+.IR troff (1).
+.\"	@(#)eqn.1	5.2 of 5/18/82

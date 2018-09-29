@@ -1,0 +1,12 @@
+*#ident	"@(#)kern-port:master.d/log	10.3"
+*
+* LOG	Streams Log Driver
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ofs	-	log	-	-	-
+						log_cnt(%i) ={ NLOG }
+						log_bsz(%i) ={ BSIZE }
+						log_log[NLOG] (%i%l%i)
+$$$
+NLOG 	= 	3
+BSIZE 	=	20

@@ -1,0 +1,39 @@
+.TH VP 7 "DEC only"
+.SH NAME
+vp \- Versatec printer
+.SH DESCRIPTION
+.I Vp\^
+provides the interface to the
+Versatec electro-static line printer.
+Both printing and plotting capabilities are implemented.
+.PP
+Two
+.IR ioctl (2)
+system calls are available:
+.PP
+.RS
+#include <sys/lprio.h>
+.br
+ioctl \|(fildes, \|command, \|arg)
+.br
+int \|arg;
+.RE
+.PP
+The
+.I commands
+are:
+.RS
+.TP "\w'LPRGETV\ \ 'u"
+.SM LPRGETV
+Return the state of the printer.
+.TP
+.SM LPRSETV
+Set the state of the printer to
+.IR arg .
+.RE
+.SH FILES
+/dev/vp
+.SH "SEE ALSO"
+vpr(1),
+lp(7).
+.\"	@(#)vp.7	5.2 of 5/18/82

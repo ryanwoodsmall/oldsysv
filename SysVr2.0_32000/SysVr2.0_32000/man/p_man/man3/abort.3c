@@ -1,0 +1,39 @@
+.TH ABORT 3C 
+.SH NAME
+abort \- generate an \s-1IOT\s0 fault
+.SH SYNOPSIS
+.B int abort ( )
+.SH DESCRIPTION
+.I Abort\^
+first closes all open files if possible, then
+causes an \s-1IOT\s0 signal to be sent to the process.
+This usually results in termination with a core dump.
+.PP
+It is possible for
+.I abort\^
+to return control if
+.SM
+.B \s-1SIGIOT\s+1
+is caught or ignored,
+in which case the value returned is that of the
+.IR kill (2)
+system call.
+.SH "SEE ALSO"
+exit(2),
+kill(2),
+signal(2).
+.br
+adb(1),
+sdb(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.SH DIAGNOSTICS
+If
+.SM
+.B SIGIOT
+is neither caught nor ignored,
+and the current directory is writable,
+a core dump is produced and the message
+``abort \- core dumped'' is
+written
+by the shell.
+.\"	%W% of %G%

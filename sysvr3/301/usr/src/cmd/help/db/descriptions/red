@@ -1,0 +1,25 @@
+
+\Sred\S:  Description
+
+Syntax Summary:  red [-] [-x] [-p string] [file_name]
+
+         where:  string  is a sequence of characters delimited
+                         by white space and/or double quotes.
+
+                 file_name  is the name of a file.
+
+Description:
+     \Sred\S is a "restricted" version of the line "editor" ed(1).  As with
+     ed(1), you use \Sred\S to change the contents of files. When you type
+     \Sred\S you invoke the editor, which makes a copy of the file you want to
+     edit and puts the copy into a buffer.  Everything you type after you 
+     invoke the editor is interpreted as a command to move around in the 
+     file or change the text in the buffer.  A typical command for \Sred\S 
+     might include a line number or regular expression identifying the lines 
+     to be changed, a single character for the type of change to be made, 
+     and parameters to the command such as the text that should be 
+     substituted.  \Sred\S is different from ed(1) because editing is 
+     restricted to files in the current working directory, and \Sred\S does 
+     not permit escapes to the shell via "! command".  See the manual 
+     pages for ed(1) and the ed(1) tutorial in the "UNIX System User's Guide" 
+     for instructions on editing with \Sred\S.

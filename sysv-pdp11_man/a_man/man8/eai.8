@@ -1,0 +1,395 @@
+.TH EAI 8 "3B20S only"
+.SH NAME
+eai \- 3B20S emergency action interface
+.SH DESCRIPTION
+The functions of the 3B20S Emergency Action Interface (\s-1EAI\s+1)
+on the system console are described below.
+.SS "Function Keys"
+Four special function keys,
+labeled \s-1EA\s+1 \s-1DISP\s+1,
+\s-1NORM\s+1 \s-1DISP\s+1,
+\s-1CMD/MSG\s+1
+and \s-1ALM\s+1 \s-1RLS\s+1
+are on the keyboard of the system console:
+.TP \w'NORM\ DISP\ \ 'u
+.SM
+EA DISP
+This key starts the emergency action mode
+and causes the \s-1EAI\s+1 display,
+consisting
+of status indicators
+and a menu of commands,
+to appear
+on the top half
+of the screen.
+Status indicators are updated
+every two seconds
+or as changes occur.
+If the \s-1UNIX\s+1 System is running,
+then the bottom half of the screen
+may be used
+as a login terminal
+and will scroll
+without affecting the \s-1EAI\s+1 display.
+If the \s-1EAI\s+1 display is already present,
+then depressing this key will cause
+the screen to be updated.
+.TP
+.SM
+NORM DISP
+This key ends the \s-1EAI\s+1 mode,
+erases the \s-1EAI\s+1 display
+and leaves the screen blank.
+The full screen is now available
+as a \s-1UNIX\s+1 System login terminal.
+.TP
+.SM
+CMD/MSG
+This key toggles the cursor
+between the command entry area
+and the \s-1UNIX\s+1 System portion
+(bottom half message section)
+of the screen.
+\s-1EAI\s+1 commands can be entered
+only when the cursor is in the
+command entry position
+(next to
+.SM
+.BR CMD\*S: ).
+This key is effective only
+when the screen is in \s-1EAI\s+1 mode.
+.TP
+.SM
+ALM RLS
+This key currently performs no function.
+.SS "Status Indicators"
+.TP \w'NORM\ DISP\ \ 'u
+.SM
+MTTY
+A single digit incremented
+once every two seconds
+that indicates the ability
+of the Maintenance \s-1TTY\s+1 Peripheral Controller (\s-1MTTYPC\s+1) to update
+the \s-1EAI\s+1 display.
+.TP
+.SM
+3BCC
+A series of five indicators
+describing the current state
+of the 3B20S processor as seen
+by the \s-1EAI\s+1.
+.RS
+.TP \w'RCVRY\ \ 'u
+.SM
+ACT
+The 3B20S processor is on-line
+(it has I/O access).
+.TP
+.SM
+RUN
+The 3B20S is processing instructions
+(not stopped or halted).
+.TP
+.SM
+FONL
+The 3B20S is forced to be the on-line
+processor
+(I/O is allowed)
+and the Diagnostic Processor (\s-1DP\s+1)
+cannot gain I/O access.
+.TP
+.SM
+FOFL
+The 3B20S is forced to be the off-line
+processor
+(I/O is inhibited)
+and cannot gain I/O access.
+.TP
+.SM
+RCVRY
+3B20S microcode has signaled
+the start
+of processor recovery.
+.RE
+.TP \w'NORM\ DISP\ \ 'u
+.SM
+DPCC
+A series of five indicators describing
+the current state
+of the \s-1DP\s+1
+as seen by \s-1DP\s+1 microcode.
+These are the same as the indicators
+for 3\s-1BCC\s+1 above,
+with the role of the 3B20S and the \s-1DP\s+1
+interchanged.
+.TP
+.SM
+SCCS
+currently unused.
+.TP
+.SM
+EAI
+A single indicator with three possible states
+describing the state
+of the link between the
+\s-1EAI\s+1 and the \s-1MTTYPC\s+1.
+.RS
+.TP \w'ASW\ \ 'u
+.SM
+ASW
+All Seems Well.
+.TP
+.SM
+ERR
+The \s-1EAI\s+1 can communicate with the \s-1MTTYPC\s+1
+but there are problems.
+.TP
+.SM
+OOS
+The \s-1EAI\s+1 is unable to communicate with the \s-1MTTYPC\s+1.
+.RE
+.TP \w'NORM\ DISP\ \ 'u
+.SM
+DPI
+Same as \s-1EAI\s+1, but indicates the state of
+the link between the \s-1DP\s+1 and the \s-1MTTYPC\s+1.
+.TP
+.SM
+TIMEOUT
+This appears
+only if the \s-1EAI\s+1
+has not received
+a low priority
+Processor Recovery Message (\s-1PRM\s+1)
+within a seventy second time period.
+This is an indication of lack of sanity
+of the 3B20S processor.
+.TP
+.SM
+3BPRM
+Processor Recovery Message (\s-1PRM\s+1)
+from the 3B20S processor.
+.TP
+.SM
+DPPRM
+\s-1PRM\s+1 from the Diagnostic Processor.
+.SS Commands
+Commands can be entered
+only when the cursor
+is positioned in the top
+left-hand corner of the screen
+next to
+.SM
+.BR "CMD\*S:" .
+A command is entered
+by keying in the number associated
+with the command
+by the \s-1EAI\s+1 display menu.
+Commands may be terminated
+either by a carriage return
+or by an exclamation point
+.RB ( ! ).
+A character may be erased
+by a backspace or an underscore.
+A line may be killed with a
+dollar sign
+.RB ( $ ).
+When a line is entered,
+the \s-1EAI\s+1 responds with
+.SM
+.B OK
+for a successfully entered command,
+or
+.SM
+.B NG
+for an invalid command.
+.PP
+Commands \fB60\fP\-\fB65\fP cause immediate action when they are entered.
+Commands \fB60\fP\-\fB62\fP
+refer to the Diagnostic Processor (\s-1DP\s+1),
+which will be supplied in the future as an option.
+.TP \w'64\ PRM\-DUMP\ \ 'u
+60 3B\-\s-1FONL\s+1
+Forces the 3B20S processor
+on-line,
+allowing the \s-13B20S\s+1 processor \s-1I/O\s+1 access
+and inhibiting the \s-1DP\s+1 I/O access.
+Any diagnostics that were running
+on the \s-1DP\s+1 are aborted.
+.TP
+61 \s-1DP\s+1\-\s-1FONL\s+1
+Forces the 3B20S processor
+off-line,
+inhibiting the 3B20S processor I/O access
+and allowing the \s-1DP\s+1 I/O access.
+If the \s-1UNIX\s+1 System was running on the 3B20S,
+then it is aborted.
+The \s-1DP\s+1 executes \s-1IOP\s+1 diagnostics,
+reads a diagnostic tape
+and then establishes an interface
+to the \s-1MTTYPC\s+1 in order to
+accept diagnostic commands.
+.TP
+62 \s-1DP\s+1\-\s-1INIT\s+1
+Initializes the \s-1DP\s+1.
+.TP
+63 \s-1CFT\s+1\-\s-1INIT\s+1
+Currently not implemented.
+.TP
+64 \s-1PRM\s+1\-\s-1DUMP\s+1
+Currently not implemented.
+.TP
+65 \s-1CLR\s+1\-\s-1EAI\s+1
+Resets all functions on the \s-1EAI\s+1 display
+and zeroes the 3\s-1BPRM\s+1 and \s-1DPPRM\s+1 fields.
+All \s-1SET\s+1/\s-1CLR\s+1 functions are reset to \s-1CLR\s+1.
+.PP
+Commands \fB70\fP\-\fB73\fP and \fB76\fP\-\fB93\fP set or clear options
+to be used during and after the next initialization,
+disk boot,
+disk dump
+or load from tape.
+They cause no immediate action.
+Commands \fB74\fP and \fB75\fP affect only the \s-1EAI\s+1 display
+and not the \s-1UNIX\s+1 System software.
+In each pair below,
+the even number sets the option
+and is displayed as
+.BR \s-1SET\s+1 ,
+and the odd number clears the option
+and is displayed as
+.BR \s-1CLR\s+1 .
+The description below represents
+the option that is selected when
+the even command of the pair is entered.
+Unless explicitly noted otherwise,
+the corresponding odd command
+undoes this option.
+.TP \w'64\ PRM\-DUMP\ \ 'u
+70\-71 \s-1SEC\s+1\-\s-1DISK\s+1
+Causes moving head disk 1 on disk file controller 0
+to be used as the boot device
+or the disk to be loaded by \s-1LDTAPE\s+1 (see \fB98\fP below).
+Clearing this option causes moving head disk 0
+on disk file controller 0 to be used.
+.TP
+72\-73 \s-1INH\s+1\-\s-1TIMER\s+1
+Inhibits automatic recovery when
+a sanity timeout occurs.
+.TP
+74\-75 \s-1PRM\s+1\-\s-1TRAP\s+1
+Freezes the next failing \s-1PRM\s+1
+on the \s-1EAI\s+1 display.
+.TP
+76\-77 \s-1PARAMETER\s+1
+Sets a parameter which is used to determine the action taken by \s-1INIT\s+1
+(see \fB95\fP below) or by automatic recovery after a failure.
+When the \fB76\fP command is entered,
+the user is prompted for a single character parameter value
+on the command entry line in the \s-1EAI\s+1 display.
+After the character is entered,
+it will be displayed next to the word \s-1PARAMETER\s+1
+on the display.
+Possible values for the parameter are:
+.RS
+.TP \w'H\ \ 'u
+.B h
+causes the system to idle.
+.TP
+.B H
+causes the system to halt.
+The system will reboot if the sanity timer is not inhibited.
+.TP
+.B d
+causes the system to dump a memory image to disk and then reboot.
+.TP
+.B D
+causes the system to dump a memory image to disk and then idle.
+.TP
+.B r
+causes the system to reboot.
+.RE
+.TP \w'64\ PRM\-DUMP\ \ 'u
+\&
+If the parameter is cleared
+or if it is set to a value not mentioned above,
+then the default action will be reboot the processor.
+.TP
+80\-81 \s-1PROMPT\s+1\-\s-1UNIX\s+1
+If set,
+this causes the disk bootstrap program
+to prompt the user for the name of the program
+to be booted.
+If clear,
+.B /unix
+will be chosen as the program to be booted.
+See
+.IR 3B20boot (8).
+.TP
+82\-83 \s-1BACKUP\s+1\-\s-1ROOT\s+1
+Causes the disk bootstrap program
+to find the program to be booted
+on the backup root file system.
+If clear,
+the normal root file system is used
+(see
+.IR dsk (7)).
+.TP
+84\-85 \s-1MIN\s+1\-\s-1CONFIG\s+1
+Causes the \s-1UNIX\s+1 System to bring only
+the boot device,
+the system console
+and a tape drive into service
+and only the first megabyte of main memory
+will be used.
+.TP
+86\-87 \s-1INH\s+1\-\s-1HDW\s+1\-\s-1CHK\s+1
+Causes the \s-1UNIX\s+1 System to disable
+refresh and correctable main store parity error detection.
+.TP
+88\-89 \s-1INH\s+1\-\s-1SFT\s+1\-\s-1CHK\s+1
+Currently unused.
+.TP
+90\-91 \s-1INH\s+1\-\s-1ERR\s+1\-\s-1INT\s+1
+Currently unused.
+.TP
+92\-93 \s-1INH\s+1\-\s-1CACHE\s+1
+Disables the use of cache memory.
+.PP
+Commands \fB95\fP\-\fB99\fP cause immediate action
+which is affected by options \fB70\fP\-\fB73\fP
+and \fB76\fP\-\fB93\fP above.
+If these commands fail,
+they will output \s-1PRM\s+1s in the 3\s-1BPRM\s+1 field of the display.
+An explanation of failure \s-1PRM\s+1s
+is found in
+.IR prm (8).
+.TP \w'64\ PRM\-DUMP\ \ 'u
+95 \s-1INIT\s+1
+Causes different action depending on the parameter value
+set by command \fB76\fP.
+.TP
+96 \s-1BOOT\s+1
+Causes a disk bootstrap.
+See
+.IR 3B20boot (8).
+.TP
+97 \s-1DUMP\s+1
+Causes a memory image of the operating system to be dumped to disk
+followed by a disk bootstrap.
+.TP
+98 \s-1LDTAPE\s+1
+Causes a disk to be loaded from tape.
+See
+.IR ldtape (8).
+.TP
+99 \s-1HALT\s+1
+Causes the \s-1UNIX\s+1 System to idle.
+.SH "SEE ALSO"
+dsk(7),
+3B20boot(8),
+ldtape(8),
+prm(8).
+.br
+.IR "\s-1UNIX\s+1 System Operator's Guide" .
+.\"	@(#)eai.8	5.2 of 5/18/82

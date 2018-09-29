@@ -1,0 +1,250 @@
+0
+"Current command line mapping" has the following meaning:
+ - A is the user input string in the current field.
+ - A onto B means that A will be mapped onto B on the command line.
+ - Mapping is specified by a general A onto B rule (e.g., A onto -o A);
+   by a list of specific A-B pairs (e.g., y onto -x); or by both a rule
+   and a list of exceptions.
+ - <SPACE>B<SPACE> means that B will be preceded and followed by blank
+   spaces on the command line.
+
+If you answer "n", you will return to the Field Attributes screen and
+your mapping will remain unchanged.
+
+If you answer "y", you will be asked a sequence of questions to define a
+new mapping.  The final question in the sequence will be a request to
+confirm your new mapping.  Your old mapping will be kept if you reject
+the new mapping.  Your old mapping will also be kept if you type ^T or
+f5, ^R or f4, or ^V or f2 any time before the confirmation request.
+1
+Use "identical" any time you simply want the user input to be copied
+directly onto the command line.
+
+Use "yes/no" any time you have an option that has no arguments.  When
+you select this mapping, "astgen" will automatically map "y" and "Y"
+onto the delimiter and option string (e.g., -o), and "n" and "N" onto
+<empty>, or vice versa.  "astgen" will also automatically select the
+"match specified strings(s)" validation function with "y", "Y",  "n",
+and "N" as allowable strings.
+
+Use "other" for all remaining situations.  Even though the "other" type
+covers the above two as special cases, it is typically used for options
+that have arguments, or to specify exceptions to a rule (e.g., on the
+"cc" command form, A" is mapped onto "-o A" unless "A" is "a.out",
+when it is mapped onto <empty>).
+2
+Enter the delimiter and option name here.  Typically, this string is
+of the type -p (where the hyphen is the delimiter and the option name
+is the character p.  You can also enter multicharacter options such
+as "-print" in the "find" command, and single character options such
+as "+" and "r" as in the "chmod" command.
+3
+If you want the option to appear on the command line if the user
+enters a "y", enter "y".  When the user erases input, an "n" will
+be displayed automatically.
+
+If you want the option to appear on the command line if the user
+enters an "n", enter "n"  When the user erases input, and "y" will
+be displayed automatically.
+
+There is an important link here with the layout.  Specifically, you
+must specify in the layout module that "n" ("y" in the second  case)
+is default input.  For example, in the "paste" command, the "%n" in:
+          PASTE INTO A SINGLE COLUMN [-s] (y/n):%n
+guarantees that when the user enters the form, "n" is be displayed
+as default input.
+4
+If you enter a "y" response to the current "astgen" prompt, the option
+for the current field will be placed behind a single hyphen delimiter
+with other single-letter options for this command (option bundling)
+(e.g., "ls -lt" instead of "ls -l -t").
+5
+You have now completed the mapping of what should be placed on the
+command line in response to ASSIST user input for the current field.
+
+If the mapping you just specified is correct, respond "y" to this
+prompt. If you want to make changes in this mapping, respond "n"
+and you will return to the first screen in the mapping module and
+may begin to re-specify the mapping.
+6
+This screen allows you to type pairs of A and B strings.  If
+user input matches an "A" string it will be mapped onto the
+corresponding "B" string.  For example, if the screen shows:
+
+    A:a.out                               B:<empty>
+    A:12                                  B:24
+
+then "a.out" will generate no strings in the command line, and
+"12" will appear as "24" on the command line.
+7
+
+8
+If you answer "n" to this prompt, user input will NEVER appear on the
+command line, i.e., will always be mapped onto something completely
+different.  For example, "Y" is mapped onto "-o".
+You will be put into a screen that allows you to specify "A"-"B" pairs,
+where "A" is user input and "B" is what this input will be mapped onto.
+There is an important link here with the layout.  Specifically, you must
+specify in the layout module the first "A"-string in this list that is
+mapped onto <empty> using the "%<string>" notation.
+
+If you answer "y" to this prompt, user input will appear on the
+command line either sometimes or always.  For example, if user
+input string (A) is an argument to an option, the command line
+string might appear as "-p A".
+9
+Specify how the user input string should appear on the command line.
+Typically, the user input string is an option argument, in which case
+you type "-o A".
+
+When the user input string happens to contain the character "A" itself,
+use a backslash to remove the special meaning of "A".  For example, if
+you want <string> to be mapped onto -A<string>, you must type "-\AA".
+10
+Enter "n" to specify that the user input string will ALWAYS appear on
+the command line.  For example, the field "NAME OF FILE(S):" will always
+have the user input string appear on the command line.
+
+Enter a "y" to specify that there are occasions when the user input
+string should not appear on the command line.  For example, the user
+input string for a "yes/no" field is a "y" or "n" that does not appear
+on the command line.
+11
+In most cases, there are spaces between strings generated from different
+fields.  For example, "diff<SPACE>file1 ..."  There are exceptions, such
+as in the "uucp" command form, where "system" and "user" come from
+different fields and occur on the command line as "system!user".
+
+If you enter "y" here, there will always be a space to the left of the
+command line string generated for the current field.  If you enter "n"
+here, there will not be a space between current field command line
+string and the preceding string on the command line IF the preceding
+string has specified "no spaces to the right."
+12
+If you enter "y" here, spaces will be placed between multiple strings
+for the current field (NOTE: If the current field is set to not accept
+multiple strings, entering a "y" here will change the setting to accept
+multiple strings.)
+
+You should enter an "n" here if the current field does not accept
+multiple strings.
+13
+In most cases, there are spaces between strings generated from different
+fields.  For example, "diff<SPACE>file1 ..."  There are exceptions, such
+as in the "uucp" command form, where "system" and "user" come from
+different fields and occur on the command line as "system!user".
+
+If you enter "y" here, there will always be a space to the right of the
+command line string generated for the current field.  If you enter "n"
+here, there will not be a space between current field command line
+string and the next string on the command line IF the next string has
+specified "no spaces to the left."
+14
+If you enter "n" here you will be placed back at the first prompt on this
+screen; and may re-specify the spacing before, between, and after the
+command line string generated for the current field.
+	
+If you enter "y" here, you will move to another screen where you can view
+a complete synopsis of the command line mapping for the current field.
+15
+20
+You are creating this ASSIST menu or command form for the first time.
+If you type "m," the screens to create a menu will be invoked.
+If you type "c," the screens to create a command form will be invoked.
+
+You may exit the "astgen" program at any time by striking the DELETE key;
+although to save the menu or command form specifications you have done
+you must exit "astgen" from the Top astgen Menu.  You will be
+automatically guided to the Top astgen Menu at various points during
+the creation of menus and command forms and will be prompted to save
+your changes if you select "Quit" from the menu.
+21
+If you type "y," you will be placed in the editor with 20 lines of text
+that describe the conventions you will need to use to prepare a menu
+or command form layout.
+
+If you are familiar with the conventions used to prepare an ASSIST layout
+file, enter "n" and you will be placed in the editor with an empty buffer
+to create your layout.
+
+22
+If you type "y", astgen will update your .fs file and then exit.
+If you type "n", astgen will exit wituout updateing your .fs file.
+23
+Respond with "n" if the line above is entirely new (you have not yet
+assigned any attributes for this line.)
+
+NOTE: new lines will be assigned location 00.  Inspect the
+ordering of the command line in Global Information Screen.
+
+Respond with "c" if the line above is a modified version of an
+existing line (you have just re-worded a line and you want the
+attributes to remain the same.)
+24
+Respond with "y" if the line above replaces the line below.
+
+Respond with "n" if the line above replaces a different line in the
+existing layout, not the line below.
+25
+You have responded that the line above is not new (one for which you
+have not yet assigned attributes), and that it is not a replacement
+for an existing line (one whose attributes you want to apply to this
+line).  These are the only two choices.
+
+Respond with "y" if you want to set new attributes for this line.
+Respond with "n" if you want this line to replace an existing line.
+26
+You have responded that the line above is not a new line, and that it
+is not a replacement line for an existing line.  These are the only
+two choices.
+
+Type "f" to identify the line above as a new or replacement line.
+Type "c" to re-identify all of the changes you made as new or
+replacement lines.
+27
+Use this screen to identify the field whose attributes you
+want to set. An arrow (------>) shows the current field.
+Move the cursor (the arrow will also move) to the field
+whose attributes you want to set.  Select the field with
+f1 or ^G.  You will then move to the Field Attributes screen.
+28
+You select fields by striking f1 or ^G.  Selected fields are marked with
+an arrow (--->)  The current field is marked with a triple arrow (>>>).
+
+Use f1 or ^G to unselect previously selected fields.
+
+When you have finished selecting or modifying the field selection, use f4
+or ^R to save your selections and return to the Field Attribute screen.
+
+NOTE:  If you enter ^T you will be prompted to confirm use of
+       this command.  Use of ^T from this screen will not save
+       your specifications.
+29
+Use this screen to specify the relative command line position for the
+arguments generated by each field.  Position the cursor on a field and
+enter a number for the command line position of its argument.
+
+When you have finished specifying the command line position for each
+command argument, use f4 or ^R (also f5 or ^T) to save your
+specifications and return to the Global Information screen.
+
+NOTE:  Bundled options are indicated by "BU."  You cannot enter "BU".
+       "BU" is specified on the mapping screens.
+       You can change a "BU" by returning to the mapping attribute.
+30
+Use this screen to identify the field on which an exit message should
+conditionally be given.  An arrow (------>) shows the current field.
+Move the cursor (the arrow will also move) to the conditional field.
+Select the field with f1 or ^G.  You will then return to the
+Global Information screen.
+31
+If you respond "y", you return to the Field Attributes screen.
+You keep the old mapping.
+If you respond "n", you continue with the current screen.
+32
+If you type "y", you return to the TOP astgen Menu.
+If you have changed your field selection(s), these changes will not
+be preserved.  To preserve these changes, you must first type
+^R to return to the Field Attributes screen.  Then you type ^T.
+
+If you type "n", you continue with the current screen.

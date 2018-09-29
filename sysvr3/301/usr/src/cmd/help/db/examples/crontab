@@ -1,0 +1,24 @@
+
+\Scrontab\S: Examples
+
+                   crontab reminder
+
+    Replaces your current chronological table with the commands in the file
+    "reminder".  The following command lines could be lines in the file
+    "reminder".
+                   0 8 * * 4 banner TIMECARD
+                   15 18 * * * who >> personnel
+
+    \Scrontab\S executes "banner TIMECARD" at 0 minutes after the hour of 8:00
+    a.m., on every day of the month, during any month of the year, on the 4th
+    day of the week, Thursday. You receive the output of the command line
+    "banner TIMECARD" through the mail(1) command.  \Scrontab\S also executes
+    the \Swho\S command on a regular basis.  It executes \Swho\S at 18:15
+    which is 6:15 p.m., every day of the month, during any month of the year,
+    on every day of the week.  The output is appended to file "personnel".
+
+    ----------------------------------------------------------------------
+
+                   crontab -l
+
+    Lists the commands in your chronological table.

@@ -1,0 +1,12 @@
+#ident	"@(#)rfs.admin:confgmgmt/DESC	1.2"
+#menu# RFS domain configuration management menu
+
+#head# 			RFS DOMAIN CONFIGURATION MANAGEMENT
+#help# 
+#help#	The subcommands of the RFS Domain Management Menu provide
+#help#	information about the current RFS configuration and let 
+#help# 	you define the permissions remote users will have when
+#help# 	accessing your resources (id mapping).  If your machine
+#help# 	is a primary name server, the subcommands allow you to
+#help#	maintain the list of member machines in your domain.
+#help# 

@@ -1,0 +1,98 @@
+'\" e
+.EQ
+gsize 10
+.EN
+.TH EQNCHAR 5
+.SH NAME
+eqnchar \- special character definitions for eqn and neqn
+.SH SYNOPSIS
+.B eqn /usr/pub/eqnchar
+[ files ]
+.B \(bv troff
+[ options ]
+.PP
+.B neqn /usr/pub/eqnchar
+[ files ]
+.B \(bv nroff
+[ options ]
+.SH DESCRIPTION
+.I Eqnchar\^
+contains
+.IR troff (1)
+and
+.I nroff
+character definitions for constructing characters that are not
+available on the Wang Laboratories, Inc. C/A/T phototypesetter.
+These definitions are primarily intended for use with
+.IR eqn (1)
+and
+.IR neqn ;
+.I eqnchar\^
+contains
+definitions for the following characters:
+.PP
+.nf
+.ta \w'angstrom  'u \n(.lu/4u +\w'angstrom  'u \n(.lu*2u/4u +\w'angstrom  'u
+.if t .RS
+.if t .vs 14p
+.EQ
+"ciplus"	ciplus	"|\|\^|"	||	"square"	square
+.EN
+.EQ
+"citimes"	citimes	"langle"	langle	"circle"	circle
+.EN
+.EQ
+"wig"	wig	"rangle"	rangle	"blot"	blot
+.EN
+.EQ
+"\-wig"	-wig	"hbar"	hbar	"bullet"	bullet
+.EN
+.EQ
+">wig"	>wig	"ppd"	ppd	"prop"	prop
+.EN
+.EQ
+"<wig"	<wig	"<\->"	<->	"empty"	empty
+.EN
+.EQ
+"=wig"	=wig	"<=>"	<=>	"member"	member
+.EN
+.EQ
+"star"	star	"|\|\^<"	|<	"nomem"	nomem
+.EN
+.EQ
+"bigstar"	bigstar	"|\|\^>"	|>	"cup"	cup
+.EN
+.EQ
+"=dot"	=dot	"ang"	ang	"cap"	cap
+.EN
+.EQ
+"orsign"	orsign	"rang"	rang	"incl"	incl
+.EN
+.EQ
+"andsign"	andsign	"3dot"	3dot	"subset"	subset
+.EN
+.EQ
+"=del"	=del	"thf"	thf	"supset"	supset
+.EN
+.EQ
+"oppA"	oppA	"quarter"	quarter	"!subset"	!subset
+.EN
+.EQ
+"oppE"	oppE	"3quarter"	3quarter	"!supset"	!supset
+.EN
+.EQ
+"angstrom"	angstrom	"degree"	degree	"scrL"	scrL
+.EN
+.EQ
+"==<"	==<	"==>"	==>
+.EN
+.if t .vs
+.if t .RE
+.DT
+.SH FILES
+/usr/pub/eqnchar
+.SH SEE ALSO
+eqn(1),
+nroff(1),
+troff(1).
+.\"	@(#)eqnchar.5	5.2 of 5/18/82

@@ -1,0 +1,34 @@
+#ident	"@(#)sadmin:shell/rmjunk	1.3"
+#	remove files of dubious worth
+#	Removes all files that match the patterns listed in the filelist file
+#	starting at <starting-directory> (default /)
+#	that are more than <days> old (default 4).
+
+#!	chmod +x ${file}
+
+if [ $# -lt 1 ]
+then
+	echo >&2 "Usage:  $0 filelist [ starting-directory ] [ days ]"
+	exit 1
+fi
+
+#	generate list of -name arguments for find
+if [ ! -r $1 ]
+then
+	echo >&2 "$0:  cannot read file '$1'"
+	exit 1
+fi
+names=`sed -n '	/^#/d
+		s/[ 	]\{1,\}#.*//
+		/^[ 	]*$/d
+	 '"	/./ s/.*/-o -name '&'/p
+	 "  $1  |
+	sed '1s/-o //'`
+if [ -z "${names}" ]
+then
+	echo >&2 "$0:  no file names!"
+	exit 1
+fi
+
+eval find ${2:-/} -type f -atime +${3:-4} '\(' ${names} '\)' \
+	-print -exec rm {} '\;'

@@ -1,0 +1,49 @@
+.TH X25CLNK 3C
+.SH NAME
+x25clnk \- change over a \s-1BX\s+1.25 link
+.SH SYNOPSIS
+.B #include <x25lib.h>
+.PP
+.B int x25clnk (linkid)
+.br
+.B int linkid;
+.SH DESCRIPTION
+.I X25clnk\^
+is used to change over from the primary to the
+backup level 2 device associated with link
+.IR linkid .
+.I Linkid\^
+is the identifier for the link data structure
+which is used in the operating system.
+This identifier was set up by the
+.I x25alnk
+subroutine call.
+.SH SEE ALSO
+ioctl(2),
+open(2),
+stat(2),
+perror(3C),
+x25alnk(3C),
+x25hlnk(3C).
+.br
+x25pvc(1M), nc(7), vpm(7), x25(7) in the
+.IR "\s-1UNIX\s+1 System Administrator's Manual " .
+.br
+.IR "Operations Systems Network Protocol Specification: BX.25 Issue 2" ,
+Bell Laboratories.
+.SH DIAGNOSTICS
+.PD 0
+.TP \w'\s-1ELNKDNC\s+1\ \ 'u
+.SM ELNKNCO
+network control device \fIopen\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKNCI
+network control device \fIioctl\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKDS
+\fIstat\fP of physical device failed; check \fIerrno\fP.
+.TP
+.SM ELNKDNC
+file associated with device name not a character special device.
+.PD
+.\"	@(#)x25clnk.3c	5.2 of 5/18/82

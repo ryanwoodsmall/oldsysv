@@ -1,0 +1,5 @@
+#	@(#)unsetup.core	1.2
+#		Remove all the xt devices
+rm -f /dev/xt???
+rm -fr /dev/xt
+/etc/drvinstall -u -m /etc/master.d/xt -v1.0

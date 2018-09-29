@@ -1,0 +1,240 @@
+.TH NSCMON 1M
+.SH NAME
+nscmon \- operationally control the \s-1NSC\s+1 local network
+.SH SYNOPSIS
+.B /etc/nscmon
+options
+.SH DESCRIPTION
+.I Nscmon
+provides the operational interface to control the \s-1NSC\s+1 local
+network.
+.I Nscmon
+starts and stops all network transfers;
+.I nscmon
+enables and inhibits transfers to individual nodes.
+All operations are in the eyes of the local node only.
+.PP
+The
+.IR nusend (1C)
+software allows the support of more than one adapter on a host,
+where each adapter defines a separate network.
+The network file
+.B /usr/nsc/nets
+contains all the networks known to the local node.
+Most operations require the specification of one or more
+networks.
+If more than one netname is given, the operation is performed
+on each network in turn.
+Every \fIoption\fP that requires a netname may optionally take
+the special case
+.BR all .
+In that case, the \fIoption\fP will perform its operation for all
+the networks known, as specified in the network file
+.BR /usr/nsc/nets .
+The following
+.I options
+are recognized:
+.PP
+.TP "\w'\fB\-off\fP names\ \ 'u"
+.BR \-start " netname"
+Start up the
+.IR nusend (1C)
+software on the local node for the specified network.
+This command
+initializes the \s-1NSC\s+1 listener process for each network,
+marks all the currently configured nodes
+online, and enables the routing of file transfers across the \s-1NSC\s+1
+network.
+This command will not clear a hung adapter or \s-1NSC\s+1 driver.
+The converse of this option is
+.BR \-stop .
+.TP
+.BR \-stop " netname"
+Terminate the
+.IR nusend (1C)
+software on the local node for the specified network.
+Any files currently queued as well as
+all subsequent jobs will be routed across the \s-1RJE\s+1
+link (if it exists).
+This command inhibits any incoming or outgoing file transfers.
+This command will not clear a hung adapter or hung \s-1NSC\s+1 driver.
+.TP
+.BR \-cancel " netname"
+Cancel the current active adapter operation (within the driver)
+for the driver associated with the specified network.
+The operation is marked as though it had failed.
+An error will be returned to the user process and suspended processes
+will continue normally.
+This command is especially useful for clearing hung processes within the driver.
+.TP
+.BR \-halt " netname"
+Disable (via software) all operations to the adapter for the specified network.
+The driver will process opens normally, but all functions
+to the adapter will be inhibited.
+This command does not clear a hung driver or hung processes, but
+inhibits all operations to the adapter.
+The converse of this command is
+.BR \-restart .
+.TP
+.BR \-restart " netname"
+Enable (via software) all adapter operations for the adapter
+associated with the specified network.
+This command restarts any suspended processes within the driver.
+This function
+is the converse of
+.BR \-halt .
+.TP
+.BR \-t " netname"
+Turn off the \s-1NSC\s+1 adapter to adapter protocol process tracing
+for the adapter associated with the specified network.
+The binary trace files may be found in
+.BR /usr/nsc/log/nsclog.\(** ,
+where the
+.B \(**
+is the process \s-1ID\s+1 of the read/send process.
+.TP
+.BR +t " netname"
+Turn on the \s-1NSC\s+1 adapter protocol process tracing for the adapter
+associated with the specified network.
+.TP
+.BR \-e " netname"
+Turn off the \s-1NSC\s+1 adapter to adapter protocol
+error logging for the adapter associated with the specified network.
+The binary error files may be found in
+.BR /usr/nsc/log/nscerr.\(** ,
+where the
+.B \(**
+is the process \s-1ID\s+1 of the read/send process.
+.TP
+.BR +e " netname"
+Turn on the \s-1NSC\s+1 adapter protocol error logging for the adapter
+associated with the specified network.
+.TP
+.B \-ps
+Print certain information about active
+.IR nusend (1C)
+processes.
+The format of the listing is:
+.RS
+.RS
+PID	TIME	CMD
+.RE
+.RE
+.IP
+.I Nscsend
+and
+.I nscread
+processes are listed under their parents.
+The format for orphan processes is:
+.RS
+.RS
+PID	PPID	TIME	CMD
+.RE
+.RE
+.IP
+The cumulative execution time
+(\s-1TIME\s+1) is not displayed on the \s-1UNIX\s+1 System/370
+implementation.
+.TP
+.BR \-on " netname names"
+Mark all nodes in the
+.I name
+list for the specified network
+online and notify the node to forward
+all queued files to the local machine.
+If name is the special case
+.B all
+all nodes for the specified network are marked up, as
+configured in the network topological file,
+.BR /etc/nsc .
+Any files currently queued for the named node(s) and all subsequent
+submitted transfers to the named node(s) will be routed
+across the \s-1NSC\s+1 network.
+This function is automatically performed if the
+.B \-start
+option is used.
+.TP
+.BR \-off " netname  names"
+Mark all the nodes in the
+.I name
+list for the specified network
+offline.
+If name is the special case
+.B all
+all the nodes for the specified network are marked offline,
+as configure in the network topological file,
+.BR /etc/nsc .
+Any files currently queued for the named node(s) and
+all subsequent jobs submitted to
+the specified node(s) will be routed across the \s-1RJE\s+1 link (if it exists).
+.TP
+.BR \-p " netname names"
+Same as
+.B \-on
+option.
+.TP
+.B \-clear
+Clear the process table of (kill off) all
+.IR nusend (1C)
+processes
+that did not die normally.
+.TP
+.B \-loop
+Perform the \s-1NSC\s+1 local loopback function.
+Same as
+.BR "nscloop \-l" .
+.TP
+.B \-stat
+Query the operational status of the \s-1NSC\s+1 network.
+Same as
+.BR "nscstat \-l" .
+.PP
+All options may be freely interdispersed;
+the
+operations will be performed in the order given on the command line.
+.br
+.ne 5v
+.SH FILES
+.PD 0
+.TP "\w'/usr/nsc/log/nsclog.\(**\ \ \ \ 'u"
+/etc/nsc
+the network topological file
+.TP
+/usr/nsc/nets
+the networks known to the local node and the associated devices
+.TP
+/usr/nsc/log/nsclog.\(**
+binary trace log
+.TP
+/usr/nsc/log/nscerr.\(**
+binary \s-1NSC\s+1 error log
+.TP
+/usr/nsc/online/\(**
+the \s-1NSC\s+1 network is enabled for this network
+.TP
+/usr/nsc/cons/\(**
+remote nodes currently considered online locally
+.TP
+/usr/nsc/rvchan
+nodes currently configured on the network
+.TP
+/usr/nsc/nsctorje
+program that routes jobs on inactive nodes across the \s-1RJE\s+1 line
+.TP
+/usr/nsc/nsccmd
+program that sends a message to a remote machine telling
+it to send any queued jobs to the local machine
+.TP
+/usr/nsc/nsclisten
+the \s-1NSC\s+1 network listen daemon
+.TP
+/usr/nsc/nscd
+the \s-1NSC\s+1 network send daemon
+.TP
+/usr/nsc/nscrecv
+the \s-1NSC\s+1 network receive daemon
+.SH "SEE ALSO"
+nscloop(1M), nscstat(1C), nsctorje(1C).
+.SH DIAGNOSTICS
+All error messages are designed to be self explanatory.
+.\"	@(#)nscmon.1m	5.2 of 5/18/82

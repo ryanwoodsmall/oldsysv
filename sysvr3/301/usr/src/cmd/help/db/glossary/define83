@@ -1,0 +1,14 @@
+
+\S EOF:  end-of-file:  end-of-file character \S
+
+EOF stands for end-of-file and refers to the point at which a file ends.
+UNIX systems recognize the end of a file because it knows how many
+"bytes"\S*\S are in the file and it knows when a command has seen them
+all.  But, when you are giving a command input from the terminal key board,
+the system does not know how much input you will type before you are
+finished. To mark the end of a file and terminate your input, you type an
+end of file character.  Control-d is the end of file character used to
+signal the end of file and you type it by depressing the control key and
+striking the letter "d" simultaneously.
+
+\S*\S defined in the \Sglossary\S

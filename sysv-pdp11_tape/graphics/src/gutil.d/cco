@@ -1,0 +1,7 @@
+# @(#)cco	1.1
+for i
+do prog=`echo $i | sed "s/\.c//"`
+   cc ${prog}.c  ../../lib/glib.a -s -o ${BIN}/${prog}
+   chmod 755 ${BIN}/${prog}
+   echo "${prog} done"
+done

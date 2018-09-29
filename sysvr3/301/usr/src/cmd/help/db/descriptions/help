@@ -1,0 +1,30 @@
+
+\Shelp\S:  Description
+
+Syntax Summary:   help
+                  help starter
+                  help usage [ -d ] [ -e ] [ -o ] [ command_name ]
+                  help locate [ keyword ... ]
+                  help glossary [ term ]
+
+         where:  starter, usage, locate, and glossary  are names of modules
+                                                       within the help facility.
+                 command_name  is the name of a UNIX system command.
+
+                 keyword  is an English word.
+
+                 term  is a technical term or symbol with special
+                       meaning to the UNIX system.
+
+
+Description:
+     \Shelp\S invokes the UNIX system on-line help facility.  Use \Shelp\S
+     to get information on the commands and terms for the UNIX system.  The 
+     \Shelp\S command is the top-level command of the help facility that has
+     command information, a glossary, information for new users, and a tool for
+     identifying unknown UNIX system commands. If you type \Shelp\S without
+     any arguments, it prints a menu from which you can select the module of 
+     the facility you wish to use. You can also enter each module directly from
+     shell level.  See also:  starter(1), usage(1), locate(1), and glossary(1)
+     for commands that might be used with \Shelp\S.
+

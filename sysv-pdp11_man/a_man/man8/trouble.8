@@ -1,0 +1,166 @@
+.TH TROUBLE 8
+.SH NAME
+trouble \- trouble reporting system
+.SH DESCRIPTION
+The first line of the
+.B /usr/lib/trouble/trsh
+file must have the correct company code for your site;
+a local modification is necessary.
+The
+.I trouble\^
+command will not run until this change is made.
+.P
+The official company codes are as follows:
+.PP
+.RS
+.PD 0
+.TP 6
+at
+AT&T
+.TP
+bl
+Bell Labs
+.TP
+cb
+Cincinnati Bell
+.TP
+cd
+C&P of Washington
+.TP
+cm
+C&P of Maryland
+.TP
+cv
+C&P of Virginia
+.TP
+cw
+C&P of West Virginia
+.TP
+lb
+Illinois Bell
+.TP
+ll
+AT&T Long Lines
+.TP
+mb
+Michigan Bell
+.TP
+ms
+Mountain States Telephone
+.TP
+nb
+Indiana Bell
+.TP
+ne
+New England Telephone
+.TP
+nj
+New Jersey Bell
+.TP
+nv
+Nevada Bell
+.TP
+nw
+Northwestern Bell
+.TP
+ny
+New York Telephone
+.TP
+ob
+Ohio Bell
+.TP
+pa
+Bell of Pennsylvania
+.TP
+pn
+Pacific Northwest Bell
+.TP
+pt
+Pacific Telephone & Telegraph
+.TP
+sb
+Southern Bell
+.TP
+sc
+South Central Bell
+.TP
+sn
+Southern New England Telephone
+.TP
+sw
+Southwestern Bell
+.TP
+we
+Western Electric
+.TP
+wt
+Wisconsin Telephone
+.RE
+.PD
+.PP
+All trouble reports are archived in
+.BR /usr/lib/trouble/tr.a ;
+this file should be checked weekly to ensure that it does not get too large.
+If it gets too large, it should be moved to
+.BR /usr/lib/trouble/otr.a ;
+after a week or so, the old archive can be thrown away.
+.PP
+The
+.BR trouble
+login is intended to be used only for administering the
+.I trouble
+system.
+If
+.I uucp
+cannot deliver a trouble report,
+.IR mail (1)
+will be returned to the
+.BR trouble
+login.
+Any trouble reports not delivered may be retransmitted by using the
+.I trxmit
+command with the trouble report numbers as
+arguments.
+(Hence, the reason for saving the archive for a while.)
+.P
+The
+.B /usr/lib/trouble/names
+file can be expanded to include the names of additional people at your site.
+.PP
+The per-line format of this file is as follows:
+.PP
+.RS
+.PD 0
+letter-\s-1ID\s+1s(3-6) location  phone  name(with appropriate blanks)
+.RE
+.PD
+.PP
+The above fields are separated by blanks and/or tabs.
+When the \fIletter-\s-1ID\s+1\fP is identified, the \fIname\fP, \fIlocation\fP and \fIphone\fP will
+be taken from this file (provided they have legal formats).
+Note that the
+.I name
+field is the only one that can have blanks.
+.PD
+.SH FILES
+.PD 0
+.TP "\w'/usr/lib/trouble/instruct  'u"
+/usr/lib/trouble/tr.a
+archived trouble reports
+.TP
+/usr/lib/trouble/instruct
+instructions
+.TP
+/usr/lib/trouble/trsh
+trouble report shell
+.TP
+/usr/lib/trouble/trxmit
+re-transmission shell
+.TP
+/usr/lib/trouble/names
+letter \s-1ID\s+1 data base
+.PD
+.SH "SEE ALSO"
+trouble(1),
+uucp(1C).
+.\"	@(#)trouble.8	5.2 of 5/18/82

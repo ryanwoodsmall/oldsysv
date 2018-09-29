@@ -1,0 +1,12 @@
+#ident	"@(#)graf:src/whatis.d/Install	1.6"
+LIB=${LIB-$ROOT/usr/lib/graf}
+INS=install
+
+for i
+do
+   NAME=`echo $i | sed "s/\.w//"`
+   cp $NAME.w $NAME
+   $INS -m 644 -f ${LIB}/whatis $NAME
+   rm $NAME
+   echo $NAME done
+done

@@ -1,0 +1,11 @@
+
+\Sred\S:  Options
+
+     -   suppresses the printing of character counts from the "e", "r", and "w"
+         commands, and diagnostics from the "e", and "q" commands.
+
+     -x   makes it possible to edit encrypted files.  (This option is only
+          available on domestic releases of UNIX systems.)
+
+     -p string   specifies <string> as the prompt.  Normally, \Sred\S does not
+                 provide a prompt.

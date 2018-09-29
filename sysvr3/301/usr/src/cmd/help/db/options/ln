@@ -1,0 +1,6 @@
+
+\Sln\S:  Options
+
+     -f   executes the link without asking questions if you do not have write
+          permission for the new file. Does not print an error message in the
+          command files because you do not have write permission.

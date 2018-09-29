@@ -1,0 +1,82 @@
+
+\S syntax:  syntax summary \S
+
+For UNIX systems, syntax refers to the order of "options"\S*\S and
+"operands"\S*\S on the command line.  The command name is first, followed
+by options, and operands. The order of the options and operands varies
+from command to command.  A syntax summary is part of the help facility
+descriptions of commands. The syntax summary describes the possible legal
+command lines for a command, using conventions that  help describe the
+correct usage of the command.  The following is a list of the syntax
+summary conventions used in the help facility.
+
+1.      Operands and option arguments are represented by variable names
+        that you replace with a file name, directory name, integer, or
+        character when you use the command.
+
+           [-z dir_name] [-n integer] [-c character] file_name
+
+        You replace dir_name with the name of a directory, integer with an
+        integer, character with an alphabetic or "special"\S*\S
+        character, and file_name with the name of a file. The type of
+        operand or option argument the variable represents is explained in
+        the "where:" list.
+
+2. (a)  Options and operands that are enclosed in "square brackets"\S*\S
+        are optional.
+
+           [-xz] [file_name]
+
+        x, z and a file name are optional.
+
+   (b)  Options in separate brackets are mutually exclusive.
+
+           [x] [z]
+
+        You cannot use x and z on the same command line.
+
+   (c)  Nested brackets indicate that one option is dependent upon the
+        other.
+
+           [x [z]]
+
+        x and z are optional, but you can only use z when you use x.
+
+   (d)  A pipe (|) character between options indicates that only one of the
+        options can be used.
+
+           [x|y|z integer]
+
+        You can only use x, y, or z and if you use one, integer is the
+        option argument that you use with it.
+
+
+
+
+   (e)  When options take "option arguments"\S*\S, they and their
+        option arguments are enclosed in brackets whether they are mutually
+        exclusive or not.
+
+           [-x file_name] [-z dir_name]
+
+        x and z are not necessarily mutually exclusive.
+
+3. (a)  Ellipses denote multiple operands of the same type.
+
+           file_name ...
+
+        You can use one or more file names on the command line.
+
+   (b)  An operand surrounded in brackets, followed by an ellipsis
+        indicates the operand is optional, but you can use any number on
+        the command line.
+
+           [file_name ...]
+
+        You can use zero or more file names on the command line.
+
+4.      Multiple syntax summaries indicate that the options change the
+        function of the command dramatically, or change the type of operand
+        you can use.
+
+\S*\S defined in the \Sglossary\S

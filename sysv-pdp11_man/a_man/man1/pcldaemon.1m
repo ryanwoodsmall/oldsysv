@@ -1,0 +1,46 @@
+.TH PCLDAEMON 1M "DEC only"
+.SH NAME
+pcldaemon \- \s-1PCL\s+1 link monitor
+.SH SYNOPSIS
+/usr/lib/pcldaemon
+.SH DESCRIPTION
+.I Pcldaemon\^
+monitors the
+.IR pcl (7)
+control channel,
+servicing requests as they arrive.
+Requests are transmitted via
+.IR net (1C).
+.SH FILES
+.PD 0
+.TP "\w'/dev/pcl/?[0-7]  'u"
+/dev/pcl/\fI?\fP[0-7]
+\s-1PCL\s+1 channel interfaces for system
+.IR ? .
+.TP
+/dev/pcl/ctrl
+\s-1PCL\s+1 control channel.
+.TP
+/usr/adm/pcllog
+activity log.
+.SH SEE ALSO
+net(1C),
+pcl(7).
+.SH DIAGNOSTICS
+.TP
+.I cannot open pcl control channel
+Another
+.I pcldaemon\^
+is running.
+.SH WARNINGS
+Running
+.I pcldaemon\^
+may present security hazards.
+A super-user may
+.IR net (1C)
+to any system on the
+.SM PCL
+bus that is running
+.I pcldaemon
+and execute any command on that system.
+.\"	@(#)pcldaemon.1m	5.2 of 5/18/82

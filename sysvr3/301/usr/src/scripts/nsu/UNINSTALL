@@ -1,0 +1,28 @@
+#ident	"@(#)pkg.nsu:UNINSTALL	1.1"
+#
+#	NSU UNINSTALL
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/nsu.name`
+
+echo "Removing the ${PKGNAME}."
+
+#
+# Invoke unsetup file
+#
+
+/install/install/unsetup
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -f $i
+done
+
+echo "The ${PKGNAME} has been removed."

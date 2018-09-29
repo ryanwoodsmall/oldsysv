@@ -1,0 +1,22 @@
+
+\S wc \S:  Examples
+
+       wc attachment
+
+    Prints the number of lines, words, and characters in the file "attachment"
+    on the standard output.
+
+    ----------------------------------------------------------------------
+
+       wc -cw memo
+
+    Prints the number of characters and words in the file "memo".
+
+
+
+
+    ----------------------------------------------------------------------
+
+       who | wc -l
+
+    Prints the current number of system users on the standard output.

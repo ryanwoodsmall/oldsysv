@@ -1,0 +1,83 @@
+.TH SYS3B 2 "3B20S only"
+.SH NAME
+sys3b \- 3B20S specific system calls
+.SH SYNOPSIS
+.B void sys3b (cmd, arg1[, arg2])
+.br
+.B int cmd, arg1, arg2;
+.SH DESCRIPTION
+This system call provides for 3B20S specific actions.
+Most require super-user privileges as the effects
+can be dangerous.
+The
+.I cmd\^
+values
+available are:
+.TP 5
+.B 1
+Reboot the processor.
+This call causes an immediate entry into the
+bootstrap code.
+.TP 5
+.B 2
+System \fIprintf\fP interface.
+.I Arg1
+is taken as a pointer to a null terminated string
+to be copied into the operating system circular
+print buffer.
+.TP 5
+.B 3
+Attach to an address translation buffer.
+.TP 5
+.B 4
+System namelist interface.
+The value of
+.I arg1
+is used to return the address of various
+data elements in the system.
+.TP 5
+.B 5
+Override for system Maintenance Reset Function (\s-1MRF\s+1) action.
+If
+.I arg1
+is non-zero, it is taken as the indicator
+for handling a processor \s-1MRF\s+1.
+If zero, the current setting is returned.
+.TP 5
+.B 6
+Send a Processor Recovery Message (\s-1PRM\s+1).
+.I Arg1
+is used as a pointer to a 16 byte string
+to be converted to a \s-1PRM\s+1 and transmitted
+to the Emergency Action Interface (\s-1EAI\s+1).
+.TP 5
+.B 7
+Modify the System Status Register (\s-1SSR\s+1).
+Bits set in
+.I arg1
+are set or cleared in the \s-1SSR\s+1
+if
+.I arg2
+is non-zero or zero, respectively.
+.TP 5
+.B 8
+Read \s-1EAI\s+1 Input Parameter Buffer.
+.I Arg1
+is used as a location in user space
+where the current Input Parameter Buffer is to be placed.
+.TP 5
+.B 9
+Change default Field Test Set utility-id.
+.B 10
+Change the floating point flag bits in the
+extended processor status word.
+.SH SEE ALSO
+fts(1M),
+ipb(1M),
+prm(1M),
+reboot(1M),
+setmrf(1M),
+ssr(1M),
+in the
+.IR "U\s-1NIX\s+1 System Administrator's Manual" .
+.\"	@(#)sys3b.2	5.2 of 5/18/82

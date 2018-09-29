@@ -1,0 +1,21 @@
+0
+This line tells you how many lines of an item help message have
+been written for the current item.  This item help message will
+be presented to the user when ^Y or f6 is entered while the cursor
+is resting on the current item.  you may write or edit the item
+help message by typing ^G or f1 here.  You will then be placed in the
+editor.
+1
+When a user of this menu selects a menu item, one of two
+things can happen.  First, another ASSIST menu or command
+form can be called up.  Second, a UNIX system command may be
+executed.  You need to specify which of these two actions
+should occur.  ^G or f1 toggles this value.
+2
+This line specifies the ASSIST command form or menu to be called,
+or the UNIX system command to be executed if the ASSIST user
+selects the current item.  If you enter the name of an ASSIST
+command form or menu, do not include the ".fs" suffix to the 
+information file name.  If you enter a UNIX system command,
+be sure to include all needed arguments.  You can specify or 
+modify this line by typing ^G or f1.

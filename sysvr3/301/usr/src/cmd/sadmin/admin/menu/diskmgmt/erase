@@ -1,0 +1,48 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/erase	2.3"
+#menu# erase data from removable medium 
+#help# 
+#help#	This procedure erases a removable medium by over writing it with
+#help#	null bytes.  It's main purpose is to remove data that you don't want
+#help#	anyone to ever see.  Needless to say, once performed it is
+#help#	irreversible.
+
+trap exit 1 2 15
+
+echo '
+	This procedure completely erases all data on the removable medium.
+	BE SURE THAT IS WHAT YOU WANT TO DO!!
+'
+
+lumps=200	#	Number of blocks per erased segment of media.
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+
+ddrive=`selectdevice -c $$ /dev/rSA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+disklabel -w -q "Insert the medium you want to erase in the ${ndrive}.
+Press <RETURN> when ready. [q]" $$ ${ddrive} >/dev/null
+
+a=`spclsize -b ${ddrive}`
+
+while [ $a -gt 0 ]
+do
+	echo ""  |  dd bs=${lumps}b conv=sync 2>/dev/null
+	a=`expr $a - ${lumps}`
+	echo .\\c >&2
+done  >${ddrive}
+echo "
+This medium is erased.
+You may now remove the medium from the ${ndrive}.
+"

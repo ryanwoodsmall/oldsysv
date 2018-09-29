@@ -1,0 +1,183 @@
+'\" t
+.TH MATHERR 3M
+.SH NAME
+matherr \- error-handling function
+.SH SYNOPSIS
+.PP
+.B #include <math.h>
+.PP
+.B int matherr (x)
+.br
+.B struct exception \(**x;
+.SH DESCRIPTION
+.I Matherr\^
+is invoked by functions in the Math Library when
+errors are detected.
+Users may define their own procedures for handling errors,
+by including a function named
+.I matherr\^
+in their programs.
+.I Matherr\^
+must be of the form described above.
+When an error occurs,
+a pointer to the exception structure
+.I x\^
+will be passed to the user-supplied
+.I matherr\^
+function.
+This structure,
+which is defined in the
+.I <math.h>\^
+header file, is as follows:
+.RS
+.PP
+.nf
+struct exception {
+	int type;
+	char \(**name;
+	double arg1, arg2, retval;
+};
+.fi
+.RE
+.PP
+The element
+.I type\^
+is an integer describing the type of error that has occurred, from the
+following list of constants (defined in the header file):
+.RS
+.PP
+.nf
+.ta \w'\s-1UNDERFLOW\s+1\ \ 'u
+\s-1DOMAIN\s+1	argument domain error
+\s-1SING\s+1	argument singularity
+\s-1OVERFLOW\s+1	overflow range error
+\s-1UNDERFLOW\s+1 	underflow range error
+\s-1TLOSS\s+1	total loss of significance
+\s-1PLOSS\s+1	partial loss of significance
+.DT
+.fi
+.RE
+.PP
+The element
+.I name\^
+points to a string containing
+the name of the function that incurred the error.
+The variables
+.I arg1\^
+and
+.I arg2\^
+are the arguments with which the function was invoked.
+.I Retval\^
+is set to the default value that will be returned by the function
+unless the user's
+.I matherr\^
+sets it to a different value.
+.PP
+If the user's
+.I matherr\^
+function returns non-zero,
+no error message will be printed,
+and
+.I errno\^
+will not be set.
+.PP
+If
+.I matherr\^
+is not supplied by the user,
+the default error-handling procedures, described with
+the math functions involved, will be invoked upon error.
+These procedures are also summarized in the table below.
+In every case,
+.I errno\^
+is set to
+.SM EDOM
+or
+.SM ERANGE
+and the program continues.
+.SH EXAMPLE
+.nf
+.ta .5i 1.0i 1.5i 2.0i
+#include <math.h>
+
+int
+matherr(x)
+register struct exception \(**x;
+{
+	switch (x\->type) {
+	case \s-1DOMAIN\s+1:
+		/\(** change sqrt to return sqrt(\-arg1), not 0 \(**/
+		if (!strcmp(x\->name, "sqrt")) {
+			x\->retval = sqrt(\-x\->arg1);
+			return (0); /* print message and set errno */
+		}
+	case \s-1SING\s+1:
+		/\(** all other domain or sing errors, print message and abort \(**/
+		fprintf(stderr, "domain error in %s\en", x\->name);
+		abort( );
+	case \s-1PLOSS\s+1:
+		/\(** print detailed error message \(**/
+		fprintf(stderr, "loss of significance in %s(%g) = %g\en",
+			x\->name, x\->arg1, x\->retval);
+		return (1); /* take no other action */
+	}
+	return (0); /\(** all other errors, execute default procedure \(**/
+}
+.fi
+.PP
+.in 0
+.TS
+expand;
+cB s s s s s s
+c | cI s s s s s
+c | c | c | c | c | c | c
+cI | c | c | c | c | c | c
+l | c | c | c | c | c | c .
+\s-1DEFAULT ERROR HANDLING PROCEDURES\s+1
+_
+	Types of Errors
+_
+\s-1type	\s-1DOMAIN\s+1	\s-1SING\s+1	\s-1OVERFLOW\s+1 	\s-1UNDERFLOW\s+1 	\s-1TLOSS\s+1 	\s-1PLOSS\s+1 \s+1
+_
+\s-2\fIerrno\fP	\s-1EDOM\s+1	\s-1EDOM\s+1	\s-1ERANGE\s+1	\s-1ERANGE\s+1	\s-1ERANGE\s+1	\s-1ERANGE\s+1\s+2
+_
+\s-2\s-1BESSEL\s+1:	\-	\-	\-	\-	M, 0	\(**\s+2
+\s-2y0, y1, yn (arg \(<= 0)	M, \-H 	\-	\-	\-	\-	\-\s+2
+_
+\s-2\s-1EXP\s+1:	\-	\-	H	0	\-	\-\s+2
+_
+\s-2\s-1LOG, LOG10\s+1:\s+2
+\s-2 (arg < 0)	M, \-H	\-	\-	\-	\-	\-\s+2
+\s-2 (arg = 0)	\-	M, \-H 	\-	\-	\-	\-\s+2
+_
+\s-2\s-1POW\s+1:	\-	\-	\(+-H	0	\-	\-\s+2
+\s-2neg \(**\(** non-int	M, 0 	\-	\-	\-	\-	\-\s+2
+\s-2  0 \(**\(** non-pos\s+2
+_
+\s-2\s-1SQRT\s+1:	M, 0	\-	\-	\-	\-	\-\s+2
+_
+\s-2\s-1GAMMA\s+1:	\-	M, H	H	\-	\-	\-\s+2
+_
+\s-2\s-1HYPOT\s+1:	\-	\-	H	\-	\-	\-\s+2
+_
+\s-2\s-1SINH\s+1:	\-	\-	\(+-H	\-	\-	\-\s+2
+_
+\s-2\s-1COSH\s+1:	\-	\-	H	\-	\-	\-\s+2
+_
+\s-2\s-1SIN\s+1, \s-1COS\s+1, \s-1TAN\s+1: \-	\-	\-	\-	M, 0	\(**\s+2
+_
+\s-2\s-1ASIN\s+1, \s-1ACOS\s+1, \s-1ATAN2\s+1: M, 0	\-	\-	\-	\-	\-\s+2
+.TE
+.PP
+.TS
+box;
+cB s
+c l .
+\s-1ABBREVIATIONS\s+1
+\s-1 \(**	As much as possible of the value is returned.\s+1
+\s-1 M	Message is printed (EDOM error).\s+1
+\s-1 H	HUGE is returned.\s+1
+\s-1 \-H	\-HUGE is returned.\s+1
+\s-1 \(+-H	HUGE or \-HUGE is returned.\s+1
+\s-1 0	0 is returned.\s+1
+.TE
+.\"	%W% of %G%

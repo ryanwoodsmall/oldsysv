@@ -1,0 +1,65 @@
+.TH EMULLOAD 1M "3B20S only"
+.SH NAME
+emulload \- load and start 3270 emulation script
+.SH SYNOPSIS
+.B /etc/emulload
+.SH DESCRIPTION
+The
+.I emulload
+command file is used to load the 3270 emulation protocol script into
+the physical device, set the proper options, and start execution of the script.
+.I Emulload
+will need local modification to use the proper hardware device, set the
+proper options, or to start more than one emulation controller.
+.PP
+As distributed,
+.I emulload
+contains the following:
+.PP
+.RS
+/etc/vpmset \|/dev/emc0 \|/dev/un53.0
+.br
+/etc/emulcntrl \|/dev/emc0 \|ascii
+.br
+/etc/vpmstart \|/dev/un53.0 \|6 \|/lib/a3270scr
+.br
+/etc/emulcntrl \|/dev/emc0 \|on
+.RE
+.PP
+This command file will connect the emulation controller and physical line,
+set the controller to \s-1ASCII\s+1 mode, load the \s-1ASCII\s+1 emulation script,
+and start execution of the script.
+Other controller options are described in
+.IR emulcntrl (1M).
+.PP
+The
+.B /etc/rc
+file should call
+.B /etc/emulload
+when going to multi-user state.
+The
+.B /etc/shutdown
+file should halt any controllers that were started in
+.BR /etc/rc .
+For example, the entry in
+.B /etc/shutdown
+for the
+.I emulload
+command shown above would be:
+.PP
+.RS
+/etc/emulcntrl \|/dev/emc0 \|off
+.RE
+.PP
+.SH FILES
+/dev/emc?	3270 emulation controller devices
+.PP
+/lib/a3270scr	\s-1ASCII\s+1 3270 script
+.PP
+/lib/e3270scr	\s-1EBCDIC\s+1 3270 script
+.SH "SEE ALSO"
+emulcntrl(1M),
+emulstat(1M),
+vpmset(1M),
+emulio(7).
+.\"	@(#)emulload.1m	5.2 of 5/18/82

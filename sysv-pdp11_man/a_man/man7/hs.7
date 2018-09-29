@@ -1,0 +1,48 @@
+.TH HS 7 "PDP-11 only"
+.SH NAME
+hs \- \s-1RH11/RJS03-RJS04\s0 fixed-head disk file
+.SH DESCRIPTION
+The files
+.BR hs0 ", " ... ", " hs7
+refer to
+\s-1RJS03\s0 disk drives 0 through 7.
+The files
+.BR hs8 ", " ... ", " hs15
+refer to
+\s-1RJS04\s0 disk drives 0 through 7.
+The \s-1RJS03\s0 drives are each 1024 blocks long and
+the \s-1RJS04\s0 drives are 2048 blocks long.
+.PP
+The
+.B hs
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly one
+.SM I/O
+operation
+and therefore raw
+.SM I/O
+is considerably more efficient when
+many words are transmitted.
+The names of the raw \s-1HS\s0 files begin with
+.BR rhs .
+The same minor device considerations
+hold for the raw interface as for the normal interface.
+.PP
+In raw
+.SM I/O
+the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/hs\(**, /dev/rhs\(**
+.\"	@(#)hs.7	5.2 of 5/18/82

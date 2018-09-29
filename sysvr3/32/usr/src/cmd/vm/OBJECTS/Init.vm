@@ -1,0 +1,29 @@
+#
+# FACE's introductory object
+#
+title="AT&T FACE"
+text="\n Copyright (c) 1988 AT&T\r\n   All Rights Reserved"
+rows=4; 
+columns=25;
+
+#
+# Variables for FACE banner line 
+# (VMBANNER set in face)
+# 
+banner=$VMBANNER
+bancol=center
+
+#
+# Colors Attributes
+#
+screen=black
+banner_text=white
+window_text=white
+active_border=cyan
+inactive_border=red
+active_title_text=black
+active_title_bar=cyan
+inactive_title_text=black
+inactive_title_bar=red
+highlight_bar=cyan
+highlight_bar_text=black

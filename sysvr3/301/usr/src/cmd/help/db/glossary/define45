@@ -1,0 +1,30 @@
+
+\S pipe:  |:  pipeline \S
+
+
+  1.  In a syntax summary, a pipe (|) character between options indicates
+    that only one of the options can be used.  For example, [x|y|z]
+    indicates that you can use x, or y, or z, but you can't use any of
+    them together.
+
+  2.  A pipe is also a program that, when used on a command line, causes
+    the output of one command to be used as the input for the next
+    command.  You create a pipeline by connecting two or more commands
+    with pipes. You do this by preceding each command after the first
+    with a  pipe symbol (|).  For example, in the command
+
+
+
+
+            who | wc -l
+
+
+    the output from who(1), which is a list of users who are logged on to
+    the system, is used as input for the word-count command, wc(1).  The
+    result of this pipeline is the number of people who are currently
+    logged on to the system.  The output for who(1) is not printed to
+    standard output, and you do not have to create a temporary file for
+    it. The system stores the output in a "buffer"\S*\S until it is
+    used for input to the second command.
+
+\S*\S defined in the \Sglossary\S

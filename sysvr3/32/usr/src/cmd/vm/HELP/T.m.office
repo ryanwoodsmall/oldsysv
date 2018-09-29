@@ -1,0 +1,57 @@
+
+   The  Office menu is your entry point into  FACE.   When  you
+   log into  FACE the  Office menu is your active frame.  It is
+   located in the upper left corner of the screen work area.  You can
+   navigate  from  the  Office menu  to any other part of FACE.
+   You can move and reshape the  Office menu, but  you  cannot  close
+   the Office menu.
+
+   The menu items contained in the Office menu are as follows:
+
+      - FILECABINET -- provides storage for your  folders  and  files.
+        Just  as a normal office uses filecabinets, folders and files,
+        FACE uses the same objects.
+
+      - OTHER USERS -- allows you to access the  Filecabinet,  folders
+        and files of other users if you have permission.
+
+      - PREFERENCES  --  allows  you  to  customize  some  aspects  of
+        FACE.   Through this menu item you can do such things as
+        change  your   password,   set  folder  display  options,  set 
+        permissions for all new  folders  and file  objects created in
+        your filecabinet and  wastebasket, set wastebasket parameters,
+        and define your default editor.
+
+      - SERVICES -- gives you access  to  special  applications  which
+        have either been installed  by your system  administrator,  or
+        added  to  the  sevices  menu  by  you.  Examples  of  special
+        applications   may  include   spreadsheets,   editors,    word
+        processors, or other popular software packages.
+
+      - WASTEBASKET -- contains folders and files  you  have   deleted
+        from   your  filecabinet.  Files  and  folders  placed  in the
+        wastebasket will eventually be permanently removed  from  your
+        system  based  on  wastebasket  parameters  you have set under
+        Preferences.
+
+      - EXIT FACE -- allows you to logout of FACE.
+
+      - SERVICES   ADMINISTRATION --  allows  you  to  customize  your 
+	services  menu  by  adding,  deleting,  or  modifying  special 
+	applications,  electronic mail,  editors,  word processors and
+        other  popular  software packages  that have been installed by
+        your system administrator.
+
+      - SYSTEM ADMINISTRATION -- appears  in the  office if the system
+        administrator  gives you  the privilege  of running sysadm(1M) 
+        commands.
+
+      - UNIX SYSTEM -- Use of the UNIX system is recommended only  for
+        users who  are  familiar with UNIX system commands.  Selecting
+        UNIX_System  from the Office menu  invokes  the default shell.
+        Your screen will be cleared  and the shell prompt "UNIX:" will
+        appear. To return to FACE,  hold  down the  control  key
+        (CTRL) and press d, or type "exit" and press RETURN.
+
+   More detailed explanations of the above menu items can be  accessed
+   through  the Help facility's Table of Contents.

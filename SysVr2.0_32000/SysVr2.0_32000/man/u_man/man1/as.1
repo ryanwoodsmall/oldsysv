@@ -1,0 +1,156 @@
+.TH AS 1
+.SH NAME
+\*pas \- common assembler
+.SH SYNOPSIS
+.BR \*pas
+.if '\*p'm32' .BR \-v type
+.RB "[" \-o " objfile]"
+.if '\*p'x86' .RB \-x
+.if '\*p'3b' .RB "[" \-Q "]"
+.RB "[" \-n "]"
+.RB "[" \-m "]"
+.RB "[" \-R "]"
+.RB "[" \-r "]"
+.RB "[" \-[bwd] "]"
+.RB "[" \-V "]"
+file-name
+.SH DESCRIPTION
+The
+.I \*pas
+command
+assembles the named file.
+.if '\*p'b16' \{\
+The output file is executable if no errors
+occurred during the assembly, transfer vectors were not used,
+and there are no unresolved external references.\}
+The following flags
+may be specified in any order:
+.if '\*p'm32' \{\
+.TP \w'\fB\-o\fP\ \fIobjfile\fP\ \ 'u
+.BI \-v " type"
+type is either an 'x' indicating the original
+.B \*p
+assembler or an 'a' indicating the
+.B \*pa
+assembler.
+\}
+.TP \w'\fB\-o\fP\ \fIobjfile\fP\ \ 'u
+.BI \-o " objfile"
+Put the output of the assembly in
+.IR objfile .
+By default, the output file name is formed by
+removing the
+.B .s
+suffix, if there is one, from the input file name
+and appending a
+.B .o
+suffix.
+.if '\*p'x86' \{\
+.TP
+.B \-x
+This
+flag is
+.I required
+for all x86 files.
+\}
+.if '\*p'3b' \{
+.TP
+.B \-Q
+Warn the user if a transfer vector operand is used
+in any context other than a "call" instruction.
+\}
+.TP
+.B \-n
+Turn off long/short address optimization.
+By default, address optimization takes place.
+.TP
+.B \-m
+Run the
+.I m4
+macro pre-processor
+on the input to the assembler.
+.TP
+.B \-R
+Remove (unlink) the input file after assembly
+is completed.
+.TP
+.B \-r
+Place all assembled data
+(normally placed in the \f3.data\fR section)
+into the \f3.text\fR section
+This option effectively disables the
+.B .data
+pseudo operation.
+This option is off by default.
+.TP
+.B \-[bwd]
+Create byte
+.RB ( b "),"
+halfword
+.RB ( w )
+or double
+.RB ( d )
+displacements for undefined symbols
+(An undefined symbol is a reference to a symbol
+whose definition is external
+to the input file
+or a forward reference.)
+The default value for this option is double
+.RB ( d )
+displacements.
+.TP
+.B \-V
+Write the version number of the assembler being run
+on the standard error output.
+.SH "SEE ALSO"
+\*pld(1),
+m4(1),
+\*pnm(1),
+\*pstrip(1).
+.br.
+a.out(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH WARNING
+.if '\*p'3b' \{
+.P
+If the input file does not contain a
+.B .file
+assembler directive and the
+.B \-m
+flag was not specified,
+the file name given by the assembler when an
+error occurs is one of the temporary files
+.RB ( /usr/tmp/\*pas \s-1XXXXXX\s+1)
+\}
+.P
+If the
+.B \-m
+(\f2m4
+macro pre-processor invocation) option is used,
+keywords for
+.I m4
+.RI "(see " m4 (1))
+cannot be used as symbols (variables, functions, labels)
+in the input file since
+.I m4
+cannot determine which are assembler symbols and
+which are real
+.I m4
+macros.
+.P
+Use the
+.B \-b
+or
+.B \-w
+option only when undefined symbols are known to refer to locations
+representable by the specified default displacement.
+Use of either option when assembling a file containing a reference
+to a symbol that is to be resolved by the loader can lead to
+unpredictable results,
+since the loader may be unable to place the address of the symbol
+into the space provided.
+.SH BUGS
+Arithmetic expressions may only have
+one non-absolute symbol per expression.
+'\" \%W\%
+.\"	@(#)as.1	6.2 of 9/2/83

@@ -1,0 +1,2 @@
+#ident	"@(#)cmd-3b2:inst/etc/rc.d_cleanup	1.2"
+rm /etc/inittab_rm /etc/rc.d/00_restore < /dev/null

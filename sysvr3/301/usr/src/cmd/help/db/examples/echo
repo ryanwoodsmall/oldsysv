@@ -1,0 +1,28 @@
+
+\S echo \S:  Examples
+
+       echo Hello World
+
+    Prints the string "Hello World" on the standard output.
+
+    ----------------------------------------------------------------------
+
+       echo *
+
+    Prints the names of the files and subdirectories in the current working
+    directory. This output is similar to that of ls(1), but the file and
+    directory names are listed in one long line.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       if test ! -r book
+       then \S echo \S "file is not readable"
+       fi
+
+    Tests if you have read permission for the file "book.file".  \S echo \S
+    prints "file is not readable" if the result of the "test ! -r book" command
+    is true.
+

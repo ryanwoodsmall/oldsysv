@@ -1,0 +1,93 @@
+.TH TPUT 1
+.SH NAME
+tput \- query terminfo database
+.SH "SYNOPSIS"
+.BR "tput [ -T" type " ] " capname
+.SH "DESCRIPTION"
+.I Tput
+uses the
+.I terminfo(4)
+database to make terminal-dependent capabilities and information available to
+the shell.
+.I Tput
+outputs a string if the attribute
+.RB ( cap ability " name" )
+is of type string, or an integer if the attribute is of type integer.
+If the attribute is of type Boolean, tput simply sets the exit code
+(0 for TRUE, 1 for FALSE), and does no output.
+.PP
+.PD 1u
+.TP 11
+.BI -T type
+indicates the type of terminal.
+Normally this flag is unnecessary, as the default is taken from the
+environment variable
+.B $TERM.
+.PP
+.TP 11
+.I Capname
+indicates the attribute from the
+.I terminfo
+database.
+See
+.I terminfo(4).
+.PP
+.SH EXAMPLES
+.TP 18
+.B "tput clear"
+Echo clear-screen sequence for the current terminal.
+.TP 18
+.B "tput cols"
+Print the number of columns for the current terminal.
+.TP 18
+.B "tput -T450 cols"
+Print the number of columns for the 450 terminal.
+.TP 18
+.B "bold=`tput smso`"
+Set shell variable "bold" to stand-out mode sequence for current terminal.
+This might be followed by a prompt:
+.sp 0
+\fBecho "${bold}Please type in your name: \\c"\fR
+.TP 18
+.B "tput hc"
+Set exit code to indicate if current terminal is a hardcopy terminal.
+.PP
+.SH FILES
+.TP 25
+/etc/term/?/*
+Terminal descriptor files
+.TP 25
+/usr/include/term.h
+Definition files
+.TP 25
+/usr/include/curses.h
+
+.SP
+.SH DIAGNOSTICS
+.I Tput
+prints error messages and returns the following error codes on error:
+.in +6
+.PD 1u
+.TP 15
+.B -1
+Usage error.
+.TP 15
+.B -2
+Bad terminal type.
+.TP 15
+.B -3
+Bad capname.
+.in
+
+.PP
+In addition, if a capname is requested for a terminal that has no value for
+that capname (e.g.,
+.BR "tput -T450 lines" ), " -1"
+is printed.
+.PP
+
+.SH "SEE ALSO"
+stty(1).
+.br
+terminfo(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.

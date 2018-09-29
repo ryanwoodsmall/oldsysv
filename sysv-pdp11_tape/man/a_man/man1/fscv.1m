@@ -1,0 +1,105 @@
+.TH FSCV 1M "DEC only"
+.SH NAME
+fscv \- convert files between \s-1PDP-11\s+1 and \s-1VAX\s+1-11/780 systems
+.SH SYNOPSIS
+.B "/etc/fscv \-v"
+ispecial [ ospecial ]
+.br
+.B "/etc/fscv \-p"
+ispecial [ ospecial ]
+.SH DESCRIPTION
+.I  Fscv\^
+converts file systems between \s-1PDP-11\s+1 and \s-1VAX\s+1-11/780 formats. 
+The super block, free list, and inodes are converted to the format of
+the output file.
+.I Fscv\^
+may be executed on \s-1PDP-11\s+1 and \s-1VAX\s+1 processors. 
+The mandatory flag specifies the format of the
+converted file system:
+.TP 6
+.B  \-v
+Convert file system from \s-1PDP-11\s+1 to \s-1VAX\s+1 format. 
+.TP 6
+.B  \-p
+Convert file system from \s-1VAX\s+1 to \s-1PDP-11\s+1 format. 
+.PP
+.I Ispecial\^
+is the name of a special file containing a file system to be converted 
+(e.g.;
+.BR /dev/rrp1 ).
+The optional 
+.I ospecial\^
+is the name of the special file to receive the results of the conversion.
+If 
+.I ospecial\^
+is specified the entire contents of 
+.I ispecial\^
+are copied to
+.I ospecial\^
+before the conversion is performed.  If
+.I ospecial\^
+is not specified an in-place conversion of
+.I ispecial\^
+is performed.
+The following items should
+be noted before executing 
+.IR "fscv" ":"
+.TP 6
+1.
+A file system consistency check
+.RI ( fsck (1M))
+should be performed on 
+.I ispecial\^
+immediately prior to executing
+.IR fscv .
+.TP 6
+2.
+Neither 
+.I ispecial\^
+nor the optional
+.I ospecial\^
+should contain a mounted file system during execution of
+.IR fscv .
+Modification to either the input or the output file system while
+.I fscv\^
+is executing will probably corrupt the converted file system.
+.TP 6
+3.
+A backup of 
+.I ispecial\^
+(see
+.IR volcopy (1M))
+is highly recommended if an in-place conversion is to be performed.
+System crashes, I/O errors, etc., during execution of 
+.I fscv\^
+may destroy the file system contained in
+.IR "ispecial" "."
+Also, if the optional
+.I ospecial\^
+is specified any data contained in that special file will be over written.
+.TP 6
+4.
+If the optional
+.I ospecial\^
+is specified, this special file must be large enough to contain the
+entire contents of 
+.IR ispecial .
+See the appropriate special files in section 4.
+.SH EXAMPLES
+Copy and convert a file system from \s-1PDP-11\s+1 to \s-1VAX\s+1 format:
+.RS 6
+/etc/fscv  \-v  /dev/rrp0  /dev/rrp10
+.br
+.RE
+Perform an in-place conversion from \s-1VAX\s+1 to \s-1PDP-11\s+1 format:
+.br
+.ns
+.RS 6
+/etc/fscv  \-p  /dev/rrp10
+.SH BUGS
+The boot block is not modified during conversion.
+The resulting file system will not be bootable.
+No data contained in the files of the file system are modified.
+.SH "SEE ALSO"
+fsck(1M), volcopy(1M).
+.\"	@(#)fscv.1m	5.2 of 5/18/82

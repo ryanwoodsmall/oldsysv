@@ -1,0 +1,129 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/unmount_f	1.1"
+## IDOC:   SCREEN 2.58: UNMOUNT FORM OR FONT
+#menu# Unmount a form or font from a printer
+
+##+++ (help _H??)
+#help#        You use the "unmount"  command  under either  the "printers"
+#help#        menu or "forms" menu to unmount a form or  print wheel  from
+#help#        a printer. The printer must be idle when you unmount a  form
+#help#        or print wheel. If a request is printing you can  issue  the
+#help#        "disable"  command  from  the  "printers"  menu  to idle the
+#help#        printer prior to performing the unmount. Note that you don't
+#help#        manually unmount character sets as the LP Print Service will
+#help#        automatically select the correct character  set  on printers
+#help#        that have selectable character sets.
+#help#
+#help#        Upon completion of the unmount any requests not needing  the
+#help#        unmounted  form  and/or  print wheel will begin  printing as
+#help#        soon as the printer is enabled  ( or immediately if  you did 
+#help#        not disable the printer prior to the unmount).
+#help#
+##--- (help _H??)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+DEF_p=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+	while true
+	do
+##+++ (2.34.1)
+chk_name \
+	"Enter the name of the printer:${DEF_p:+ (default: ${DEF_p})}" \
+	"${DEF_p}" \
+	"\
+        You are expected to enter the name of the printer  on  which
+        you want to unmount a form or print wheel. If you don't know
+        the name, enter \"q\" and select the \"status\" command from the
+        \"printers\" menu, to get a list of known printers.  \
+"
+OPT_p=${RESP}
+##--- (2.34.1)
+
+	if ls -d /usr/spool/lp/admins/lp/printers/${OPT_p} 2>/dev/null 1>&2
+	then
+		break
+	else
+		echo "You did not specify an existing printer. Try again."
+	fi
+
+	done
+
+DEF_f=yes
+
+if checkyn ${flags} -f \
+	${DEF_f:+"-D${DEF_f}"} -H \
+	"\
+        Enter a \"y\" (for yes) if you want  to unmount  the form that
+	is currently mounted on the  printer,  or a  \"n\" (for no) if 
+	not.  Note  that if  the  printer  is  currently  printing a 
+	request, the unmount will be rejected. To avoid this problem
+	use the \"disable\" command  in the  \"printers\" menu to insure
+	that the printer is not active. \
+" \
+	"Do you want to unmount the current form?${DEF_f:+ (default: ${DEF_f})}"
+then
+	OPT_f=none
+else
+	OPT_f=
+fi
+
+TERM=`sed -n -e '/Printer type: /s///p' /usr/spool/lp/admins/lp/printers/${OPT_p}/configuration`
+
+	export TERM
+	if tput daisy 2>/dev/null
+	then
+
+DEF_S=yes
+
+if checkyn ${flags} -f \
+	${DEF_S:+"-D${DEF_S}"} -H \
+	"\
+        Enter a \"y\" (for yes) if you want to unmount the print wheel
+	that is currently mounted on the printer, or a  \"n\" (for no) 
+	if not. Note that if the  printer  is  currently  printing a 
+	request, the unmount will be rejected. To avoid this problem
+	use the \"disable\" command  in the  \"printers\" menu to insure
+	that the printer is not active. \
+" \
+	"Do you want to unmount the current print wheel?${DEF_S:+ (default: ${DEF_S})}"
+then
+	OPT_S=none
+else
+	OPT_S=
+fi
+
+	fi
+
+if [ -z "${OPT_f}" -a -z "${OPT_S}" ]
+then
+	echo \
+"It seems you aren't unmounting anything!"
+	break
+else
+	opts="${OPT_f:+-f ${OPT_f}} ${OPT_S:+-S ${OPT_S}}"
+	/usr/lib/lpadmin -p ${OPT_p} -M ${opts} && break
+fi
+done

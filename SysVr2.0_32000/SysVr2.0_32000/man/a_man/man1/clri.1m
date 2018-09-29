@@ -1,0 +1,56 @@
+.TH CLRI 1M
+.SH NAME
+clri \- clear i-node
+.SH SYNOPSIS
+.B /etc/clri
+file-system i-number ...
+.SH DESCRIPTION
+.I Clri\^
+writes zeros on the 64 bytes occupied by the i-node
+numbered
+.IR i-number .
+.I File-system\^
+must be a special file
+name referring to a device
+containing a file system.
+After
+.I clri\^
+is executed,
+any blocks
+in the affected file
+will show up as ``missing'' in an
+.IR fsck (1M)
+of the
+.IR file-system .
+This command should only be used in
+emergencies and extreme care should be exercised.
+.PP
+Read and write permission is required on the specified
+.I file-system\^
+device.
+The i-node becomes allocatable.
+.PP
+The primary purpose of this routine
+is to remove a file which
+for some reason appears in no
+directory.
+If it is used to
+.I zap\^
+an i-node
+which does appear in a directory, care should be taken to track down
+the entry and remove it.
+Otherwise, when the i-node is reallocated to some new file,
+the old entry will still point to that file.
+At that point removing the old entry will destroy the new file.
+The new entry will again point to an unallocated i-node,
+so the whole cycle is likely to be repeated again and again.
+.SH SEE ALSO
+fsck(1M),
+fsdb(1M),
+ncheck(1M),
+fs(4).
+.SH BUGS
+If the file is open,
+.I clri\^
+is likely to be ineffective.
+.\"	@(#)clri.1m	6.2 of 9/2/83

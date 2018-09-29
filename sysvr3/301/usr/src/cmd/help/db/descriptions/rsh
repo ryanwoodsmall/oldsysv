@@ -1,0 +1,26 @@
+
+\Srsh\S:  Description
+
+Syntax Summary:  rsh [-aefhiknrtuvx] file_name [argument ...]
+                 rsh [-aefhiknrtuvx] [-c command ...]
+                 rsh [-aefhiknrtuvx] [-s] [argument ...]
+
+         where:  file_name  is the name of a file.
+
+                 argument  is a string that is an argument to a command.
+
+                 command   is a UNIX system command, a shell program,
+                           or an executable file and any arguments
+                           it might take.
+Description:
+     \Srsh\S stands for "restricted shell." \Srsh\S is a restricted version
+     of the standard command programming language, sh(1).  Use \Srsh\S to
+     execute commands. \Srsh\S takes the commands from a file, the command
+     line, or from standard input.  \Srsh\S is most often used to create
+     restricted login environments that are more controlled than those of the
+     standard shell.  The restrictions for \Srsh\S do not allow you to change
+     directories, set the value of PATH, or redirect standard output.  These
+     rules make it possible to restrict users to one directory so that they do
+     not move around a file system.  The manual pages for sh(1) list the 
+     details of \Srsh\S.  See also:  sh(1) for a command with a function 
+     similar to \Srsh\S.

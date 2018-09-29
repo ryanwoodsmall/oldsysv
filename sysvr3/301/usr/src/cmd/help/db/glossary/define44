@@ -1,0 +1,13 @@
+
+\S operand \S
+
+An operand is an "argument"\S*\S to a command that specifies the
+files or directories that the command is to operate on. For example,
+in the command
+
+	pr temp
+
+the "file name"\S*\S "temp" is an operand that specifies the input
+file for the print command, pr(1).
+
+\S*\S defined in the \Sglossary\S

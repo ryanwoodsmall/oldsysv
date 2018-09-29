@@ -1,0 +1,128 @@
+.TH COPYTAPE 1 "25 June 1986"
+.\"@(#)copytape.1 1.0 86/07/08 AICenter; by David S. Hayes
+.SH NAME
+copytape \- duplicate magtapes
+.SH SYNOPSIS
+.B copytape
+\[\-f\]
+\[\-t\]
+\[\-s\fInnn\fP\]
+\[\-l\fInnn\fP\]
+\[\-v\]
+\[\-x\]
+.I
+\[input \[output\]\]
+.SH DESCRIPTION
+.LP
+.I copytape
+duplicates magtapes.  It is intended for duplication of
+bootable or other non-file-structured (non-tar-structured)
+magtapes on systems with only one tape drive.
+.I copytape
+is blissfully ignorant of tape formats.  It merely makes
+a bit-for-bit copy of its input.
+.PP
+In normal use,
+.I copytape
+would be run twice.  First, a boot tape is copied to an
+intermediate disk file.  The file is in a special format that
+preserves the record boundaries and tape marks.  On the second
+run, 
+.I copytape
+reads this file and generates a new tape.  The second step
+may be repeated if multiple copies are required.  The typical
+process would look like this:
+.sp
+.RS +.5i
+tutorial% copytape /dev/rmt8 tape.tmp
+.br
+tutorial% copytape tape.tmp /dev/rmt8
+.br
+tutorial% rm tape.tmp
+.RE
+.PP
+.I copytape
+copies from the standard input to the standard output, unless
+input and output arguments are provided.  It will automatically
+determine whether its input and output are physical tapes, or
+data files.  Data files are encoded in a special (human-readable)
+format.
+.PP
+Since
+.I copytape
+will automatically determine what sort of thing its input
+and output are, a twin-drive system can duplicate a tape in
+one pass.  The command would be
+.RS +.5i
+tutorial% copytape /dev/rmt8 /dev/rmt9
+.RE
+.SH OPTIONS
+.TP 3
+.RI \-s nnn
+Skip tape marks.  The specified number of tape marks are skipped
+on the input tape, before the copy begins.  By default, nothing is
+skipped, resulting in a copy of the complete input tape.  Multiple
+tar(1) and dump(1) archives on a single tape are normally
+separated by a single tape mark.  On ANSI or IBM labelled tapes,
+each file has three associated tape marks.  Count carefully.
+.TP 3
+.RI \-l nnn
+Limit.  Only nnn files (data followed by a tape mark), at most,
+are copied.  This can be used to terminate a copy early.  If the
+skip option is also specified, the files skipped do not count
+against the limit.
+.TP 3
+\-f
+>From tape.  The input is treated as though it were a physical
+tape, even if it is a data file.  This option can be used
+to copy block-structured device files other than magtapes.
+.TP 3
+\-t
+To tape.  The output is treated as though it were a physical
+tape, even if it is a data file.  Normally, data files mark
+physical tape blocks with a (human\-readable) header describing
+the block.  If the \-t option is used when the output is
+actually a disk file, these headers will not be written.
+This will extract all the information from the tape, but
+.I copytape
+will not be able to duplicate the original tape based on
+the resulting data file.
+.TP 3
+\-v
+Verbose.
+.I copytape
+does not normally produce any output on the control terminal.
+The verbose option will identify the input and output files,
+tell whether they are physical tapes or data files, and
+announce the size of each block copied.  This can produce
+a lot of output on even relatively short tapes.  It is
+intended mostly for diagnostic work.
+.TP 3
+\-x
+Extract.
+.I copytape
+can extract the data between the tape marks and create a file for
+each. The output filename should be a prototype string with %d in it
+that will substitute for the current file number.
+.SH FILES
+/dev/rmt*
+.SH "SEE ALSO"
+ansitape(1), dd(1), tar(1), mtio(4), copytape(5)
+.SH AUTHOR
+David S. Hayes, Site Manager, US Army Artificial Intelligence Center.
+Originally developed September 1984 at Rensselaer Polytechnic Institute,
+Troy, New York.
+Revised July 1986.  This software is in the public domain.
+.SH BUGS
+.LP
+.I copytape
+treats two successive file marks as logical end-of-tape.
+.LP
+The intermediate data file can consume huge amounts of
+disk space.  A full 2400-foot reel can burn 50 megabytes.
+This is not strictly speaking a bug, but users should
+be aware of the possibility.  Check disk space with
+.I df(1)
+before starting
+.IR copytape .
+Caveat Emptor!

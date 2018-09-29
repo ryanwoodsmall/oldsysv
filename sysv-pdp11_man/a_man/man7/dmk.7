@@ -1,0 +1,84 @@
+.TH DMK 7 "DEC only"
+.SH NAME
+dmk \- \s-1DM\s+1\&11-\s-1BA\s+1 modem control multiplexor
+.SH DESCRIPTION
+The files
+.B /dev/dmk?
+are used to access
+.SM DM11-BA
+modem control units.
+Each
+.SM DM11-BA
+provides modem control and status information
+for eight synchronous lines.
+The
+.SM DM11-BA
+is an optional component of the
+.SM KMS\*S11
+communications processor
+(see
+.IR vpm (7)).
+Since the
+.SM VPM
+software for the
+.SM KMS\*S11
+does not provide any access to the
+\s-1DM11-BA\s+1,
+it is necessary to use the
+.I dmk
+driver if modem control is required with the
+\s-1KMS11\s+1.
+.PP
+The
+.IR ioctl (2)
+function is used to provide access to the basic
+modem control capabilities:
+.PP
+.RS
+.nf
+#include <sys/dmk.h>
+ioctl \|(fildes, \|command, \|arg)
+struct \|dmkctl \|{
+	short	line;
+	short	mode;
+} \|\(**arg;
+.fi
+.RE
+.PP
+The only
+.I command
+available is
+.SM DMKSETM\*S.
+The effect of this command is to
+set the control leads in the modem interface
+for the line (0-7) specified by
+.I line
+to the state specified by
+.IR mode .
+The bits in
+.I mode
+specify control leads to be asserted as follows:
+.PP
+.ta \w'MAXMAX\ \ 'u +\w'0100000\ \ 'u
+.RS
+\fIName\fP	\fIBit\fP	\fIMeaning\fP
+.nf
+\s-1DMKDTR\s+1	002	Data Terminal Ready
+\s-1DMKRTS\s+1	004	Request to Send
+\s-1DMKNS\s+1	010	New Sync
+.DT
+.fi
+.RE
+.PD
+.SH FILES
+/dev/dmk?
+.SH "SEE ALSO"
+x25pvc(1M),
+vpm(7).
+.br
+"KMS11-A/B Communications Processor Option Description",
+YM-C126C-00, Digital Equipment Corporation.
+.br
+"DM11-BA Modem Control Multiplexor Option Description",
+YM-C138C-00, Digital Equipment Corporation.
+.\"	@(#)dmk.7	5.2 of 5/18/82

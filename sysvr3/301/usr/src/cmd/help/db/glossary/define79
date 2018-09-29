@@ -1,0 +1,13 @@
+
+\S directory name:  simple directory name \S
+
+A directory name is a "string"\S*\S of characters that identifies a
+directory.  A directory name can be a simple directory name which is the
+name of a "subdirectory"\S*\S in your current working directory.  Simple
+directory names can not be more than 14 characters long and can not contain
+"pipe"\S*\S characters. A directory name can also be the relative pathname 
+or full pathname of a directory.  Directories with the same name can
+exist in different directories, but subdirectory names within the same
+directory must be unique.
+
+\S*\S defined in the \Sglossary\S

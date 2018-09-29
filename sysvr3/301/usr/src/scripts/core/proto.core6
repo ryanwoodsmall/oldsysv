@@ -1,0 +1,59 @@
+/dev/null
+1422 96
+d--775 0 3
+	setup		---555 2 2	setup.core6
+	boot	d--775 0 3
+		KERNEL		---555 0 0	../usr/src/uts/3b2/KERNEL
+		HDELOG		---444 0 0	../usr/src/uts/3b2/io/HDELOG
+		IDISK		---444 0 0	../usr/src/uts/3b2/io/IDISK
+		IUART		---444 0 0	../usr/src/uts/3b2/io/IUART
+		MEM		---444 0 0	../usr/src/uts/3b2/io/MEM
+		PORTS		---444 0 0	../usr/src/uts/3b2/io/PORTS
+		STUBS		---444 0 0	../usr/src/uts/3b2/io/STUBS
+		GENTTY		---444 0 0	../usr/src/uts/3b2/io/GENTTY
+		MAU		---444 0 0	../usr/src/uts/3b2/io/MAU
+		DISP		---444 0 0	../usr/src/uts/3b2/os/DISP
+		S5		---444 0 0	../usr/src/uts/3b2/fs/s5/S5
+	$
+	etc	d--775 0 3
+		ckauto		---555  0 0	../etc/ckauto
+		mkboot		---555	0 0	../etc/mkboot
+		mkunix		---555	0 0	../etc/mkunix
+		master.d	d--775	0 3
+			README	---444  0 0	../usr/src/uts/3b2/master.d/README
+			hdelog	---444  0 0	../usr/src/uts/3b2/master.d/hdelog
+			iuart	---444  0 0	../usr/src/uts/3b2/master.d/iuart
+			idisk	---444  0 0	../usr/src/uts/3b2/master.d/idisk
+			kernel	---444  0 0	../usr/src/uts/3b2/master.d/kernel
+			mem	---444  0 0	../usr/src/uts/3b2/master.d/mem
+			ports	---444  0 0	../usr/src/uts/3b2/master.d/ports
+			stubs	---444  0 0	../usr/src/uts/3b2/master.d/stubs
+			gentty	---444  0 0	../usr/src/uts/3b2/master.d/gentty
+			mau	---444  0 0     ../usr/src/uts/3b2/master.d/mau
+			disp	---444  0 0	../usr/src/uts/3b2/master.d/disp
+			s5	---444  0 0	../usr/src/uts/3b2/master.d/s5
+		$
+	$
+	inst	d--775 0 3
+		final	d--775 0 3
+			dgmon		---500 0 0	../init/dgmon
+			etc	d--775 0 3
+				inittab		---664 2 2	../etc/inittab
+				rc.d	d--775 0 3
+					00_restore	---444 0 3	inst/etc/rc.d_cleanup
+				$
+				system		---644 0 3	../etc/system
+			$
+		$
+	$
+	sbin	d--775 0 3
+		absunix		---555 2 2	inst/bin/absunix
+	$
+	lib	d--775 0 3
+		lboot		---555 0 0	../lib/lboot
+		mboot		---555 0 0	../lib/mboot
+		olboot		---555 0 0	../lib/olboot
+	$
+	
+$
+:#ident	"@(#)core:proto.core6	1.6"

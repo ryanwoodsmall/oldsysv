@@ -1,0 +1,39 @@
+/dev/null
+1422 200
+d--755 0 3
+install d--775 0 3
+	INSTALL		---555 2 2	./install/sgs/INSTALL.sgs
+	Rlist		---775 2 2	./install/sgs/Rlist.sgs
+	UNINSTALL	---555 2 2	./install/sgs/UNINSTALL.sgs
+	ORDER		---555 2 2	./install/sgs/ORDER2
+$		
+new	d--775 0 3
+	usr	d--775 0 3
+		options	d--775 0 3
+			sgs.name	---555	2 2	./install/sgs/sgs.name
+		$
+		lib	d--775 0 3
+			libcrypt.a	---664	2 2	../usr/lib/libcrypt.a
+		$
+	$
+	lib	d--775 0 3
+		cm4defs	---664	2 2	../lib/cm4defs
+		crt1.o	---664	2 2	../lib/crt1.o
+		crt0.o	---664	2 2	../lib/crt0.o
+		crtn.o	---664	2 2	../lib/crtn.o
+		fcrt1.o	---664	2 2	../lib/fcrt1.o
+		fcrt0.o	---664	2 2	../lib/fcrt0.o
+		fmcrt1.o	---664	2 2	../lib/fmcrt1.o
+		fmcrt0.o	---664	2 2	../lib/fmcrt0.o
+		libc.a	---664	2 2	../lib/libc.a
+		libc_s.a	---664	2 2	../lib/libc_s.a
+		libld.a	---664	2 2	../lib/libld.a
+		libm.a	---664	2 2	../lib/libm.a
+		mcrt1.o	---664	2 2	../lib/mcrt1.o
+		mcrt0.o	---664	2 2	../lib/mcrt0.o
+	$
+$
+$
+$
+$
+#ident	"@(#)pkg.sgs:proto2.sgs	1.21"

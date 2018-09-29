@@ -1,0 +1,8 @@
+#	@(#)vtu78rom.s	1.3
+	movl	$0x20012000,r0
+	clrl	0xc(r0)
+	movl	$0x80000000,0x800(r0)
+	cvtwl	$0xfe00,0x10(r0)
+	movl	$4,0x404(r0)	# select drive 0
+	cvtwl	$0x39,0x400(r0)
+	halt

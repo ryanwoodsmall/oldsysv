@@ -1,0 +1,231 @@
+.TH CPIO 1
+.SH NAME
+cpio \- copy file archives in and out
+.SH SYNOPSIS
+.B cpio
+.B \-o
+[
+.B acBv
+]
+.PP
+.B cpio
+.B \-i
+[
+.B BcdmrtuvfsSb6
+] [ patterns ]
+.PP
+.B cpio
+.B \-p
+[
+.B adlmruv
+] directory
+.SH DESCRIPTION
+.B Cpio \-o
+(copy out)
+reads the standard input to obtain a list of path names
+and copies those files onto the
+standard output
+together with path name and status information.
+Output is padded to a 512-byte boundary.
+.PP
+.B Cpio \-i
+(copy in)
+extracts files from the
+standard input,
+which is assumed to be the product of a previous
+.BR "cpio \-o" .
+Only files with names that match
+.I patterns\^
+are selected.
+.I Patterns\^
+are given in the name-generating notation of
+.IR sh (1).
+In
+.IR patterns ,
+meta-characters
+.BR ? ,
+.BR \(** ,
+and
+.BR [ \|.\|.\|. ]
+match the slash
+.B /
+character.
+Multiple
+.I patterns\^
+may be specified and
+if no
+.I patterns\^
+are specified, the default for
+.I patterns\^
+is
+.BR \(**
+(i.e., select all files).
+The extracted files are conditionally created and copied
+into the current directory tree
+based upon the options described below.
+The permissions of the files will be those of the previous
+.BR "cpio \-o" .
+The owner and group of the files
+will be that of the current user
+unless the user is super-user, which causes
+.I cpio
+to retain the owner and group of the files of the previous
+.BR "cpio \-o" .
+.PP
+.B Cpio \-p
+(pass)
+reads the standard input to obtain a list of path names
+of files that are conditionally created and copied
+into the destination
+.IR directory
+tree based upon the options described below.
+.PP
+The meanings of the available options are:
+.PP
+.PD 0
+.TP
+.B a
+Reset access times of input files after they have been copied.
+.TP
+.B B
+Input/output is to be blocked 5,120 bytes to the record
+(does not apply to the
+.I pass\^
+option; meaningful only with data directed to or from
+.BR /dev/rmt/?? ).
+.TP
+.B d
+.I Directories\^
+are to be created as needed.
+.TP
+.B c
+Write
+.I header\^
+information in
+.SM ASCII
+character form for portability.
+.TP
+.B r
+Interactively
+.I rename\^
+files.
+If the user types a null line, the
+file is skipped.
+.TP
+.B t
+Print a
+.I table of contents\^
+of the input.
+No files are created.
+.TP
+.B u
+Copy
+.I unconditionally\^
+(normally, an older file will not replace a newer file with the same name).
+.TP
+.B v
+.IR Verbose :
+causes a list of file
+names to be printed.
+When used with
+the
+.B t
+option,
+the table of contents looks like the output of an
+.B ls\ \|\-l
+command
+(see
+.IR ls (1)).
+.TP
+.B l
+Whenever possible, link files rather than copying them.
+Usable only with
+the
+.B \-p
+option.
+.TP
+.B m
+Retain previous file modification time.
+This option is ineffective on directories that are being copied.
+.TP
+.B f
+Copy in all files except those in
+.I patterns.\^
+.TP
+.B s
+Swap bytes.
+Use only with the
+.B \-i
+option.
+.TP
+.B S
+Swap halfwords.
+Use only with the
+.B \-i
+option.
+.TP
+.B b
+Swap both bytes and halfwords.
+Use only with the
+.B \-i
+option.
+.TP
+.B 6
+Process an old (i.e.,
+.SM UNIX
+System
+.I Sixth\^
+Edition format)
+file.
+Only useful with
+.B \-i
+(copy in).
+.PD
+.bp
+.SH EXAMPLES
+The first example below copies the contents of a directory
+into an archive;
+the second duplicates a directory hierarchy:
+.PP
+.RS
+ls \|\(bv \|cpio \|\-o \|>/dev/mt/0m
+.PP
+.PP
+cd \|olddir
+.br
+find
+.B \|.\|
+\-depth \-print \|\(bv \|cpio \|\-pdl \|newdir
+.RE
+.PP
+The trivial case
+``find
+.B \|.\|
+\-depth \-print \|\(bv \|cpio \|\-oB \|>/dev/rmt/0m''
+can be handled more efficiently by:
+.PP
+.RS
+find
+.B \|.\|
+\-cpio \|/dev/rmt/0m
+.RE
+.SH SEE ALSO
+ar(1), find(1), ls(1).
+.br
+cpio(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH BUGS
+Path names are restricted to 128 characters.
+If there are too many unique linked files,
+the program runs out of
+memory to keep track of them
+and, thereafter, linking information is lost.
+Only the super-user can copy special files.
+The
+.B \-B
+option does not work with certain magnetic tape drives
+(see
+.IR un32 (7)
+in the
+.IR "\s-1UNIX\s+1 System V Administrator Reference Manual" ).
+.\"	@(#)cpio.1	6.3 of 9/2/83

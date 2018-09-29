@@ -1,0 +1,30 @@
+
+\Scpio\S :  Description
+
+Syntax Summary:  cpio -i [BSbcdfmrstuv] [pattern ...]
+                 cpio -o [Bacv]
+                 cpio -p [adlmuv] dir_name
+
+         where:  pattern  is the name of a file or regular expression.
+
+                 dir_name  is the name of a directory.
+
+Description:
+    \Scpio\S stands for "copy in and out."  \Scpio\S archives and unarchives
+     files and directories.  Archiving files saves inodes and space in memory.
+     Use \Scpio\S to archive files so you can transfer them to other UNIX
+     systems.  You can also use \Scpio\S to move an entire directory hierarchy
+     to another directory or file system.  With the "o" option, \Scpio\S takes
+     file names from standard input and archives them, and sends them to
+     standard output as a single file. Use \Scpio\S with the "i" option to
+     unarchive a file that you archived with "\Scpio\S -o".  "\Scpio\S -i"
+     returns each file in the archive back to its original form.  You can
+     archive an entire directory when you have only read permission, but you
+     must have write permission to unarchive the archive file.  \Scpio\S with
+     the "p" option takes files from standard input and archives them.  It then
+     copies them to a directory where it unarchives them.  "\Scpio\S -p"
+     passes the files to the new directory without creating a permanent 
+     archive.  See also: tar(1) for a command with a function similar to
+     \Scpio\S, and find(1), and ls(1) for commands that might be used with
+     \Scpio\S.
+

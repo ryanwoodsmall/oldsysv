@@ -1,0 +1,54 @@
+2 0 0 #ident	"@(#)script.files:t.viintro	1.5"
+8 4 20 WELCOME TO THE vi WALKTHRU
+705 7 6 61
+In this walkthru,  I will show you how to do some simple
+editing with vi.  When we have finished, you will know how to:
+
+    - Move the cursor by characters, words, and lines
+    - Delete text
+    - Undo your last text modification
+    - Add text and create a new file
+    - Save the results of your editing session
+    - Enter and quit vi.
+706 
+15 
+520 arrow
+2 0 0
+12 
+520 asshelp
+705 8 8 51
+Would you like a brief demonstration of some of
+vi's editing commands?
+
+Many people find a demonstration useful, especially 
+if they have never used vi before.
+706 
+8 1002 8 Answer y or n:  
+18 
+256 121 110
+25 
+15 
+20 
+200 1
+245 10000
+32 
+30 
+8 16 8 Answer y to get vi demonstration
+8 17 8 Answer n to skip the vi demonstration
+31 
+25 
+2 2000 2000
+15 
+20 
+246 
+271 121
+2 0 0
+12 
+8 4 8 Wait for the vi demonstration 
+15 
+310 TUT ($ASSISTBIN/mscript -m -s vi.demo;i=$?;if test $i -eq 3;then echo Hit RETURN to continue;read r;fi;exit $i)
+9 4 8 That ends the demonstration of vi
+16 
+280 
+250 
+520 arrow

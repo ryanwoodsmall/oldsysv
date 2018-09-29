@@ -1,0 +1,11 @@
+
+\S portable:  portability \S
+
+Portable means that a program or "library"\S*\S can be moved from one
+system to another.  Portability is the degree to which a program is moved
+easily.  Portability is desirable because once a program is developed it is
+used on many systems.  If the program writer must change the program before
+it can be distributed to the other systems, time is wasted, and each change
+increases the chances for an error.
+
+\S*\S defined in the \Sglossary\S

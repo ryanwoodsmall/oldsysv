@@ -1,0 +1,7 @@
+#ident	"@(#)initpkg:init.d/fumounts	1.2"
+
+/bin/cat /etc/advtab |
+	while read resource junk
+	do 
+		/usr/bin/fumount ${resource}
+	done

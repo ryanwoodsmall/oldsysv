@@ -1,0 +1,17 @@
+2 0 0 #ident	"@(#)script.files:t.asintro	1.1"
+705 4 7 63
+           AN INTRODUCTORY WALKTHRU OF ASSIST
+
+
+In the next few minutes you will walk through an introduction
+to ASSIST's features:
+
+     + ASSIST's menu system, which leads you to command forms.
+     + Command forms, which help you build and execute UNIX
+         system commands
+     + Three types of pop-up help
+     + ASSIST's pop-up menu, which provides access to additional
+         ASSIST functions
+
+706 
+520 botarrow

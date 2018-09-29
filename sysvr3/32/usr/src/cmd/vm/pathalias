@@ -1,0 +1,11 @@
+OBJECTS=$VMSYS/OBJECTS
+HELP=$VMSYS/HELP
+
+filecabinet=$HOME/FILECABINET
+wastebasket=$HOME/WASTEBASKET
+
+preferences=$VMSYS/OBJECTS/Menu.pref
+services=$VMSYS/OBJECTS/Menu.serve
+office=$VMSYS/OBJECTS/Menu.office
+other_users=$VMSYS/OBJECTS/Menu.users
+other users=$VMSYS/OBJECTS/Menu.users

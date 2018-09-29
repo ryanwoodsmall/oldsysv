@@ -1,0 +1,18 @@
+
+\S file system : file system structure :  current working directory: \S 
+\S directory \S
+
+The file system used in UNIX systems is a hierarchical collection
+of directories and other files that are organized in a tree structure.
+The base of the structure is the "root directory"\S*\S and it is  
+represented by a slash (/) at the beginning of every "full pathname"\S*\S.  
+Other directories, all of which are subordinate to root, are branches. 
+Many directories and "subdirectories"\S*\S can exist between root and a file.
+Ordinary files are the  storage areas in the file system, and can be thought
+of as  leaves of the tree. The current working directory is one of the 
+branches between root and your ordinary  files, and it is the directory that 
+you are working in at any particular time.  Unless you state otherwise, new
+files or directories that you create are attached to the branch which is your 
+current working directory.
+
+\S*\S defined in the \Sglossary\S

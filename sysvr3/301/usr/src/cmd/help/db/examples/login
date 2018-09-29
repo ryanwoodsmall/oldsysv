@@ -1,0 +1,26 @@
+
+\Slogin\S:  Examples
+
+        exec login
+
+   Executes \Slogin\S when you want to login again.  \Slogin\S asks you for
+   a login name and password.
+
+   ---------------------------------------------------------------------------
+
+        exec login xyz
+
+   Executes \Slogin\S when you want to login again, and initiates the login
+   process with the login name "xyz".  \Slogin\S queries you for your
+   password.
+
+
+
+   ---------------------------------------------------------------------------
+
+        exec login xyz $HOME=/q14/xyz
+
+   Executes \Slogin\S when you want to login again.  Initiates the login
+   process for the login name "xyz". \Slogin\S queries you for a password, and
+   resets the "HOME" environment variable to "/q14/xyz/" when the login
+   succeeds.

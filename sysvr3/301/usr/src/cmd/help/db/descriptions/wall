@@ -1,0 +1,13 @@
+
+\Swall\S:  Description
+
+Syntax Summary:  wall
+
+Description:
+     \Swall\S stands for "write all".  Use \Swall\S to send messages to all
+     system users.  \Swall\S reads the standard input and sends it as a
+     message to all current system users.  The typical use of \Swall\S is to
+     warn users that the system is being brought down. The sender of the
+     message must be super-user, otherwise, users who have turned off the write
+     access to their terminal will not receive the message.  See also: write(1)
+     for a command with a function similar to \Swall\S.

@@ -1,0 +1,148 @@
+#ident	"@(#)core:setup.core4	1.6"
+#
+#	Sets up "3B2 Core Unix Part 4" file system on floppy
+#
+
+echo "Setting up the \"3B2 Core UNIX Part 4\" floppy"
+
+set -u
+export PATH
+PATH=/bin:/usr/bin:/etc
+ROOT=/install
+cd ${ROOT}/usr/lib/terminfo
+mkdir o p
+ln 1/1620 1/1640
+ln 1/1620 4/450
+ln 1/1620 d/diablo
+ln 2/2621 2/2621-wl
+ln 2/2621 2/2621A
+ln 2/2621 2/2621a
+ln 2/2621 h/hp2621
+ln 2/2621 h/hp2621-wl
+ln 2/2621 h/hp2621A
+ln 2/2621 h/hp2621a
+ln 2/2622 2/2622a
+ln 2/2622 h/hp2622
+ln 2/2622 h/hp2622a
+ln 2/2623 2/2623a
+ln 2/2623 h/hp2623
+ln 2/2623 h/hp2623a
+ln 2/2624 2/2624-4p
+ln 2/2624 2/2624a
+ln 2/2624 2/2624b
+ln 2/2624 h/hp2624
+ln 2/2624 h/hp2624a
+ln 2/2624 h/hp2624b
+ln 2/2624 h/hp2624b-4p
+ln 2/2626 2/2626A
+ln 2/2626 2/2626P
+ln 2/2626 2/2626a
+ln 2/2626 2/2626p
+ln 2/2626 h/hp2626
+ln 2/2626 h/hp2626a
+ln 2/2626 h/hp2626p
+ln 2/2640 2/2640a
+ln 2/2640 h/hp2640a
+ln 2/2640b 2/2644a
+ln 2/2640b h/hp2640b
+ln 2/2640b h/hp2644a
+ln 2/2645 h/hp2645
+ln 2/2645 h/hp45
+ln 2/2648 2/2648A
+ln 2/2648 2/2648a
+ln 2/2648 h/hp2648
+ln 2/2648 h/hp2648a
+ln 3/31 a/adm31
+ln 3/36 a/adm36
+ln 3/3a a/adm3a
+ln 4/4012 t/tek
+ln 4/4012 t/tek4012
+ln 4/4013 t/tek4013
+ln 4/4014 t/tek4014
+ln 4/4015 t/tek4015
+ln 4/4023 t/tek4023
+ln 4/4023 t/tex
+ln 4/4024 4/4025
+ln 4/4024 4/4025cu
+ln 4/4024 4/4027
+ln 4/4024 4/4027cu
+ln 4/4024 t/tek4024
+ln 4/4024 t/tek4025
+ln 4/4024 t/tek4027
+ln 4/4112 4/4112-nd
+ln 4/4112 4/4113
+ln 4/4112 4/4114
+ln 4/4112 t/tek4112
+ln 4/42 a/adm42
+ln 4/4410 5/5410
+ln 4/4410 A/ATT4410
+ln 4/4410 A/ATT5410
+ln 4/4410 a/att4410
+ln 4/4410 a/att5410
+ln 4/4410 t/tty5410
+ln 4/4415 5/5420
+ln 4/4415 A/ATT4415
+ln 4/4415 A/ATT5420
+ln 4/4415 a/att4415
+ln 4/4415 a/att5420
+ln 4/4415 t/tty5420
+ln 4/4418 5/5418
+ln 4/4418 A/ATT4418
+ln 4/4418 A/ATT5418
+ln 4/4418 a/att4418
+ln 4/4418 a/att5418
+ln 4/4424 4/4424-1
+ln 4/4424 4/4424-3
+ln 4/4424 A/ATT4424
+ln 4/4424 a/att4424
+ln 4/4424 t/tty4424
+ln 4/4424-2 A/ATT4424-2
+ln 4/4424-2 a/att4424-2
+ln 4/4424-2 t/tty4424-2
+ln 4/4425 5/5425
+ln 4/4425 A/ATT4425
+ln 4/4425 A/ATT5425
+ln 4/4425 a/att4425
+ln 4/4425 a/att5425
+ln 4/4425 t/tty5425
+ln 4/4426 A/ATT4426
+ln 4/4426 a/att4426
+ln 4/4426 t/tty4426
+ln 5/513bct A/ATT513
+ln 5/513bct a/att513
+ln 5/5420_2 A/ATT5420_2
+ln 5/5420_2 a/att5420_2
+ln 5/5620 A/ATT5620
+ln 5/5620 a/att5620
+ln 5/5620 d/dmd
+ln 5/5620 t/tty5620
+ln 5/5620 t/ttydmd
+ln 6/610bct A/ATT610BCT
+ln 6/610bct a/att610bct
+ln 9/925 t/tvi925
+ln 9/950 t/televideo950
+ln 9/950 t/tvi950
+ln A/ATTPT505 a/attpt505
+ln A/ATTPT505 p/pt505
+ln b/bantam p/pe550
+ln b/bantam p/pe6100
+ln c/c100 c/c100-4p
+ln c/c100 c/c104
+ln c/c100 c/concept
+ln c/c100 c/concept100
+ln c/c108 c/c108-8p
+ln c/c108 c/concept108
+ln c/c108 c/concept108-8p
+ln d/decwriter d/dw
+ln d/decwriter d/dw2
+ln d/dw3 l/la120
+ln i/intext2 i/intextii
+ln l/lp l/lpr
+ln l/lp p/print
+ln l/lp p/printer
+ln l/lp p/printing
+ln r/regent200 r/regent60
+ln v/vt100 v/vt100-am
+find * -print | cpio -pdmul ../.COREterm >/dev/null 2>&1
+cd /
+rm ${ROOT}/setup

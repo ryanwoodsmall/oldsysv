@@ -1,0 +1,11 @@
+title="Software Version"
+
+lifetime=shortterm
+rows=4
+columns=24
+
+help=`message No help available yet`
+
+text="
+    AT&T FACE
+ Version 1.0 Revision 3"

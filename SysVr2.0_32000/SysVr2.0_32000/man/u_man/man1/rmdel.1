@@ -1,0 +1,86 @@
+.TH RMDEL 1
+.SH NAME
+rmdel \- remove a delta from an \s-1SCCS\s+1 file
+.SH SYNOPSIS
+.B rmdel
+.if n .ul
+\fB\-r\fR\c
+.if n .ul 0
+\s-1SID\s0
+files
+.SH DESCRIPTION
+.I Rmdel\^
+removes the delta specified by the
+.SM \fISID\fP
+from each
+named \s-1SCCS\s+1 file.
+The delta to be removed must be the newest (most recent) delta
+in its branch in the delta chain of each
+named \s-1SCCS\s+1 file.
+In addition,
+the \*(I) specified must
+.I not\^
+be that of a version being edited for the purpose of
+making a delta (i. e.,
+if a
+.I p-file\^
+[see
+.IR get (1)]
+exists for the named \s-1SCCS\s+1 file,
+the \*(I) specified must
+.I not\^
+appear in any entry of the
+.I p-file\c\^
+).
+.PP
+If a directory is named,
+.I rmdel\^
+behaves as though each file in the directory were
+specified as a named file,
+except that non-\s-1SCCS\s+1 files
+(last component of the path name does not begin with \fBs.\fR)
+and unreadable files
+are silently ignored.
+If a name of \fB\-\fR is given, the standard input is read;
+each line of the standard input is taken to be the name of an \s-1SCCS\s+1 file
+to be processed;
+non-\s-1SCCS\s+1 files and unreadable files are silently ignored.
+.PP
+The exact permissions necessary to remove a delta
+are documented in the
+.IR "Source Code Control System User Guide" .
+Simply stated,
+they are either (1)
+if you make a delta you can remove it;
+or (2)
+if you own the file and directory you can remove a delta.
+.SH FILES
+.PD 0
+.TP 10
+x.file
+[see
+.IR delta (1)]
+.TP 10
+z.file
+[see
+.IR delta (1)]
+.PD
+.SH "SEE ALSO"
+delta(1),
+get(1),
+help(1),
+prs(1).
+.br
+sccsfile(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+.sp
+.I "Source Code Control System Support Tools Guide\^"
+in the
+.IR "\s-1UNIX\s+1 System V User Guide" .
+.br
+.SH DIAGNOSTICS
+Use
+.IR help (1)
+for explanations.
+.\"	@(#)rmdel.1	6.2 of 9/2/83

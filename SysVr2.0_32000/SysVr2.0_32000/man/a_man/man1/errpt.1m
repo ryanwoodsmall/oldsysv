@@ -1,0 +1,111 @@
+.TH ERRPT 1M
+.SH NAME
+errpt \- process a report of logged errors
+.SH SYNOPSIS
+.B errpt
+[ options ] 
+[ files ]
+.SH DESCRIPTION
+.I Errpt\^
+processes data collected by the error logging
+mechanism
+.RI [ errdemon (1M)]
+and generates a report of that data.
+The default report is a summary of all errors posted in the files named.
+Options apply to all files and are described below.
+If no files are specified,
+.I errpt\^
+attempts to use
+.B /usr/adm/errfile
+as
+.IR file .
+.PP
+A summary report notes the options that may
+limit its completeness, records the time stamped on
+the earliest and latest errors encountered, and
+gives the total number of errors of one or more types.
+Each device summary contains the total number
+of unrecovered errors, recovered errors,
+errors unabled to be logged,
+I/O operations on the device,
+and miscellaneous activities that occurred on the device.
+The number of times that
+.I errpt\^
+has difficulty reading input data
+is included as read errors.
+.PP
+Any detailed report contains, in addition to specific error information,
+all instances of the error logging process being started
+and stopped, and any time changes [via
+.IR date (1)]
+that took
+place during the interval being processed.
+A summary of each error type included in the report is
+appended to a detailed report.
+.PP
+A report may be limited to certain records in the
+following ways:
+.PP
+.TP 16
+.BI \-s " date\^"
+Ignore all records posted earlier than
+\fIdate\fR,
+where
+.I date\^
+has the form \fImmddhhmmyy\fP\^,
+consistent in meaning with the
+.IR date (1)
+command.
+.TP
+.BI \-e " date\^"
+Ignore all records posted later than
+.IR date ,
+whose form is as described above.
+.TP
+.BR \-a	
+Produce a detailed report that includes all error types.
+.TP
+.BI \-d " devlist\^"
+A detailed report is limited to 
+data about devices given in
+.IR devlist ,
+where
+.I devlist\^
+can be one of two forms:
+a list of device identifiers separated from one another
+by a comma, or a list of device identifiers enclosed in
+double quotes
+and separated from one another by a comma and/or more spaces.
+.I Errpt\^
+is familiar with the common form of identifiers
+(e.g., DC, TC;
+see Section\ 7 of this volume).
+For the NSC SYS32 processor,
+the (block) devices for which errors
+are logged are
+.SM DC,
+and
+.SM TC.
+Additional identifiers are
+.B int
+and
+.B mem
+which include detailed reports of stray-interrupt and
+memory-parity type errors, respectively.
+.TP
+.BI \-p " n\^"
+Limit the size of a detailed report to
+.I n\^
+pages.
+.TP
+.B \-f
+In a detailed report, limit the reporting of block device errors to
+unrecovered errors.
+.SH FILES
+/usr/adm/errfile	     default error file
+.SH SEE ALSO
+date(1),
+errdead(1M),
+errdemon(1M),
+errfile(4).
+.\"	@(#)errpt.1m	6.2 of 9/2/83

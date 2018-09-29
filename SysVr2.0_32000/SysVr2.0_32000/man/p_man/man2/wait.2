@@ -1,0 +1,95 @@
+.TH WAIT 2 
+.SH NAME
+wait \- wait for child process to stop or terminate
+.SH SYNOPSIS
+.B int wait (stat_loc)
+.br
+.B int \(**stat_loc;
+.PP
+.B int wait ((int \(**)0)
+.SH DESCRIPTION
+.I Wait\^
+suspends the calling process until
+one of the immediate children
+terminates or until a child that is
+being traced stops, because it has hit a break point.
+The \f2wait\fR system call will return
+prematurely if a signal is received and 
+if a child process stopped or terminated prior to the call on
+.IR wait ,
+return is immediate.
+.PP
+If
+.I stat_loc\^
+(taken as an integer) is non-zero, 16 bits of information called status
+are stored in the low order 16 bits of the location pointed to by
+.IR stat_loc .
+.I Status\^
+can be used to differentiate between stopped and terminated child processes and
+if the child process terminated, status identifies the cause of termination
+and passes useful information to the parent. This is accomplished in the
+following manner:
+.IP
+If the child process stopped, the high order 8 bits of status will contain
+the number of the signal that caused the process to stop and
+the low order 8 bits will be set equal to 0177.
+.IP
+If the child process terminated due to an
+.I exit\^
+call, the low order 8 bits of status will be zero and the high order 8 bits
+will contain the low order 8 bits of the argument that the child process
+passed to
+.IR exit ;
+see
+.IR exit (2).
+.IP
+If the child process terminated due to a signal, the high order 8 bits
+of status will be zero and the low order 8 bits will contain the number of the
+signal that caused the termination. In addition, if the low order seventh bit
+(i.e., bit 200) is set, a ``core image'' will have been produced; see
+.IR signal (2).
+.PP
+If a parent process terminates without waiting for its child processes
+to terminate, the parent process
+.SM ID
+of each child process is set to 1. This means the initialization process
+inherits the child processes; see
+.IR intro (2).
+.PP
+.PP
+.I Wait\^
+will fail and return immediately if one or more of the following are true:
+.TP 15
+.SM
+\%[ECHILD]
+The calling process has no existing unwaited-for child processes.
+.TP
+.SM
+\%[EFAULT]
+.I Stat_loc\^
+points to an illegal address.
+.SH RETURN VALUE
+If
+.I wait\^
+returns due to the receipt of a signal, a value of \-1 is returned
+to the calling process and
+.I errno\^
+is set to
+.SM EINTR.
+If
+.I wait\^
+returns due to a stopped or terminated child process, the process
+.SM ID
+of the child is returned to the calling process.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+exec(2), exit(2), fork(2), intro(2), pause(2), ptrace(2), signal(2).
+.SH WARNING
+See
+.SM
+.I WARNING\^
+in
+.IR signal (2).
+.\"	@(#)wait.2	6.2 of 9/6/83

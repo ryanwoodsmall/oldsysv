@@ -1,0 +1,9 @@
+menu=Objects Found in `pathconv -t -v "${ARG1:-$OPWD}"`
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.m.found 'Objects Found'
+
+`genfind -1 "${ARG1:-$OPWD}" "$ARG2" "$ARG3" "$ARG4" "$ARG5" | regex '(.*)$0;(.*)$1;(.*)$2;(.*)$3' '
+name=$m2
+arg=$m0
+description=$m3
+action=OPEN $m1 $m0' || message 'No objects found' && echo init=false`

@@ -1,0 +1,28 @@
+
+\S expression:  regular expression:  full regular expression:  limited\S
+\Sregular expression:  logical expression:  logical operator:  pattern\S
+\Smatching \S
+
+An expression is a series of characters that has value.  In UNIX the
+values of expressions are most often "strings"\S*\S or the logical values
+TRUE and FALSE.  Expressions that have string values are full regular
+expressions, which are sometimes called regular expressions, and limited
+regular expressions.  You create these expressions using alphanumeric
+characters and "special characters"\S*\S.  Limited regular expressions
+use a subset of the possible alphanumeric characters and special
+characters.  In UNIX systems, these expressions are most often used with
+commands to identify strings in a file.  The activity of finding strings
+using expressions is called pattern matching.  For example, you might want
+to search for strings that contain one or more occurrences of the letter
+"a".  To do this you would use the regular expression "a+".  This
+expression would match "a", "aa", and "aaaaaa".  The manual pages for
+ed(1), grep(1), and egrep(1) contain more information on expressions and
+pattern matching.
+
+You create expressions with logical value using regular expressions in
+combination with logical operations.  Logical operators are "&" for logical
+"and", "|" for logical "or" and "!" for logical "not".  For example,
+"a+|t+" would match any string that had any number of the character "a" or
+the character "t".
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,21 @@
+
+\Sps\S:  Description
+
+Syntax Summary:
+      ps [-a] [-d] [-e] [-f] [-l] [-c alternate_mem]
+         [-g grp_list] [-n name_list][-p proc_list]
+         [-s alternate_swap] [-t term_list] [-uuid_list]
+
+         where:  alternate_mem, alternate_swap and file_name are names of files.
+                 name_list, term_list, proc_list, uid_list, grp_list are lists.
+
+Description:
+     \Sps\S stands for "process status".  Use \Sps\S to print information
+     about active UNIX system processes.  If you type \Sps\S by itself it
+     prints a list of basic information about all the processes associated with
+     your terminal.  It prints the process ID number, the tty number of the
+     controlling terminal, the time the command was executed and the command
+     name.  With different options, \Sps\S prints information about processes
+     belonging to other users or groups of users and additional information
+     about the processes.  See also:  kill(1) and nice(1) for commands that
+     might be used with \Sps\S.

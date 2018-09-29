@@ -1,0 +1,47 @@
+.TH CALENDAR 1 
+.SH NAME
+calendar \- reminder service
+.SH SYNOPSIS
+.B calendar
+[ \- ]
+.SH DESCRIPTION
+.I Calendar\^
+consults the file \f3calendar\fP in the current directory
+and prints out lines that contain today's or
+tomorrow's date anywhere in the line.
+Most reasonable month-day dates such as ``Aug. 24,''
+``august 24,'' ``8/24,'' etc., are recognized, but not
+``24 August'' or ``24/8''.
+On weekends ``tomorrow'' extends through Monday.
+.PP
+When 
+an argument is present,
+.I calendar\^
+does its job for every user
+who has a file \f3calendar\fP in the login directory
+and sends them any positive results by
+.IR mail (1).
+Normally this is done daily by facilities in the 
+.SM UNIX
+operating system.
+.SH FILES
+.TP 20
+/usr/lib/calprog
+to figure out today's and tomorrow's dates
+.br
+.sp
+.TP
+/etc/passwd
+.br
+.TP
+/tmp/cal\(**
+.SH "SEE ALSO"
+mail(1).
+.SH BUGS
+Your calendar must be public information for you
+to get reminder service.
+.br
+.I Calendar's\^
+extended idea of ``tomorrow'' does not account for
+holidays.
+.\"	@(#)calendar.1	6.2 of 9/2/83

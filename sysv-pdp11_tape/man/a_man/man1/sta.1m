@@ -1,0 +1,25 @@
+.TH STA 1M "3B20S only"
+.SH NAME
+sta \- find status of pending on-line diagnostic requests
+.SH SYNOPSIS
+.B /dgn/bin/sta
+.SH DESCRIPTION
+The diagnostic command \fIsta\fP
+reports the status of
+all currently pending diagnostic
+requests within the Maintenance Input Request
+Administrator (\s-1MIRA\s+1).
+The contents of both the waiting and active diagnostic
+requests are printed along with
+their respective slot numbers.
+.SH "SEE ALSO"
+dgn(1M),
+rmv(1M),
+rst(1M).
+.br
+.IR "3B DMERT Output Messages" ,
+OM-4C000-01.
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)sta.1m	5.2 of 5/18/82

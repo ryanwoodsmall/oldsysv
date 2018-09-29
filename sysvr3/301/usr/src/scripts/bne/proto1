@@ -1,0 +1,63 @@
+/dev/null
+1422 104
+d--775 0 3
+install	d--755	5 3
+	INSTALL	---444	5 3	./install/bne/INSTALL
+	ORDER	---444	5 3	./install/bne/ORDER1
+	Rlist.uucp	---444	5 3	./install/bne/Rlist.uucp
+	UNINSTALL	---444	5 3	./install/bne/UNINSTALL
+	packagename	---444	5 3	./install/bne/packagename
+	postinstall	---555	5 3	./install/bne/postinstall
+	preinstall	---555	5 3	./install/bne/preinstall
+	unsetup		---555	5 3	./install/bne/unsetup
+$
+new	d--755	5 3
+	usr	d--775	0 3
+		admin	d--755	0 3
+			menu	d--755	0 3
+				packagemgmt	d--755	0 3
+					uucpmgmt	d--755	5 3
+						DESC	---444	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/DESC
+						adddevice	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/adddevice
+						addpoll	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/addpoll
+						addport	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/addport
+						addsystem	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/addsystem
+						deldevice	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/deldevice
+						delpoll	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/delpoll
+						delport	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/delport
+						delsystem	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/delsystem
+						devicemgmt	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/devicemgmt
+						lsdevice	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/lsdevice
+						lspoll	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/lspoll
+						lsport	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/lsport
+						lssystem	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/lssystem
+						modifyport	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/modifyport
+						pollmgmt	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/pollmgmt
+						portmgmt	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/portmgmt
+						systemmgmt	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/systemmgmt
+						trysystem	---555	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/trysystem
+						_initprint	---444	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/_initprint
+						_delinittab	---444	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/_delinittab
+						_deviceprint	---444	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/_deviceprint
+						_systemprint	---444	5 3	../usr/admin/menu/packagemgmt/uucpmgmt/_systemprint
+					$
+				$
+			$
+		$
+		bin	d--775	2 2
+			ct	-u-111	0 3	../usr/bin/ct
+			cu	-u-111	5 3	../usr/bin/cu
+			uucp	-u-111	5 3	../usr/bin/uucp
+			uulog	---555	5 3	../usr/bin/uulog
+			uuname	-u-111	5 3	../usr/bin/uuname
+			uupick	---555	5 3	../usr/bin/uupick
+			uustat	-u-111	5 3	../usr/bin/uustat
+			uuto	---555	5 3	../usr/bin/uuto
+			uux	-u-111	5 3	../usr/bin/uux
+		$
+		options	d--775	0 3
+			uucp.name	---755	0 3	./install/bne/packagename
+		$
+	$
+$
+$

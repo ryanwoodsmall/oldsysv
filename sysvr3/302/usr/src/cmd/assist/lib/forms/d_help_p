@@ -1,0 +1,8 @@
+NAVIGATING, EXECUTING       CURSOR POSITIONING         MISCELLANEOUS 
+^G Select current item     RETURN, ^N Next item       ^L Redraw screen
+^V Clear help or prompt         ^P Previous item      ^Y Current item help
+^R Return to menu or form       ^W ...                ^O Current menu help
+^F ...                          ^B ...                ^A ASSIST help
+^T Top menu                     ^U ...                ^K ...
+^D Exit ASSIST                                        ^C ...
+^E ...                       <letter> Go to item that starts with <letter>

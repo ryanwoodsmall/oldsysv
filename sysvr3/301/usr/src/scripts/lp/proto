@@ -1,0 +1,66 @@
+/dev/null
+1422 100
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/lp/Rlist.lp
+	UNINSTALL	---555 2 2	./install/lp/UNINSTALL
+	INSTALL 	---755 2 2	./install/lp/INSTALL
+	setup		---755 2 2	./install/lp/setup
+	setup1		---755 2 2	./install/lp/setup1
+	setup2		---755 2 2	./install/lp/setup2
+	unsetup		---755 2 2	./install/lp/unsetup
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		bin	d--775 2 2
+			cancel		-ug555 71 2	../usr/bin/cancel
+			disable		-ug555 71 2	../usr/bin/disable
+			enable		-ug555 71 2	../usr/bin/enable
+			lp		-ug555 71 2	../usr/bin/lp
+			lpstat		-ug555 71 2	../usr/bin/lpstat
+		$
+		lib	d--775 0 3
+			hp2631a		---755 2 2	../usr/lib/hp2631a
+			accept		-ug555 71 2	../usr/lib/accept
+			lpadmin		-ug555 0 2	../usr/lib/lpadmin
+			lpmove		-ug555 71 2	../usr/lib/lpmove
+			lpsched		-ug555 0 2	../usr/lib/lpsched
+			lpshut		-ug555 71 2	../usr/lib/lpshut
+			pprx		---755 2 2	../usr/lib/pprx
+			prx		---755 2 2	../usr/lib/prx
+			5310		---755 2 2	../usr/lib/5310
+			reject		-ug555 71 2	../usr/lib/reject
+		$
+		spool	d--775 0 2
+			lp	d--775 71 2
+				outputq		---644 71 2	../usr/spool/lp/outputq
+				pstatus		---644 71 2	../usr/spool/lp/pstatus
+				qstatus		---644 71 2	../usr/spool/lp/qstatus
+				class	d--775 71 2
+				$
+				interface	d--775 71 2
+				$
+				member	d--775 71 2
+				$
+				request	d--775 71 2
+				$
+				model	d--775 71 2
+					1640		---775 2 2	../usr/spool/lp/model/1640
+					dqp10		---775 2 2	../usr/spool/lp/model/dqp10
+					lqp40		---775 2 2	../usr/spool/lp/model/lqp40
+					dumb		---775 2 2	../usr/spool/lp/model/dumb
+					f450		---775 2 2	../usr/spool/lp/model/f450
+					hp		---775 2 2	../usr/spool/lp/model/hp
+					pprx		---775 2 2	../usr/spool/lp/model/pprx
+					prx		---775 2 2	../usr/spool/lp/model/prx
+					5310		---775 2 2	../usr/spool/lp/model/5310
+				$
+			$
+		$
+		options		d--775 0 3
+			lp.name		---555 2 2	./install/lp/lp.name
+		$
+	$
+$
+$
+#ident "@(#)pkg.lp:lp/proto	1.9"

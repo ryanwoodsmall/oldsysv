@@ -1,0 +1,12 @@
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/assist.name`
+echo "Removing ${PKGNAME}"
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist`
+do
+        echo $i
+        rm -f $i
+done
+rm -fr /usr/lib/assist
+echo "The ${PKGNAME} has been removed."
+exit

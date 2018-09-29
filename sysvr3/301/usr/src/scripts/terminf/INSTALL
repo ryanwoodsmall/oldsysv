@@ -1,0 +1,62 @@
+#ident	"@(#)pkg.terminf:terminf/INSTALL	1.7"
+#
+#	Save the mount point of the floppy & the package name.
+#
+
+INSPATH="/install/new"
+INSINS="/install/install"
+PKGNAME="`cat ${INSPATH}/usr/options/terminf.name`"
+ORDER="`cat ${INSINS}/ORDER`"
+
+if [ -s /usr/lib/libcurses.a ]
+then
+	if [ "${ORDER}" = "1" -o "${ORDER}" = "2" ]
+	then
+		echo "Installing the ${PKGNAME}."
+		echo "Copyright (c) 1984 AT&T"
+		echo "All Rights Reserved"
+	fi
+elif [ ! -s /usr/lib/libcurses.a -a "${ORDER}" = "1" ]
+then
+		echo "Installing the ${PKGNAME}."
+		echo "Copyright (c) 1984 AT&T"
+		echo "All Rights Reserved"
+fi
+
+#
+#	How much space that is required for this package is dependent
+#		on how many of the files will be installed so we can't
+#		check for this.
+#
+
+
+if [ "`cat /install/install/ORDER`" = "1" ]
+then
+	cd ${INSPATH}
+	echo "The following files are being installed:"
+	find . -print | cpio -pduvm /
+	ln /usr/lib/libcurses.a /usr/lib/libtermcap.a
+	echo /usr/lib/libtermcap.a
+	ln /usr/lib/libcurses.a /usr/lib/libtermlib.a
+	echo /usr/lib/libtermlib.a
+	echo
+	echo
+	echo "Please install the terminal files you wish from the 2nd diskette."
+elif [ "`cat /install/install/ORDER`" = "2" ]
+then
+	#
+	#	Export the INSINS variable for setup script on 2nd diskette.
+	#
+	export INSINS
+
+	if [ ! -s /usr/lib/libcurses.a ]
+	then
+		echo "Please install the first diskette of this package."
+		exit 1
+	fi
+
+	echo "Selective installation of the ${PKGNAME} database."
+	cd ${INSINS}
+	${INSINS}/setup
+	echo "The installation of ${PKGNAME} is now complete."
+fi

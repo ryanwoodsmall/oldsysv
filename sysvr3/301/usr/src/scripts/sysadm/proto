@@ -1,0 +1,36 @@
+bootblk
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/sysadm/Rlist.sysadm
+	UNINSTALL	---555 2 2	./install/sysadm/UNINSTALL
+	INSTALL 	---555 2 2	./install/sysadm/INSTALL
+$
+new	d--775 0 3
+	etc	d--775 0 3
+		chroot		---555 2 2	../etc/chroot
+		crash		---555 2 2	../etc/crash
+		dcopy		---555 2 2	../etc/dcopy
+		dfsck		---555 2 2	../etc/dfsck
+		ff		---555 2 2	../etc/ff
+		fsdb		---555 2 2	../etc/fsdb
+		fsdb1b		---555 2 2	../etc/fsdb1b
+		fuser		---555 2 2	../etc/fuser
+		grpck		---555 2 2	../etc/grpck
+		ldsysdump	---555 2 2	../etc/ldsysdump
+		link		---500 0 2	../etc/link
+		mvdir		---544 0 2	../etc/mvdir
+		ncheck		---555 2 2	../etc/ncheck
+		pwck		---555 2 2	../etc/pwck
+		sysdef		---555 2 2	../etc/sysdef
+		unlink		---500 0 2	../etc/unlink
+		volcopy		---555 2 2	../etc/volcopy
+		whodo		--g555 2 3	../etc/whodo
+	$
+	usr	d--775 0 3
+		options	d--775 0 3
+			sysadm.name	---555 2 2	./install/sysadm/sysadm.name
+		$
+	$
+$
+$

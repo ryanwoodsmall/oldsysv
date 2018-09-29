@@ -1,0 +1,24 @@
+menu="Help Facility: Services Administration"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=current
+begcol=current
+
+name="Services Administration Overview"
+action=OPEN TEXT OBJECTS/Text.help T.sadm 'Services Administration Overview'
+
+name="Add Services"
+action=OPEN TEXT OBJECTS/Text.help T.add 'Add Services'
+
+name="Modify Services"
+action=OPEN TEXT OBJECTS/Text.help T.mod 'Modify Services'
+
+name="Remove Services"
+action=OPEN TEXT OBJECTS/Text.help T.rem 'Remove Services'
+
+name="Personal Services"
+action=OPEN TEXT OBJECTS/Text.help T.list 'Personal Services'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

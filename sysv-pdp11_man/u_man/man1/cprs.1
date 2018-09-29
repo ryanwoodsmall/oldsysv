@@ -1,0 +1,37 @@
+.if '\*p'' \{\
+.ds N 3B20S
+.ds p 
+.ds P 
+.ds l libc.a\}
+.TH \*PCPRS 1 "\*N only"
+.SH NAME
+cprs \- compress an \s-1IS\s+125 object file
+.SH SYNOPSIS
+.B \*pcprs
+.RB [ \-pv ]
+file1 file2
+.SH DESCRIPTION
+The 
+.I cprs
+command
+reduces the size of an \s-1IS\s+125 object file,
+.IR file1 ,
+by removing duplicate structure and union descriptors.
+The reduced file,
+.IR file2 ,
+is produced as output.
+.PP
+The options are:
+.PP
+.TP 6
+.B \-p
+Print statistical messages including: total number of tags, total duplicate
+tags, and total reduction of 
+.IR file1 .
+.PP
+.TP 6
+.B \-v
+Print verbose error messages if error condition occurs.
+.SH SEE ALSO
+strip(1).
+.\"	@(#)cprs.1	5.2 of 5/18/82

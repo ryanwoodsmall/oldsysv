@@ -1,0 +1,21 @@
+#ident	"@(#)xenv:m32/make-m32	1.7"
+#
+#	Front end script to "make" for use in cross compilation of
+#	3b15/3b5/3b2 SGS
+#
+
+MAKECMD=
+
+MAKEOPTS="MAKE=make AS=xxxas CC=xxxcc LD=xxxld TESTDIR=. \
+	OL=$ROOT/ SL=$ROOT/usr/src/cmd \
+	ROOT=$ROOT INCSYS=$INCSYS INC=$INC \
+	SIZE=xxxsize LORDER=xxxlorder STRIP=xxxstrip PFX=xxx \
+	LST=xxxlist DIS=xxxdis NM=xxxnm CONV=xxxconv"
+
+echo xxx-make
+if [ $# = 0 ]
+then
+	exec $MAKECMD $MAKEOPTS
+else
+	exec $MAKECMD $MAKEOPTS "$@"
+fi

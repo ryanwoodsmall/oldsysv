@@ -1,0 +1,29 @@
+*#ident	"@(#)kern-port:master.d/msg	10.5"
+*
+* MSG
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ox	-	msg	-	-	-	ipc
+						msgsys(){nosys}
+						msgmap[MSGMAP] (%i%i)
+						msgque[MSGMNI] (%0x34)
+						msglock[MSGMNI] (%c)
+						msgh[MSGTQL] (%12)
+						msginfo(%i%i%i%i%i%i%s)
+						      ={MSGMAP,
+							MSGMAX,
+							MSGMNB,
+							MSGMNI,
+							MSGSSZ,
+							MSGTQL,
+							MSGSEG}
+
+$$$
+
+MSGMAP	= 100
+MSGMAX	= 2048
+MSGMNB	= 4096
+MSGMNI	= 50
+MSGSSZ	= 8
+MSGTQL	= 40
+MSGSEG	= 1024

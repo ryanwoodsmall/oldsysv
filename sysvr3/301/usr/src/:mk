@@ -1,0 +1,38 @@
+#ident	"@(#)adm::mk	1.5scp"
+#
+#	Shell script for rebuilding the UNIX System
+#
+trap "exit 1" 1 2 3 15
+if [ "$ROOT" = "" ]
+then
+	PATH=/bin:/etc:/usr/bin; export PATH
+fi
+#	install /usr/include and /usr/include/sys header files
+./:mkhead
+./:mksyshead
+#	build and install the C library
+#!scp	./:mklib libc
+#	build the C compilation tools
+#!scp	if vax || pdp11
+#!scp	then
+#!scp	./:mkcmd $* cc
+#!scp	else
+#!scp	./:mkcmd sgs
+#!scp	fi
+#	build the other libraries
+./:mklib \*
+#	build the system administration tools
+if [ "$ROOT" != "" ]
+then
+	./:mkcmd .adm
+fi
+#	build all the commands
+./:mkcmd $* \*
+#	build stand-alone system, if appropriate
+if vax || pdp11
+then
+	./:mkstand
+fi
+#	build the OS itself
+./:mkuts
+exit 0

@@ -1,0 +1,65 @@
+.if t .ds ' \h@.05m@\s+4\v@.333m@\'\v@-.333m@\s-4\h@.05m@
+.if n .ds ' '
+.if t .ds ` \h@.05m@\s+4\v@.333m@\`\v@-.333m@\s-4\h@.05m@
+.if n .ds ` `
+.TH BASENAME 1
+.SH NAME
+basename, dirname \- deliver portions of path names
+.SH SYNOPSIS
+.B basename
+string [ suffix ]
+.br
+.B dirname
+string
+.SH DESCRIPTION
+.I Basename\^
+deletes any prefix ending in
+.B /
+and the
+.I suffix\^
+(if present in
+.IR string )
+from
+.IR string ,
+and prints the result on the standard output.
+It is normally used inside substitution marks
+.RB ( "\*`\|\*`" )
+within shell procedures.
+.PP
+.I Dirname\^
+delivers all but the last level of the path name in
+.IR string .
+.SH EXAMPLES
+The following example, invoked with the argument
+.BR /usr/src/cmd/cat.c ,
+compiles the named file and moves the output to
+a file named
+.B cat
+in the current directory:
+.PP
+.RS
+cc \|$1
+.br
+mv \|a.out \|\*`basename \|$1 \|.c\*`
+.RE
+.PP
+The following example will set
+the shell variable
+.SM
+.B NAME
+to
+.BR /usr/src/cmd :
+.PP
+.RS
+\s-1NAME\s+1=\*`dirname \|/usr/src/cmd/cat\f3.\fPc\*`
+.RE
+.SH SEE ALSO
+sh(1).
+.SH BUGS
+The
+.I basename
+of
+.B /
+is null and
+is considered an error.
+.\"	@(#)basename.1	5.2 of 5/18/82

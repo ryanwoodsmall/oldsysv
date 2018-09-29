@@ -1,0 +1,90 @@
+.TH ENVIRON 5
+.SH NAME
+environ \- user environment
+.SH DESCRIPTION
+An array of strings called the ``environment'' is
+made available by
+.IR exec (2)
+when a process begins.
+By convention, these strings have the form
+``name=value''.
+The following names are used by various commands:
+.PP
+.PD 0
+.TP
+.SM
+.B PATH
+The sequence of directory prefixes that
+.IR sh (1),
+.IR time (1),
+.IR nice (1),
+.IR nohup (1),
+etc.,
+apply in searching for a file known by an incomplete path name.
+The prefixes are separated by
+colons
+.RB ( \^:\^ ).
+.IR Login (1)
+sets
+.SM
+.BR PATH\*S=:/bin:/usr/bin .
+.TP
+.SM
+.B HOME
+Name of the user's login directory, set by
+.IR login (1)
+from the password file
+.IR passwd (4).
+.TP
+.SM
+.B TERM
+The kind of terminal for which output is to be prepared.
+This information is used by commands, such as
+.IR mm (1)
+or
+.IR tplot (1G),
+which may exploit special capabilities of that terminal.
+.TP
+.SM
+.B TZ
+Time zone information. The format is
+.BI xxx n zzz
+where
+.B xxx
+is standard local time zone abbreviation,
+.I n\^
+is the difference in hours from
+.SM GMT\*S,
+and
+.B zzz
+is the abbreviation for the daylight-saving local time zone,
+if any;
+for example,
+.BR \s-1EST\s+15\s-1EDT\s+1 .
+.PD
+.PP
+Further names may be placed in the environment by
+the
+.I export\^
+command and ``name=value'' arguments in
+.IR sh (1),
+or by
+.IR exec (2).
+It is unwise to conflict with
+certain shell variables that are frequently exported by
+.B .profile
+files:
+.SM
+.BR MAIL \*S,
+.SM
+.BR PS1 \*S,
+.SM
+.BR PS2 \*S,
+.SM
+.BR IFS \*S.
+.SH SEE ALSO
+exec(2).
+.br
+env(1), login(1), sh(1), mm(1), nice(1), nohup(1), time(1), tplot(1G) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	@(#)environ.5	6.2 of 9/6/83

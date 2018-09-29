@@ -1,0 +1,284 @@
+/dev/null
+1422 224
+d--775 0 3
+	setup	---555 2 2	setup.core5
+	usr	d--775 0 0
+		admin		d--755	0 3
+			.profile	---444	0 3	../usr/admin/.profile
+			menu		d--755	0 3
+				DESC		---444	0 3	../usr/admin/menu/DESC
+				diagnostics	d--755	0 3
+					DESC		---444	0 3	../usr/admin/menu/diagnostics/DESC
+					diskrepair	---444	0 3	../usr/admin/menu/diagnostics/diskrepair
+					diskreport	---444	0 3	../usr/admin/menu/diagnostics/diskreport
+				$
+				diskmgmt	d--755	0 3
+					DESC		---444	0 3	../usr/admin/menu/diskmgmt/DESC
+					checkfsys	---444	0 3	../usr/admin/menu/diskmgmt/checkfsys
+					checkfsys.d	d--755	0 3
+						diskette	---444	0 3 	/dev/null
+					$
+					cpdisk		---444	0 3	../usr/admin/menu/diskmgmt/cpdisk
+					cpdisk.d	d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					erase		---444	0 3	../usr/admin/menu/diskmgmt/erase
+					erase.d		d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					format		---444	0 3	../usr/admin/menu/diskmgmt/format
+					format.d	d--755 0 3
+						diskette	---444	0 3	/dev/null
+					$
+					harddisk	d--755 0 3
+						DESC		---444	0 3	../usr/admin/menu/diskmgmt/harddisk/DESC
+						display		---444	0 3	../usr/admin/menu/diskmgmt/harddisk/display
+						display.d	d--755	0 3
+							disk	---444	0 3	/dev/null
+						$
+						makehdfsys	---444	0 3	../usr/admin/menu/diskmgmt/harddisk/makehdfsys
+						partitioning	---444	0 3	../usr/admin/menu/diskmgmt/harddisk/partitioning
+						partitioning.d	d--755	0 3
+							disk	---444	0 3	/dev/null
+						$
+						rmdisk	---444	0 3	../usr/admin/menu/diskmgmt/harddisk/rmdisk
+						rmdisk.d	d--755	0 3
+							disk	---444	0 3	/dev/null
+						$
+					$
+					makefsys	---444	0 3	../usr/admin/menu/diskmgmt/makefsys
+					makefsys.d	d--755	0 3
+						diskette	---444	0 3 	/dev/null
+					$
+					mountfsys	---444	0 3	../usr/admin/menu/diskmgmt/mountfsys
+					mountfsys.d	d--755	0 3
+						diskette	---444	0 3 	/dev/null
+					$
+					umountfsys	---444	0 3	../usr/admin/menu/diskmgmt/umountfsys
+					umountfsys.d	d--755	0 3
+						diskette	---444	0 3 	/dev/null
+					$
+				$
+				filemgmt	d--755	0 3
+					DESC		---444	0 3	../usr/admin/menu/filemgmt/DESC
+					backup		---444	0 3	../usr/admin/menu/filemgmt/backup
+					backup.d	d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					bupsched	d--755	0 3
+						DESC		---444	0 3	../usr/admin/menu/filemgmt/bupsched/DESC
+						schedcheck	---444	0 3	../usr/admin/menu/filemgmt/bupsched/schedcheck
+						schedmsg	---444	0 3	../usr/admin/menu/filemgmt/bupsched/schedmsg
+					$
+					diskuse		---444	0 3	../usr/admin/menu/filemgmt/diskuse
+					fileage		---444	0 3	../usr/admin/menu/filemgmt/fileage
+					filesize	---444	0 3	../usr/admin/menu/filemgmt/filesize
+					restore		---444	0 3	../usr/admin/menu/filemgmt/restore
+					restore.d	d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					store		---444	0 3	../usr/admin/menu/filemgmt/store
+					store.d		d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+				$
+				ttymgmt	d--755	0 3
+						DESC		---444	0 3	../usr/admin/menu/ttymgmt/DESC
+						mklineset	---444  0 3	../usr/admin/menu/ttymgmt/mklineset
+						modtty		---444	0 3	../usr/admin/menu/ttymgmt/modtty
+						lineset		---444	0 3	../usr/admin/menu/ttymgmt/lineset
+				$
+				machinemgmt	d--755	0 3
+						DESC		---444	0 3	../usr/admin/menu/machinemgmt/DESC
+						autold		---444	0 3	../usr/admin/menu/machinemgmt/autold
+						firmware	---444	0 3	../usr/admin/menu/machinemgmt/firmware
+						floppykey	---444	0 3	../usr/admin/menu/machinemgmt/floppykey
+						powerdown	---444	0 3	../usr/admin/menu/machinemgmt/powerdown
+						reboot		---444	0 3	../usr/admin/menu/machinemgmt/reboot
+						whoson		---444	0 3	../usr/admin/menu/machinemgmt/whoson
+				$
+				packagemgmt		d--755	0 3
+					DESC		---444	0 3	../usr/admin/menu/packagemgmt/DESC
+				$
+				softwaremgmt		d--755	0 3
+					DESC		---444	0 3	../usr/admin/menu/softwaremgmt/DESC
+					install		---444	0 3	../usr/admin/menu/softwaremgmt/install
+					installpkg	---444	0 3	../usr/admin/menu/softwaremgmt/installpkg
+					installpkg.d	d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					listpkg		---444  0 3	../usr/admin/menu/softwaremgmt/listpkg
+					removepkg	---444	0 3	../usr/admin/menu/softwaremgmt/removepkg
+					removepkg.d	d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					runpkg		---444	0 3	../usr/admin/menu/softwaremgmt/runpkg
+					runpkg.d	d--755	0 3
+						diskette	---444	0 3	/dev/null
+					$
+					uninstall	---444	0 3	../usr/admin/menu/softwaremgmt/uninstall
+				$
+				syssetup	d--755	0 3
+						DESC		---444	0 3	../usr/admin/menu/syssetup/DESC
+						admpasswd	---444	0 3	../usr/admin/menu/syssetup/admpasswd
+						datetime	---444	0 3	../usr/admin/menu/syssetup/datetime
+						nodename	---444	0 3	../usr/admin/menu/syssetup/nodename
+						setup		---444	0 3	../usr/admin/menu/syssetup/setup
+						syspasswd	---444	0 3	../usr/admin/menu/syssetup/syspasswd
+				$
+				usermgmt	d--755	0 3
+						DESC		---444	0 3	../usr/admin/menu/usermgmt/DESC
+						addgroup	---444	0 3	../usr/admin/menu/usermgmt/addgroup
+						adduser		---444	0 3	../usr/admin/menu/usermgmt/adduser
+						delgroup	---444	0 3	../usr/admin/menu/usermgmt/delgroup
+						deluser		---444	0 3	../usr/admin/menu/usermgmt/deluser
+						lsgroup		---444	0 3	../usr/admin/menu/usermgmt/lsgroup
+						lsuser		---444	0 3	../usr/admin/menu/usermgmt/lsuser
+						modadduser	---444 0 3	../usr/admin/menu/usermgmt/modadduser
+					modgroup	d--755 0 3
+						DESC		---444  0 3	../usr/admin/menu/usermgmt/modgroup/DESC
+						chgname		---444  0 3	../usr/admin/menu/usermgmt/modgroup/chgname
+					$
+					moduser		d--755 0 3
+							DESC		---444	0 3	../usr/admin/menu/usermgmt/moduser/DESC
+							chgloginid	---444	0 3	../usr/admin/menu/usermgmt/moduser/chgloginid
+							chgpasswd	---444	0 3	../usr/admin/menu/usermgmt/moduser/chgpasswd
+							chgshell	---444	0 3	../usr/admin/menu/usermgmt/moduser/chgshell
+					$
+				$
+			$
+			bupsched	---555	0 3	../usr/admin/bupsched
+			checkfsys	---555	0 3	../usr/admin/checkfsys
+			checkfsys.d	d--755	0 3
+				diskette	---444	0 3 	/dev/null
+			$
+			makefsys	---555	0 3	../usr/admin/makefsys
+			makefsys.d	d--755	0 3
+				diskette	---444	0 3	/dev/null
+			$
+			mountfsys	---555	0 3	../usr/admin/mountfsys
+			mountfsys.d	d--755	0 3
+				diskette	---444	0 3	/dev/null
+			$
+			powerdown	---555	0 3	../usr/admin/powerdown
+			profile.dot	---444	0 3	../usr/admin/profile.dot
+			setup		---555	0 3	../usr/admin/setup
+			sysadm		---555	0 3	../usr/admin/sysadm
+			umountfsys	---555	0 3	../usr/admin/umountfsys
+			umountfsys.d	d--755	0 3
+				diskette	---444	0 3	/dev/null
+			$
+			gettyvalues	---555  0 3	../usr/admin/gettyvalues
+			unixadmin	---555	0 3	../usr/admin/unixadmin
+		$
+		bin	d--775 2 2
+			checkfsys	---555 0 3	../usr/bin/checkfsys
+			fgrep		---555 2 2	../usr/bin/fgrep
+			getopt		---555 2 2	../usr/bin/getopt
+			id		---555 2 2	../usr/bin/id
+			mailx		--g555 2 6	../usr/bin/mailx
+			makefsys	---555 0 3	../usr/bin/makefsys
+			mountfsys	---555 0 3	../usr/bin/mountfsys
+			news		---555 2 2	../usr/bin/news
+			powerdown	---555 0 3	../usr/bin/powerdown
+			setup		---555 0 3	../usr/bin/setup
+			sysadm		---555 0 3	../usr/bin/sysadm
+			tr		---555 2 2	../usr/bin/tr
+			umountfsys	---555 0 3	../usr/bin/umountfsys
+			xargs		---555 2 2	../usr/bin/xargs
+		$
+		lbin		d--775	2 2
+			admerr		---555	0 3	../usr/lbin/admerr
+			agefile		---555	0 3	../usr/lbin/agefile
+			checklist	---555	0 3	../usr/lbin/checklist
+			checkre		---555	0 3	../usr/lbin/checkre
+			checkyn		---555	0 3	../usr/lbin/checkyn
+			chkyn		---555	0 3	../usr/lbin/chkyn
+			devinfo		---555	0 3	../usr/lbin/devinfo
+			disklabel	---555	0 3	../usr/lbin/disklabel
+			diskumount	---555	0 3	../usr/lbin/diskumount
+			drivename	---555	0 3	../usr/lbin/drivename
+			fdate		---555	0 3	../usr/lbin/fdate
+			filecheck	---555	0 3	../usr/lbin/filecheck
+			getedt		---555	0 3	../usr/lbin/getedt
+			labelfsname	---555	0 3	../usr/lbin/labelfsname
+			largest		---555	0 3	../usr/lbin/largest
+			lightenfs	---555	0 3	../usr/lbin/lightenfs
+			mkmenus		---555	0 3	../usr/lbin/mkmenus
+			selpattern	---555  0 3	../usr/lbin/selpattern
+			spclsize	---555  0 3	../usr/lbin/spclsize
+		$
+		mail	d--775 0 6
+			:  the ':' is the mkfs comment character
+			: saved is moved to :saved in setup.core5
+			saved	d--775 0 6
+			$
+		$
+		news	d--777 2 2
+		$
+		preserve	d--777 2 2
+		$
+		pub	d--775 2 2
+		$
+		tmp	d--777 0 3
+		$
+		adm	d--775 4 4
+			passwd	d--775 4 4
+			$
+			sa	d--775 4 3
+			$
+		$
+		3bnet	d--775 0 3
+		$
+		lib	d--755 0 3
+			config	d--775 2 2
+			$
+			cron	d--755 0 3
+
+				at.allow	---644 2 2	../usr/lib/cron/at.allow
+				cron.allow	---644 2 2	../usr/lib/cron/cron.allow
+				queuedefs	---644 2 2	../usr/lib/cron/queuedefs
+				.proto		---644 2 2	../usr/lib/cron/.proto
+			$
+			diffh		---775 2 2	../usr/lib/diffh
+			font	d--775 2 2
+			$
+			getoptcvt	---555 2 2	../usr/lib/getoptcvt
+			lex	d--775 2 2
+			$
+			macros	d--775 2 2
+			$
+			mailx	d--775 0 3
+				mailx.help	---664 2 2	../usr/lib/mailx/mailx.help
+				mailx.help.~	---664 2 2	../usr/lib/mailx/mailx.help.~
+				rmmail		--g755 2 6	../usr/lib/mailx/rmmail
+			$
+			mv_dir		-u-555 0 3	../usr/lib/mv_dir
+			sa	d--775 4 2
+			$
+			tabset	d--775 2 2
+			$
+			term	d--775 2 2
+			$
+			tmac	d--775 2 2
+			$
+			trouble d--775 2 2
+			$
+		$
+		options		d--775 0 3
+		$
+		spool	d--775 0 2
+			cron	d--755 0 3
+				atjobs		d--755 0 3
+				$
+				crontabs	d--755 0 3
+					adm	---644 0 3	../usr/spool/cron/crontabs/adm
+					root	---644 0 3	../usr/spool/cron/crontabs/root
+					sys	---644 0 3	../usr/spool/cron/crontabs/sys
+					sysadm	---644 0 3	../usr/spool/cron/crontabs/sysadm
+				$
+			$
+		$
+	$
+$
+:#ident	"@(#)core:proto.core5	1.12"

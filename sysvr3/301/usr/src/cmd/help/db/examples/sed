@@ -1,0 +1,25 @@
+
+\Ssed\S:  Examples
+
+        sed -f modfile text
+
+   Reads the commands in "modfile" and modifies a copy of "text." Prints the
+   modified file to standard output, but does not change the original.
+
+   ---------------------------------------------------------------------------
+
+        sed s/name=// text.names > text
+
+   Removes the "name=" from every line of a copy of the file "text.names".
+   Stores the modified file in "text".
+
+
+
+
+   ---------------------------------------------------------------------------
+
+        sed -e s/name=// -e s/201// text.names > text
+
+   Removes the "name=" and "201" from every line of a copy of the file
+   "text.names".  Stores the modified file in "text".
+

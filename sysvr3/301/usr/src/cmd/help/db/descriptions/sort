@@ -1,0 +1,25 @@
+
+\Ssort\S:  Description
+
+Syntax Summary:
+      sort [-m] [-u] [-c] [-Mbdfinr] [-o output_file] [-t char] [-y memory]
+           [-z size] [+position1 [-position2] ...] [file_name ...]
+
+         where:  output_file and file_name  are names of files.
+
+                 positions, memory and size  are integers.
+
+                 char  is a field separator character.
+
+Description:
+     \Ssort\S sorts the lines of a file, and prints them in order.  \Ssort\S
+     will sort standard input if you do not give it a file name, or if you
+     replace the file name with a "-". If you type \Ssort\S followed by a
+     file name, the file's lines will be printed in alphabetical and numerical
+     order, according to the entire line.  The sort can be done in different
+     ways; for example , you can sort in reverse alphabetical order, you can
+     ignore the difference between upper-case and lower-case letters, or you
+     can restrict the sort to certain fields on the line by using different 
+     options.  See also: join(1) and uniq(1) for commands that function similar
+     to \Ssort\S, and grep(1) for a command that might be used with \Ssort\S.
+

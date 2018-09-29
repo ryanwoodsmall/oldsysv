@@ -1,0 +1,75 @@
+.TH LINENUM 4
+.SH NAME
+linenum \- line number entries in a common object file
+.SH SYNOPSIS
+.B
+#include  <linenum.h>
+.SH DESCRIPTION
+Compilers based on
+.IR pcc
+generate an entry in the object file for
+each C source line on which a breakpoint is possible [when
+invoked with the \fB\-g\fR option; see
+.IR cc (1)].
+Users can then reference line numbers when using
+the appropriate software test system
+[see
+.IR sdb (1)].
+The structure of these line number entries appears below.
+.PP
+.if t .RS
+.ta \w'struct\ \ 'u +\w'unsigne'u +\w'd\ short\ \ 'u
+.nf
+.lg 0
+struct	lineno
+{
+	union
+	{
+		long	l_symndx ;
+		long	l_paddr ;
+	}		l_addr ;
+	unsigned short	l_lnno ;
+} ;
+.fi
+.lg
+.if t .RE
+.PP
+Numbering starts with one for each function.
+The initial line number entry for a function has
+.I l_lnno
+equal to zero, and the symbol table index of the function's
+entry is in
+.IR l_symndx .
+Otherwise,
+.I l_lnno
+is non-zero, and
+.I l_paddr
+is the physical address of the code for the referenced line.
+Thus the overall structure is the following:
+.sp
+.RS 10
+.ta \w'function\ symtab\ index\ \ \ \ 'u
+.nf
+.I
+l_addr	l_lnno
+.sp
+function symtab index	0
+physical address	line
+physical address	line
+\&...
+
+function symtab index	0
+physical address	line
+physical address	line
+\&...
+.fi
+.sp
+.RE
+.DT
+.SH "SEE ALSO"
+a.out(4).
+.br
+cc(1), sdb(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+'\" \%W\%
+.\"	%W% of %G%

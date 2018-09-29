@@ -1,0 +1,64 @@
+#ident	"@(#)bne.admin:lsport	2.2"
+#	This shell is used to list port entries from /etc/inittab
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -r $DEVICES ]; then :
+else
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+portlist=`grep '^[^#]' $DEVICES  2>/dev/null | cut -d' ' -f2  |  sort -u  |
+			grep '^[a-z0-9]' 2>/dev/null`
+if [ -z "${portlist}" ]; then
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+if [ -z "$portlist" ]; then
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+					# ***** MAIN LOOP *****
+while $FIRST || chkyn ${flags} -f '
+Do you want to see another port?' || break
+
+do
+FIRST=false
+
+echo "This is the current list of ports available to the $PACKAGE:"
+echo "${portlist}"  |  pr -t -w80 -6
+
+portname=`chkyn ${flags} -fec '
+Enter device name you want to see in detail [q]:' \
+		${portlist}`
+
+entry="`grep \"${portname}[ 	]\" $INITTAB 2>/dev/null`"
+
+if [ -z "$entry" ]; then
+echo "\nThere is no entry for ${portname} in '$INITTAB'.
+It is probably being used for outgoing traffic only."
+
+else
+echo "Found the following entry in '$INITTAB':\n"
+/bin/sh _initprint ${entry}
+fi
+
+done					# ***** MAIN LOOP *****

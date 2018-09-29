@@ -1,0 +1,32 @@
+#ident	"@(#)vi:port/READ_ME	1.8"
+This is version 4 (5.3a) of the editor.
+
+[Note the new version numbering scheme.  System V Release 3 is
+shown as "Version 5.3x" where the character "x" is a letter from
+a to z, updated upon each delivery.  In this way, customers can
+report which version of ex/vi is being run on their machine.
+This variable is set in ex.c --- see related comments.]
+
+Version 2 corresponds to version 3 without the enhancements in 3.
+There is no reason to use 2 unless you have a pdp-11 that does not have
+overlay software, since 3 contains all the bug fixes and some new features.
+
+The include file local/uparm.h should be installed, as ex_tune.h needs it.
+The contents of this include file can be modified if you wish to place
+the editor in a nonstandard location.
+
+Conditional compilation flags:
+
+	-DTRACE		for debugging (the original command line syntax
+			 was "[-T [suffix]]"; this has been changed to be:
+			 "[-T] [-S suffix]" in order to standardize
+			 command line syntax.  For the moment, BOTH
+			 forms are acceptable; in the future, the original
+			 form will be dropped to eliminate the optional
+			 argument to the option T.
+	-DVFORK		for UCB Vax/Unix with the vfork system call.
+	-DCHDIR		compile in undocumented chdir (cd) command
+	-DLISP		compile in lisp hacks
+	-DUCVISUAL	compile in code to handle \ escapes for visual on
+			 upper case only terminals.
+	-DCRYPT		-x option to edit encrypted files

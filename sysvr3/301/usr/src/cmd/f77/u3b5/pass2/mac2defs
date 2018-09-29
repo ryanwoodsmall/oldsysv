@@ -1,0 +1,112 @@
+#ident	"@(#)comp:u3b/mac2defs	1.4.3.1"
+/*	static char  ID[]  = @(#) mac2defs: 1.4.3.1 1/14/86	*/
+
+/* IS25 Registers */
+
+	/* scratch registers (R0 - R3) */
+# define R0 0
+# define R1 1
+# define R2 2
+# define R3 3
+
+	/* register variables (R4 - R8) */
+
+	/* special purpose */
+# define AP 9		/* argument pointer */
+# define FP 10		/* frame pointer */
+# define SP 11		/* stack pointer */
+
+# ifdef INDEX
+	/* dummy register for flagging indexed OREG with no base register */
+
+# define RDUMMY	12
+# endif
+# ifdef FLT
+# define Rflt 0	/* for returning floating point results */
+
+	/* floating registers */
+
+	/* the b registers are used as floating point registers--
+	   these are not actually registers, but memory locations */
+
+# define Blbl "$.Lflt" /* B-register label. Marks the beginning of storage
+			 for intermediate floating point results */
+# endif /*FLT*/
+
+
+# ifdef FLT
+# ifdef INDEX
+# define REGSZ 18
+# else
+# define REGSZ 17
+# endif /*INDEX*/
+# else
+# ifdef INDEX
+# define REGSZ 13
+# else
+# define REGSZ 12
+# endif /*INDEX*/
+# endif /*FLT*/
+# define TMPREG FP
+
+extern int fregs;
+extern int maxargs;
+
+# define BYTEOFF(x) ((x)&03)
+# define wdal(k) (BYTEOFF(k)==0)
+# ifdef AR32W
+# define BITOOR(x) (x<0)?-((-x)>>3):((x)>>3) /* preserve sign on 3b20 and 370*/
+# else
+# define BITOOR(x) ((x)>>3)  /* bit offset to oreg offset */
+# endif
+
+# define STOARG(p)	/* just evaluate the arguments, and be done with it... */
+# define STOFARG(p)
+# define STOSTARG(p)
+# define genfcall(a,b) gencall(a,b)
+
+# define NESTCALLS
+
+# define MYREADER(p) walkf(p, optim2)
+int optim2();
+
+/* special shapes */
+
+# define SPECIAL 0100000
+# define SCCON (SPECIAL|3)	/* -256 <= constant < 256 */
+# define SSCON (SPECIAL|4)	/* -32768 <= constant < 32768 */
+# define SW3ADR (SPECIAL|5)	/* triadic assign - word */
+# define SH3ADR (SPECIAL|6)	/* triadic assign - halfword */
+# define SB3ADR (SPECIAL|7)	/* triadic assign - byte */
+# define SW2ADR (SPECIAL|8)	/* dyadic assign - word */
+# define SH2ADR (SPECIAL|9)	/* dyadic assign - halfword */
+# define SB2ADR (SPECIAL|10)	/* dyadic assign - byte */
+# define SSTCALL (SPECIAL|11)	/* STASG of STCALL */
+# ifdef INDEX
+# define SSOREG (SPECIAL|12)	/* non-indexed OREG */
+# endif
+# ifdef TV
+# define STV (SPECIAL|13)
+# endif /*TV*/
+# define SNOTTV (SPECIAL|14)
+# ifdef FLT
+# define SSCONV (SPECIAL|15)
+# define SD3ADR (SPECIAL|16)
+# endif /*FLT*/
+
+# define NOOPT	/* because of restricted result indicators for logical instr */
+
+# ifdef INDEX
+/* special indexed OREG packing to allow flag for * to be stored */
+
+# define R2PK(x,y,z)	(R2PACK(x,y)+040000*z)
+# define R2UPK3(x)	(x>>14)
+
+# define MYCANON(p)	fwalk(p, myoreg2)
+int myoreg2();
+# endif
+#ifdef FONEPASS
+#define FSPOFF "+.FSP"
+#endif /* FONEPASS */
+/* extracts name user sees from internal name (same on 3b series) */
+#define USERNAME(compname) (compname)

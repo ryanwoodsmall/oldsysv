@@ -1,0 +1,11 @@
+
+\S destination file \S
+
+The destination file is the file that receives the output from a
+command.  For example, the command
+
+	cp infile newfile
+
+makes a copy of the file  named "infile" and puts it in the file
+named "newfile".  "newfile" is the destination  file in this command
+line.

@@ -1,0 +1,21 @@
+#	@(#)bne:UNINSTALL	1.7
+#  Uninstall script for Basic Networking Utilities Package
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/uucp.name`
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+
+# remove the inittab uugettys and kill uugettys using init q
+sh /install/install/unsetup
+
+for i in `cat /install/install/Rlist.uucp`
+do
+	echo $i
+	rm -fr $i
+done
+
+echo "The ${PKGNAME} has been removed."
+

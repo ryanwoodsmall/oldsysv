@@ -1,0 +1,13 @@
+.TH DPROD 3F
+.SH NAME
+dprod \- double precision product intrinsic function
+.SH SYNOPSIS
+\fBreal a1, a2\fR
+.br
+.sp
+\fBdouble precision a3\fR
+.br
+.sp
+\fBa3 = dprod(a1, a2)\fR
+.SH DESCRIPTION
+Dprod returns the double precision product of its real arguments.

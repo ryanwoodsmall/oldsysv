@@ -1,0 +1,45 @@
+26 200
+600 200
+705 1 6 63
+               FUNCTION KEY CHECK
+
+
+NOTE: Some function keys do not send characters to the computer.
+      If you strike a function key and nothing happens, please
+      type any letter.
+
+706 
+8 1001 6 --> Strike f8 (Function Key 8):    
+15 
+20 
+271 1 272
+8 1002 6 Good; received f8 key.
+15 
+272 
+8 20 6 Sorry; got something other than f8
+8 22 6 --> Strike the RETURN key to continue 
+15 
+21 35
+1000 100
+280 
+1 2
+25 
+8 1003 6 --> Strike f1 (Function Key 1):  
+15 
+20 
+271 7 265
+8 1002 6 Good; received f1 key.
+15 
+272 
+8 20 6 Sorry; got something other than f1
+8 22 6 --> Strike the RETURN key to continue 
+15 
+21 35
+1000 265
+280 
+1 1
+25 
+8 22 6 --> Strike the RETURN key to continue 
+15 
+21 35
+1000 2

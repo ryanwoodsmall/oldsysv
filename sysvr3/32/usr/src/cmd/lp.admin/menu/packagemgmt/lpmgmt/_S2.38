@@ -1,0 +1,479 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/_S2.38	1.6"
+## IDOC:   SCREEN 2.38: SPECIFY FORM
+
+##+++ (functions)
+chk_integer () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!integer!}" \
+		'^[1-9][0-9]*$' \
+			'Your response must be a nonzero positive integer.' \
+	`
+}
+chk_integer2 () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!integer!}" \
+		'^[0-9]\{1,\}$' \
+			'Your response must be an integer.' \
+	`
+}
+chk_type_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!type-name!}" \
+		'^[-a-zA-Z0-9]\{1,14\}$' \
+			'A type name can contain only 1 to 14 letters, digits, and dashes.' \
+	`
+}
+chk_install_edit_skip () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!install-edit-skip!}" \
+		'^install$' -o '^i$' -o '^edit$' -o '^ed$' -o '^e$' -o '^skip$' -o '^s$' \
+			'You must answer with "install", "edit", or "skip".' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_user_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!user-name!}" \
+		'^[a-z0-9]\{1,8\}$' \
+			'A user name can contain no more than 8 lower case letters and digits.' \
+	`
+}
+chk_user_list () {
+# listof: user-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!user-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_user_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid user name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_alert_type () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!alert-type!}" \
+		'.\{1,\}' \
+			'You must give "mail", "write", "none" or a shell command.' \
+	`
+}
+chk_one_line_comment () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!one-line-comment!}" \
+		'.*' '' \
+	`
+}
+chk_path_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!path-name!}" \
+		'^/' 'A full path name must begin with a "/".' \
+		'[^/]$' 'No trailing "/" in the path name.' \
+		-R \
+		'/[^/]\{14,\}' 'No more than 14 characters in each part of the path name.' \
+	`
+}
+chk_align_path_name () {
+# oneof: "none" path-name
+#set -x
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!align-path-name!}" \
+		$4 \
+		'.*' ''`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if [ "none" = "${RESP}" ]; then return 0; fi
+	echo "${RESP}" | ( flags="-m1"; chk_path_name >/dev/null 2>&1 ) && return 0
+	echo '	You must give a path name or the word "none".
+\c'
+    done
+}
+##--- (functions)
+
+. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.18
+
+##+++ (line 2)
+echo \
+""
+##--- (line 2)
+
+DEF=${DEF_number_of_pages}
+##+++ (2.38.3)
+chk_integer \
+	"Number of pages in the form:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter a single  number  that  gives  the
+        length  of the form in pages.  This information is only used
+        to truncate alignment patterns to  fit  on  a  single  form.
+        Just  press  return  if you don't want to change the default
+        shown.  \
+"
+OPT_number_of_pages=${RESP}
+##--- (2.38.3)
+
+DEF=${DEF_character_set_choice}
+##+++ (2.38.4)
+chk_name \
+	"Character set to use with the form:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        If  a  particular  character  set,  print  wheel,  or   font
+        cartridge  should  be used when printing files on this form,
+        enter its name here.  You define the ones available when you
+        add  printers.   This  name  will  be  used to automatically
+        select a character set when the form is used  on  a  printer
+        that  has  selectable  character  sets, or will be used in a
+        message to you when the LP  Print  Service  reminds  you  to
+        mount the form.  Just press return if the character set used
+        isn't important or if you don't want to change  the  default
+        shown.  \
+"
+OPT_character_set_choice=${RESP}
+##--- (2.38.4)
+
+if [ "any" != "${OPT_character_set_choice}" ]
+then
+	DEF=${DEF_mandatory}
+##+++ (2.38.5)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        If you enter \"y\" (for yes) the character set  you  named  in
+        the  previous  field will be required when the form is used.
+        Otherwise, enter \"n\" (for no) and the character set will  be
+        recommended  only.   The  difference  is  that if the set is
+        mandatory, a user cannot override the choice; if it  is  not
+        mandatory,  the character set named will be used by default,
+        but a user can pick a different one  to  print  his  or  her
+        files.   Just  press  return  if  the  character  set  isn't
+        mandatory or if you don't want to change the default  shown.
+        \
+" \
+	"Is this character set mandatory?${DEF:+ (default: ${DEF})}"
+then
+	OPT_mandatory=yes
+else
+	OPT_mandatory=no
+fi
+##--- (2.38.5)
+fi
+
+DEF=${DEF_ribbon_color}
+##+++ (2.38.6)
+chk_name \
+	"Ribbon color to use with the form:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You should enter the color of ribbon  that  should  be  used
+        when  printing on this form.  This is informational only; it
+        will be shown when you are reminded to mount a form.  Please
+        limit  the  name  of  the  color  to 14 letters, digits, and
+        underscores.  Just press return if you don't want to  change
+        the default shown.  \
+"
+OPT_ribbon_color=${RESP}
+##--- (2.38.6)
+
+##+++ (line 7)
+echo \
+"Enter a one-line description of this form for your users:"
+##--- (line 7)
+
+DEF=${DEF_comment}
+##+++ (2.38.8)
+chk_one_line_comment \
+	"${DEF:+(default: ${DEF})
+}" \
+	"${DEF}" \
+	"\
+        You are expected to enter a single line of text that will be
+        displayed  to  people whenever they ask for a description of
+        the form.  It's a good idea to keep it short so that it will
+        fit  across the screen.  Just press return if you don't want
+        to change the default shown.  \
+"
+OPT_comment=${RESP}
+##--- (2.38.8)
+
+if [ "same" = "${DEF_alignment_pattern}" ]
+then
+	if checkyn ${flags} -f \
+		-Dno -H \
+	"\
+        If you enter \"y\" (for yes) the current  alignment  pattern
+        will  be  displayed on the screen.  If you \"n\" (for no) it
+        will not be displayed.  Either way, you will then be asked
+        if you want to keep the alignment pattern. \
+" \
+	"Do you want to see the current alignment pattern? (default: no)"
+	then
+		cat "${tmpfile_pat}"
+	fi
+
+	if checkyn ${flags} -f \
+		-Dyes -H \
+	"\
+        If you enter "y" (for yes)  the  current  alignment  pattern
+        will  be  kept.  If  you  answer  "n"  (for  no)  it will be
+        discarded and you will be asked to give the name of  a  file
+        containing a new alignment pattern.
+" \
+	"Do you want to keep the current alignment pattern? (default: yes)"
+	then
+		:
+	else
+		DEF_alignment_pattern=none
+	fi
+fi
+
+if [ "same" != "${DEF_alignment_pattern}" ]
+then
+##+++ (line 9)
+echo \
+"Enter the full pathname of a file containing an alignment pattern:"
+##--- (line 9)
+
+DEF=${DEF_alignment_pattern:-none}
+##+++ (2.38.10)
+chk_align_path_name \
+	"${DEF:+(default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the name of a file that contains a
+        sample print-out that can be used to help you align the form
+        in a printer.  When you mount the form later, you can ask to
+        get  this  file  printed  repeatedly,  with  a pause between
+        forms, so that you can adjust the printer until  the  print-
+        out looks correct on the form.
+
+                                  WARNING
+The file you give will be printed as an  alignment  pattern  EXACTLY  as  it
+looks  now.  You should prepare the file so that no sensitive data is shown.
+A copy of the file will be stored safely on disk so no other  user  can  see
+it,  but sensitive data or real data that is printed as an alignment pattern
+may be a problem.
+
+        Just press return if you don't want  to  give  an  alignment
+        pattern or don't want to change the default shown.  \
+"
+OPT_alignment_pattern=${RESP}
+##--- (2.38.10)
+
+	if [ "none" = "${OPT_alignment_pattern}" ]
+	then
+		OPT_alignment_pattern=
+	else
+
+DEF=${DEF_type:-simple}
+##+++ (2.38.11)
+chk_type_name \
+	"What type of file is this?${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        So that the alignment pattern in the file you just gave  can
+        be  properly  printed,  you should enter its type.  The type
+        name you give will be used  to  ensure  that  the  alignment
+        pattern  will  be  reproduced correctly on the printer where
+        the form is mounted.  The LP Print Service will use a filter
+        to do this if necessary and one is available.
+
+        Your choice of type here  should  conform  to  the  type  of
+        printer, types of files acceptable by the printers, or types
+        acceptable to the filters, that you have on your system.  \
+"
+OPT_type=${RESP}
+##--- (2.38.11)
+	fi
+fi
+
+##+++ (line 12)
+echo \
+"
+Enter a command to run to alert you when the form needs mounting."
+##--- (line 13)
+
+##+++ (2.38.14)
+chk_alert_type \
+	"${DEF_A:+(default: ${DEF_A})}" \
+	"${DEF_A}" \
+	"\
+        You are expected to enter:  the word \"mail\" if  you  want  a
+        message mailed to you when the form needs to be mounted; the
+        word \"write\" if  you  want  the  message  sent  to  whatever
+        terminal  you  are  logged  in to; or the word \"none\" if you
+        don't want to be  reminded.   You  can  also  give  a  shell
+        command  if  you  want  to  be reminded but not by mail or a
+        written message, or if you want someone else notified.
+
+        For instance, if you want a  message  written  to  the  user
+        \"pat\" enter the following:
+
+                                 write pat
+        \
+"
+OPT_A=${RESP}
+##--- (2.38.14)
+
+if [ "none" != "${OPT_A}" ]
+then
+##+++ (line 15)
+echo \
+"How many print requests should be waiting before you are alerted?"
+##--- (line 15)
+
+##+++ (2.38.16)
+chk_integer \
+	"${DEF_Q:+(default: ${DEF_Q})}" \
+	"${DEF_Q}" \
+	"\
+        You are expected to enter a single  number  that  gives  the
+        size  the  queue  for  this form should reach before you are
+        reminded to mount the form.  Enter a \"1\" if you want  to  be
+        reminded as soon as someone submits a print request for this
+        form.  Just press return if you want a reminder as soon as a
+        print  request  comes  in or if you don't want to change the
+        default shown.  \
+"
+OPT_Q=${RESP}
+##--- (2.38.16)
+
+##+++ (line 17)
+echo \
+"How often should you be alerted (minutes; 0 = once)?"
+##--- (line 17)
+
+##+++ (2.38.18)
+chk_integer2 \
+	"${DEF_W:+(default: ${DEF_W})}" \
+	"${DEF_W}" \
+	"\
+        You are expected to enter the number of minutes that  should
+        elapse  between  repeated  reminders.   To keep you informed
+        that a form still needs to be mounted, the LP Print  Service
+        will  keep  issuing  reminders until the form is mounted (or
+        enough print requests needing the form have been canceled or
+        changed  to use a different form).  Entering 0 will mean you
+        want to reminded just once.  Just press return for 0  or  if
+        you don't want to change the default shown.  \
+"
+OPT_W=${RESP}
+##--- (2.38.18)
+fi
+
+##+++ (line 19)
+echo \
+"
+List the users who are denied access to this form."
+##--- (line 20)
+
+##+++ (2.38.21)
+chk_user_list \
+	"${DEF_deny:+(default: ${DEF_deny})}" \
+	"${DEF_deny}" \
+	"\
+        You are expected to list the users who are  NOT  allowed  to
+        use  this  form.   Please give the login names of the users,
+        not their proper names.  Separate several names with  blanks
+        or commas.
+
+        If you've already given a list of users, any names you  give
+        now  will be ADDED to the list; if you want to allow someone
+        who's already been denied, press just  the  return  key  and
+        answer the next question.  If it is easier to specify access
+        restrictions by listing just those who ARE  allowed  to  use
+        the form, press return and answer the next question.
+
+        You can deny EVERYBODY by entering the  word  \"any\".   Press
+        return if you don't want to change the default shown.  \
+"
+OPT_deny=${RESP}
+##--- (2.38.21)
+
+if [ "none" = "${OPT_deny}" ]
+then
+##+++ (line 22)
+echo \
+"List the only users who are allowed access to this form."
+##--- (line 22)
+
+##+++ (2.38.23)
+chk_user_list \
+	"${DEF_allow:+(default: ${DEF_allow})}" \
+	"${DEF_allow}" \
+	"\
+        You are expected to list the users who ARE  allowed  to  use
+        this  form.   Please  give the login names of the users, not
+        their proper names.  Separate several names with  blanks  or
+        commas.
+
+        If you've already given a list of users, any names you  give
+        now  will  be ADDED to the list.  You can allow EVERYBODY by
+        entering the word \"any\".
+
+        Press return if you don't want to change the default  shown.
+        \
+"
+OPT_allow=${RESP}
+##--- (2.38.23)
+fi
+
+##+++ (line 24)
+echo \
+""
+##--- (line 24)
+
+DEF="install"
+##+++ (2.38.25)
+chk_install_edit_skip \
+	"install, edit, or skip this form:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        If you enter \"i\" (or \"install\") the form  you  just  defined
+        will be put in the system.  If you enter \"e\" (or \"edit\") you
+        can go back and fix the form definition.  If you  enter  \"s\"
+        (or \"skip\") the form will not be put in the system.  \
+"
+OPT_install=${RESP}
+##--- (2.38.25)
+
+case "${RESP}" in
+i | install )
+	OPT_install="install";;
+e | ed | edit )
+	OPT_install="edit";;
+s | skip )
+	OPT_install="skip";;
+esac

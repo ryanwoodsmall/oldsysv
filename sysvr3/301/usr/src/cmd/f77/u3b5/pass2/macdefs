@@ -1,0 +1,132 @@
+#ident	"@(#)comp:u3b/macdefs	1.7.3.1"
+/*	static char  ID[] = @(#)comp:u3b/macdefs	1.7.3.1		*/
+
+#ifndef TWOPASS
+#ifndef FORT
+#ifndef ONEPASS
+#define ONEPASS 1
+#endif
+#endif
+#endif
+
+# define ARGINIT 0 
+# define AUTOINIT 0 
+# define SZCHAR 8
+# define SZINT 32
+# define SZFLOAT 32
+# define SZDOUBLE 64
+# define SZLONG 32
+# define SZSHORT 16
+# define SZPOINT 32
+# define ALCHAR 8
+# define ALINT 32
+# define ALFLOAT 32
+# define ALDOUBLE 32
+# define ALLONG 32
+# define ALSHORT 16
+# define ALPOINT 32
+# define ALSTRUCT 32
+# define ALSTACK 32 
+
+/*	character constant packing macro
+ *	i is the character count
+ */
+
+# define makecc(val,i)  lastcon = (lastcon<<8)|val
+
+/*	size in which constants are converted
+ *	should be long if feasable
+ */
+
+# define CONSZ long
+# define CONFMT "%ld"
+
+/*	size in which offsets are kept
+ *	should be large enough to cover address space in bits
+ */
+
+# define OFFSZ long
+
+/*	format for printing labels */
+
+#ifdef ONEPASS
+# define LABFMT ".L%d"
+# else
+# define LABFMT ".L%d\n"
+# define EXPR '&'	/* redefine value in manifest because '.'
+			 * appears in IS25 assembly language	 */
+# endif
+
+/* 	character set translation macro */
+
+# define  CCTRANS(x) x
+
+/*	register cookie for stack poINTer */
+
+# define AUTOREG 10
+# define ARGREG 9
+
+/*	maximum and minimum register variables */
+
+# define MAXRVAR 8
+# define MINRVAR 4
+
+/*	various standard pieces of code are used */
+
+# define STDPRTREE
+
+/*	show stack grows positively by not defining BACKAUTO and BACKTEMP */
+
+/*	If forward byte ordering, show that bytes are numbered from left
+ *	to right by not defining RTOLBYTES.
+ *	If reverse byte ordering, show that bytes are numbered from right
+ *	to left by defining RTOLBYTES.
+ */
+
+#ifdef RBO
+# define RTOLBYTES 1
+#endif
+
+/*	show there is hardware support for fields */
+
+# define FIELDOPS
+
+# define FIXDEF(p) fixdef(p)
+
+# define ENUMSIZE(high,low)	ctype(INT)
+
+# define CHARCAST(x) (unsigned)(0377&(x))
+
+# define ADDROREG(p) addroreg(p)
+
+# ifndef NOSYMB
+# define FIXSTRUCT(p,q) strend(p)
+# endif
+
+/*	more storage class definitions */
+
+# define SCBLOCK 100
+# define SCFCN 101
+# define SCEOS 102
+# define SCFILE 103
+
+/* assembly language comments to bracket user inserted asms */
+#define ASM_COMMENT	"#ASM"
+#define ASM_END		"#ASMEND"
+
+# define ASMBUF 80
+# ifdef AR16WR
+# define BUG4
+# endif
+# ifdef AR16WR
+# 	ifdef ONEPROC
+# 		define SYMTSZ 800	/* size of the symbol table */
+# 		define DIMTABSZ 1150	/* size of the dimension-size table */
+# 	else
+# 		define SYMTSZ 1100	/* size of the symbol table */
+# 		define DIMTABSZ 1350	/* size of the dimension-size table */
+# 	endif	/* ONEPROC */
+# else
+# 	define SYMTSZ 1800
+# 	define DIMTABSZ 3000
+# endif /* AR16WR */

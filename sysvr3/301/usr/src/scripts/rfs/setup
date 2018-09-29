@@ -1,0 +1,65 @@
+#ident	"@(#)pkg.rfs:rfs/setup	1.9"
+# Install RFS "drivers"
+#
+DRVPATH=/boot
+/etc/drvinstall -d $DRVPATH/du.o -v 1.0
+/etc/drvinstall -d $DRVPATH/dufst.o -v 1.0
+rm -f $DRVPATH/du.o
+rm -f $DRVPATH/dufst.o
+rm -f /usr/nserve/nspip
+
+MAJOR=`/etc/drvinstall -d $DRVPATH/sp.o -c 32 -v 1.0`
+touch /etc/system
+
+M2=`/etc/drvinstall -d $DRVPATH/CLONE -nbv 1.0`
+
+rm -rf $DRVPATH/sp.o
+rm -rf /dev/spx
+/etc/mknod /dev/spx c $M2 $MAJOR
+
+if grep 'NSRMOUNT.* 0$' /etc/master.d/kernel >/dev/null 2>&1
+then
+	ed - /etc/master.d/kernel <<! >/dev/null 2>&1
+	/^NSRMOUNT/s/ 0/ 50/
+	w
+	q
+!
+fi
+
+/etc/mkboot -k /boot/KERNEL
+
+if [ ! -d /etc/rc0.d ]
+then
+	mkdir /etc/rc0.d
+fi
+
+if [ ! -d /etc/rc2.d ]
+then
+	mkdir /etc/rc2.d
+fi
+
+if [ ! -d /etc/rc3.d ]
+then
+	mkdir /etc/rc3.d
+fi
+
+ln /etc/init.d/fumounts /etc/rc0.d/K50fumounts
+ln /etc/init.d/rumounts /etc/rc0.d/K60rumounts
+ln /etc/init.d/rfs      /etc/rc0.d/K65rfs
+
+ln /etc/init.d/fumounts /etc/rc2.d/K30fumounts
+ln /etc/init.d/rumounts /etc/rc2.d/K40rumounts
+ln /etc/init.d/rfs      /etc/rc2.d/K50rfs
+
+ln /etc/init.d/rfs      /etc/rc3.d/S21rfs
+
+#
+#	Initialize service codes for all installed transport providers
+#
+
+NLS=/usr/bin/nlsadmin
+
+for n in `$NLS -x | sed 's/	.*$//'`
+do
+	$NLS -a 105 -c"/usr/net/servers/rfs/rfsetup" -y"RFS server" $n >/dev/null 2>&1
+done

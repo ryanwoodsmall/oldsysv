@@ -1,0 +1,41 @@
+.TH ABS 3F
+.SH NAME
+abs, iabs, dabs, cabs, zabs \- \s-1FORTRAN\s+1 absolute value
+.SH SYNOPSIS
+.nf
+.B "integer i1, i2"
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.B "complex cx1, cx2"
+.B "double complex dx1, dx2"
+.P
+.B "r2 = abs(r1)"
+.P
+.B "i2 = iabs(i1)"
+.B "i2 = abs(i1)"
+.P
+.B "dp2 = dabs(dp1)"
+.B "dp2 = abs(dp1)"
+.P
+.B "cx2 = cabs(cx1)"
+.B "cx2 = abs(cx1)"
+.P
+.B "dx2 = zabs(dx1)"
+.B "dx2 = abs(dx1)"
+.SH DESCRIPTION
+.I Abs\^
+is the family of absolute value functions.
+.I Iabs\^
+returns the integer absolute value of its integer argument.
+.I Dabs\^
+returns the double-precision absolute value of its double-precision argument.
+.I Cabs\^
+returns the complex absolute value of its complex argument.
+.I Zabs\^
+returns the double-complex absolute value of its double-complex argument.
+The generic form
+.I abs\^
+returns the type of its argument.
+.SH SEE ALSO
+floor(3M).
+.\"	%W% of %G%

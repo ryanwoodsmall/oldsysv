@@ -1,0 +1,23 @@
+
+\S UNIX:  UNIX operating system:  UNIX system:  operating system: kernel
+\S
+
+The UNIX system is a set of programs that include an operating system and a
+set of programs which are commands for users.  An operating system is the
+program that mediates between the compiler, the CPU, input and output
+devices, and data storage devices.  The operating system has two basic
+parts:
+
+   1)   The kernel is the program in the UNIX operating system that is
+        responsible for most operating system functions.  It schedules
+        and manages all the work done by the computer and maintains the
+        file system.  It is always running.
+
+   2)   The shell is the UNIX operating system program responsible for
+        handling all interaction between users and the computer.  It
+        includes a powerful command language called shell language.
+
+The programs or UNIX commands are executed using the shell, and allow users
+to do things like communicate with each other, to edit and manipulate
+files, and to write and execute programs in several programming languages.
+

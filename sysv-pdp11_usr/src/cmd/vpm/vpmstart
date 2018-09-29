@@ -1,0 +1,64 @@
+#	vpmstart 1.3 of 6/9/82
+#	@(#)vpmstart	1.3
+
+: usage: vpmstart device n [filen]
+set -- `getopt r $*`
+for i in $*
+do
+case $i in
+-r)
+ropt=true
+shift
+;;
+--)
+shift;
+break
+;;
+esac
+done
+if
+test -z "$2" -o -n "$4"
+then
+echo "vpmstart: arg count"
+exit 2
+else
+if
+test -n "$3"
+then
+filen="$3"
+else
+filen="a.out"
+fi
+if
+test -n "$ropt"
+then
+if
+kasb -d "$1" <<!
+.reset
+!
+then
+kasb -d "$1" <<!
+.load "$filen"
+.reset
+.run $2
+!
+else
+exit 2
+fi
+else
+if
+kasb -d "$1" <<!
+.reset
+!
+then
+sleep 10 	# Wait for OK check, if any
+kasb -d "$1" <<!
+.load "$filen"
+.clear
+.run $2
+!
+else
+exit 2
+fi
+fi
+fi

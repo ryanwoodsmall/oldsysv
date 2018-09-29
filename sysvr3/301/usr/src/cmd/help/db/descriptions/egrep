@@ -1,0 +1,24 @@
+
+\Segrep\S:  Description
+
+Syntax Summary:
+      egrep [-b][-c][-i][-l][-n][-v] [-e special_expr] [-f file_name]
+            [full_expr] [name ...]
+
+         where:  special_expr and full_expr  are full regular expressions.
+
+                 name  is the name of a file or directory.
+
+Description:
+     \Segrep\S searches files for all the lines that contain a pattern of
+     characters.  \Segrep\S uses full regular expressions to match the
+     patterns then prints the line that contains the pattern to standard 
+     output.  If you don't specify a file, \Segrep\S uses standard input.
+     With options \Segrep\S prints a count of lines that contain the 
+     pattern specified by <full_expr>, the names of files that contain the 
+     pattern, and line and block numbers associated with the found line.
+     \Segrep\S is different from grep(1) and fgrep(1) because you use 
+     full regular expressions to identify patterns and you can use "+", "?",
+     "|", "()" in the expressions.  For information about regular expressions 
+     see the glossary(1) and read the manual pages for ed(1).  See also: 
+     grep(1) and fgrep(1) for command with functions similar to \Segrep\S.

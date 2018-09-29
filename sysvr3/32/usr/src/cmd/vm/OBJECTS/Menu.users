@@ -1,0 +1,9 @@
+menu="Other Users"
+help=OPEN TEXT OBJECTS/Text.mfhelp T.h52.other 'Other Users'
+
+`sort +0 -1 -t: /etc/passwd | regex "^$LOGNAME:" "" '^([^:][^:]*)$0:[^:]*:[0-9][0-9][0-9][0-9]*:[^:][^:]*:([^:]*)$1:([^:][^:]*)$2:.*$' 'name="$m0"
+description="$m1"
+action=OPEN DIRECTORY `shell \'if test -d "$m2"/FILECABINET
+then echo "$m2"/FILECABINET
+else echo "$m2"
+fi\'`'`

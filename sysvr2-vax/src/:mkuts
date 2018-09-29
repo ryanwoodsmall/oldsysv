@@ -1,0 +1,49 @@
+#	@(#):mkuts	1.8
+
+: make UNIX libraries and initial systems
+
+if vax
+then
+	cd uts/vax/cf
+	for i in gdgt gdts
+	do
+		config $i
+		make install VER=$i
+	done
+elif pdp11
+then
+	cd uts/pdp11/cf
+	for i in gdht gdtm rpht rptm
+	do
+		config $i
+		make install VER=$i
+	done
+elif u3b
+then
+	cd uts/3b/cf
+	for i in un32 mtc11 mtc12
+	do
+		config /etc/system.${i}
+		make VER=$i
+		if [ $? -eq 0 ]
+		then
+			mv ../unix$i /unix.$i
+		else
+			echo "*** $0: make of unix.$i failed"
+			continue
+		fi
+	done
+elif u3b2
+then
+	cd uts/3b2
+	echo make -f unix.mk install SYS=unix REL=2.0 $*
+	make -f unix.mk install SYS=unix REL=2.0 $*
+elif u3b5
+then
+	cd uts/3b5
+	echo make -f unix.mk install SYS=unix REL=2.0 $*
+	make -f unix.mk install SYS=unix REL=2.0 $*
+fi
+
+
+

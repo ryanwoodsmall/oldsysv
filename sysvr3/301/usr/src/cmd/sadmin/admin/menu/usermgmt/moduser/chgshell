@@ -1,0 +1,62 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/moduser/chgshell	2.3"
+#menu# change a user's login shell
+#help# 
+#help#	This procedure allows you to change the command run when a user
+#help#	logs in.  This procedure will not change the login shell of the
+#help#	administrative and system logins.
+
+minid=100	# Minimum user and group ID
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+while  true
+do
+	loginid=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the user.
+	It also is used to identify data that belongs to the user.' \
+		-fe "Enter user's login ID [?, q]:  " \
+		-R ':' '":" is an illegal character.' \
+		-r '.' 'You must enter a value.'`
+	uid=`sed -n "/^${loginid}:/s/[^:]*:[^:]*:\([0-9]*\):.*/\1/p" /etc/passwd`
+	if [ -z "${uid}" ]
+	then
+		echo "\\tLogin ID '${loginid}' does not exist.  Choose another."
+		continue
+	elif [ "${uid}" -lt ${minid} ]
+	then
+		echo "\\tThis login has user ID ${uid}, which is less than ${minid}.
+	This procedure will not change its login shell."
+		continue
+	fi
+	shell=`grep "^${loginid}:" /etc/passwd  |  cut -d: -f7`
+	if [ -z "${shell}" ]
+	then
+		shell=/bin/sh
+	fi
+	echo "The current shell is ${shell}."
+	while true
+	do
+		newshell=`checkre ${flags} \
+			-fe 'Enter new shell command [q]:  ' \
+			'.' 'You must enter a value.' \
+			'^[^ 	:]*$' 'Answer contains an illegal character.' \
+			'^/' 'Answer must begin with a "/"'`
+		if [ ! -f "${newshell}"  -o  ! -x "${newshell}" ]
+		then
+			echo "\\tCommand '${newshell}' does not exist.  Choose another."
+			continue
+		fi
+		break
+	done
+
+	ed - /etc/passwd <<-!  ||  { admerr $0 'Cannot edit /etc/passwd.'; exit 1;}
+	H
+	/^${loginid}:/s;\\([^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\\).*;\\1${newshell};
+	w
+	!
+
+	checkyn ${flags} -f \
+		'Do you want to change the login shell of another login?'  ||
+		break
+done

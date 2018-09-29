@@ -1,0 +1,137 @@
+.TH VOLCOPY 1M
+.SH NAME
+volcopy, labelit \- copy file systems with label checking
+.SH SYNOPSIS
+.B /etc/volcopy
+[options] fsname special1 volname1 special2 volname2
+.PP
+.B /etc/labelit
+special [ fsname volume [ \f3\-n\fP ] ]
+.SH DESCRIPTION
+.I Volcopy\^
+makes a literal copy of the file system
+using
+a blocksize matched to the device.
+.I Options
+are:
+.PD 0
+.RS
+.TP
+.B \-a
+invoke a verification sequence
+requiring a positive operator response instead of the
+standard 10-second delay before the copy is made
+.TP
+.B \-s
+(default) invoke the
+.B "\s-1DEL\s+1 if wrong"
+verification sequence.
+.PD
+.RE
+.PP
+Other \fIoptions\fP are used only with tapes:
+.PD 0
+.RS
+.TP \w'\fB\-bpi\fPdensity\ \ 'u
+.BR \-bpi density
+bits-per-inch (i.e.,
+.BR 800 / 1600 / 6250 ),
+.TP
+.BR \-feet size
+size of reel in feet (i.e.,
+.BR 1200 / 2400 ),
+.TP
+.BR \-reel num
+beginning reel number for a restarted copy,
+.TP
+.B \-buf
+use double buffered I/O.
+.PD
+.RE
+.PP
+The program requests length and density
+information if it is not given on the
+command line or is not recorded on an input tape label.
+If the file system is too large to fit on one reel,
+.I volcopy\^
+will prompt for additional reels.
+Labels of all reels are checked.
+Tapes may  be mounted alternately on two or more drives.
+If
+.I volcopy\^
+is interrupted, it will ask 
+if the user wants to quit 
+or wants a shell.
+In the latter case,
+the user can perform other operations 
+(e.g.,:
+.IR labelit\^ )
+and return to 
+.I volcopy\^
+by exiting the new shell.
+.PP
+The
+.I fsname\^
+argument represents the mounted name (e.g.,:
+.BR root ,
+.BR u1 ,
+etc.)
+of the filsystem being copied.
+.PP
+The
+.I special\^
+should be the physical disk section or tape (e.g.,:
+.BR /dev/rdsk/1s5 ,
+.BR /dev/rmt/0m ,
+etc.).
+.PP
+The
+.I volname\^
+is the physical volume name (e.g.,:
+.BR pk3 ,
+.BR t0122 ,
+etc.)
+and should match the external label sticker.
+Such label names are limited to six or fewer characters.
+.I Volname
+may be
+.B \-
+to use the existing volume name.
+.PP
+.I Special1\^
+and
+.I volname1\^
+are the device and volume from which the copy of the file system is
+being extracted.
+.I Special2\^
+and
+.I volname2\^
+are the target device and volume.
+.PP
+.I Fsname\^
+and
+.I volname\^
+are recorded in the last 12 characters
+of the superblock (\fBchar fsname[6], volname[6];\fP).
+.PP
+.I Labelit\^
+can be used to provide initial labels for unmounted disk
+or tape file systems.
+With the optional arguments omitted,
+.I labelit\^
+prints current label values.
+The
+.B \-n
+option provides for initial labeling of new tapes only
+(this destroys previous contents).
+.SH FILES
+/etc/log/filesave.log	a record of file systems/volumes 
+copied
+.SH "SEE ALSO"
+sh(1), 
+fs(4).
+.SH BUGS
+Only device names beginning
+.B /dev/rmt/
+are treated as tapes.
+.\"	@(#)volcopy.1m	6.2 of 9/2/83

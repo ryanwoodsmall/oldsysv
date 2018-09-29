@@ -1,0 +1,213 @@
+#ident	"@(#)bne.admin:addsystem	2.7"
+#	This shell is used to add a system to /usr/lib/uucp/Systems
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+MYNAME=`uname`
+FIRST=true
+callingdevices='
+	1 acu
+	2 direct
+	3 develcon
+	4 micom
+	5 TLI device'
+
+flags="-qq -k$$"
+trap exit 1 2 15
+
+if [ -f "$SYSTEMS" -a \( ! -w "$SYSTEMS" -o ! -r "$SYSTEMS" \) ]; then
+	admerr $0 "Can't write and read '$SYSTEMS'\nCan't do add operation!\n"
+	exit
+fi
+
+echo "
+This procedure is used to create entries in the
+$PACKAGE '$SYSTEMS' file.
+This file contains information which this machine, '$MYNAME',
+uses to contact remote systems.
+"
+
+while $FIRST || chkyn ${flags} -f  "
+Add another entry to the Systems file?"  || exit
+do
+FIRST=false
+
+	NAME=`chkyn ${flags} -ref "Enter the node name of the system you want to call:" \
+	'^[0-9A-Za-z][0-9A-Za-z-]*$' 'Name is letters, digits, "-" character only'`
+
+	case `chkyn ${flags} -fce -Dacu "
+Select one of these device types to call on:  ${callingdevices}
+(default acu):  " ${callingdevices}` in
+	acu|1)
+		DEVICE=ACU
+		;;
+	direct|2)
+		DEVICE=Direct
+		;;
+	develcon|3)
+		DEVICE=Develcon
+		;;
+	micom|4)
+		DEVICE=Micom
+		;;
+	TLI|5)
+		DEVICE=TLIS
+		;;
+	*)
+		admerr $0 "Unknown Device Type"
+		continue
+	esac
+
+	TIME=Any
+
+	if [ "$DEVICE" = "TLIS" ]
+	then
+		SPEED="-"
+	else
+		SPEED=`chkyn ${flags} -efc -D1200 "
+Enter the speed at which you want to call:
+1200 300 1800 2400 4800 9600 19200
+(default 1200):  "  1200 300 1800 2400 4800 9600 19200`
+	fi
+
+	if [ $DEVICE != Direct -a "$DEVICE" != TLIS ]
+	then
+		PHONE=`chkyn ${flags}  -h'?' -H"
+The phone number may be composed of digits, '*' and '#' (the touch-tone keys),
+'-' (pause 2 seconds), and '=' (wait for dial-tone).
+The Switch Token is the token the user must enter to get to the machine
+'$NAME' from the switch." \
+			-ref "
+Enter the phone number for dialing into machine '$NAME',
+or the 'switch token' for connection on the same switch as '$MYNAME'.
+Phone Number or Token: [?] " \
+		'^[0-9A-Za-z=#*--]\{1,\}$' \
+			'Phone number is letters, digits, -, = ,*, # only'`
+
+	else
+		if [ "$DEVICE" = Direct ]
+		then
+			PHONE=`chkyn ${flags}  -h'?' -H"
+The device port is the line that will be used.
+For example, if /dev/tty10 will be used for the connection,
+enter  'tty10'. " \
+			-ref "
+Enter the device port that will be used for the connection to machine '$NAME'.
+(e.g. tty03) Device: [?] " \
+		'^[A-Za-z][0-9A-Za-z]*$' \
+			'Device port is letters and digits only'`
+		else	#	is TLI device
+			NETNAME=`chkyn ${flags} -ref -h'?' -H"
+This is the name of the network used for the connection to machine '$NAME'.
+This network must conform to the AT&T Transport Interface." \
+		"
+Enter the name of the TLI network that will be used for the connection to
+machine '$NAME'.  Network name: [?]" \
+		'[a-zA-Z].*' 'The network name must begin with a letter.'`
+			PHONE=`chkyn ${flags}  -h'?' -H"
+This is the network address on which the remote system is listening
+for connection requests.  The address format is defined by the individual
+network.  For example, connections to ${NAME} over the STARLAN NETWORK 
+would use network address '${NAME}'." \
+			-ref "
+Enter the network address that will be used for the connection to machine
+'$NAME'.   Address: [?] " \
+		'.*' \
+			'Network address can contain any printable characters'`
+		fi
+
+	fi
+
+
+	INITSTR="in:--in:"
+	ans=none
+	if [ $DEVICE != Direct -a "$DEVICE" != "TLIS" ]
+	then
+		ans=`chkyn ${flags} -cef -Ddialup "
+Enter the type of equipment you are dialing into at the remote site:
+dialup, develcon, micom, or none.
+'none' is used if this machine is on the same switch as $NAME
+or for Direct line.
+Remote Device (default dialup):  "  dialup develcon micom none`
+	fi
+
+
+	if [ "$ans" = "develcon" ]
+	then	# ****** if dialing into a develcon
+		TOKEN=`chkyn ${flags} -fer -D${NAME} -h'?' -H"
+The 'Token' is the token the user must enter
+to get to the machine '$NAME' from the switch" \
+		 "Enter the token that the switch needs to connect to machine $NAME
+(default is $NAME): [?]" \
+			'^[^ 	]*$' 'No blanks or tabs permitted.'`
+		INITSTR=' "" \d\d\dr\ds\c quest:--quest: '"${TOKEN}"'\r\d\r\d\r\d\r\c in:--in:'
+	# ****** end if dialing into develcon
+
+	elif [ "$ans" = "micom" ]
+	then	# ****** if dialing into a micom
+		TOKEN=`chkyn ${flags} -fer -D${NAME} \
+		 "Enter the token that the switch needs to connect to machine $NAME
+(default is $NAME): " \
+			'^[^ 	]*$' 'No blanks or tabs permitted.'`
+		INITSTR=' "" \s\c NAME? '"${TOKEN}"'\r\c GO \c in:--in:'
+	fi	# ****** end if dialing into micom
+
+	LOGIN=`chkyn ${flags} -ref "
+Enter the login id that is used when calling $NAME (e.g. nuucp)
+Login:  " \
+	'^[0-9A-Za-z-\\]\{1,\}$' 'Login is letters, digits, -, and \\ for special characters '`
+
+	PASS=`chkyn ${flags} -ref -D '' "
+Enter the passwd used by login $LOGIN (default is no password): " \
+		'^[^ 	]*$' 'No blanks or tabs permitted.'`
+	if [ -n "$PASS" ]
+	then
+		PASS="word: $PASS"
+	fi
+
+	if [ $DEVICE = Direct ]
+	then
+		LINE="$NAME $TIME $NAME $SPEED  - $INITSTR $LOGIN $PASS"
+	elif [ $DEVICE = TLIS ]
+	then
+		LINE="$NAME $TIME $NETNAME $SPEED  $PHONE $INITSTR $LOGIN $PASS"
+	else
+		LINE="$NAME $TIME $DEVICE $SPEED  $PHONE $INITSTR $LOGIN $PASS"
+	fi
+
+	echo "\nHere is the Systems file entry for machine '$NAME.'"
+	/bin/sh _systemprint $LINE
+
+	if  chkyn ${flags} -f "
+Should this be entered into the '$SYSTEMS' file?"
+	then
+		cat <<-! >> $SYSTEMS
+			$LINE
+		!
+		echo "\n **** System '$NAME' has been added to '$SYSTEMS' *****\n"
+		if [ $DEVICE = TLIS ]
+		then
+			grep "^${NETNAME}" ${DEVICES} >/dev/null 2>&1
+			if [ $? != 0 ]
+			then
+				echo "
+You should use the 'devicemgmt' command of the sysadm uucpmgmt menu to
+create an entry in $DEVICES for the $NETNAME network device."
+			fi
+
+		fi
+		if [ $DEVICE = Direct ]
+		then
+			cat <<-! >> $DEVICES
+				$NAME $PHONE - $SPEED  direct
+			!
+		fi
+	fi
+done

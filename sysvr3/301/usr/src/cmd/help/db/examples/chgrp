@@ -1,0 +1,16 @@
+
+\Schgrp\S:  Examples
+
+        chgrp 1009 chapter
+
+   If you own a file "chapter", the new group will be the group named by the
+   numeric group ID "1009".  "1009" must be a valid group ID listed in the
+   /etc/passwd file.
+
+   ---------------------------------------------------------------------------
+
+        chgrp work *
+
+   Changes the group for all the files you own in the current directory.  The
+   new group will be the group with the group name "work." "work" must be a
+   valid group name listed in the /etc/group file.

@@ -1,0 +1,55 @@
+/*LINTLIBRARY*/
+
+/*	from file delclass.c */
+#include "stdio.h"
+#include "errno.h"
+#include "sys/types.h"
+#include "lp.h"
+#include "fs.h"
+
+/**
+ ** delclass() - WRITE CLASS OUT TO DISK
+ **/
+int			delclass (name)
+	char			*name;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** _delclass()
+ **/
+
+/*	from file freeclass.c */
+#include "class.h"
+
+/**
+ ** freeclass() - FREE SPACE USED BY CLASS STRUCTURE
+ **/
+void			freeclass (clsbufp)
+	CLASS			*clsbufp;
+{
+}
+
+/*	from file getclass.c */
+#include "string.h"
+
+/**
+ ** getclass() - READ CLASS FROM TO DISK
+ **/
+CLASS			*getclass (name)
+	char			*name;
+{	static CLASS			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file putclass.c */
+/**
+ ** putclass() - WRITE CLASS OUT TO DISK
+ **/
+int			putclass (name, clsbufp)
+	char			*name;
+	CLASS			*clsbufp;
+{	static int			 _returned_value;
+	return _returned_value;
+}

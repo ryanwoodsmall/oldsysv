@@ -1,0 +1,126 @@
+'''\"	OSDD document format (used with mm macros)
+'''\"	@(#)osdd.src	1.5
+.)K \" kill MT macros
+.nr P 1 \" start with page 2 (TOC is p. 1)
+.nr Cl 3 \" put first 3 levels in TOC
+.nr Cp 1 \" put List of Figs on TOC page
+.nr Cs 1 \" indicates text (rather than TOC page)
+.nr Fp 1 \" frame page option retained for TMAS compatibility
+.nr Np 1 \" use numbered paragraphs
+.nr Of 1 \" use dash for figure captions
+.nr Oc 1 \" use Arabic numbers on TOC pages
+.tr ~
+.tc ~
+.hc ^
+.ds <1 " (cont'd)\" for use on continued figure pages
+.ds Sc \" override string (second arg) for .FG
+.ds H1 AAA-BBBBB-CC\" document number
+.ds H2 n\" section number
+.ds H3 n\" issue number
+.ds H4 (date)
+.ds H5 (rating)
+.HM 1 1 A 1 1
+.ds HF 3 1 2 2 1 2
+.ds Lf FIGURES\" title for List of Figures
+.nr Ht 1
+.nr Pt 0
+.nr Hb 5
+.nr Hs 5
+.nr Di 1 \" presume document index is being made separately
+.EF "'Page \\\\nP'''"
+.OF "'''Page \\\\nP'"
+.am )h
+.(B \" must be cleared each page after figure captions printed with BS/BE
+.(E 1 0
+..
+.de HX
+.if (\\$1=2):(\\$1=4):(\\$1=5) .ds }0\" make heading levels unnumbered
+..
+.de TP
+.if \\n(Cs=0 \{\
+.tl 'BELL LABORATORIES''\\*(H1'
+.if \w'\\*(H2' .tl '''Section \\*(H2'
+.if \w'\\*(H3' .tl '''Issue \\*(H3'
+.if \\n(Di=0 \{\
+.   tl '''\\*(H4'
+.   tl '''\\*(H5' \}
+.tl ''OPERATIONS SYSTEMS'' \}
+.if \\n(Cs=1 \{\
+.   ie (\\nP%2)=0 \{\
+.      tl '\\*(H1'''
+.      tl 'Section \\*(H2'''
+.      tl 'Issue \\*(H3''' \}
+.   el \{\
+.      tl '''\\*(H1'
+.      tl '''Section \\*(H2'
+.      tl '''Issue \\*(H3' \}
+.sp 3v \}
+.if \\n(Cs=0 .nr Cs 1 
+..
+.de TY
+.nf
+.{a
+.sp 3v
+.cu 1
+.tl 'CONTENTS''Page No.'
+.cu 0
+.fi
+..
+.de Tc
+.br
+.di {a
+\!.ce 99
+.nf
+..
+.de Td
+\!.br
+\!.ce0
+.fi
+.br
+.di
+.nr Cs 0
+.TC 7 1 7
+..
+.de [F
+.SK
+.rs
+.sp 30v-\\n(nlu
+.ce
+\\$5
+.ce0
+.(B     \" put in bottom block
+.)F \\$3 \\$6 \\$4 "\\*(Tt\\*(<1" \\*(Sc
+.sp 2v
+.(E 1
+.nr %c \\$1+1
+.if \\$2-\\$1 .[F \\n(%c \\$2 \\$3 \\$4 "\\$5" \\$6
+..
+'''\"	for compatibility with TMAS, .Fg takes 5 args as follows:
+'''\"	.Fg page-count figure-caption comment unused override
+'''\"	Fp flag = 0 suppresses printing of additional figure pages
+.de Fg
+.SK
+.rs
+.sp 30v-\\n(nlu
+.ce
+\\$3
+.ce0
+.br
+.ds Sc \\$5
+.(B     \" begin bottom block
+.FG "\\$2" \\*(Sc
+.sp 2v
+.(E 1
+.ds Tt \\$2
+.ie (\\$1>1)&(\\n(Fp>0) .[F 2 \\$1 Figure \\n(Fg "\\$3" -1
+.el \{\
+.   de [h
+.   nr P +\\$1
+.   rm [h
+\\..
+.   if \\$1>1 \{\
+.   nr %h (\\$1-1)
+.   am )h
+.   [h \\n(%h
+\\.. \} \}
+..

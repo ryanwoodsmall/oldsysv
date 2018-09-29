@@ -1,0 +1,160 @@
+#ident	"@(#)bne.admin:modifyport	2.3"
+# This shell is used to change the direction of ports.
+# This is done by modifying the entries int /etc/inittab.
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+dirlist='
+	1 incoming
+	2 outgoing
+	3 bidirectional
+'
+
+if [ -f "$INITTAB" -a \( ! -w "$INITTAB" -o ! -r "$INITTAB" \) ]; then
+	echo "Can't write and read '$INITTAB'\nCan't do delete operation!\n"
+	exit
+fi
+
+portlist=`grep '^[^#]' $DEVICES  2>/dev/null | cut -d' ' -f2  |  sort -u  |
+			grep '^[a-z0-9]' 2>/dev/null`
+
+if [ -z "$portlist" ]; then
+	echo "\nThere are currently no ports in the '$DEVICES' file."
+	exit
+fi
+
+echo "
+This procedure is used to modify the entries in the
+$PACKAGE '$INITTAB' file
+which controls the direction of traffic on system I/O ports.
+It will only access those ports known by the $PACKAGE,
+namely those that appear in the '$DEVICES' file.\n"
+
+#					# ***** MAIN LOOP *****
+while $FIRST || chkyn ${flags} -f "
+Do you want to modify another port entry?"
+do
+FIRST=false
+
+echo "\nThis is the current list of ports available to the
+$PACKAGE:\n"
+echo "${portlist}"  |  pr -t -w80 -6
+
+portname=`chkyn ${flags} -fec '
+Enter port name you want to modify [q]:' \
+	${portlist}`
+
+entry="`grep \"${portname}[ 	]\" $INITTAB 2>/dev/null`"
+if [ -z "$entry" ]
+then
+	echo "\n There is no entry for ${portname} in '$INITTAB'."
+	if  chkyn ${flags} -f "
+Do you want to add an entry for '${portname}'?"
+	then
+		/bin/sh addport ${portname}
+	fi
+	continue
+fi
+
+echo "Found the following entry in '$INITTAB':\n"
+/bin/sh _initprint ${entry}
+
+F1=`echo "${entry}" | cut -d':' -f1`
+STATES=`echo "${entry}" | cut -d':' -f2`
+STATUS=`echo "${entry}" | cut -d':' -f3`
+SPEED=`echo "${entry}" |
+	sed '
+		s/[ 	]*#.*//
+		s/^.* \([^ ]*\)$/\1/
+		'`
+GETTY=`echo "${entry}" | sed -e 's#.*:\(/etc/getty\).*$#\1#' \
+	-e 's#.*:\(/usr/lib/uucp/uugetty\).*$#\1#'`
+
+if echo $entry | grep ":$STATES:respawn:.*uugetty" >/dev/null 2>&1; then
+	GETTY="/usr/lib/uucp/uugetty -r"
+
+elif echo $entry | grep ":$STATES:respawn:.*cgetty" >/dev/null 2>&1; then
+	GETTY="/usr/lib/uucp/uugetty -r"
+
+elif echo $entry | grep ":$STATES:respawn:.*getty" >/dev/null 2>&1; then
+	GETTY=/etc/getty
+fi
+
+ret=`chkyn ${flags} -efc -D0 "
+Do you want port ${portname} to be for
+incoming, outgoing, or bidirectional traffic
+Enter:
+${dirlist}
+(default remain the same): " ${dirlist}`
+
+case $ret in
+incoming|1)
+	GETTY="/etc/getty"
+	STATUS=respawn
+	;;
+outgoing|2)
+	GETTY="/etc/getty"
+	STATUS=off
+	;;
+bidirectional|3)
+	GETTY="/usr/lib/uucp/uugetty -r"
+	STATUS=respawn
+	;;
+*)
+	;;
+esac
+
+# if SPEED ends in H, eliminate the H
+if [ 0 != `expr $SPEED : ".*H"` ] ; then
+	SPEED=`expr $SPEED : "\(.*\)H"`
+fi
+
+SPEED=`chkyn ${flags} -efc -D$SPEED "
+The current speed is $SPEED.
+If you want to change the speed, enter speed:
+300 1200 1800 2400 4800 9600 19200
+(default '$SPEED'):  "  300 1200 1800 2400 4800 9600 19200`
+
+# if uugetty add H to SPEED
+if echo $GETTY | grep uugetty >/dev/null ; then
+	SPEED=${SPEED}H
+fi
+
+LINE="$F1:$STATES:$STATUS:$GETTY -t 60 ${portname} $SPEED"
+
+#echo 
+ed - $INITTAB <<-! >/dev/null 2>&1
+	H
+	/^$F1:$STATES:/c
+	$LINE
+	.
+	w
+	q
+!
+if [ $? != 0 ]; then
+	admerr $0 Could not edit $INITTAB
+	exit 1
+fi
+
+echo "\n*** the entry for ${portname} is now:"
+/bin/sh _initprint $LINE
+
+
+
+# call _delinittab to kill the process running on the port
+/bin/sh _delinittab -k ${portname}
+
+AN=another
+done					# ***** END MAIN LOOP *****

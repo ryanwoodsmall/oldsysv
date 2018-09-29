@@ -1,0 +1,14 @@
+
+\S ?:  question mark \S
+
+A question mark in a "file name"\S*\S that is an "argument"\S*\S  to
+a  command matches any single character in a file name.  For example,
+the command
+
+	rm temp?
+
+
+removes "temp1", and "tempt", but it does not remove "temp" or
+"tempt2" from the current working directory.
+
+\S*\S defined in the \Sglossary\S

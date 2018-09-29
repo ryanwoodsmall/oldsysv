@@ -1,0 +1,102 @@
+e tiget.c
+r caps
+g/^\([^,]*\),[	]*"\([^"]*\)".*$/s//\2	return \1;/
+g/^\(.\)\(.\)	return /s//		case two('\1','\2'):		return /
+g/^\(.\)\(.\)\(.\)	return /s//		case three('\1','\2','\3'):	return /
+g/^\(.\)\(.\)\(.\)\(.\)	return /s//		case four('\1','\2','\3','\4'):	return /
+g/^\(.\)\(.\)\(.\)\(.\)\(.\)	return /s//		case five('\1','\2','\3','\4','\5'):	return /
+1,/--- begin bool/c
+#ident	"@(#)curses:screen/tiget.ed	1.6"
+/*
+ * Routines to retrieve a value based on the short terminfo name.
+ * This file is created from tiget.ed. DO NOT EDIT ME!
+ */
+
+#include "curses.ext"
+
+/* Make a 2-5 letter code into an unsigned long integer we can switch on */
+/* easily. This is based on the 75-character alphabet of characters between */
+/* '0' and 'z', inclusively. The alphabet was chosen because 75**5 < 2**32. */
+
+#define d(x)		((x)-'0')
+#define ten		('z'-'0'+1)
+#define hundred		(ten*ten)
+#define thousand	(ten*hundred)
+#define tenthou		(ten*thousand)
+
+#define two(s1, s2)	(d(s1)*ten + d(s2))
+#define three(s1, s2, s3) \
+	(d(s1)*hundred + d(s2)*ten + d(s3))
+#define four(s1, s2, s3, s4) \
+	(d(s1)*thousand + d(s2)*hundred + d(s3)*ten + d(s4))
+#define five(s1, s2, s3, s4, s5) \
+	(d(s1)*tenthou + d(s2)*thousand + d(s3)*hundred + d(s4)*ten + d(s5))
+
+#define twostr(str)	two((unsigned)str[0], str[1])
+#define threestr(str)	three((unsigned)str[0], str[1], str[2])
+#define fourstr(str)	four((unsigned)str[0], str[1], str[2], str[3])
+#define fivestr(str)	five((unsigned)str[0], str[1], str[2], str[3], str[4])
+
+static unsigned int switchval(tistr)
+register char *tistr;
+{
+	switch (strlen(tistr)) {
+		case 2:	return twostr(tistr);	
+		case 3:	return threestr(tistr);	
+		case 4:	return fourstr(tistr);	
+		case 5:	return fivestr(tistr);	
+		default:	return 0;
+	}
+}
+
+/*
+    Return the value of the boolean capability tistr.
+    Return -1 if the name is not a boolean capability.
+*/
+int tigetflag(tistr)
+register char *tistr;
+{
+	switch (switchval(tistr)) {
+.
+/^--- end bool/-1,/^--- begin num/c
+		default:	return -1;
+	}
+}
+
+/*
+    Return the value of the numeric capability tistr.
+    Return -2 if the name is not a numeric capability.
+*/
+int tigetnum(tistr)
+register char *tistr;
+{
+	switch (switchval(tistr)) {
+.
+/^--- end num/-1,/^--- begin str/c
+		default:	return -2;
+	}
+}
+
+/*
+    Return the value of the string capability tistr.
+    Return (char *)-1 if the name is not a string capability.
+*/
+char *tigetstr(tistr)
+register char *tistr;
+{
+	switch (switchval(tistr)) {
+.
++150a
+	}
+
+	switch (switchval(tistr)) {
+.
+/^--- end str/-1,$c
+	default:	return (char *) -1;
+	}
+}
+.
+0r copyright.h
+/screen\/copyright\.h/d
+w
+q

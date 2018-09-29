@@ -1,0 +1,21 @@
+
+ \Slocate\S: Find UNIX System Commands with Keywords
+
+     Give \Slocate\S one or more keywords related  to  the  work
+     you  want  to  do.  It  will print a list of UNIX system commands
+     whose actions are related  to  the  keywords.  
+
+     For example, you enter the keywords \Sprint file\S 
+
+    \Slocate\S could produce the list:   The cat (concatenate) command
+                                         The ls (list) command
+                                         The pr (print) command
+
+     Enter a \Sk\S to use \Slocate\S. 
+
+              choices            description
+
+                \S k \S              Enter a list of keywords
+
+                \S r \S              Redirect to a file or a command
+                \S q \S              Quit

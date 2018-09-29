@@ -1,0 +1,61 @@
+.TH LDTBSEEK 3X
+.SH NAME
+ldtbseek \- seek to the symbol table of a common object file
+.SH SYNOPSIS
+.nf
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <ldfcn.h>\}
+.el \{\
+.B #include ~\s-1INCDIR\s+1\/filehdr.h~
+.B #include ~\s-1INCDIR\s+1\/ldfcn.h~\}
+.tr ~~
+.PP
+.B int ldtbseek (ldptr)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.fi
+.SH DESCRIPTION
+.I Ldtbseek
+seeks to the symbol table 
+of the \*N object file
+currently associated with
+.IR ldptr .
+.PP
+.I Ldtbseek
+.RB "returns " \s-1SUCCESS\s+1 " or " \s-1FAILURE\s+1 .
+.I Ldtbseek 
+will fail if
+the symbol table has been stripped from the object file,
+or if it cannot seek to the symbol table.
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a .
+\}
+.RE
+.if !'\*p'' \{\
+.PP
+.IR Intro (4)
+describes
+.IR \s-1INCDIR\s+1  and  \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X),
+ldopen(3X),
+ldtbread(3X),
+ldfcn(4).
+\}
+.el \{\
+ldclose(3X),
+ldopen(3X),
+ldtbread(3X),
+intro(4),
+ldfcn(4),
+paths.h(4).
+\}
+.\"	%W% of %G%

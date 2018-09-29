@@ -1,0 +1,77 @@
+
+   The FIND command allows you to search for objects  in  your  system
+   based  on  any  or  all of the following criteria: name of the file
+   object or folder, object type, owner, and age.   FIND  will  search
+   down  through  all  folders  from  the  point  you  are  at  in the
+   Filecabinet.  If you issue the FIND  from  the  Office  Frame  the
+   entire  Filecabinet  is  searched.   You  can  also specify via the
+   "typed command" method the name of a folder to be searched.
+
+     1.  To use the FIND command use one of the following options:
+
+            - Command Menu - Select FIND + RETURN
+
+            - Typed command - Type find [object_name] [in folder_name]
+                               + RETURN
+
+     2.  If you specified an object name, FACE  will begin  the
+         search for matches.
+
+     3.  If you did not specify an  object  name,  a  FIND  form  will
+         appear  requesting  that  you  specify  any  of the following
+         search criteria:
+
+            - NAME:  Enter the name of the object to be searched  for.
+              To  find  objects starting with the same letter(s), type
+              the initial letter(s) followed by *.   For  example,  g*
+              will find all objects starting with g.
+
+            - TYPE:  Enter the object type or press CHOICES to display
+              a  menu  of  the  object types in your system.  Move the
+              cursor to the desired selection and press RETURN.
+
+            - OWNER:  Enter the  object  owner  or  press  CHOICES  to
+              display  a  menu  of  owners  on  your system.  Move the
+              cursor to the desired selection and press RETURN.
+
+            - AGE: Indicate the age  or  age  range  by  entering  the
+              number  of  days  since  the  object was created or last
+              changed.  For example:
+
+                Enter:     3      To find objects created or changed
+                                  3 days ago
+
+                Enter:    <3      To find objects created or changed
+                                  within the last 2 days
+
+                Enter:    >3      To find objects created or changed
+                                  more than 3 days ago
+
+                Enter:   3-10     To find objects created or changed
+                                  between 3 and 10 days ago
+
+         Press the SAVE screen labeled key to begin search.  Press the
+         CANCEL screen labeled key to cancel the search.
+
+     4.  An "Objects Found" menu frame will be  displayed listing  all
+         matches  found.  Each  object in the menu is specified in its
+         "path name" format so you  will  know  what  folder  actually
+         contains the object.
+
+         This  menu  frame  operates  like  any  other  folder  frame,
+         allowing  you  to  open,  copy, move, rename, etc. any of the
+         objects listed.  You cannot CREATE an object and store it  in
+         this  menu  frame.    Note  that  performing any action on an
+         object in this menu is like operating on  it  in  the  folder
+         that  actually  contains  it.   For  example,  if you MOVE an
+         object in this menu it will be  moved from the  folder  which
+         actually contains it.
+
+         Note that when you perform an action that alters the contents
+         of the frame, e.g., MOVE, DELETE or RENAME, you  will not see 
+	 the  object change until  you  issue  the  UPDATE command  to 
+	 update the frame contents.  This is because this  menu is not 
+	 a file  folder  but  an  extension  of  the  FIND command.
+
+         To remove this menu frame from the screen,  you  must  either
+         CANCEL it or do a CLEANUP.

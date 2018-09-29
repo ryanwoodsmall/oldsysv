@@ -1,0 +1,35 @@
+.TH HYPOT 3M 
+.SH NAME
+hypot \- Euclidean distance function
+.SH SYNOPSIS
+.B #include <math.h>
+.PP
+.B double hypot (x, y)
+.br
+.B double x, y;
+.SH DESCRIPTION
+.I Hypot\^
+returns 
+.PP
+.RS
+sqrt(x \(** x + y \(** y),
+.RE
+.PP
+taking precautions against unwarranted overflows.
+.SH DIAGNOSTICS
+When the correct value would overflow,
+.I hypot\^
+returns
+.SM
+.B HUGE
+and sets
+.I errno\^
+to
+.SM
+.B ERANGE.
+.PP
+These error-handling procedures may be changed with the function
+.IR matherr (3M).
+.SH SEE ALSO
+matherr(3M).
+.\"	%W% of %G%

@@ -1,0 +1,41 @@
+.TH RL 7 "DEC only"
+.SH NAME
+rl \- R\s-1L-11/RL01\s0 disk
+.SH DESCRIPTION
+.BR rl0 ", " ... ", " rl3
+refer to an entire
+.SM RL01
+disk drive as a single sequentially-addressed file.
+Its 256-word blocks are numbered 0 to 10239.
+.PP
+The
+.B rl
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly one I/O call
+and therefore raw I/O is considerably more efficient when
+many words are transmitted.
+The names of the raw
+.SM RL
+files begin with
+.B rrl
+and end with a number which selects the same disk
+as the corresponding
+.B rl
+file.
+.PP
+In raw I/O the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)\^
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/rl\(**, /dev/rrl\(**
+.\"	@(#)rl.7	5.2 of 5/18/82

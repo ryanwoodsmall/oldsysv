@@ -1,0 +1,297 @@
+.TH LS 1
+.SH NAME
+ls \- list contents of directory
+.SH SYNOPSIS
+.B ls
+[
+.B \-RadCxmlnogrtucpFbqisf
+] [names]
+.SH DESCRIPTION
+For each directory argument,
+.I ls
+lists the contents of the directory;
+for each file argument,
+.I ls
+repeats its name and any other information requested.
+The output is sorted alphabetically by default.
+When no argument is given, the current directory is listed.
+When several arguments are given,
+the arguments are first sorted appropriately,
+but file arguments appear
+before directories and their contents.
+.PP
+There are three major listing formats.
+The default format is to list one entry per line,
+the
+.B \-C
+and
+.B \-x
+options enable
+multi-column formats,
+and the
+.B \-m
+option enables stream output format in which files are listed
+across the page, separated by commas.
+In order to determine output formats for the
+.BR \-C ,
+.BR \-x ,
+and
+.B \-m
+options,
+.I ls
+uses an environment variable,
+.BR \s-1COLUMNS\s+1 ,
+to determine the number of character positions available on one
+output line.
+If this variable is not set,
+the
+.I terminfo
+database is used to determine the number of columns, based on the
+environment variable
+.BR \s-1TERM\s+1 .
+If this information cannot be obtained, 80 columns are assumed.
+.PP
+There are an unbelievable number of options:
+.TP
+.B  \-R
+Recursively list subdirectories encountered.
+.TP
+.B  \-a
+List all entries; usually entries whose names begin with a period
+.RB ( . )
+are not listed.
+.TP
+.B  \-d
+If an argument is a directory, list only its name
+(not its contents);
+often used with
+.B \-l
+to get the status
+of a directory.
+.TP
+.B  \-C
+Multi-column output with entries sorted down the columns.
+.TP
+.B  \-x
+Multi-column output with entries sorted across rather than
+down the page.
+.TP
+.B  \-m
+Stream output format.
+.TP
+.B  \-l
+List in long format, giving mode, number of links, owner, group,
+size in bytes, and time of last modification
+for each file (see below).
+If the file is a special file,
+the size field will instead contain
+the major and minor device numbers rather than a size.
+.TP
+.B \-n
+The same as
+.BR \-l ,
+except that the owner's
+.B UID
+and group's
+.B GID
+numbers are printed, rather than
+the associated character strings.
+.TP
+.B \-o
+The same as
+.BR \-l ,
+except that the group is not printed.
+.TP
+.B  \-g
+The same as
+.BR \-l ,
+except that the owner is not printed.
+.TP
+.B  \-r
+Reverse the order of sort to get reverse alphabetic
+or oldest first as appropriate.
+.TP
+.B  \-t
+Sort by time modified (latest first) instead of
+by name.
+.TP
+.B  \-u
+Use time of last access instead of last
+modification for sorting (with the 
+.B \-t
+option) or printing (with the
+.B \-l
+option).
+.TP
+.B  \-c
+Use time of last modification of the i-node
+(file created, mode changed, etc.) for sorting
+.RB ( \-t )
+or printing
+.RB ( \-l ).
+.TP
+.B \-p
+Put a slash
+.RB ( / )
+after each filename if that file is a directory.
+.TP
+.B  \-F
+Put a slash
+.RB ( / )
+after each filename if that file is a directory
+and put an asterisk
+.RB ( * )
+after each filename if that file is executable.
+.TP
+.B  \-b
+Force printing of non-graphic characters to be in the octal \eddd
+notation.
+.TP
+.B  \-q
+Force printing of non-graphic characters in file names as
+the character
+.RB ( ? ).
+.TP
+.B  \-i
+For each file,
+print the i-number in the first column of the report.
+.TP
+.B  \-s
+Give size in blocks,
+including indirect blocks, for each entry.
+.TP
+.B  \-f
+Force each argument to be interpreted as a directory
+and list the name found in each slot.
+This option turns off
+.B "\-l, \-t, \-s,"
+and
+.B \-r,
+and
+turns on
+.B \-a;
+the order is the order in which entries
+appear in the directory.
+.PP
+The mode printed under the
+.B \-l
+option consists of 10 characters
+that are interpreted
+as follows:
+.RS
+.sp \n(PDu
+The first character is:
+.sp \n(PDu
+.RS
+.PD 0
+.TP 4
+.B d
+if the entry is a directory;
+.TP
+.B b
+if the entry is a block special file;
+.TP
+.B c
+if the entry is a character special file;
+.TP
+.B p
+if the entry is a fifo (a.k.a. ``named pipe'') special file;
+.TP
+.B \-
+if the entry is an ordinary file.
+.RE
+.PD
+.sp \n(PDu
+The next 9 characters are interpreted
+as three sets of three bits each.
+The first set refers to the owner's permissions;
+the next to permissions of others in the user-group of the file;
+and the last to all others.
+Within each set, the three characters indicate
+permission to read, to write, and to
+execute the file as a program, respectively.
+For a directory, ``execute'' permission is interpreted
+to mean permission to search the directory
+for a specified file.
+.sp \n(PDu
+The permissions are indicated as follows:
+.sp \n(PDu
+.RS
+.PD 0
+.TP 4
+.B r
+if the file is readable;
+.TP
+.B w
+if the file is writable;
+.TP
+.B x
+if the file is executable;
+.TP
+.B \-
+if the indicated permission is
+.I not\^
+granted.
+.RE
+.PD
+.sp \n(PDu
+The group-execute permission character is given
+as
+.B s
+if the file has set-group-\s-1ID\s+1 mode;
+likewise, the user-execute permission character is given
+as
+.B s
+if the file has set-user-\s-1ID\s+1 mode.
+The last character of the mode (normally
+.B x
+or
+.BR \- )
+is
+.B t
+if the 1000 (octal) bit of the mode is on;
+see
+.IR chmod (1)
+for the meaning of this mode.
+The indications of set-\s-1ID\s+1 and 1000 bits of the mode
+are capitalized
+.RB ( S
+and
+.B T
+respectively) if the corresponding execute permission is
+.I not\^
+set.
+.RE
+.PP
+When the sizes of the files in a directory
+are listed, a total count of blocks,
+including indirect blocks, is printed.
+.SH FILES
+.PD 0
+.TP 20m
+/etc/passwd
+to get user
+.SM ID\*Ss
+for
+.B "ls \-l"
+and
+.BR "ls \-o" .
+.TP
+/etc/group
+to get group
+.SM ID\*Ss
+for
+.B "ls \-l"
+and
+.BR "ls \-g" .
+.TP
+/usr/lib/terminfo/*
+to get terminal information.
+.PD
+.SH SEE ALSO
+chmod(1),
+find(1).
+.SH BUGS
+Unprintable characters in file names may confuse the
+columnar output options.
+.\"	@(#)ls.1	6.3 of 9/2/83

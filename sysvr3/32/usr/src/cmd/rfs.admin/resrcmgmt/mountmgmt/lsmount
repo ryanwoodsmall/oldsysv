@@ -1,0 +1,81 @@
+#ident	"@(#)rfs.admin:resrcmgmt/mountmgmt/lsmount	1.9"
+#menu# list remote resources that are locally mounted
+
+#help# 
+#help# 	The subcommand "lsmount" shows you remote resources that are 
+#help# 	mounted or are set up to be automatically mounted on a directory 
+#help#	of your local file system.  The resources are designated as
+#help#	"Current" which means the resource is mounted, or "Auto" which 
+#help#	means the resource is on the Automatic Mount List.
+#help#	Resources may be both "Current" and "Auto."
+#help#
+
+#set trap
+trap '/bin/rm -f /usr/tmp/autocur$$ /usr/tmp/auto$$ /usr/tmp/cur$$ /usr/tmp/lsmount$$; trap 0; exit' 0 1 2 3 15
+
+# print heading
+echo '\n\n		REMOTE RESOURCES MOUNTED'
+
+#initialization
+>/usr/tmp/cur$$
+>/usr/tmp/auto$$
+
+HEADING="
+This list shows remote resources that are mounted or set up to be mounted
+on your machine.  The order of the fields is:  Resource identifier, 
+Local mount-point, Local access permissions, Resource status.
+
+The status of a resource is \"C\" (Current) if RFS is running and the remote
+resource is mounted on a local directory.  The status is \"A\" (Auto) if
+the remote resource is on the Automatic Mount List.  Resources may be both
+\"C\" and \"A\".   Please wait for the list...
+--------------------------------------------------------------------------\n"
+
+echo "$HEADING\n"
+# if RFS is running, then remote resources currently mounted, and format them
+# appropriately
+if /usr/lbin/rfsrunning
+then
+	/etc/mount | /bin/grep "\/remote on" | /usr/bin/awk '{
+		printf "%s %s ", $3, $1
+		if ( $4 == "read" )
+			printf "read-only\n"
+		else 
+			printf "read-write\n"
+		}' | /bin/sort >/usr/tmp/cur$$
+fi
+
+# if /etc/fstab exists, then get resources mounted automatically and format them
+# appropriately
+if [ -s /etc/fstab ]
+then
+	/bin/sed "s/^\#.*$//" /etc/fstab | /bin/grep "[	 ]\-[r]*d[r]*[	 ]*$" | /usr/bin/awk '{
+		printf "%s %s ", $1, $2
+		if ( $3 == "-d")
+			print "read-write"
+		else if ( $3 == "-rd" || $3 == "-dr")
+			print "read-only"
+		}' | /bin/sort >/usr/tmp/auto$$
+fi
+
+# Determine which resources are mounte currenly only, automatically only, and both
+# currently and automatically.  Formating each subgroup to include the field "C", "A",
+# and "A/C" respectively.
+# If no resources exist automatically as well as currently, then print the appropriate
+# message.
+
+if [  -s /usr/tmp/cur$$  -o  -s /usr/tmp/auto$$  ]
+then 
+	/usr/bin/comm -12 /usr/tmp/cur$$ /usr/tmp/auto$$ | /bin/sort >/usr/tmp/autocur$$
+	/bin/sed "s/$/ A\/C/" /usr/tmp/autocur$$ >/usr/tmp/lsmount$$
+
+	/usr/bin/comm -23 /usr/tmp/cur$$ /usr/tmp/autocur$$ | /bin/sed "s/$/ C/" >>/usr/tmp/lsmount$$
+
+	/usr/bin/comm -23 /usr/tmp/auto$$ /usr/tmp/autocur$$ | /bin/sed "s/$/ A/" >>/usr/tmp/lsmount$$
+
+	/bin/sort -u /usr/tmp/lsmount$$ | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+	echo
+
+else
+	echo "\tThere are no remote resources currently or automatically mounted.\n"
+fi

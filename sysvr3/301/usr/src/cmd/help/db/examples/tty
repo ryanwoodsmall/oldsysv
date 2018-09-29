@@ -1,0 +1,24 @@
+
+\S tty \S:  Examples
+
+       tty
+
+    Prints your terminal line number on the standard output.
+
+    ----------------------------------------------------------------------
+
+       echo "TIME FOR LUNCH" > `tty`
+
+    Prints the string "TIME FOR LUNCH" on your terminal.
+
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+       tty -l
+
+    Prints your line number on standard output.  It also prints a message 
+    informing you if your terminal is using a synchronous line or not.

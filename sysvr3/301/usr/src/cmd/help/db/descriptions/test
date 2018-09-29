@@ -1,0 +1,19 @@
+
+\Stest\S:  Description
+
+Syntax Summary:  test logical_expr
+                 [logical_expr]
+
+         where:  logical_expr  is a logical expression consisting
+                               of primaries and logical operators.
+Description:
+     Use \Stest\S in shell programs to evaluate and compare the type and size
+     of files, strings, and integers.  You combine file names, strings, and
+     integers with arithmetic and logical operators to create logical
+     expressions.  If \Stest\S evaluates the expression as true, it sets the
+     exit status to zero.  If \Stest\S evaluates the expression as false, or
+     if the expression is incomplete or omitted, \Stest\S sets the exit status
+     to a non-zero number.  You can perform the same tests on expressions
+     without explicitly stating \Stest\S.  You do this by surrounding an
+     expression with blanks and square brackets.  
+     See the manual pages for \Stest\S for details on creating expressions.

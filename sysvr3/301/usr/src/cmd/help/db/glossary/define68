@@ -1,0 +1,15 @@
+
+\S -:  minus:  dash:  hyphen \S
+
+  1.  A minus or dash "-" precedes the options on the command lines for
+      most UNIX system commands.  The minus is a flag that signals the
+      command that the character, or characters that follow are options.
+      This ensures that the "option"\S*\S is not interpreted as an
+      "operand"\S*\S.  Some commands do not follow this rule.  Their
+      options may be preceded by "+" or they might not have any flag.
+
+  2.  A minus can also be used on some command lines to mean "standard
+      input"\S*\S.  If you substitute "-" for the operand, the command
+      will use standard input.
+
+\S*\S defined in the \Sglossary\S

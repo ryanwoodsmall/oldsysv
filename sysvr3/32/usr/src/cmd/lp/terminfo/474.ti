@@ -1,0 +1,53 @@
+#ident	"@(#)nlp:terminfo/474.ti	1.5"
+#01-07-88
+
+474|att474|AT&T 474; 14"; C.Itoh 1550EP;IBM Graphics,
+
+	cpix,
+
+	bufsz#4096,
+	cols#132,
+	it#8,
+	lines#66,
+	orc#10,
+	orhi#100,
+	orl#12,
+	orvi#72,
+	cps#120,
+
+	cr=^M,
+	cpi=%?%p1%{10}%=%t^R%e%p1%{16}%=%p1%{17}%=%O%t^O%;,
+	cvr=%?%p1%{0}%>%p1{86}%<%&%t\EA%p1%c\E2%;,
+	csnm=%?%p1%{0}%=%p1%{1}%=%O%tcharacter_set_1%e%p1%{2}%=%tcharacter_set_2%;,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+#CAN clears all unprinted characters on current line
+	is1=^X,
+
+#Set 10 cpi and 6 lpi; Emphasize,double width and underline off.
+	is2=^R\EA^L\E2\EF\EH\EW0\ET\E-0\E7,
+	lpi=%?%p1%{2}%=%t\EA$\E2%e%p1%{3}%=%t\EA^X\E2%e%p1%{4}%=%t\EA^R\E2%e%p1%{6}%=%t\EA^L\E2%e%p1%{8}%=%t\E0%e%p1%{12}%=%t\EA^F\E2%;,
+	rsubm=\ET,
+	rsupm=\ET,
+	rsupm=\ET,
+	rshm=\EF,
+	rmul=\E-0,
+	rwidm=\EW0,
+	sshm=\EE,
+	ssubm=\ES1,
+	ssupm=\ES0,
+	smul=\E-1,
+	swidm=\EW1,
+	scs=%?%p1%{0}%=%p1%{1}%=%O%t\E7%e%p1%{2}%=%t\E6%;,
+#Set form length
+	u9=%?%p1%{128)%<%t\EC%p1%c%;,
+
+473|att473|AT&T 473; 8"; C.Itoh 8510EP; IBM graphics printer,
+
+	cols#80,
+	use=474,
+
+ibmgraphics,
+	
+	use=473,

@@ -1,0 +1,31 @@
+
+\Suname\S: Options
+
+     -D domain_name   sets the domain name to <domain_name> which is a string 
+                      of less than 64 characters.
+
+     -S system_name   sets the system name to <system_name> which is a string
+        that names your system.  System name can not be longer
+        than 8 characters.
+
+     -N node_name     sets the node name to <node_name> which is a string that
+        names your node. <node_name> cannot be longer than 8
+        characters.
+
+     -a   prints all the information from options "b", "m", "n", "r", "s", and
+          "v".
+
+     -b   prints the date the system was built.
+
+     -d   prints the name of the domain the machine is a member of.
+
+     -m   prints the machine hardware name.
+
+     -n   prints the node name of your UNIX system.
+
+     -r   prints the release number of the UNIX operating system you are using.
+
+     -s   prints system name for your UNIX system.
+
+     -v   prints a number selected by the system administrator to represent
+          this version of your UNIX operating system.

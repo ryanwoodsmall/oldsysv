@@ -1,0 +1,55 @@
+.TH RF 7 "PDP-11 only"
+.SH NAME
+rf \- \s-1RF11/RS11\s0 fixed-head disk file
+.SH DESCRIPTION
+This file refers to the
+concatenation of all
+.SM RS-11
+disks.
+.PP
+Each disk contains 1024 256-word blocks.
+The length of the combined
+.SM RF
+file is
+1024\(mu(minor+1) blocks.
+That is minor device zero
+is taken to be
+1024 blocks long;
+minor device one is 2048,
+etc.
+.PP
+The
+.B rf0
+file
+accesses the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly one \s-1I/O\s0 operation
+and therefore raw \s-1I/O\s0 is considerably more efficient when
+many words are transmitted.
+The name of the raw
+.SM RF
+file is
+.BR rrf0 .
+The same minor device considerations
+hold for the raw interface as for the normal interface.
+.PP
+In raw
+.SM I/O
+the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)\^
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/rf0, /dev/rrf0
+.SH BUGS
+The 512-byte restrictions on the raw device are not
+physically necessary,
+but are still imposed.
+.\"	@(#)rf.7	5.2 of 5/18/82

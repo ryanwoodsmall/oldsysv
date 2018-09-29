@@ -1,0 +1,161 @@
+VERSION=2.15
+#  sccsid = @(#) makefile.u3 1.4@(#)
+#
+# Ex skeletal makefile for Unix 3.0
+#
+# NB: This makefile doesn't indicate any dependencies on header files.
+#
+# Ex is very large - it may not fit on PDP-11's depending on the operating
+# system and the cflags you turn on. Things that can be turned off to save
+# space include LISPCODE (-l flag, showmatch and lisp options), UCVISUAL
+# (visual \ nonsense on upper case only terminals), CHDIR (the undocumented
+# chdir command,)  RDONLY (-R flag, view), SOFTTABS (^T tabs), ZCMD (the
+# various strange options after z plus ^F/^B), ZZCMD (ZZ from visual), WRAPMGN
+# (wrapmargin), TAGSCODE (the tags feature), OPENCODE (open without visual),
+# CRNL (code to support terminals with cr, nl, or ns attributes),
+# BEEHIVE (superbee: f1=esc, f2=^c)
+# SOURCECODE defines the use of the `~/.exrc' file.
+#
+# Rule of thumb: OPENCODE will buy you about 2.5K, LISPCODE and TAGSCODE
+# are worth perhaps 1.5K, and the others are worth fairly small amounts
+# (mostly about 50-100 bytes).  UCVISUAL is worth a bit more (256?) and
+# you should take it out unless you have such a terminal.
+# Also make sure you are running the doprnt printf and not the portable
+# one unless you have to run the portable one.
+#
+# Don't define VFORK unless your system has the VFORK system call,
+# which is like fork but the two processes share memory until the
+# child execs. This speeds up ex by saving the memory copy.
+#
+# If your system expands tabs to 4 spaces you should -DTABS=4 below
+#
+BINDIR=	../misc
+INSDIR=	/usr/bin
+NBINDIR=/i1/beau/bin
+LIBDIR=	/usr/lib
+FOLD=	${BINDIR}/fold
+CTAGS=	${BINDIR}/ctags
+XSTR=	${BINDIR}/xstr
+MKSTR=	${BINDIR}/mkstr
+CXREF=	${BINDIR}/cxref
+INCLUDE=
+TERMLIB=-ltermlib
+PR=	pr
+# Debugging must be done on a vax, otherwise it just won't fit.
+DEB=	${NONDEBUGFLAGS}	# or ${DEBUGFLAGS} if mdd
+DEBUGFLAGS=	-DTRACE
+NONDEBUGFLAGS=	-O
+CFLAGS=	${OPTIONS} ${DEB} ${INCLUDE} -DUSG3TTY
+# See also CFLAGS in the termlib makefile.
+OPTIONS=	-DCHDIR -DLISPCODE -DSOFTTABS -DZCMD -DZZCMD -DWRAPMGN -DZATALL -DCHCASE -DCRNL -DSOURCECMD -DRDONLY -DOPENCODE -DBEEHIVE -DFILTER -DYANKDEL -DEX
+# everything:	-DLISPCODE -DCHDIR -DUCVISUAL -DSOFTTABS -DZCMD -DZZCMD -DRDONLY -DWRAPMGN -DTAGSCODE -DOPENCODE -DCRNL -DBEEHIVE -DZATALL -DSOURCECMD -DCHCASE -DFILTER -DYANKDEL -DEX
+# PRINTF can be "pprintf.o" for the portable version or "printf.o doprnt.o"
+# for the nonportable version, which uses doprnt (written in pdp-11 assembly
+# language) and is quite a bit smaller than pprintf.o (about 900 bytes)
+PRINTF=	11printf.o doprnt.o
+OBJS=	ex.o ex_addr.o ex_cmds.o ex_cmds2.o ex_cmdsub.o ex_data.o ex_get.o \
+	ex_io.o ex_put.o ex_re.o ex_set.o ex_subr.o ex_temp.o ex_tty.o \
+	ex_unix.o ex_v.o ex_vadj.o ex_vget.o ex_vmain.o ex_voper.o \
+	ex_vops.o ex_vops2.o ex_vops3.o ex_vput.o ex_vwind.o \
+	${PRINTF} strings.o
+
+.c.o:
+	${MKSTR} - ex${VERSION}strings x $*.c
+	${CC} -E ${CFLAGS} x$*.c | ${XSTR} -c -
+	rm -f x$*.c
+	${CC} ${CFLAGS} -c x.c 
+	mv x.o $*.o
+
+a.out: ${OBJS}
+	cc -i -V215 ${OBJS} ${TERMLIB}
+	size a.out
+	cp ex2.15strings /usr/lib
+#	cc -i -s -V215 ${OBJS} ${TERMLIB}
+#	cc -i -z ${OBJS} ${TERMLIB}
+
+all:	a.out exrecover expreserve tags
+
+ex.o:	ex.c ex.h ex_argv.h ex_re.h ex_temp.h ex_tty.h ex_tune.h ex_vars.h ex_vis.h
+
+tags:
+	${CTAGS} -w *.h *.c
+
+${OBJS}: ex_vars.h
+
+# ex_vars.h:
+# 	csh makeoptions ${CFLAGS}
+
+strings.o: strings
+	${XSTR}
+	${CC} -c -S xs.c
+#	ed - <:rofix xs.s
+	as -o strings.o xs.s
+	rm xs.s
+	
+exrecover: exrecover.o
+	${CC} -o exrecover exrecover.o
+
+exrecover.o:
+	${CC} -c -O exrecover.c
+
+expreserve: expreserve.o
+	${CC} -o expreserve expreserve.o
+
+expreserve.o:
+	${CC} -c -O expreserve.c
+
+clean:
+#	If we dont have ex we cant make it so dont rm ex_vars.h
+	-rm -f expreserve exrecover
+	-rm -f a.out ex${VERSION}strings strings core trace
+	-rm -f *.o x*.[cs] 
+
+ninstall: a.out
+	-mv ${NBINDIR}/ex ${NBINDIR}/oldex
+	-rm -f ${NBINDIR}/vi ${NBINDIR}/view ${NBINDIR}/oldex
+	cp a.out ${NBINDIR}/ex
+	-cp ex${VERSION}strings ${LIBDIR}/ex${VERSION}strings
+	ln ${NBINDIR}/ex ${NBINDIR}/vi
+#	ln ${NBINDIR}/ex ${NBINDIR}/view
+	chmod 1755 ${NBINDIR}/ex
+
+install: a.out
+	-mv ${INSDIR}/ex ${INSDIR}/oldex
+	-rm -f ${INSDIR}/ex ${INSDIR}/edit ${INSDIR}/vi ${INSDIR}/view ${INSDIR}/oldex
+	strip a.out
+	cp a.out ${INSDIR}/ex
+	-cp ex${VERSION}strings ${LIBDIR}/ex${VERSION}strings
+	-rm -rf ${LIBDIR}/ex2.1[01234]strings
+	ln ${INSDIR}/ex ${INSDIR}/edit
+	ln ${INSDIR}/ex ${INSDIR}/vi
+	ln ${INSDIR}/ex ${INSDIR}/view
+	chmod 1755 ${INSDIR}/ex
+
+installutil: exrecover expreserve
+	cp exrecover ${LIBDIR}/ex${VERSION}recover
+	cp expreserve ${LIBDIR}/ex${VERSION}preserve
+	chmod 4755 ${LIBDIR}/ex${VERSION}recover ${LIBDIR}/ex${VERSION}preserve
+	-rm -rf ${LIBDIR}/ex2.1[01234]recover ${LIBDIR}/ex2.1[01234]preserve
+	-mkdir /usr/preserve
+	-chown bin /usr/preserve
+	-chgrp bin /usr/preserve
+
+lint:
+	lint ex.c ex_?*.c
+	lint -u exrecover.c
+	lint expreserve.c
+
+print:
+	@${PR} READ* BUGS
+	@${PR} makefile*
+	@${PR} /etc/termcap
+	@(size -l a.out ; size *.o) | ${PR} -h sizes
+	@${PR} -h errno.h ${INCLUDE}/errno.h
+	@${PR} -h setjmp.h ${INCLUDE}/setjmp.h
+	@${PR} -h sgtty.h ${INCLUDE}/sgtty.h
+	@${PR} -h signal.h ${INCLUDE}/signal.h
+	@${PR} -h stat.h ${INCLUDE}/stat.h
+	@${PR} -h types.h ${INCLUDE}/types.h
+	@ls -ls | ${PR}
+	@${CXREF} *.c | ${PR} -h XREF
+	@${PR} *.h *.c

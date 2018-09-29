@@ -1,0 +1,44 @@
+.TH RK 7 "PDP-11 only"
+.SH NAME
+rk \- \s-1RK-11/RK03\s0 or \s-1RK05\s0 disk
+.SH DESCRIPTION
+The file
+.B rk?
+refers to an entire
+.SM RK03
+disk as a single sequentially-addressed
+file.
+Its 256-word blocks are numbered 0 to 4871.
+.PP
+The
+.B rk
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly one \s-1I/O\s0 operation
+and therefore raw \s-1I/O\s0 is considerably more efficient when
+many words are transmitted.
+The names of the raw
+.SM RK
+files
+begin with
+.B rrk
+and end with a number which selects the same disk
+as the corresponding
+.B rk
+file.
+.PP
+In raw \s-1I/O\s0 the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)\^
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/rk\(**, /dev/rrk\(**
+.\"	@(#)rk.7	5.2 of 5/18/82

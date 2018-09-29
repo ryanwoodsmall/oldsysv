@@ -1,0 +1,8 @@
+
+\Swc\S: Options
+
+     -c   prints the number of characters in <file_name>.
+
+     -l   prints the number of lines in <file_name>.
+
+     -w   prints the number of words in <file_name>.

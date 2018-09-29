@@ -1,0 +1,45 @@
+.\"%W%
+.TH PCLTEST 8 "DEC only"
+.SH NAME
+pcltest \- test the pcl driver user interface
+.SH SYNOPSIS
+.B pcltest
+[test] [-n] [cc]|[pcl_file]...
+.SH DESCRIPTION
+.I Pcltest
+is a program designed to test the user interface
+provided by the \s-1UNIX\s+1 system driver for the
+\s-1DEC PCL-11B\s+1 network bus
+controller.
+The default parameters cause the file
+.B /dev/pcl/b0
+to be opened for read/write,
+the driver control structure and debug buffer to be printed on
+.I stdout
+and a test pattern control message to be transmitted.
+.P
+The optional arguments may be used as follows:
+.TP
+test
+The test program functions are exercised without accessing
+any special files.
+.TP
+-n
+Any special files opened will have the \s-1O_NDELAY\s+1 flag set.
+.TP
+cc
+A two character identifier for a file in the directory
+\fB/dev/pcl/\fR.
+The special file will be opened instead of the default.
+.TP
+pcl_file
+A complete file name for a \s-1PCL\s+1 special file.
+The tests will be run on the file named.
+.SH FILES
+.PD 0
+.TP "\w'/dev/pcl/b0  'u"
+/dev/pcl/b0
+\s-1PCL-11\s+1 special file naming channel \fB0\fR to machine \fBb\fR.
+.PD
+.SH "SEE ALSO"
+pcl(7).

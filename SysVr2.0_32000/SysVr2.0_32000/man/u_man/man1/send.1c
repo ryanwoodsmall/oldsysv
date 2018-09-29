@@ -1,0 +1,737 @@
+.TH SEND 1C
+.SH NAME
+send, gath \- gather files and/or submit \s-1RJE\s+1 jobs
+.SH SYNOPSIS
+.B gath
+.RB [ \-ih ]
+file
+.B .\|.\|.
+.PP
+.B send
+argument
+.B .\|.\|.
+.SH DESCRIPTION
+.SS Gath
+.I Gath\^
+concatenates the named files and writes them to the standard output.
+Tabs are expanded into spaces according to
+the format specification for each file [see
+.IR fspec (4)].
+The size limit and margin parameters of a format specification
+are also respected.
+Non-graphic characters other than tabs are identified
+by a diagnostic message and excised.
+The output of
+.I gath\^
+contains no tabs unless the
+.B \-h
+flag is set, in which case the output is written with standard tabs
+(every eighth column).
+.PP
+Any line of any of the files which begins with
+.B ~
+is interpreted by
+.I gath\^
+as a control line.
+A line beginning
+.RB `` "~# " ''
+(tilde,space)
+specifies a sequence of files to be included at that point.
+A line beginning
+.B ~!
+specifies a
+.SM UNIX
+system command;
+that command is executed,
+and its output replaces the
+.B ~!
+line in the
+.I gath\^
+output.
+.PP
+Setting the
+.B \-i
+flag prevents control lines from being interpreted
+and causes them to be output literally.
+.PP
+A file name of
+.B \-
+at any point refers to standard input,
+and a control line consisting of
+.B ~.
+is a logical \s-1EOF\s+1.
+Keywords may be defined by specifying a replacement string
+which is to be substituted for each occurrence of the keyword.
+Input may be collected directly from the terminal,
+with several alternatives for prompting.
+In fact, all of the special arguments and flags recognized by the
+.I send\^
+command are also recognized and treated identically by
+.IR gath .
+Several of them only make sense in the context
+of submitting an \s-1RJE\s+1 job.
+.SS Send
+.PP
+.I Send\^
+is a command-level interface to the
+.SM RJE
+subsystems.
+It allows the user
+to collect input from various sources
+in order to create a run stream
+consisting of card images, and submit this run stream
+for transmission to an
+.SM IBM
+host computer.
+Output from the
+.SM IBM
+system may be returned to the user in either
+.SM ASCII
+text form or
+.SM EBCDIC
+punch format [see 
+.I pnch
+(4)].
+How output is to be disposed of once it returns
+from the host is determined by a "usr=" specification
+which should be embedded in each job that a user
+submits for transmission.
+A detailed description of
+.SM RJE
+operation and the "usr=" specification is given in
+.IR "U\s-1NIX\s+1 Remote Job Entry User Guide" .
+.PP
+Possible sources of input to
+.I send\^
+are: ordinary files, standard input,
+the terminal,
+and the output of a command or shell file.
+Each source of input is treated as a virtual file,
+and no distinction is made based upon its origin.
+Typical input is an
+.SM ASCII
+text file of the sort
+that is created by the editor
+.IR ed (1).
+An optional format specification
+appearing in the first line of a file
+[see
+.IR fspec (4)]
+determines the settings
+according to which tabs are expanded into spaces.
+In addition, lines that begin with
+.B ~
+are normally interpreted as commands
+controlling the execution of
+.IR send .
+They may be used to set or reset flags,
+to define keyword substitutions,
+and to open new sources of input
+in the midst of the current source.
+Other text lines are translated one-for-one
+into card images of the run stream.
+.PP
+The run stream that results from this collection
+is treated as one job by the
+.SM RJE
+subsystems.
+.I Send\^
+prints the card count of the run stream,
+and the queuer that is invoked
+prints the name of the temporary file that holds the job
+while it is awaiting transmission.
+The initial card of a job
+submitted to a
+host
+must have a
+.B //
+in the first column.
+Any cards preceding this card will be excised.
+If a host computer is not specified before
+the first card of the runstream is ready to be sent,
+.I send\^
+will select a reasonable default.
+All cards
+beginning with
+.B /*$
+will be excised from the runstream,
+because they are
+.SM HASP
+command cards.
+.PP
+The arguments that
+.I send\^
+accepts are described below.
+An argument is interpreted
+according to
+the first pattern that it matches.
+Preceding a character with
+.B \e
+causes it to loose any special meaning
+it might otherwise have
+when matching against an argument pattern.
+.PP
+.RS 2
+.TP 21
+.B \s+3\&.\s0
+Close the current source.
+.TP
+.B \-
+Open standard input as a new source.
+.TP
+.B +
+Open the terminal as a new source.
+.TP
+.BI : spec :
+Establish a default format
+specification for included sources,
+.br
+e.g.,
+.B :m6t\-12:
+.TP
+.BI : message\^
+Print message on the terminal.
+.TP
+.BI \-: prompt\^
+Open standard input
+and, if it is a terminal,
+print
+.IR prompt .
+.TP
+.BI +: prompt\^
+Open the terminal
+and
+print
+.IR prompt .
+.TP
+.BI \- flags\^
+Set the specified flags,
+which are described below.
+.TP
+.BI + flags\^
+Reset the specified flags.
+.TP
+.BI = flags\^
+Restore the specified flags to their state
+at the previous level.
+.TP
+.BI ! command\^
+Execute the specified
+.SM UNIX
+system
+.I command\^
+via the one-line shell,
+with input redirected to
+.B /dev/null
+as a default.
+Open the standard output of the command
+as a new source.
+.TP
+.BI $ line\^
+Collect contiguous arguments
+of this form and write them
+as consecutive lines
+to a temporary file;
+then have the file executed by the shell.
+Open the standard output of the shell
+as a new source.
+.TP
+.BI @ directory\^
+The current directory for the send process is changed to
+.IR directory .
+The original directory will be restored at the end of the current source.
+.TP
+.BI ~ comment\^
+Ignore this argument.
+.TP
+.BI ?: keyword\^
+Prompt for a definition of
+.I keyword\^
+from the terminal unless
+.I keyword\^
+has an existing definition.
+.TP
+.BI ? keyword =^ xx\^
+Define the \fIkeyword\fP
+as a two-digit hexadecimal
+character code unless it already has a non-null replacement.
+.TP
+.BI ? keyword = string\^
+Define the \fIkeyword\fP
+in terms of a replacement
+string unless it already has a non-null replacement.
+.TP
+.BI =: keyword\^
+Prompt for a definition
+of \fIkeyword\fP from the terminal.
+.TP
+.IB keyword =^ xx
+Define \fIkeyword\fP
+as a two-digit hexadecimal character code.
+.TP
+.IR keyword = string
+Define \fIkeyword\fP
+in terms of a replacement string.
+.bp
+.TP
+.I host\^
+The host machine that the job should be submitted to.
+It can be any name that corresponds to one in the first column
+of the \s-1RJE\s0 configuration file
+.RB ( /usr/rje/lines ).
+.TP
+.I "file-name\^"
+Open the specified file as a new source of input.
+.i0
+.PP
+When commands are executed via 
+.B $
+or
+.B !
+the shell environment
+[see \fIenviron\fP(5)]
+will contain the values of all
+send keywords that begin with
+.B $
+and have the
+syntax of a shell variable.
+.PP
+The flags recognized by
+.I send\^
+are described in terms of
+the special processing
+that occurs when they are set:
+.PP
+.RS 2
+.TP 5
+.B \-l
+List card images on standard output.
+.SM EBCDIC
+characters are translated back to
+.SM ASCII\*S.
+.TP
+.B \-q
+Do not output card images.
+.TP
+.B \-f
+Do not fold lower case to upper.
+.TP
+.B \-t
+Trace progress on diagnostic output,
+by announcing the
+opening of input sources.
+.TP
+.B \-k
+Ignore the keywords
+that are active at the previous level
+and erase any keyword definitions
+that have been made at the current level.
+.TP
+.B \-r
+Process included sources in raw mode;
+pack arbitrary 8-bit bytes
+one per column (80 columns per card) until an
+\s-1EOF\s+1.
+.TP
+.B \-i
+Do not interpret control lines
+in included sources;
+treat them as text.
+.TP
+.B \-s
+Make keyword substitutions
+before detecting and interpreting
+control lines.
+.TP
+.B \-y
+Suppress error diagnostics
+and submit job anyway.
+.TP
+.B \-g
+Gather mode, qualifying
+.B \-l
+flag;
+list text lines before
+converting them to card images.
+.TP
+.B \-h
+Write listing with standard tabs.
+.TP
+.B \-p
+Prompt with \fB\(**\fP when taking input from the terminal.
+.TP
+.B \-m
+When input returns to the terminal
+from a lower level, repeat the prompt, if any.
+.TP
+.B \-a
+Make
+.B \-k
+flag propagate to included sources,
+thereby protecting them from keyword substitutions.
+.TP
+.B \-c
+List control lines on diagnostic output.
+.TP
+.B \-d
+Extend the current set of keyword
+definitions by adding those active at the end of
+included sources.
+.TP
+.B \-x
+This flag guarantees that the job will be transmitted in the
+order of submission (relative to other jobs sent with this flag).
+.i0
+.PP
+Control lines are input lines
+that begin with
+.BR ~ .
+In the default mode
+.BR +ir ,
+they are interpreted as commands to
+.IR send .
+Normally they are
+detected immediately and
+read literally.
+The
+.B \-s
+flag forces
+keyword substitutions to be made
+before control lines
+are intercepted and interpreted.
+This can lead to unexpected results if a control line uses a
+keyword which is defined within an immediately preceding
+.B ~$
+sequence.
+Arguments appearing in control lines are handled
+exactly like the command arguments to
+.IR send ,
+except that they are processed
+at a nested level of input.
+.PP
+The two possible formats for a control line are:
+``~argument'' and ``~##argument#\fB...\fP''.
+In the first case,
+where the
+.B ~
+is not followed by a space,
+the remainder of the line
+is taken as a single argument to
+.IR send .
+In the second case,
+the line is parsed
+to obtain a sequence of arguments
+delimited by spaces.
+In this case
+the quotes
+.B \(fm
+and
+\fB"\fP
+may be employed to pass embedded spaces.
+.PP
+The interpretation of the argument
+\fB\s+3\&.\s0\fP
+is chosen so that an input line
+consisting of \fB~.\fP
+is treated as a logical \s-1EOF\s+1.
+The following example illustrates
+some of the above conventions:
+.PP
+.RS 10
+send## \-
+.br
+~##argument ...
+.br
+~\fB.\fP
+.RE
+.i0
+.PP
+This sequence of three lines
+is equivalent to
+the command synopsis
+at the beginning of this description.
+In fact, the
+.B \-
+is not even required.
+By convention, the
+.I send\^
+command reads standard input
+if no other input source is specified.
+.I Send\^
+may therefore be employed
+as a filter with side-effects.
+.PP
+The execution of the
+.I send\^
+command is controlled at each instant
+by a current environment,
+which includes
+the format specification for the input source,
+a default format specification for included sources,
+the settings of the mode flags,
+and the active set of keyword definitions.
+This environment can be altered dynamically.
+When a control line opens a new source of input,
+the current environment is pushed onto a stack,
+to be restored when input resumes
+from the old source.
+The initial format specification
+for the new source
+is taken from the first line of the file.
+If none is provided, the established default is used
+or, in its absence, standard tabs.
+The initial mode settings
+and active keywords
+are copied from the old environment.
+Changes made while processing
+the new source
+will not affect the environment
+of the old source, with one exception:
+if
+.B \-d
+mode is set in the old environment,
+the old keyword context
+will be augmented by those definitions
+that are active at the end of the new source.
+.PP
+When
+.I send\^
+first begins execution,
+all mode flags are reset,
+and the values of the shell environment variables
+become the initial values for keywords of the
+same name with a
+.B $
+prefixed.
+.PP
+The initial reset state for all mode flags
+is the
+.B +
+state.
+In general, special processing
+associated with a mode
+.I N\^
+is invoked by flag
+.BI \- N\^
+and is revoked by flag
+.BI + N\^\fR.\fP
+Most mode settings have an immediate effect
+on the processing of the current source.
+Exceptions to this are the
+.B \-r
+and
+.B \-i
+flags,
+which apply only to included source,
+causing it to be processed
+in an uninterpreted manner.
+.PP
+A keyword is an arbitrary 8-bit
+.SM ASCII
+string for which
+a replacement has been defined.
+The replacement may be another string or
+the hexadecimal code for a single 8-bit byte.
+At any instant, a given set of keyword definitions is active.
+Input text lines are scanned,
+in one pass from left to right,
+and longest matches are attempted
+between substrings of the line
+and the active set of keywords.
+Characters that do not match
+are output, subject to folding and
+the standard translation.
+Keywords
+are replaced
+by the specified hexadecimal code
+or replacement string,
+which is then output
+character by character.
+The expansion of tabs
+and length checking,
+according to the format specification
+of an input source,
+are delayed until
+substitutions have been made in a line.
+.PP
+All of the keywords definitions made
+in the current source
+may be deleted by
+setting the
+.B \-k
+flag.
+It then becomes possible
+to reuse them.
+Setting the
+.B \-k
+flag also causes keyword definitions active
+at the previous source level to be ignored.
+Setting the
+.B +k
+flag causes keywords at the previous level to be ignored
+but does not delete the definitions
+made at the current level.
+The
+.B =k
+argument reactivates the definitions of the previous level.
+.PP
+When keywords are redefined, the previous definition at the same
+level of source input is lost, however the definition at the previous
+level is only hidden, to be reactivated upon return to that level
+unless a
+.B \-d
+flag causes the current definition to be retained.
+.PP
+Conditional prompts for keywords,
+.BR ?:A ,/p
+which have already been defined at some higher level
+to be null or have a replacement
+will simply cause the definitions
+to be copied down to the current level;
+new definitions
+will not be solicited.
+.PP
+Keyword substitution is
+an elementary macro facility
+that is easily explained
+and that appears useful enough
+to warrant its inclusion in the
+.I send\^
+command.
+More complex replacements are
+the function of a general macro processor (\c
+.I m4\^\c
+(1), perhaps).
+To reduce the overhead of string comparison,
+it is recommended that
+keywords be chosen
+so that their initial characters
+are unusual.
+For example, let them all be upper case.
+.PP
+.I Send\^
+performs two types of error checking on input text lines.
+Primarily, only
+.SM ASCII
+graphics
+and tabs
+are permitted in input text.
+Secondly, the length of a text line,
+after substitutions have been made,
+may not exceed 80 bytes.
+The length of each line may be additionally constrained
+by a size parameter
+in the format specification
+for an input source.
+Diagnostic output provides
+the location of each erroneous line,
+by line number and input source,
+a description of the error,
+and the card image that results.
+Other routine errors that are announced are
+the inability to open or write files,
+and abnormal exits from the shell.
+Normally, the occurrence of any error
+causes
+.IR send ,
+before invoking the queuer,
+to prompt for positive affirmation
+that the suspect run stream
+should be submitted.
+.PP
+Before submitting a job to a host, 
+.I send\^
+translates 8-bit
+.SM ASCII
+characters into
+their
+.SM EBCDIC
+equivalents.
+The conversion for 8-bit
+.SM ASCII
+characters
+in the octal range 040-176 is based on
+the character set described in
+``Appendix H'' of
+.I "IBM System/370 Principles of Operation\^"
+(\s-1IBM SRL\s+1 GA22-7000).
+Each 8-bit
+.SM ASCII
+character
+in the range 040-377
+possesses an
+.SM EBCDIC
+equivalent
+into which it is mapped,
+with five exceptions:#
+.if t \fB~\fP into \fB\(no\fP,
+.if n \fB~\fP into EBCDIC not,
+0345 into
+.BR ~ ,
+.if t 0325 into \fB\(ct\fP,
+.if n 0325 into \s-1EBCDIC\s0 cent,
+.if t 0313 into \(bv\|,
+.if n 0313 into \s-1EBCDIC\s0 split-bar,
+0177 (\s-1DEL\s0) is illegal.
+In listings requested from
+.I send\^
+and in printed output returned by
+the subsystem,
+the reverse translation
+is made
+with the qualification that
+.SM EBCDIC
+characters that do not have valid 8-bit 
+.SM ASCII
+equivalents
+are translated into
+.BR ^ .
+.PP
+Additional control over the translation process
+is afforded by
+the
+.B \-f
+flag
+and hexadecimal character codes.
+As a default,
+.I send\^
+folds
+lower-case letters into upper case.
+Setting the
+.B \-f
+flag
+inhibits any folding.
+Non-standard character codes are obtained as
+a special case of keyword substitution.
+The users should check with the remote
+IBM system to be sure the special
+processing will be accepted.
+.SH "SEE ALSO"
+m4(1),
+rjestat(1C),
+sh(1).
+.br
+lseek(2),
+fspec(4),
+pnch(4),
+ascii(5),
+environ(5) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+.sp
+.I "U\s-1NIX\s+1 Remote Job Entry User Guide\^"
+in the 
+\f2U\s-1NIX\s+1 System User Guide\fR.
+.SH BUGS
+Standard input is read in blocks, and unused bytes are
+returned via
+.IR lseek (2).
+If standard input is a pipe, multiple arguments
+of the form
+.B \-
+and
+.BI \-: prompt
+should not be used,
+nor should the logical \s-1EOF\s+1 (\fB~.\fP).
+.tr ##
+.\"	@(#)send.1c	6.3 of 9/2/83

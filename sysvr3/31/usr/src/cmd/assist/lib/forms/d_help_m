@@ -1,0 +1,8 @@
+NAVIGATING, EXECUTING:     CURSOR POSITIONING:      MISCELLANEOUS:
+^G Select current item      <CR>,^N Next item       ^L Redraw screen
+^V Clear help or prompt          ^P Previous item   ^Y Current item help
+^R Previous menu or form         ^W ...             ^O Current menu help
+^F Popup menu                    ^B ...             ^A ASSIST help
+^T Top menu                      ^U Next page       ^K ...
+^D Exit ASSIST                                      ^C ...
+^E Shell escape            <letter> Go to item that starts with <letter>

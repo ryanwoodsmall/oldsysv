@@ -1,0 +1,131 @@
+520 clearall #ident
+705 3 7 71
+            EXECUTING COMMANDS AND GETTING VARIABLE VALUES
+
+After you have set breakpoints, you can start your program with an 
+"sdb" command.  The program will execute normally until it encounters a 
+line at which a breakpoint has been set.  The program stops at this 
+breakpoint, and you can use "sdb" commands to determine the values of 
+variables at this point in the program's execution.  You can then 
+continue program execution from this point.  
+706 
+520 arrow
+520 redraw
+520 code1
+705 0 0 7
+*4b
+main:4 b
+*10b
+div2:10b
+706 
+8 1001 0 *
+18 
+2 17 7
+19 
+705 3000 3000 62
+I've put back the breakpoints at lines 4 and 10.  Now let's use
+these breakpoints to examine the testdiv2 program.
+706 
+520 arrow
+520 clearbot
+705 3000 3000 72
+The r command executes the program as if it were invoked from the shell.
+For example, r 16 will run the testdiv2 program with 16 as the argument. 
+Program execution will continue until the program reaches a breakpoint.
+706 
+520 instruct
+3 Run testdiv2 with the argument of 8
+253 %0r%18%0
+254 r 8
+520 ansloopstr
+705 2001 0 32
+Breakpoint at
+main:4:  i = div2(atoi(argv[1]));
+*
+706 
+15 
+1 1
+520 clearbot
+520 arrow
+520 clearbot
+705 3000 3000 65
+You can ask "sdb" to tell you current value of variables in your
+stopped program.  You do this by typing the variable name followed
+by a slash.
+706 
+2 3000 3000
+520 instruct
+3 Get the value of argv[1]
+2 2003 1
+18 
+253 %0argv[1]%2/%0
+254 argv[1]/
+520 ansloopstr
+8 2001 1999 8
+8 1001 0 *
+18 
+15 
+520 clearbot
+520 arrow
+520 clearbot
+705 3000 3000 52
+We also have a breakpoint set at line 10.  We can use
+the command c to continue executing the program.
+706 
+520 instruct
+3 Continue executing the program
+253 %0c%0
+254 c  
+520 ansloopstr
+705 2001 1999 19
+Breakpoint at:
+div2:10:   j = k>>1;
+*
+706 
+15 
+1 1
+520 clearbot
+520 arrow
+520 clearbot
+705 3000 3000 61
+You can also single step through the execution of your program
+using the command s .
+706 
+520 instruct
+3 Execute the next step of the program
+2 2003 1
+18 
+253 %0s%0
+254 s 
+520 ansloopstr
+705 2001 1999 22
+*div2:11:    return(j);
+*
+706 
+18 
+1 1 
+520 clearbot
+520 arrow
+520 clearbot
+2 3002 3000
+520 instruct
+3 Find the current value of j.
+2 2000 2000
+253 %0j%2/%0
+254 j/
+520 ansloopstr
+8 2001 1999 4
+15 
+1 1
+520 clearbot
+520 arrow
+2 0 0
+12 
+8 3 5 SUMMARY OF EXECUTION COMMANDS and VARIABLE-VALUE COMMANDS
+705 7 6 50
+       r .... Execute command
+       c .... Continue execution of stopped command
+       s .... Execute single step of command
+ 
+VARNAME/ .... Print the current value of VARNAME
+706 

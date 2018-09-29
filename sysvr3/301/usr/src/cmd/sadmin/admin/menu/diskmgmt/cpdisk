@@ -1,0 +1,139 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/cpdisk	2.12"
+#menu# make exact copies of a removable medium
+#help# 
+#help#	This procedure copies the contents of a removable medium into the
+#help#	machine and makes exact copies of it.  These copies are identical to
+#help#	the original in every way.
+#help#	The copies are made by first reading the original removable medium
+#help#	entirely into the machine and then writing it out onto duplicates.
+#help#	The procedure will fail if there is not enough space in the
+#help#	system to hold the original medium.
+#help#	If there are two or more drives of the same type on the system,
+#help#	you can request that the copy be directly from one to the other,
+#help#	in which case the space limitation (above) does not hold.
+##help#	When copying between dissimilar drives, the smaller one dominates.
+
+trap 'exit 0' 1 2  15
+
+unset patterns
+lspatterns=/dev/rSA
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+	lspatterns=`echo "${patterns}"  |  sed 's;.*;/dev/rSA/&*;'`
+fi
+sdargs="-c $$ /dev/rSA ${patterns}"
+cpcmd=cp
+
+if [ `ls ${lspatterns} 2>/dev/null  |  wc -l` -gt 1 ]  &&
+	checkyn -q q -k $$ -f -H '
+	Copying directly from one drive to another can save time and also
+	does not use any file system space on the built-in disk.  The original
+	is put in one drive and then copied onto the media on the other.
+		When using only one drive, the original is copied onto the
+	built-in disk and then copied out to another medium placed in the same
+	drive.  This is slower, but leaves the other drive available.' \
+	'Do you wish to copy directly from one drive to another?'
+then
+	ddrive=`selectdevice -q 'Select the drive you wish to copy from:' ${sdargs}`
+	ddrive2=`selectdevice -q 'Select the drive you wish to copy to:' ${sdargs}`
+	if [ ${ddrive} = ${ddrive2} ]
+	then
+		echo 'You cannot copy directly from and to the same drive.
+Try again.'
+		exit 0
+	fi
+	ndrive=`drivename ${ddrive}`
+	ndrive2=`drivename ${ddrive2}`
+	if [ -n "${patterns}" ]
+	then
+		. ${dir}/`selpattern ${ddrive}`
+	fi
+	while true
+	do
+		disklabel -q "Insert the ORIGINAL medium to be COPIED in the ${ndrive}.
+It is recommended that you write-protect the original.
+Press <RETURN> when ready. [q]" $$ ${ddrive} >/dev/null
+		disklabel -w -q "To make a COPY of the original
+insert the medium TO BE WRITTEN into the ${ndrive2}.
+Press <RETURN> when ready.  Type  q  to quit." $$ ${ddrive2} >/dev/null
+		trap 'echo Interrupt.' 1 2 15
+		${cpcmd} ${ddrive} ${ddrive2}  || {
+			echo "
+	The copy did not succeed, possibly because the \"to\" drive's medium
+	is smaller than the \"from\" drive's, or because the \"to\" medium was
+	write protected, or some other difficulty.
+	The copy is incomplete."
+		exit 1
+		}
+		trap 'exit 0' 1 2 15
+		echo 'Copy finished.  You may now remove the media.'
+		checkyn ${flags} -f -H '
+	If you answer "yes", you will be able to use the same drives to copy
+	either the same or different media.' \
+			'
+Do you want to make another drive-to-drive copy?'  ||
+			break
+	done
+	exit 0
+fi
+
+ddrive=`selectdevice ${sdargs}`
+ndrive=`drivename ${ddrive}`
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+
+#	select file system with most free space
+free=0
+usrfree=0
+eval `df / /usr	 |
+	sed -n 's/.\([^ 	]*\).* \([0-9]*\) blocks.*/\1free=\2/p'`
+if [ "${free}" -lt "${usrfree}" ]
+then
+	usr=/usr
+	free=${usrfree}
+else
+	usr=
+fi
+ulimit ${free}
+disklabel -q "Insert the ORIGINAL medium to be COPIED IN the ${ndrive}.
+It is recommended that you write-protect the original.
+Press <RETURN> when ready. [q]" $$ ${ddrive} >/dev/null
+
+echo 'The original is being copied in.'
+
+trap '	trap "" 1 2
+	rm -f ${usr}/tmp/$$cpdisk' 0
+
+${cpcmd} ${ddrive} ${usr}/tmp/$$cpdisk  || {
+	echo '	There is not enough room in the machine to copy the original
+	medium.  No copies can be made.'
+	exit 1
+}
+echo 'Copy in complete.'
+
+unset a
+while true
+do
+	echo "You may now remove the medium from the ${ndrive}.\n"
+	disklabel -w -q "To make ${a:-a} COPY of the original
+insert the medium TO BE WRITTEN into the ${ndrive}.
+Press <RETURN> when ready.  Type  q  to quit." $$ ${ddrive} >/dev/null
+	echo 'The original is being copied out onto the duplicate medium.'
+	if  ${cpcmd} ${usr}/tmp/$$cpdisk ${ddrive}
+	then
+		echo 'Copy out complete.'
+		a=ANOTHER
+	else
+		echo "
+	There is a problem with the medium in the ${ndrive}."'
+	No copy has been made.
+	Check for "write protection" on the medium or
+	try a different medium.
+'
+	fi
+done

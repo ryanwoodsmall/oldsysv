@@ -1,0 +1,54 @@
+.TH PROFILE 4
+.SH NAME
+profile \- setting up an environment at login time
+.SH DESCRIPTION
+If your login directory contains a file named
+.BR \&.profile ,
+that file will be executed (via
+.BR "exec .profile" )
+before your session begins;
+.BR \&.profile s
+are handy for setting exported environment variables and terminal modes.
+If the file
+.B /etc/profile
+exists, it will be executed for every user before the
+.BR .profile .
+The following example is typical (except for the comments):
+.nf
+.PP
+.BR "#  " "Make some environment variables global"
+export \s-1MAIL\s0 \s-1PATH\s0 \s-1TERM\s0
+.BR "#  " "Set file creation mask"
+umask 22
+.BR "#  " "Tell me when new mail comes in"
+\s-1MAIL\s0=/usr/mail/myname
+.BR "#  " "Add my /bin directory to the shell search sequence"
+\s-1PATH\s0=\s-1$PATH\s0\f3:\fP\s-1$HOME\s0/bin
+.BR "#  " "Set terminal type"
+.if t .ta .5i 1.3i
+.if n .ta 2n 12n
+echo "terminal\f3:\fP \^\ec"
+read \s-1TERM\s0
+case \s-1$TERM\s0 in
+	300)	stty cr2 nl0 tabs\f3;\fP tabs\f3;;\fP
+	300s)	stty cr2 nl0 tabs\f3;\fP tabs\f3;;\fP
+	450)	stty cr2 nl0 tabs\f3;\fP tabs\f3;;\fP
+	hp)	stty cr0 nl0 tabs\f3;\fP tabs\f3;;\fP
+	745\|\(bv\^735)	stty cr1 nl1 \-tabs\f3;\fP \s-1TERM\s0=745\f3;;\fP
+	43)	stty cr1 nl0 \-tabs\f3;;\fP
+	4014\|\(bv\^tek)	stty cr0 nl0 \-tabs f\&f1\f3;\fP \s-1TERM\s0=4014\f3;\fP echo "\e33\f3;\fP"\f3;;\fP
+	\(**)	echo "\s-1$TERM\s0 unknown"\f3;;\fP
+esac
+.RE
+.fi
+.DT
+.SH FILES
+\s-1$HOME\s+1/\f3.\fPprofile
+.br
+/etc/profile
+.SH SEE ALSO
+environ(5), term(5).
+.br
+env(1), login(1), mail(1), sh(1), stty(1), su(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	%W% of %G%

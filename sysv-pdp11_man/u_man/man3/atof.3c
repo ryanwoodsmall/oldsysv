@@ -1,0 +1,41 @@
+.TH ATOF 3C 
+.SH NAME
+atof \- convert \s-1ASCII\s0 string to floating-point number
+.SH SYNOPSIS
+.B double atof (nptr)
+.br
+.B char \(**nptr;
+.SH DESCRIPTION
+.I Atof\^
+converts a character string pointed to by
+.I nptr\^
+to a double-precision floating-point number.
+The first unrecognized character ends the conversion.
+.I Atof\^
+recognizes an optional string of white-space characters,
+then an optional sign, then
+a string of digits optionally containing a decimal
+point, then an optional
+.B e
+or
+.B E
+followed
+by an optionally signed integer.
+If the string begins with an unrecognized character,
+.I atof\^
+returns the value zero.
+.SH DIAGNOSTICS
+When the correct value would overflow,
+.I atof\^
+returns
+.SM
+.BR HUGE,
+and sets
+.I errno\^
+to
+.SM
+.BR ERANGE\*S .
+Zero is returned on underflow.
+.SH SEE ALSO
+scanf(3S).
+.\"	@(#)atof.3c	5.2 of 5/18/82

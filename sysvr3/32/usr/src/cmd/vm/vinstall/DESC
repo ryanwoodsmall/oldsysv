@@ -1,0 +1,7 @@
+#	Copyright  1984  AT&T
+#
+#head# 			FACE MANAGEMENT
+#menu# FACE management menu
+#help#
+#help# These submenus and subcommands manage FACE's service
+#help# administration and setting up a FACE environment for a user.

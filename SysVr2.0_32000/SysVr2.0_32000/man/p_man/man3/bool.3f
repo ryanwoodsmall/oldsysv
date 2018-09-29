@@ -1,0 +1,40 @@
+.TH BOOL 3F
+.SH NAME
+and, or, xor, not, lshift, rshift \- \s-1FORTRAN\s+1 bitwise Boolean functions
+.SH SYNOPSIS
+.nf
+.B "integer i, j, k"
+.B "real a, b, c"
+.B "double precision dp1, dp2, dp3"
+.PP
+.B "k = and(i, j)"
+.B "c = or(a, b)"
+.B "j = xor(i, a)"
+.B "j = not(i)"
+.B "k = lshift(i, j)"
+.B "k = rshift(i, j)"
+.SH DESCRIPTION
+The generic intrinsic Boolean functions
+.IR and ,
+.I or\^
+and
+.I xor\^
+return the value of the binary operations on their arguments.
+.I Not\^
+is a unary operator returning the one's complement of its argument.
+.I Lshift\^
+and
+.I rshift\^
+return the value of the first argument shifted left or right, respectively,
+the number of times specified by the second (integer) argument.
+.P
+The Boolean functions are generic, that is, they are defined for all
+data types as arguments and return values. Where required, the compiler
+will generate appropriate type conversions.
+.SH NOTE
+Although defined for all data types, use of Boolean functions on any but
+integer data is bizarre and will probably result in unexpected consequences.
+.SH BUGS
+The implementation of the shift functions may cause large shift values
+to deliver weird results.
+.\"	%W% of %G%

@@ -1,0 +1,26 @@
+
+\Sdircmp\S:  Examples
+
+        dircmp SOURCE SOURCE.2
+
+    Compares the two directories, "SOURCE" and "SOURCE.2".  Prints the files
+    that are unique to each directory, and identifies files that have the same
+    name and identical or different contents.
+
+    ---------------------------------------------------------------------------
+
+        dircmp -s SOURCE SOURCE.2
+
+    Compares the files in the directories "SOURCE" and "SOURCE.2".  Lists the
+    files that are unique to each directory, and the files with the same name
+    but different contents.  Suppresses the printing of file names that have
+    identical contents.
+
+    ---------------------------------------------------------------------------
+
+        dircmp -d -w80 SOURCE SOURCE.2
+
+    Compares the files in "SOURCE" and "SOURCE.2".  Lists the files that are
+    unique to each directory, files with identical or different contents, and
+    creates scripts to make different files identical. \Sdircmp\S truncates
+    the output lines so they are only 80 characters long.

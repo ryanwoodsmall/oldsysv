@@ -1,0 +1,241 @@
+.TH TRENTER 1M
+.SH NAME
+trenter \- enter a trouble report
+.SH SYNOPSIS
+.B trenter
+.RB [ \-s ]
+.SH DESCRIPTION
+.I Trenter
+resides on any machine that must submit machine-readable trouble
+reports to Customer Support.
+It prompts the user for the data needed to enter the report, and allows for
+correction of previously entered data, either
+.IR in-line ,
+or by invoking a text editor.
+.I Trenter
+also allows users to specify (in a file), default values for fields
+that will likely remain constant across reports, such as name, address,
+company name, etc.
+In addition, facilities are provided to assist local administrators in
+handling trouble report flow on their systems.
+.SS "Fields and Values"
+Trouble reports consist simply of fields and associated values.
+Each field has a
+.IR "field name" ,
+by which it may be referenced.
+When invoked,
+.I trenter
+prompts for values for the trouble report's fields.
+The following table lists the prompts that are issued, along with their
+corresponding field names.
+All fields accept one line of input, except for the problem description,
+which is a multi-line field, terminated with a line consisting of only ``.''.
+The items marked with a star (\fB\(**\fP) are explained below.
+.P
+These first nine fields identify the originator of the report.
+.P
+.IP \(bu 5
+Name (\s-1NAME\s+1) (\(**)
+.IP \(bu 5
+Company (\s-1CO\s+1) (\(**)
+.IP \(bu 5
+Phone (\s-1PHONE\s+1) (\(**)
+.IP \(bu 5
+Room Number (\s-1ROOM\s+1) (\(**)
+.IP \(bu 5
+Address (\s-1ADDR\s+1) (\(**)
+.IP \(bu 5
+City (\s-1CITY\s+1) (\(**)
+.IP \(bu 5
+State (\s-1STATE\s+1) (\(**)
+.IP \(bu 5
+Zip Code (\s-1ZIP\s+1) (\(**)
+.IP \(bu 5
+Country (\s-1COUNTRY\s+1) (\(**)
+.P
+These two fields are \s-1AT&T\s+1-assigned numbers to identify the customer
+and the specific site.
+.P
+.IP \(bu 5
+Customer \s-1ID\s+1 (\s-1CID\s+1) (\(**)
+.IP \(bu 5
+Site \s-1ID\s+1 (\s-1SID\s+1) (\(**)
+.P
+The next two fields identify the processor on which the problem occurred.
+.P
+.IP \(bu 5
+\s-1CPU\s+1 serial number (\s-1CPUNO\s+1) (\(**)
+.IP \(bu 5
+Machine type (\s-1MACH\s+1)
+.P
+The following fields identify the area in which the problem occurred.
+.P
+.IP \(bu 5
+Trouble Report Type (\s-1TYPE\s+1)
+.br
+Valid responses:
+.B doc
+(documentation),
+.B enh
+(enhancement),
+.B cs
+(customer support),
+.B fw
+(firmware),
+.B hdw
+(hardware),
+.B sw
+(software),
+or
+.B unk
+(unknown).
+.IP \(bu 5
+AT&T Product Name (\s-1PROD\s+1)
+.br
+Examples: \s-1UNIX\s+1, \s-1BASIC\s+1, etc.
+.IP \(bu 5
+Operating system release (\s-1OS_REL\s+1) (\(**)
+.br
+The release of the \s-1UNIX\s+1 system on which the problem occurred.
+.IP \(bu 5
+Product release (\s-1PROD_REL\s+1)
+.br
+The release of the product given in response to the AT&T product
+prompt.
+If product is
+.IR unix ,
+this prompt is not issued.
+.P
+The remaining fields define the body of the trouble report.
+.P
+.IP \(bu 5
+Severity (\s-1SEV\s+1)
+.br
+The severity of the problem (1-4).
+.IP \(bu 5
+Required date (\s-1RDATE\s+1)
+.br
+If the severity of the report is 2, the required date for the fix is prompted.
+The date given must be at least one week from the date of the trouble report.
+.IP \(bu 5
+Abstract (\s-1ABS\s+1)
+.br
+One-line description of the problem.
+.IP \(bu 5
+Description (\s-1DESC\s+1)
+.br
+Full description of the problem.
+Note that description input will
+.I not
+be passed through
+.IR nroff ;
+however,
+.I trenter
+will recognize the macros
+.SM
+.B .ES
+and
+.SM
+.B .EE
+(example start, example end)
+indicating an indented example (these may
+be nested).
+.IP \(bu 5
+Attachments (yes or no) (\s-1ATT\s+1)
+.P
+If
+.B ?
+is given in response to a prompt, a message explaining the field will
+be printed.
+.P
+If
+.I trenter
+receives an interrupt during prompting, the trouble report will be aborted.
+.P
+After a trouble report has been completed, the user is
+given an opportunity to edit any data that has been supplied.
+Next,
+a reprint of the trouble report just entered may be requested.
+Finally, the user is asked whether another
+report is to be entered.
+If so, the values for the starred items in the field table above will be
+carried over from the first report.
+.SS "Editing Field Values"
+In order to provide editing while responding to prompts, the following
+.I escapes
+are recognized on input:
+.IP \(bu 5
+.BI \- field
+.br
+Return to a field for which data has previously been supplied.
+If the field name is not specified, return to the previous field.
+The value already assigned to the field is printed, and the user
+may enter either new data, or another editing command.
+.IP \(bu 5
+.B !e
+.br
+Invoke the editor
+.IR ed (1)
+with any text already supplied for the current prompt in the edit buffer
+(an alternate editor can be specified: see "Specifying Default Values"
+below).
+.IP \(bu 5
+.B >
+.br
+Move down to the first unfilled field.
+This is useful, for example, when the
+.B \-
+command has been used to fix a single field near the top of the report,
+and the user wishes to quickly return to the point where they left off.
+.IP \(bu 5
+.BI = field
+.br
+Print the value currently assigned to the given
+.IR field .
+.IP \(bu 5
+.B ??
+.br
+Print a summary of editing functions.
+.P
+Editing commands are only recognized when they appear at the beginning of
+the input line;
+they may be escaped using a backslash (\^\fB\e\^\fR).
+.SS "Specifying Default Values"
+Users may provide default values for any fields marked with (\(**) above.
+These values are specified in a file
+.I .trdef
+in the user's home directory.
+Entries in this file are of form:
+.IP "" 10
+\fIfield\fB=\fIvalue\fR
+.P
+where
+.I field
+is a field name from the table above.
+.P
+The editor to be used for field editing can be overridden with a
+.I .trdef
+entry by assigning the name of the desired program to the field
+.BR \s-1EDITOR\s+1 .
+.P
+During prompting,
+.I trenter
+will print any values supplied for fields from a
+.I .trdef
+file.
+By default, it will stop at each such field and wait for either a
+carriage return (indicating confirmation), an edit command, or new data.
+If invoked with a
+.B \-s
+option,
+.I trenter
+will print the supplied values, but will not stop for confirmation.
+.P
+Default values specified in
+.I .trdef
+files may be changed, on a per-report basis,
+using the editing functions described above.
+.SH FILES
+\&.trdef			\- default value file
+.br
+/usr/spool/trenter	\- spool directory

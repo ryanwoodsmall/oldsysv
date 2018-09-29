@@ -1,0 +1,56 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/moduser/chgpasswd	2.3"
+#menu# change a user's password
+#help# 
+#help#	This procedure allows you to remove or change a user's password.
+#help#	You cannot change the passwords of the administrative and system
+#help#	logins.  To do that, see the system setup menu:  sysadm syssetup
+
+minid=100	# Minimum user and group ID
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+while  true
+do
+	loginid=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the user.
+	It also is used to identify data that belongs to the user.' \
+		-fe "Enter user's login ID [?, q]:  " \
+		-R ':' '":" is an illegal character.' \
+		-r '.' 'You must enter a value.'`
+	uid=`sed -n "/^${loginid}:/s/[^:]*:[^:]*:\([0-9]*\):.*/\1/p" /etc/passwd`
+	if [ -z "${uid}" ]
+	then
+		echo "\\tLogin ID '${loginid}' does not exist.  Choose another."
+		continue
+	elif [ "${uid}" -lt ${minid} ]
+	then
+		echo "\\tThis login has user ID ${uid}, which is less than ${minid}.
+This procedure will not change its password.  See the \"syssetup\" menu."
+		continue
+	fi
+
+	if  grep "^${loginid}::" /etc/passwd >/dev/null
+	then
+		/bin/passwd ${loginid}
+	else
+		a=`checklist ${flags} -efp \
+			'Do you want to change or delete the password? [c, d, q]' \
+			change delete`
+		case ${a} in
+		change )
+			/bin/passwd ${loginid}
+			;;
+		delete )
+			ed - /etc/passwd <<-!  ||  { admerr $0 'Cannot edit /etc/passwd.'; exit 1;}
+			H
+			/^${loginid}:[^:]*:/s//${loginid}::/
+			w
+			!
+		esac
+	fi
+
+	checkyn ${flags} -f \
+		'Do you want to change the password on another login?'  ||
+		break
+done

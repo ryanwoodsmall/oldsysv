@@ -1,0 +1,27 @@
+0	"@(#)setup.files:t.altchar	1.2"
+8 2 20 CHECK OF GRAPHICS LINES AND CORNERS
+34 alt
+705 4 25 23
+lqqqqqqqqqqqqqqqqqqqqqqk
+x                      x
+x                      x
+x                      x
+x                      x
+x                      x
+x                      x
+x                      x
+mqqqqqqqqqqqqqqqqqqqqqqj
+706 
+35 alt
+705 13 8 67
+
+Answer y if you see the rectangle drawn with sharp continuous lines 
+and corners.  
+
+Answer n if you see anything else. For example,
+     - Any letters (jklmqx) instead of sharp lines or corners.
+     - Any breaks in the rectangle.
+     - A missing corner.
+706 
+15 
+1000 

@@ -1,0 +1,31 @@
+#
+#ident	"@(#)pkg.s52k:UNINSTALL	10.2"
+#	This command will remove portions of previously installed command set.
+#
+
+INSPATH=/install/new
+RPATH=/install/install
+PKGNAME=`cat ${INSPATH}/usr/options/s52k.name`
+
+echo "\nRemoving the ${PKGNAME}."
+echo "Copyright (c) 1987 AT&T"
+echo "All Rights Reserved\n"
+
+#
+# Invoke unsetup file
+#
+
+/install/install/unsetup
+
+echo "The following files are being removed:\n"
+
+for i in `cat ${RPATH}/Rlist`
+do
+	echo $i
+	rm -f $i
+done
+
+echo "\nThe ${PKGNAME} has been removed."
+echo 'Execute "shutdown -i6 -g0 -y" and'
+echo 'wait for the "Console Login:" prompt.'
+exit

@@ -1,0 +1,23 @@
+
+\Sfgrep\S:  Description
+
+Syntax Summary:
+      fgrep [-b][-c][-i][-l][-n][-v][x] [-e special_string]
+            [-f file_name ...] [string] [name ...]
+
+         where:  special_string and string  are sequences of characters
+                                            delimited by white space
+                                            and/or double quotes.
+                 name  is the name of a file or directory.
+
+Description:
+     \Sfgrep\S searches files for character strings and prints the lines
+     containing the string.  The string must be a literal string because 
+     \Sfgrep\S does not allow regular expressions.  \Sfgrep\S is different from
+     grep(1) and egrep(1) because it searches for the string, instead of
+     searching for a pattern that matches an expression.  If you do not specify
+     <name> on the command line, \Sfgrep\S uses standard input.  With
+     options, you can get a count of lines containing <string>, the names of
+     files with lines that match <string>, or line and block numbers associated
+     with the found line.  See also: egrep(1) and grep(1) for commands with
+     functions similar to \Sfgrep\S.

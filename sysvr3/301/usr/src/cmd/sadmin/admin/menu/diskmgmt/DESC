@@ -1,0 +1,10 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/DESC	1.4"
+#menu# disk management menu
+
+#help#
+#help#	The subcommands in this menu provide functions for using removable
+#help#	media.  They include the ability to format, copy and to use disks
+#help#	and other removable media as mountable file systems.
+#help#	It also contains a menu of subcommands for handling non-removable
+#help#	media.
+#head#				DISK MANAGEMENT

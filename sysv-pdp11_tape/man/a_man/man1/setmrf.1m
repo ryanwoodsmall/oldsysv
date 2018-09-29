@@ -1,0 +1,61 @@
+.TH SETMRF 1M "3B20S only"
+.SH NAME
+setmrf \- override system \s-1MRF\s+1 action
+.SH SYNOPSIS
+.B /etc/setmrf
+[
+.B d
+|
+.B D
+|
+.B h
+|
+.B H
+|
+.B r
+]
+.SH DESCRIPTION
+.I Setmrf\^
+overrides the default action taken by the system
+in the event of a Maintenance Reset Function (\s-1MRF\s+1).
+A \s-1MRF\s+1 can be caused by a hardware fault in the processor
+or as a result of a
+.I panic\^
+call in the operating system.
+The default action is
+to reboot the processor.
+.PP
+The
+.B h
+flag will cause the processor to enter an idle loop,
+resetting the internal sanity timer.
+The
+.B H
+flag will execute a
+.I halt\^
+instruction,
+causing all processor activity to stop.
+However, if the sanity timer
+is not inhibited at the \s-1EAI\s+1,
+the processor will reboot when the timer expires.
+.PP
+The
+.B d
+flag
+sets the \s-1MRF\s+1 action to its default value of
+dump to disk followed by reboot.
+The
+.B D
+flag causes the processor to idle
+after the dump is taken.
+.PP
+The
+.B r
+flag causes the processor to reboot immediately,
+without taking a dump.
+.PP
+All other values are not implemented
+and are treated as in the default case.
+.SH "SEE ALSO"
+3B20ops(8).
+.\"	@(#)setmrf.1m	5.2 of 5/18/82

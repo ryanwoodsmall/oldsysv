@@ -1,0 +1,96 @@
+.TH LINK 2 
+.SH NAME
+link \- link to a file
+.SH SYNOPSIS
+.B int link (path1, path2)
+.br
+.B char \(**path1, \(**path2;
+.SH DESCRIPTION
+.I Path1\^
+points to a
+path name
+naming an existing file.
+.I Path2\^
+points to a
+path name
+naming the new directory entry to be created.
+.I Link\^
+creates a new link (directory entry) for the existing file.
+.PP
+.I Link\^
+will fail and no link will be created if one or more of the following
+are true:
+.IP
+A component of either
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+A component of either
+path prefix
+does not exist.
+.SM
+\%[ENOENT]
+.IP
+A component of either
+path prefix
+denies search permission.
+.SM
+\%[EACCES]
+.IP
+The file named by
+.I path1\^
+does not exist.
+.SM
+\%[ENOENT]
+.IP
+The link named by
+.I path2\^
+exists.
+.SM
+\%[EEXIST]
+.IP
+The file named by
+.I path1\^
+is a directory and the effective user
+.SM ID
+is not super-user.
+.SM
+\%[EPERM]
+.IP
+The link named by
+.I path2\^
+and the file named by
+.I path1\^
+are on different logical devices (file systems).
+.SM
+\%[EXDEV]
+.IP
+.I Path2\^
+points to a null path name.
+.SM
+\%[ENOENT]
+.IP
+The requested link requires writing in a directory
+with a mode
+that denies write permission.
+.SM
+\%[EACCES]
+.IP
+The requested link requires writing in a directory on a read-only file system.
+.SM
+\%[EROFS]
+.IP
+.I Path\^
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.SH "RETURN VALUE"
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+unlink(2).
+.\"	@(#)link.2	5.2 of 5/18/82

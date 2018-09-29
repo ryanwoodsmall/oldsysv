@@ -1,0 +1,25 @@
+
+\Sfalse\S:  Example
+
+This is an example of a use of \Sfalse\S.  It illustrates a loop that you
+might use in a shell program.
+                                count=0
+                                until \Sfalse\S
+                                do
+                                     count=`expr "$count" + 1`
+                                     echo "HELLO WORLD"
+                                     if
+                                             test "$count" -gt 59
+                                     then
+                                             break
+                                     else
+                                             sleep 10
+                                     fi
+                                done
+         
+The loop begins with "until \Sfalse\S." The value of "count" increases by one
+with every pass through the loop.  This example prints "HELLO WORLD" and then
+tests the value of "count".  If "count" is less than 60, then the program waits
+10 seconds and prints "HELLO WORLD" again.  If "count" is greater than 59, the
+inner loop ends and the outer loop ends when it executes break.
+

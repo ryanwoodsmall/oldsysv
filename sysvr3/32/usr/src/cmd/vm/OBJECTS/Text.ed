@@ -1,0 +1,11 @@
+title=EDITOR
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'help facility overview'
+rows=12
+columns=73
+edit
+lifetime=longterm
+text="`readfile $ARG1`"
+
+name=WRITE
+action=`echo "$TEXT" >$ARG1`close
+button=1

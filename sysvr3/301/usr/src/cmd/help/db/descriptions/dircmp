@@ -1,0 +1,26 @@
+
+\Sdircmp\S:  Description
+
+Syntax Summary:
+      dircmp [-ds] [-width] dir_name1 dir_name2
+
+         where:  dir_names  are names of directories.
+
+                 width  is an integer.
+
+Description:
+     \Sdircmp\S stands for "directory comparison." \Sdircmp\S compares the
+     contents of directories.  Use \Sdircmp\S to compare the names of the
+     files in the directories, and then compare the contents of the files that
+     have the same names.  \Sdircmp\S lists the file names that are in only
+     one directory on the first page of output.  The file names that are in 
+     both directories but have different contents all listed on the second
+     page.  And \Sdircmp\S lists the file names that are the same and have
+     identical contents on the third page.  \Sdircmp\S always lists the file
+     names that are in only one directory, but you can suppress the listing of
+     identical files.  With the correct options, \Sdircmp\S creates a script
+     that makes two files with the same name into identical files, or changes
+     the width of the output lines.  See also:  bdiff(1), cmp(1), comm(1),
+     diff(1), diff3(1), sdiff(1) for commands with functions similar to
+     \Sdircmp\S.
+

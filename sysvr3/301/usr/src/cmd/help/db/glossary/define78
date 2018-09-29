@@ -1,0 +1,10 @@
+
+\S device:  device driver \S
+
+Devices are machines that are used for memory storage, and machines that
+are used for input and output to and from the computer.  Magnetic tape and
+disks are memory storage devices. They hold the information that you input
+into the computer.  A device driver is the machine that runs the magnetic
+tape or disk.  Video display terminals and line printers are input and
+output devices.
+

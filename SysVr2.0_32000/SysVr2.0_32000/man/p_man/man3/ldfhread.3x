@@ -1,0 +1,71 @@
+.TH LDFHREAD 3X
+.SH NAME
+ldfhread \- read the file header of a common object file
+.SH SYNOPSIS
+.ft B
+.nf
+.ta \w'LDFILE\ \ \ 'u
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <ldfcn.h>
+\}
+.el \{\
+.B #include "\s-1INCDIR\s+1\/filehdr.h"
+.B #include "\s-1INCDIR\s+1\/ldfcn.h"
+\}
+.PP
+.B int ldfhread (ldptr, filehead)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B \s-1FILHDR\s+1 \(**filehead;
+.fi
+.DT
+.ft R
+.SH DESCRIPTION
+.I Ldfhread
+reads the file header of the common object file 
+currently associated with
+.I ldptr
+into the area of memory beginning at
+.IR filehead .
+.PP
+.I Ldfhread
+.RB "returns " \s-1SUCCESS\s+1 " or " \s-1FAILURE\s+1 .
+.I Ldfhread
+will fail if 
+it cannot read the file header.
+.PP
+In most cases the use of
+.I ldfhread
+can be avoided by using the macro
+.BI \s-1HEADER\s+1\*S( ldptr )
+defined in
+.B ldfcn.h
+[see \f1ldfcn\f2 (4)].
+The information in any field,
+.IR fieldname ,
+of the file header may be accessed using
+.BR \s-1HEADER\s+1 ( ldptr ). fieldname\c
+\&.
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a .
+\}
+.PP
+.if !'\*p'' \{\
+.IR Intro (4)
+describes
+.IR \s-1INCDIR\s+1  and  \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X), ldopen(3X), ldfcn(4).
+\}
+.el \{\
+ldclose(3X), ldopen(3X), intro(4), ldfcn(4), path.h(4).
+\}
+.\"	%W% of %G%

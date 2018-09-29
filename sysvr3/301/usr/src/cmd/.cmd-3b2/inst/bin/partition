@@ -1,0 +1,305 @@
+#ident	"@(#)cmd-3b2:inst/bin/partition	1.8"
+#
+# partition
+#
+# Partition the disk(s). Expects DRIVEID_0 and CYLSIZE_0 to be set to the
+# drive ID and cylinder size (sectors) of disk 1. Similarly, DRIVEID_1 and
+# CYLSIZE_1 must be present for dual-disk systems. Writes the generated
+# "fstab" (for /usr) to stdout. Makes filesystems on both disks, but doesn't
+# mount anything.
+#
+# Note that this program "exec"s itself when asked to start over again. Any
+# command-line arguments must be passed through these "exec"s.
+#
+
+set -ue
+myname="${0}"
+
+#**********************
+# "fmthard -r" prints several shell variable assignments:
+#	rootmin		Minimum size of a root partition in sectors
+#	swapbase	Start sector of the swap partition
+#	swapmin		Minimum size of a swap partition in sectors
+#	usrmin		Minimum size of a usr partition in sectors
+#	diskmin		Minimum size of core system disk in sectors
+#*************************
+eval `fmthard -r ${RSIX_0}`
+
+if [ -z "${rootmin:-}" ]
+then
+	echo "${myname}: Minimum value assignment incomplete." >&2
+	exit 1
+fi
+
+#
+# Read the VTOC default partitioning for each disk
+#
+for drive in 0 ${DRIVEID_1:+1}
+do
+	if [ -n "${DRIVEID_1:-}" ]
+	then
+		number=`ignore expr ${drive} + 1`
+	else
+		number=${drive}
+	fi
+
+	# "fmthard -c[0-2]" where:
+	#	0 is single core disk
+	#	1 is first dual core disk
+	#	2 is second dual core disk
+	# the "-p" returns several shell variable assignments:
+	#	rootsize
+	#	swapsize
+	#	bootsize_0	bootsize_1
+	#	usrsize_0	usrsize_1
+	#	disksize_0	disksize_1
+
+	eval `eval fmthard -p -c${number} \\\${RSIX_$drive}`
+
+	if [ -z "`eval echo \\\${disksize_${drive}:-}`" \
+	    -o -z "`eval echo \\\${bootsize_${drive}:-}`" ]
+	then
+		echo "${myname}: boot or disk size undefined" >&2
+		exit 1
+	fi
+done
+
+if [ -z "${rootsize:-}" -o -z "${swapsize:-}" ]
+then
+	echo "${myname}: root or swap size undefined" >&2
+	exit 1
+fi
+
+usrsize=${usrsize_0:-${usrsize_1:?"${myname}: No \"usr\" size!"}}
+
+#
+# Define allocatable space for each disk. Also defines the
+# largest "swap" partition to be allowed by the following
+# askx.
+#
+if [ -n "${DRIVEID_1:-}" ]
+then
+	remain_0=`ignore expr ${disksize_0} - ${bootsize_0}`
+	remain_1=`ignore expr ${disksize_1} - ${bootsize_1}`
+	allow=`ignore expr ${remain_0} - ${rootmin}`
+else
+	remain_0=`ignore expr ${disksize_0} - ${bootsize_0}`
+	allow=`ignore expr ${remain_0} - ${rootmin} - ${usrmin}`
+fi
+
+swapsize=`askx -q "\
+How many blocks for the \"swap\" partition?" \
+    -h "\
+The \"swap\" partition holds inactive processes during periods of heavy
+system load. It must be at least ${swapmin} blocks long.  More space may be
+allocated (up to  ${allow}  blocks) if you so desire.  The default \"swap\"
+partition size for your disk is ${swapsize}  blocks.  Enter the desired swap
+size, \"quit\" to quit or \"again\" to start over.
+NOTE: partition sizes are always rounded up to 
+cylinder ( ${CYLSIZE_0} block ) boundaries." \
+    -s -n ${swapmin}:${allow} -d ${swapsize} -c quit -c again`
+
+if [ "${swapsize}" = quit ]
+then
+	exit 1
+elif [ "${swapsize}" = again ]
+then
+	exec ${myname}
+fi
+
+swapsize=`ignore expr \( \( ${swapsize} + ${bootsize_0} + ${CYLSIZE_0} - 1 \) / ${CYLSIZE_0} \* ${CYLSIZE_0} \) - ${bootsize_0}`
+
+if [ ${swapsize} -gt ${allow} ]
+then
+	swapsize=${allow}
+fi
+
+remain_0=`ignore expr ${remain_0} - ${swapsize}`
+
+if [ -n "${DRIVEID_1:-}" ]
+then
+	allow=${remain_0}
+else
+	allow=`ignore expr ${remain_0} - ${usrmin}`
+fi
+
+rootsize=`askx -q "\
+How many blocks for the \"root\" partition?" \
+    -h "\
+The \"root\" partition holds the UNIX kernel and the basic commands. Some free
+space is required here for temporary files.  The \"root\" partition must be at
+least  ${rootmin}  blocks long.  More space may be  allocated (as  many as  ${allow}
+blocks) if you  so desire.  The default \"root\" partition size for your disk
+is ${rootsize} blocks. Type the desired \"root\" size, \"quit\" to quit or \"again\" to 
+start over.  NOTE: partition sizes are always rounded up to 
+cylinder ( ${CYLSIZE_0} block ) boundaries." \
+    -s -n ${rootmin}:${allow} -d ${rootsize} -c quit -c again`
+
+if [ "${rootsize}" = quit ]
+then
+	exit 1
+elif [ "${rootsize}" = again ]
+then
+	exec ${myname}
+fi
+
+rootsize=`ignore expr \( ${rootsize} + ${CYLSIZE_0} - 1 \) / ${CYLSIZE_0} \* ${CYLSIZE_0}`
+
+if [ ${rootsize} -gt ${allow} ]
+then
+	rootsize=${allow}
+fi
+
+remain_0=`ignore expr ${remain_0} - ${rootsize}`
+
+#
+# Decide which disk to place "usr" on. Always use disk 2 when
+# disk 1 doesn't have enough space for a minimal "usr".
+#
+if [ ${remain_0} -lt ${usrmin} ]
+then
+	#
+	# "usr" will only fit on disk 2
+	#
+	case `askx -m "\
+There are ${remain_0} blocks remaining on disk 1. The \"usr\" partition requires
+at least ${usrmin} blocks.  Hence, it will not fit on disk 1 as it is
+partitioned. It is being placed on disk 2." \
+	    -q "\
+Type \"go\" to proceed, \"again\" to start over." \
+	    -h "\
+System performance is  typically greater  with the \"usr\" partition on
+disk 2. Some applications may, however, prefer to keep the entire set
+of 3B2 commands  on disk 1.  Type \"quit\" if you wish to stop, \"again\"
+if you'd like to repartition disk 1 (possibly to allow enough room for
+the \"usr\" partition on that disk) or \"go\" if you want to proceed (with
+\"usr\" on disk 2).  NOTE: partition sizes are always rounded up to 
+cylinder ( ${CYLSIZE_0} block ) boundaries." \
+	    -c go -c again -c quit` in
+	go)
+		;;
+	again)
+		exec ${myname}
+		;;
+	quit)
+		exit 1
+		;;
+	esac
+	usrflag=1
+elif [ -n "${DRIVEID_1:-}" ]
+then
+	#
+	# "usr" will fit on either disk
+	#
+	case `askx -m "\
+There are ${remain_0} blocks remaining on disk 1 and ${remain_1} blocks on
+disk 2. The \"usr\" partition requires at least ${usrmin} blocks; by
+default, ${usrsize} blocks would have been allocated. The system will
+typically perform better with \"usr\" on disk 2." \
+	    -q "\
+Which disk should hold the \"usr\" 
+partition?" \
+	    -h "\
+The \"usr\" partition holds the largest portion of the 3B2 UNIX software. It
+may be placed on either of your two disks. Type \"1\" to put \"usr\" on disk
+1, \"2\" to place it on disk 2, \"quit\" if wish to stop or \"again\" if you
+want to start the partitioning over again.
+NOTE: partition sizes are always rounded up to 
+cylinder ( ${CYLSIZE_0} block ) boundaries." \
+	    -c 1 -c 2 -c "quit" -c "again" -d 2` in
+	1)
+		usrflag=0 ;;
+	2)
+		usrflag=1 ;;
+	again)
+		exec ${myname}
+		;;
+	quit)
+		exit 1
+		;;
+	esac
+else
+	#
+	# "usr" must go on disk 1, since disk 2 does not exist.
+	#
+	usrflag=0
+fi
+
+eval allow=\${remain_${usrflag}}
+
+usrsize=`askx -q "\
+How many blocks for the \"usr\" partition?" \
+    -h "\
+The \"usr\" partition holds additional commands, libraries, spooled data and
+temporary files. It is also the default location for private user files (this
+may be overridden while creating user logins). The \"usr\" partition must be
+at least ${usrmin} blocks long. More space may be allocated (up to ${allow}
+blocks) if you so desire. The default \"usr\" partition size for your disk
+is ${usrsize} blocks. Type the desired \"usr\" size, \"quit\" to quit or
+\"again\" to start over.  NOTE: partition sizes are always rounded up to 
+cylinder ( ${CYLSIZE_0} block ) boundaries." \
+    -s -n ${usrmin}:${allow} -d ${usrsize} -c quit -c again`
+
+if [ "${usrsize}" = quit ]
+then
+	exit 1
+elif [ "${usrsize}" = again ]
+then
+	exec ${myname}
+fi
+
+eval usrcyl=\${CYLSIZE_${usrflag}}
+usrsize=`ignore expr \( ${usrsize} + ${usrcyl} - 1 \) / ${usrcyl} \* ${usrcyl}`
+
+if [ ${usrsize} -gt ${allow} ]
+then
+	usrsize=${allow}
+fi
+
+eval remain_${usrflag}="\`ignore expr \${remain_${usrflag}} - ${usrsize}\`"
+
+bootbase=0
+swapbase=`ignore expr ${bootbase} + ${bootsize_0}`
+rootbase=`ignore expr ${swapbase} + ${swapsize}`
+if [ ${usrflag} -eq 0 ]
+then
+	usrbase_0=`ignore expr ${rootbase} + ${rootsize}`
+	usrsize_0=${usrsize}
+	usrbase_1=0
+	usrsize_1=0
+else
+	usrbase_0=0
+	usrsize_0=0
+	usrbase_1=`ignore expr ${bootbase} + ${bootsize_1}`
+	usrsize_1=${usrsize}
+fi
+
+echo "*
+    0 2 00	${rootbase}	${rootsize}
+    1 3 01	${swapbase}	${swapsize}
+    2 4 00	${usrbase_0}	${usrsize_0}
+    6 0 01	0		${disksize_0}
+    7 0 01	${bootbase}	${bootsize_0}" \
+	| fmthard -s - ${RSIX_0} > /dev/null
+vmkfs ${RALL_0}? > /dev/null
+dlabelit ${ROOT_0} root ${REL} > /dev/null
+if [ ${usrsize_0} -ne 0 ]
+then
+	dlabelit ${USR_0} usr ${REL} > /dev/null
+fi
+
+if [ -n "${DRIVEID_1:-}" ]
+then
+	echo "*
+	    2 0 00	${usrbase_1}	${usrsize_1}
+	    6 0 01	0		${disksize_1}
+	    7 0 01	${bootbase}	${bootsize_1}" \
+		| fmthard -s - ${RSIX_1} > /dev/null
+	vmkfs ${RALL_1}? > /dev/null
+	if [ ${usrsize_1} -ne 0 ]
+	then
+		dlabelit ${USR_1} usr ${REL} > /dev/null
+	fi
+fi
+
+eval echo "\"\${USR_${usrflag}}\t/usr\""

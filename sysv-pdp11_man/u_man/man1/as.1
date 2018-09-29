@@ -1,0 +1,184 @@
+.TH AS 1 "not on PDP-11"
+.SH NAME
+\*pas \- common assembler
+.SH SYNOPSIS
+.BR \*pas
+.if '\*p'm32' .BR \-v type
+.RB "[" \-o " objfile]"
+.if '\*p'x86' .RB \-x
+.if '\*p'3b' .RB "[" \-Q "]"
+.RB "[" \-n "]"
+.RB "[" \-m "]"
+.RB "[" \-R "]"
+.RB "[" \-r "]"
+.RB "[" \-[bwl] "]"
+.RB "[" \-V "]"
+file-name
+.SH DESCRIPTION
+The 
+.I \*pas
+command
+assembles the named file.
+.if '\*p'b16' \{\
+The output file is executable if no errors
+occurred during the assembly, transfer vectors were not used,
+and there are no unresolved external references.\}
+The following flags
+may be specified in any order:
+.if '\*p'm32' \{\
+.TP \w'\fB\-o\fP\ \fIobjfile\fP\ \ 'u
+.BI \-v " type"
+type is either an 'x' indicating the original
+.B \*p
+assembler or an 'a' indicating the
+.B \*pa
+assembler.
+\}
+.TP \w'\fB\-o\fP\ \fIobjfile\fP\ \ 'u
+.BI \-o " objfile"
+Output of assembly is put in
+.IR objfile .
+By default, the output file name is formed by
+removing the 
+.B .s
+suffix, if there is one, from the input file name
+and appending a 
+.B .o
+suffix.
+.if '\*p'x86' \{\
+.TP
+.B \-x
+This
+flag is
+.I required
+for all x86 files.
+\}
+.if '\*p'3b' \{
+.TP
+.B \-Q
+Warns the user if a transfer vector operand is used
+in any context other than a "call" instruction.
+\}
+.TP
+.B \-n
+Turns off long/short address optimization.
+By default, address optimization takes place.
+.TP
+.B \-m
+Runs the 
+.I m4
+macro pre-processor
+on the input to the assembler.
+.TP
+.B \-R
+Instructs the assembler to delete (unlink) the input file after assembly
+is completed.  This option is off by default.
+.TP
+.B \-r
+For the \s-1VAX\s+1 version of the common assembler only.  This option instructs
+the assembler to place all assembled data (normally placed in the .data
+section) into the .text section.  This option effectively disables the
+.I .data
+pseudo operation.
+This option is off by default.
+.TP
+.B \-[bwl]
+For the \s-1VAX\s+1 version of the common assembler only.  This option instructs
+the assembler to create byte
+.RB ( b )
+, halfword
+.RB ( w )
+or long
+.RB ( l )
+displacements for
+undefined symbols.  The default value for this option is long 
+.RB ( l )
+displacements.
+.TP
+.B \-V
+Causes the version number of the assembler being run
+to be written on standard error.
+.SH FILES
+.RI /usr/tmp/\*pas[1-6] XXXXXX
+temporary files
+.SH "SEE ALSO"
+.if \nC \{\
+.I
+IS25 \(em The 3B Family Common Instruction Set \(em Release 2.
+D. A. Poplawski.\}
+.nr C 0
+.if '\*p'b16' .nr C 1
+.if '\*p'x86' .nr C 1
+.if \nC \{\
+S. J. Trowbridge,
+.I
+Basic-16 Assembly Language Reference Manual.
+.br
+H. G. Roberts,
+.I
+Addendum to Basic-16 Assembly Reference Manual.\}
+.br
+\*pld(1),
+m4(1),
+\*pnm(1),
+\*pstrip(1),
+a.out(4).
+.SH DIAGNOSTICS
+If the input file cannot be read,
+the assembly will terminate with the message
+"Unable to open input file".
+If assembly errors are detected
+the following information is written to standard error:
+the input file name, line number where the error occurred
+in the assembly code,
+a (hopefully) descriptive message of the problem,
+and, if the input file was produced by the C compiler \c
+.RI "(see " \*pcc (1))
+the line number in the C program that generated
+the erroneous code.
+.SH CAVEATS
+Those running the assembler
+explicitly should take note of some possible pitfalls:
+.if '\*p'3b' \{
+.IP \- 5
+If the input file does not contain a 
+.B .file
+assembler directive and the
+.B \-m
+flag was not specified,
+the file name given by the assembler when an
+error occurs is one of the temporary files
+.RB ( /usr/tmp/\*pas \s-1XXXXXX\s+1)
+\}
+.IP \- 5
+If the 
+.B \-m
+(
+.I m4
+macro pre-processor invocation) option is used,
+keywords for
+.I m4
+.RI "(see " m4 (1))
+cannot be used as symbols (variables, functions, labels)
+in the input file since
+.I m4
+cannot determine which are assembler symbols and 
+which are real 
+.I m4
+macros.
+.SH BUGS
+The
+.if '\*p'b16' .B .even
+.if '\*p'x86' .B .even
+.if '\*p'3b' .B .align
+.if '\*p'm32' .B .align
+.if '\*p'' .B .align
+assembler directive is not guaranteed to work
+in the
+.B .text
+section when optimization is performed.
+.PP
+Arithmetic expressions may only have
+one forward referenced symbol per expression.
+'\" \%W\%
+.\"	@(#)as.1	5.2 of 5/18/82

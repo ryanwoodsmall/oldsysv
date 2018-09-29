@@ -1,0 +1,49 @@
+*#ident	"@(#)kern-port:master.d/du	10.14.6.3"
+*
+* DU
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ox	-	-	-	-	-	dufst
+						advertise[NADVERTISE] (%0x20)
+						nadvertise (%i) ={ NADVERTISE }
+						rcvd[NRCVD] (%0x30)
+						nrcvd (%i) ={ NRCVD }
+						sndd [NSNDD] (%0x34)
+						nsndd (%i) ={ NSNDD }
+						maxgdp (%i) = { MAXGDP }
+						gdp [MAXGDP] (%0x7C)
+						minserve (%i) ={ MINSERVE }
+						maxserve (%i) ={ MAXSERVE }
+						nrduser (%i) ={ NRDUSER }
+						rd_user[NRDUSER] (%0x18)
+						rfheap[RFHEAP] (%c)
+						rfsize (%i) ={ RFHEAP }
+						rfs_vhigh (%i) = { RFS_VHIGH }
+						rfs_vlow (%i) = { RFS_VLOW }
+						nremote (%i) =	{ NREMOTE }
+						nlocal (%i) ={ NLOCAL }
+						rhbuf[NHBUF] (%0x1C)
+						nrhbuf (%i) ={ NHBUF }
+						rhmask (%i) ={ NHBUF-1 }
+						rc_time (%i) ={ RCACHETIME }
+
+$$$
+
+NADVERTISE	= 25
+MAXGDP		= 24
+NRCVD		= 150
+NRDUSER		= 250
+NSNDD		= 100
+MINSERVE	= 3
+MAXSERVE	= 6
+HIST 		= 6
+RFHEAP		= 3072
+RFS_VHIGH	= 1
+RFS_VLOW	= 1
+RCACHETIME	= 10
+
+* NREMOTE and NLOCAL default to one third of NBUF when set to zero. *
+* Non-zero value overrides the default *
+
+NREMOTE 	= 0
+NLOCAL  	= 0

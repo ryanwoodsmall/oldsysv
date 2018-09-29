@@ -1,0 +1,25 @@
+
+\S newline character:  tab character:  blank character:  newline: blank:\S
+\Stab \S
+
+In UNIX systems, the contents of a file is stored as a sequence of
+characters.  There is a character in the file for every upper case and
+lower case letter you type, every number, every punctuation mark, symbol,
+and special character.  The UNIX system also stores characters that
+represent blanks, tabs, and newlines.  When you are creating a file, or
+adding to or modifying a file, and you hit the space bar, the UNIX system
+places a blank character in the position in the file where you hit the
+space bar.  When you hit the tab key, the UNIX system places a tab
+character in that position.  When you type a carriage return, the UNIX
+system inserts a newline character.  The newline character is an
+instruction that means this line is finished, move to the next line and
+continue. When you print your file, all of the blanks, tabs, and newlines
+are there, but you do not see the characters that produced them.  These
+characters are called "non-printing characters"\S*\S because they exist but are
+not printed when you print your file.
+
+When you want to create blanks, tabs, and newlines in the output of shell
+programs, you use \b, \t, and \n, respectively.
+(see also:  backslash.)
+
+\S*\S defined in the \Sglossary\S

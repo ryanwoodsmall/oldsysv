@@ -1,0 +1,35 @@
+
+\Ssh\S:  Examples
+
+        sh format
+
+   Executes the commands in the file "format." "format" does not have to be an
+   executable file.
+
+   ---------------------------------------------------------------------------
+
+        sh -x format
+
+   Executes commands in the file "format".  It also prints each command as it
+   is executed.  This is useful when you are debugging "format".  "format"
+   does not have to be an executable file.
+
+
+
+   ---------------------------------------------------------------------------
+
+
+        sh -s format format.2
+
+   Creates a new shell and assigns "format" to be positional parameter 1 and
+   "format.2" to be positional parameter 2.  If you type:
+
+        cat $1
+
+   the new shell prints the file "format".  If you type:
+
+        ls -l $2
+
+   The new shell prints the access permissions and information on the file
+   "format.2". To end the new shell and return to the old shell, you hold down
+   the control key and strike the letter "d" simultaneously.

@@ -1,0 +1,145 @@
+.TH JOIN 1 
+.SH NAME
+join \- relational database operator
+.SH SYNOPSIS
+.B join
+[
+options
+]
+file1 file2
+.SH DESCRIPTION
+.I Join\^
+forms, on the standard output,
+a join
+of the two relations specified by the lines of
+.I file1\^
+and
+.IR file2 .
+If
+.I file1\^
+is \f3\-\fP, the standard input is used.
+.PP
+.I File1\^
+and 
+.I file2\^
+must be sorted in increasing \s-1ASCII\s+1 collating
+sequence on the fields
+on which they are to be joined,
+normally the first in each line.
+.PP
+There is one line in the output 
+for each pair of lines in 
+.I file1\^
+and 
+.I file2\^
+that have identical join fields.
+The output line normally consists of the common field,
+then the rest of the line from 
+.IR file1 ,
+then the rest of the line from
+.IR file2 .
+.PP
+The default input field separators are blank, tab, or new-line.
+In this case, multiple separators count as one field separator, and
+leading separators are ignored.
+The default output field separator is a blank.
+.PP
+Some of the below options use the argument
+.IR n .
+This argument should be a
+.B 1
+or a
+.B 2
+referring to either
+.I file1
+or
+.IR file2 ,
+respectively.
+The following options are recognized:
+.TP \w'\fB\-o\fP\ \fIlist\fP\ \ 'u
+.BI \-a n\^
+In addition to the normal output,
+produce a line for each unpairable line in file
+.IR n ,
+where
+.I n\^
+is 1 or 2.
+.TP
+.BI \-e \ s\^
+Replace empty output fields by string
+.IR s .
+.TP
+.BI \-j n\ m\^
+Join on the
+.IR m th
+field of file
+.IR n .
+If
+.I n\^
+is missing, use the
+.IR m th
+field in each file.
+Fields are numbered starting with
+.BR 1 .
+.TP
+.BI \-o \ list\^
+Each output line comprises the fields specified in
+.IR list ,
+each element of which has the form
+.IB n . m\^\fR,
+where
+.I n\^
+is a file number and
+.I m\^
+is a field number.
+The common field is not printed
+unless specifically requested.
+.TP
+.BI \-t c\^
+Use character
+.I c\^
+as a separator (tab character).
+Every appearance of
+.I c\^
+in a line is significant.
+The character
+.I c\^
+is used as the field separator for both
+input and output.
+.SH EXAMPLE
+The following command line will join
+the password file and the group file,
+matching on the numeric group ID, and outputting
+the login name, the group name and the login
+directory.
+It is assumed that the files have been sorted
+in ASCII collating sequence on
+the group ID fields.
+.PP
+.RS
+join \-j1 4 \-j2 3 \-o 1.1 2.1 1.6 \-t: /etc/passwd /etc/group
+.RE
+.SH "SEE ALSO"
+awk(1), comm(1), sort(1), uniq(1).
+.SH BUGS
+With default field separation,
+the collating sequence is that of
+.BR "sort \-b" ;
+with
+.BR \-t ,
+the sequence is that of a plain sort.
+.PP
+The conventions of
+.IR join (1),
+.IR sort (1),
+.IR comm (1),
+.I uniq (1),
+and
+.IR awk (1)
+are incongruous.
+.P
+Filenames that are numeric may cause conflict
+when the
+.BR -o 
+option is used right before listing filenames.
+.\"	@(#)join.1	6.3 of 9/2/83

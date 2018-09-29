@@ -1,0 +1,452 @@
+.if t .ds ' \h@.05m@\s+4\v@.333m@\'\v@-.333m@\s-4\h@.05m@
+.if n .ds ' '
+.if t .ds ` \h@.05m@\s+4\v@.333m@\`\v@-.333m@\s-4\h@.05m@
+.if n .ds ` `
+.TH STERMIO 7
+.SH NAME
+stermio \- general synchronous terminal interface
+.SH DESCRIPTION
+.PP
+All of the synchronous
+communications ports use the
+same general interface, no matter what
+hardware is involved.
+The remainder of this section discusses
+the common features of this interface.
+.PP
+When a terminal file is opened,
+it normally causes
+the process to wait until a connection is established.
+In practice, users' programs seldom open these
+files; they are opened by
+.I stgetty
+and become a user's
+standard input, output, and error files.
+The very first terminal file opened
+by the process group leader of a terminal
+file not already associated with a process group
+becomes the
+.I "control terminal\^"
+for that process group.
+The control terminal plays a special
+role in handling quit and interrupt signals, as discussed
+below.
+The control terminal is inherited by a child process during a
+.IR fork (2).
+A process can break this association by changing its
+process group using
+.IR setpgrp (2).
+.PP
+A terminal associated with one of these files
+operates in half-duplex mode.
+Characters may be typed only when the terminal is in local mode.
+.PP
+When the user channel is in line mode,
+terminal input is processed in units of lines.
+A line is delimited by a new-line (\s-1ASCII\s+1
+.SM LF\*S)
+character that is supplied by the driver at the end of each field from the
+terminal.
+No matter how many characters are requested
+in the read call, at most one line will be returned.
+It is not, however, necessary to read a whole line at
+once; any number of characters may be
+requested in a read, even one, without losing information.
+.PP
+When the user channel is in application mode,
+full blocks of data from the terminal may be requested in a read.
+As in line mode,
+any number may be requested without losing information.
+The program must know how to interpret the protocol and field separation
+characters to understand the data returned.
+.PP
+Certain characters have special functions on input when the user channel
+is in line mode.
+These functions and their default key assignments
+are summarized as follows:
+.TP "\w'CLEAR\ \ \ 'u"
+.SM INTR
+(\s-1PA1\s+1)
+generates an
+.I interrupt\^
+signal which is sent to all processes
+with the associated control terminal.
+Normally, each such process is forced to terminate,
+but arrangements may be made either to
+ignore the signal or to receive a
+trap to an agreed-upon location;
+see
+.IR signal (2).
+.TP
+.SM QUIT
+(\s-1PA2\s+1)
+generates a
+.I quit\^
+signal.
+Its treatment is identical to the interrupt signal
+except that, unless a receiving process has
+made other arrangements, it will not only be terminated
+but a core image file
+(called
+.BR core )
+will be created in the current working directory.
+.TP
+.SM EOF
+(\s-1PF12\s+1)
+may be used to generate an end-of-file from a terminal.
+When received,
+all characters changed in the terminal's buffer are queued to be passed to the
+program and the
+.SM EOF
+is discarded.
+Thus,
+if there are no changes in the terminal's buffer,
+zero characters will be passed back,
+which is the standard end-of-file indication.
+.TP
+.SM CTAB
+(@)
+will be translated to an
+.SM ASCII
+.SM HT
+character.
+.TP
+.SM SEND
+(\s-1S/R\s+1,
+\s-1PF1\s+1 through \s-1PF11\s+1)
+may be used to send modified fields to the program.
+In line mode,
+each modified field is packaged as an input line with a trailing new-line
+character.
+In application mode,
+the entire transmission block is given to the program.
+.TP
+.SM CLEAR
+(\s-1CLEAR\s+1)
+clears the screen.
+In line mode,
+the screen will be reformatted so that each line is a separate field.
+In application mode,
+reformatting the screen is the program's responsibility.
+.PP
+The character value for
+.SM CTAB
+may be changed to suit individual tastes.
+.PP
+When the carrier signal from the data-set drops, a
+.I hangup\^
+signal is sent to all processes
+that have this terminal as the control terminal.
+Unless other arrangements have been made,
+this signal causes the processes to terminate.
+If the hangup signal is ignored, any subsequent read
+returns with an end-of-file indication.
+Thus programs that read a terminal and test for
+end-of-file can terminate appropriately when
+hung up on.
+.PP
+Several
+.IR ioctl (2)
+system calls apply to synchronous terminal files.
+Several of these calls use the same structure
+defined in
+.B /usr/include/sys/termio.h\^
+as described in
+.IR termio (7)
+and accept the same \s-1TCGETA\s+1,
+\s-1TCSETA\s+1,
+\s-1TCSETAW\s+1,
+and \s-1TCSETAF\s+1 commands that are described there.
+When these calls are used,
+however,
+only the
+.IR c_iflag ,
+.IR c_oflag, 
+and
+.I c_lflag\^
+fields are used with these fields corresponding,
+respectively to the
+.IR imode ,
+.IR omode ,
+and
+.I lmode\^
+fields described in the following description of the
+.I stermio\^
+structure that is defined in
+.BR /usr/include/sys/stermio.h .
+Within those fields,
+only the values described below,
+some of which overlap those described in
+.IR termio (7),
+are used.
+.PP
+.ta \w'struct s'u +\w'unsigned short\ \ 'u +\w'omode;\ \ 'u
+.nf
+struct stermio {
+	unsigned short	ttyid;	/\(** station and device id's \(**/
+	char	row;	/\(** cursor row position at last \s-1SEND\s+1 \(**/
+	char	col;	/\(** cursor col position at last \s-1SEND\s+1 \(**/
+	char	orow;	/\(** next output cursor row position \(**/
+	char	ocol;	/\(** next output cursor col position \(**/
+	char	tab;	/\(** translate to tab on input \(**/
+	char	aid;	/\(** function key identification code \(**/
+	char	ss1;	/\(** status and sense character 1 \(**/
+	char	ss2;	/\(** status and sense character 2 \(**/
+	unsigned short	imode;	/\(** input modes \(**/
+	unsigned short	lmode;	/\(** local modes \(**/
+	unsigned short	omode;	/\(** output modes \(**/
+};
+.fi
+.PP
+The
+.I ttyid\^
+field contains the station selection character in the high order byte
+and the device selection character in the low order byte.
+.PP
+The
+.I row\^
+and
+.I col\^
+fields contain the row and column numbers of the screen position of the
+cursor when the last \s-1SEND\s+1 key was hit.
+Rows are numbered from 1 through 24.
+Columns are numbered from 1 through 80.
+.PP
+The
+.I orow\^
+and
+.I ocol\^
+fields specify the next screen position that will be written.
+.PP
+The
+.I tab\^
+field contains the character that will be translated to an
+.SM ASCII
+.SM TAB
+character on input if line mode is enabled.
+.PP
+The
+.I aid\^
+field contains the function key identification code signifying the
+terminal key that caused the last buffer to be sent.
+.PP
+The
+.I ss1\^
+and
+.I ss2\^
+fields contain the last status and sense characters received from the
+terminal.
+.PP
+The
+.I imode\^
+field describes the basic terminal input control:
+.PP
+.ta \w'MAXMAX\ \ 'u +\w'0100000\ \ 'u
+.RS
+.nf
+\s-1IUCLC\s+1	0001000	Map upper-case to lower-case on input.
+.fi
+.RE
+.PP
+If
+.SM IUCLC
+is set and line mode is enabled,
+a received upper-case alphabetic character is translated
+into the corresponding lower-case character.
+.PP
+The initial input control value is all bits clear.
+.PP
+The
+.I omode\^
+field specifies the system treatment of output:
+.PP
+.ta \w'MAXMAX\ \ 'u +\w'0100000\ \ 'u
+.RS
+.nf
+\s-1OLCUC\s+1	0000002	Map lower case to upper on output.
+\s-1TABDLY\s+1	0014000	Select horizontal-tab translation option:
+\s-1TAB0\s+1	0	Don't modify tabs.
+\s-1TAB3\s+1	0014000	Expand tabs to spaces.
+.DT
+.fi
+.RE
+.PP
+If
+.SM OLCUC
+is set and line mode is enabled,
+a lower-case alphabetic character is transmitted as
+the corresponding upper-case character.
+This function is often used in conjunction with
+.SM IUCLC\*S.
+.PP
+Horizontal-tab type 0 specifies that tabs are not to be modified.
+Type 3 specifies that tabs are to be expanded into spaces.
+.PP
+The initial output control value is
+\s-1TAB3\s+1.
+.PP
+The
+.I lmode\^
+field of the argument structure
+is used by the line discipline to control terminal functions.
+The synchronous terminal line discipline provides the following:
+.PP
+.ta \w'MAXMAX\ \ 'u +\w'0100000\ \ 'u
+.RS
+.nf
+\s-1XCASE\s+1	0000004	Canonical upper/lower presentation.
+\s-1STFLUSH\s+1	0000400	Flush output on each \fIwrite\fP(2).
+\s-1STWRAP\s+1	0001000	Wrap around long lines.
+\s-1STAPPL\s+1	0002000	Use application mode.
+.DT
+.fi
+.RE
+.PP
+If
+.SM XCASE
+is set and line mode is enabled,
+an upper-case letter is accepted on input by preceding
+it with a
+.B \e
+character,
+and on output is preceded by a
+.B \e
+character.
+In this mode, the following escape sequences are generated
+on output and accepted on input:
+.br
+.ne 7
+.PP
+.PD 0
+.RS
+.TP
+.IR for :
+.IR use :
+.TP
+.B \*`
+.B \e\*'
+.TP
+.B \(bv
+.B \e!
+.TP
+.B ~
+.B \e^
+.TP
+.B {
+.B \e(
+.TP
+.B }
+.B \e)
+.TP
+.B \e
+.B \e\e
+.RE
+.PD
+.PP
+For example,
+.B A
+is input as
+.BR \ea ,
+.B \en
+as
+.BR \e\en ,
+and
+.B \eN
+as
+.BR \e\e\en .
+.PP
+If
+.SM STAPPL
+is set,
+application mode is enabled.
+Read requests are satisfied directly from the terminal input buffer,
+and the user is responsible for handling all terminal protocol from the
+.SM STX
+character
+through the
+.SM ETX
+character on output.
+.PP
+If
+.SM STAPPL
+is not set,
+line mode processing is enabled.
+This enables the input fields from the terminal to be broken into lines
+terminated with a
+new-line
+chracter and the actions to provide the
+\s-1IUCLC\s+1,
+\s-1TAB3\s+1,
+\s-1OLCUC\s+1,
+\s-1XCASE\s+1,
+\s-1STFLUSH\s+1,
+and \s-1STWRAP\s+1 processing to be performed.
+For output,
+the screen is formatted so that each terminal line is a separate field.
+New-line
+characters cause the remainder of the current line to be cleared and the
+cursor to be positioned at the beginning of the next field.
+If data overflows the last line of the terminal,
+the cursor is repositioned to the beginning of the first field on the
+screen and output is halted until one of the
+.SM SEND
+keys,
+the
+.SM PF12
+key,
+or the
+.SM CLEAR
+key is hit to restart output.
+This allows the terminal operator to read a screen full of data before
+it is overwritten.
+.PP
+The initial value for terminal modes has the
+.SM STAPPL
+and
+.SM STWRAP
+modes enabled.
+.PP
+The primary
+.IR ioctl (2)
+system calls using the
+.I stermio
+structure have the form:
+.PP
+.RS
+ioctl \|(fildes, \|command, \|arg)
+.br
+struct \|stermio \|\(**arg;
+.RE
+.PP
+The commands using this form are:
+.RS
+.TP "\w'STGET\ \ \ 'u"
+.SM STGET
+Get the parameters associated with the terminal
+and store in the
+.I stermio\^
+structure referenced by
+.BR arg .
+.TP
+.SM STSET
+Set the parameters associated with the terminal
+from the structure referenced by
+.BR arg .
+Only the
+.IR imode ,
+.IR lmode ,
+.IR ocol ,
+.IR omode ,
+.IR orow ,
+and
+.I tab\^
+fields are affected.
+The change is immediate.
+A switch from application mode to line mode will cause the screen to
+be reformatted by the driver.
+.RE
+.SH FILES
+/dev/tty\(**
+.SH SEE ALSO
+stty(1), ioctl(2), st(7),termio(7).
+.\"	@(#)stermio.7	5.2 of 5/18/82

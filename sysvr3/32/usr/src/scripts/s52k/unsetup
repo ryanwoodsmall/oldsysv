@@ -1,0 +1,9 @@
+#ident	"@(#)pkg.s52k:unsetup	10.1"
+#
+# unsetup script for S52K
+#
+
+# Deinstall S52K "driver"
+#
+DRVPATH=/etc/master.d
+/etc/drvinstall -u -f -m $DRVPATH/s52k -v 1.0

@@ -1,0 +1,31 @@
+.TH SLEEP 1 
+.SH NAME
+sleep \- suspend execution for an interval
+.SH SYNOPSIS
+.B sleep
+time
+.SH DESCRIPTION
+.I Sleep\^
+suspends execution for
+.I time\^
+seconds.
+It is used to execute a command
+after a certain amount of time, as in:
+.PP
+	(sleep 105; \fIcommand\fP\^)&
+.PP
+or to execute a command every so often, as in:
+.PP
+	while true
+.br
+	do
+.br
+		\fIcommand\fP
+.br
+		sleep 37
+.br
+	done
+.SH "SEE ALSO"
+alarm(2), sleep(3C) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)sleep.1	6.2 of 9/2/83

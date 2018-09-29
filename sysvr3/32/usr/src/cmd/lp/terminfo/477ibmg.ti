@@ -1,0 +1,47 @@
+#ident	"@(#)nlp:terminfo/477ibmg.ti	1.5"
+#01-09-88
+
+477ibmg|att477ibmg|AT&T 477 IBM graphics printer emulation,
+
+	cpix,
+
+	bufsz#8192,
+	cols#136,
+	it#8,
+	lines#66,
+	orc#10,
+	orhi#100,
+	orl#10,
+	orvi#60,
+	cps#80,
+
+	cr=^M,
+	cpi=%?%p1%{10}%=%t^R%e%p1%{17}%=%O%t^O%;,
+	cvr=%?%p1%{0}%>%p1%{86}%<%&%t\EA%p1%c\E2%;,
+	csnm=%?%p1%{0}%=%p1%{1}%=%O%tcharacter_set_1%e%p1%{2}%=%tcharacter_set_2%;,
+	cud1=^J,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+
+#CAN clears all unprinted characters on current line
+	is1=^X,
+
+#Remote reset
+	is2=\E@,
+	lpi=%?%p1%{2}%=%t\EA$\E2%e%p1%{3}%=%t\EA^X\E2%e%p1%{4}%=%t\EA^R\E2%e%p1%{6}%=%t\EA^L\E2%e%p1%{8}%=%t\E0%e%p1%{12}%=%t\EA^F\E2%;,
+	rwidm=\EW0,
+	rmul=\E-0,
+	rsupm=\ET,
+	rsubm=\ET,
+	swidm=\EW1,
+	smul=\E-1,
+	ssubm=\ES1,
+	ssupm=\ES0,
+	scs=%?%p1%{0}%=%p1%{1}%=%O%t\E7%e%p1%{2}%=%t\E6%;,
+	smgbp=%?%p1%{0}%>%p1%{128}%<%&%t\EC%p1%c%;,
+
+#0 margin will have to be set to 1 because NULL cannot be sent
+
+	smglp=%?%p1%{256}%<%t\El%p1%{1}%+%c,
+	smgrp=%?%p1%{256}%<%t\EQ%p1%{2}%+%c,

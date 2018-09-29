@@ -1,0 +1,14 @@
+
+\Scat\S:  Description
+
+Syntax Summary:  cat [-su] [ -v [-et] ] [file_name ...]
+
+         where:  file_name  is the name of a file.
+
+Description:
+    \Scat\S is  shorthand  for "concatenate".  Use \Scat\S to send the
+    contents of a file to standard output.  If more than one file name is used,
+    \Scat\S prints each file in sequence on the standard output.  \Scat\S
+    echos standard input if you do not list a file name or if you use "-" as an
+    argument. See also:  cp(1), pg(1) and pr(1) for commands with functions
+    similar to \Scat\S.

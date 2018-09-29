@@ -1,0 +1,11 @@
+
+\S editor:  text editor:  editor command \S
+
+Editors or text editors are commands that you use to create, change, or add
+information to files.  You use editors like other UNIX system commands, by
+typing the name of the editor, followed by any options and the name of the
+file you want to create or change.  After you type this command line you
+will be able to edit the file with editor commands that are specific to the
+editor.  Editor commands enable you to move around the file, move or change
+text, or to enter new text into the file.
+

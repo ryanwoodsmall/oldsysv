@@ -1,0 +1,12 @@
+
+\S news \S:  Examples
+
+       news
+
+    Prints all the news items on the system that you have not already read.
+
+    ----------------------------------------------------------------------
+
+       news reorg
+
+    Prints just the news item "reorg".

@@ -1,0 +1,13 @@
+
+   The GOTO command allows you to quickly move the cursor  to another
+   open frame by specifying the frame number.
+
+     1.  To use the GOTO command do one of the following:
+
+            - Command Menu - Select GOTO + RETURN
+
+            - Typed Command - Type goto [frame_#]
+                              + RETURN
+
+     2.  If you use the  GOTO  command  without  specifying  a  frame
+         number , you will be prompted for a frame number.

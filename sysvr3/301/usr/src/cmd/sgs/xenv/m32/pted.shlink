@@ -1,0 +1,45 @@
+#ident	"@(#)xenv:m32/pted.shlink	1.1"
+
+#Copy a directory structure starting from ${1} [the full path name]
+#     making all directories and then linking all files.
+#
+
+#Be sure libc exists before trying to link files
+if [ ! -d ../../../../lib/libc ]
+then echo "Error: ../../../../lib/libc DOES NOT exist."
+exit 50
+fi
+
+#Be sure shlibc exists and create it if it doesn't
+if [ ! -d ../../../../lib/shlibc ]
+then
+mkdir ../../../../lib/shlibc
+fi
+
+cd ../../../../lib/shlibc
+echo "making directories"
+for i in `cd ../libc; find . -type d -print`
+do
+if [ ! -d $i ]
+then
+	mkdir $i
+fi
+done
+echo "DONE making directories"
+echo "\nlinking files: Expect message \"DONE linking files\""
+cd ../libc
+for i in *
+do
+	if [ -d $i ]
+	then
+		for j in `find $i -type f -print`
+		do
+			if [ ! -f ../shlibc/${j} ]
+				then
+				echo ".\c"
+				ln ${j} ../shlibc/${j}
+			fi
+		done
+	fi
+done
+echo "\n\nDONE linking files"

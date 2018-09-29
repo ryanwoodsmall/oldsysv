@@ -1,0 +1,181 @@
+.TH AR 1
+.SH NAME
+ar \- archive and library maintainer for portable archives
+.SH SYNOPSIS
+.B ar
+key [ posname ] afile [name] ...
+.SH DESCRIPTION
+The
+.I Ar\^
+command
+maintains groups of files
+combined into a single archive file.
+Its main use
+is to create and update library files as used by the link editor.
+It can be used, though, for any similar purpose.
+The magic string and the file headers used by
+.I ar\^
+consist of printable
+.SM ASCII
+characters.
+If an archive is composed of printable files, the entire archive is
+printable.
+.PP
+When
+.I ar\^
+creates an archive, it creates headers in a format that is portable across
+all machines.  The portable archive format and structure is described in
+detail in
+.IR ar (4).
+The archive symbol table [described in
+.IR ar (4)]
+is used by the link editor
+.RI [ ld (1)]
+to effect multiple passes over libraries of
+object files in an efficient manner.
+An archive symbol table is only created and maintained by
+.I ar\^
+when there is at least one object file in the archive.
+The archive symbol table is in a specially named
+file which is always the first file in the archive.
+This file is never mentioned or accessible to the user.
+Whenever the 
+.IR ar (1)
+command is used to create or update the contents of such an archive, the
+symbol table is rebuilt.  The
+.B s
+option described below will force the symbol table to be rebuilt.
+.PP
+.I Key\^
+is an optional
+.BR \- ,
+followed by one character from the set
+.BR drqtpmx ,
+optionally concatenated with
+one or more of
+.BR vuaibcls .
+.I Afile\^
+is the archive file.
+The
+.I names\^
+are constituent files in the archive file.
+The meanings of the
+.I key\^
+characters are:
+.TP
+.B d
+Delete the named files from the archive file.
+.TP
+.B r
+Replace the named files in the archive file.
+If the optional character
+.B u
+is used with
+.BR r ,
+then only those files with
+dates of modification later than
+the archive files are replaced.
+If an optional positioning character from the set
+.B abi
+is used, then the
+.I posname\^
+argument must be present
+and specifies that new files are to be placed
+after
+.RB ( a )
+or before
+.RB ( b
+or
+.BR i )
+.IR posname .
+Otherwise
+new files are placed at the end.
+.TP
+.B q
+Quickly append the named files to the end of the archive file.
+Optional positioning characters are invalid.
+The command does not check whether the added members
+are already in the archive.
+Useful only to avoid quadratic behavior when creating a large
+archive piece-by-piece.
+.TP
+.B t
+Print a table of contents of the archive file.
+If no names are given, all files in the archive are tabled.
+If names are given, only those files are tabled.
+.TP
+.B p
+Print the named files in the archive.
+.TP
+.B m
+Move the named files to the end of the archive.
+If a positioning character is present,
+then the
+.I posname\^
+argument must be present and,
+as in
+.BR r ,
+specifies where the files are to be moved.
+.TP
+.B x
+Extract the named files.
+If no names are given, all files in the archive are
+extracted.
+In neither case does
+.B x
+alter the archive file.
+.TP
+.B v
+Give a verbose file-by-file
+description of the making of a
+new archive file from the old archive and the constituent files.
+When used with
+.BR t ,
+give a long listing of all information about the files.
+When used with
+.BR x ,
+precede each file with a name.
+.TP
+.B c
+Suppress the
+message that is produced by default when
+.I afile\^
+is created.
+.TP
+.B l
+Place temporary files in the local current working directory,
+rather than in the directory specified by the environment variable
+.SM
+.B TMPDIR
+or in the default directory
+.BR /tmp .
+.TP
+.B s
+Force the regeneration of the archive symbol table even if 
+.IR ar (1) 
+is not invoked with a command which will modify the archive contents.
+This command is useful to restore the archive symbol table after the
+.IR strip (1)
+command has been used on the archive.
+.SH FILES
+/tmp/ar\(**	temporaries
+.SH SEE ALSO
+arcv(1), convert(1), ld(1),
+lorder(1), strip(1).
+.br
+tmpnam(3S),
+a.out(4),
+ar(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH NOTES
+This archive format is new to this release.
+The
+.IR convert (1)
+command can be used to change an older archive file into
+an archive file that is recognized by this
+.I ar\^
+command.
+.SH BUGS
+If the same file is mentioned twice in an argument list,
+it may be put in the archive twice.
+.\"	@(#)ar.1	6.2 of 9/2/83

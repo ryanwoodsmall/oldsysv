@@ -1,0 +1,72 @@
+#ident	"@(#)nserve:README	1.6"
+This directory contains the source for the name server.
+Its home is $(ROOT)/usr/src/cmd/nserve.  To make the
+name server, type make.  To install the name server,
+type make install.  The install directory for the name
+server program (nserve) is $(ROOT)/usr/nserve.
+
+The biggest changes for N6 are some additional capabilities
+for handling media independence.  These changes include a
+new listener process, which will not be discussed here and
+some changes to the rfmaster file.
+
+As with previous versions, you should check the state of
+several files in $(ROOT)/usr/nserve and /dev.  The following
+commands will take care of the easy ones:
+
+mknod /dev/spx c 127 39
+rm /usr/nserve/nspid	# nserve will make what it wants as long as
+			# nothing else is there.
+
+The ones that you need to worry about are "rfmaster" and "dom.master."
+rfmaster contains a reference to the domain name server in the
+following format (Note: fields in brackets <> are variable fields,
+the others are constant):
+
+<domain>	p	<domain.ns>
+<domain.ns>	a	<address>
+
+<domain>	= the name of this machine's domain.
+p		= keyword for record that defines a domain
+		  name server.
+<domain.ns>	= name of domain name server for <domain>
+a		= keyword for record that defines address of
+		  a machine.
+<address>	= address of machine <domain.ns>, for 3bnet,
+		  this is the ethernet address (in the form
+		  \x0000000m800010xxxxxx0000, where m is the
+		  minor device that the listener will use and
+		  xxxxxx is a hexadecimal value that usually
+		  corresponds to the machine's serial number).
+
+For example:
+
+sgs		p	sgs.sfjec
+sgs.sfjec	a	\x000000028000104531000000
+
+Note that the 34 that was previously part of the address has gone.
+To avoid confusion, make sure that your addresses don't have the 34.
+"dom.master" is a file in the same format that contains information
+about other domains.  This file is optional, and if used at all, will
+only be found on the primary name server.
+
+See "Requirements for Distributed UNIX Administration--Issue 2,"
+Dell'Aglio, et al. for more details.
+
+The name server is started using the rfstart command, but several
+things must be done first.  The normal sequence, starting from scratch
+would be:
+
+dname -d <domain_name>  # only really needed on first startup.
+epump
+pckd
+nlsadmin -s <net_spec>  # net_spec will probably be npack
+rfstart
+
+In addition, you need to make sure that the program rfsetup is
+in /usr/net and that it is executable.  When you run rfstart,
+it will take several seconds to run, because there are several
+operations that must take place, including some that may go
+remote.  To stop things, run rfstop, which will get rid of
+everything except listen and pckd, which must be killed
+separately.

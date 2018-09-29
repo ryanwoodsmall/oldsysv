@@ -1,0 +1,13 @@
+
+\Snews\S:  Description
+
+Syntax Summary:  news [-a] [-n] [-s] [file_name ...]
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Snews\S is for reading news items posted on the system.  Use \Snews\S
+     to read files from the /usr/news directory.  \Snews\S followed by
+     <file_name> prints the specific news item from the file with that name.
+     The options allow you to check the names of all current news items, the
+     number of items there are, and whether or not you have already read them.

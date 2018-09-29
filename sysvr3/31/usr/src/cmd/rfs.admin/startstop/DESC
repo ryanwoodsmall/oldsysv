@@ -1,0 +1,10 @@
+#ident	"@(#)rfs.admin:startstop/DESC	1.1"
+#menu# start / stop RFS menu
+
+#head# 			START / STOP REMOTE FILE SHARING
+#help# 
+#help# 	The subcommands of the Start / Stop RFS Menu allow you 
+#help# 	to start RFS, set up the system to automatically start 
+#help# 	RFS whenever you start your machine, stop RFS, and check 
+#help# 	to see if RFS is currently running.	
+#help# 

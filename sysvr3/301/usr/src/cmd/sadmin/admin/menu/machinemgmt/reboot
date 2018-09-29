@@ -1,0 +1,48 @@
+#ident	"@(#)sadmin:admin/menu/machinemgmt/reboot	2.2"
+#menu# stop all running programs then reboot the machine
+#help# 
+#help#	Reboot will stop all running programs, close any open files,
+#help#	write out information to disk (such as directory information),
+#help#	then reboot the machine.  This can be used to get out of some
+#help#	types of system trouble, such as when a process cannot be killed.
+
+trap 'exit 0' 1 2  15
+flags="-qq -k$$"
+
+cd /
+wholist=`who`
+if [ `echo "${wholist}"  |  wc -l` -gt 1 ]
+then
+	echo "Users currently logged in:\\n${wholist}"
+fi
+
+if  checkyn ${flags} -f -H'
+	An express reboot brings the system down as fast as possible and
+	reboots the system.  It is not a very friendly thing to do on a system
+	which several users are using.
+	Entering  q  will quit this procedure.' \
+	'Once started, a reboot CANNOT BE STOPPED.
+Do you want to start an express reboot?'
+then
+	grace=0
+else
+	grace=`checkre ${flags} -D60 -fe -H'
+	There are 1 or 2 warning messages (depending on whether there is more
+	than one user on the system) before the system is shut down.  The delay
+	you specify here is used between the messages and between the last
+	message and the beginning of reboot.
+	Entering  q  will quit this procedure.' \
+'Enter the number of seconds to allow
+between the warning messages (default 60): [?, q]' \
+		'^[0-9]\{1,\}$' 'Must be all digits.' \
+		'^.\{1,4\}$' 'No more than 4 digits.  That is good for over 2.7 hours.'`
+fi
+
+trap '' 1 2 3  15
+#	-i6 assumes that init state 6 does a clean reboot.
+setpgrp /etc/shutdown -y -g${grace} -i6  ||  exit 1
+#	A trick to keep the shell from announcing the death of a process and
+#	yet keep the command from returning.
+sleep 1200&
+trap 'kill -9 0 2>/dev/null' 15
+wait

@@ -1,0 +1,78 @@
+.TH PASSWD 1
+.SH NAME
+passwd \- change login password
+.SH SYNOPSIS
+.B passwd
+[ name ]
+.SH DESCRIPTION
+This command changes or installs a password
+associated with the login
+.IR name .
+.P
+Ordinary users may change only the password which corresponds to their 
+login 
+.IR name .
+.P
+.IR Passwd
+prompts ordinary users for their old password, if any.
+It then prompts for the new password twice.  
+The first time the new password is entered
+.IR passwd
+checks to see if
+the old password has ``aged'' sufficiently.  
+If ``aging'' is insufficient the new password is rejected and 
+.IR passwd
+terminates;  see 
+.IR passwd (4).
+.P
+Assuming ``aging'' is sufficient, a check is made to insure 
+that the new password meets construction requirements.  When the
+new password is entered a second time the two copies of the new 
+password are compared.
+If the two copies are not identical the cycle of prompting for the 
+new password is repeated for at most two more times.
+.P
+Passwords must be constructed to meet the following requirements:
+.RS
+.sp
+Each password must have at least six characters.
+Only the first eight characters are significant.
+.P
+Each password must contain at least two alphabetic
+characters and at least one numeric or special character.
+In this case, ``alphabetic'' means upper and lower
+case letters.
+.P
+Each password must differ from the user's login 
+.IR name
+and any reverse
+or circular shift of that login
+.IR name .
+For comparison purposes, an upper case letter and its corresponding lower 
+case letter are equivalent.
+.P
+New passwords must differ from the old by at least three characters.
+For comparison purposes, an upper case letter and its corresponding lower 
+case letter are equivalent.
+.RE
+.P
+One whose effective user ID is zero is called a super-user; see 
+.IR id (1),
+and 
+.IR su (1).
+Super-users may change any password; hence, 
+.IR passwd
+does not prompt
+super-users for the old password.
+Super-users are not forced to comply with password aging and password  
+construction requirements.
+A super-user can create a null password by entering a carriage return in 
+response to the prompt for a new password.
+.SH FILES
+/etc/passwd
+.SH "SEE ALSO"
+login(1), id(1), su(1).
+.br
+crypt(3C), passwd(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)passwd.1	6.2 of 9/2/83

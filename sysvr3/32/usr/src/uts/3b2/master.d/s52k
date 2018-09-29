@@ -1,0 +1,24 @@
+*
+*
+*#ident	"@(#)3b2s52k:master.d/s52k	10.1"
+*
+* s52k
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+oxj	-	s52k	-	-	-
+						s52kbuf[NF2KBUF] (%0x38)
+						s52kbuffers[(NF2KBUF+1)*2048] (%c)
+						s52kfreecnt(%i)={NF2KBUF}
+						s52khbuf[NHF2KBUF] (%0x10)
+						s52khash(%i)={NHF2KBUF}
+						s52kflag(%l) ={FLAGF2K}
+						s52kname(%15c)= {NAMEF2K}
+						s52knotfy(%l) = {NOTFYF2K}
+
+$$$
+
+NF2KBUF = 100
+NHF2KBUF = 64
+FLAGF2K =  0
+NAMEF2K = "S52K"
+NOTFYF2K = 0

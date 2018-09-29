@@ -1,0 +1,33 @@
+#	@(#)make.order	1.1
+#
+# This shell script, which was extracted from the now obsolete pdp11/libc.rc,
+# is used to generate the correct ordering for the object modules in a
+# pdp11 C library archive.
+#
+
+# The following is intended to prevent cycles in the topological sort....
+
+lorder *.o | sort >bb$$
+
+comm -23 bb$$ - <<END >aa$$
+cuexit.o flsbuf.o
+cvt.o fltpr.o
+doprnt.o fltpr.o
+ecvt.o fltpr.o
+gcvt.o fltpr.o
+END
+
+cat - aa$$ <<END | tsort >objlist
+cvt.o doprnt.o
+flsbuf.o cuexit.o
+fltpr.o cvt.o
+fprintf.o fltpr.o
+printf.o fltpr.o
+sprintf.o fltpr.o
+END
+
+if [ ! $? = 0 ]
+then
+	echo "tsort failure"
+	exit
+fi

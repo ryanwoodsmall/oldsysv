@@ -1,0 +1,410 @@
+'\" t
+.\" --- 2/83
+.TH VI 1
+.UC 4
+.SH NAME
+vi \- screen-oriented (visual) display editor based on ex
+.SH SYNOPSIS
+.B vi
+[
+.B \-t
+.I tag\^
+] [
+.B \-r
+.I file\^
+]
+[
+\fB\-w\fIn\fR
+]
+[
+.B \-R
+] [
+\fB+\fR\fIcommand\fR
+]  name ...
+.br
+.B view
+[
+.B -t
+.I tag\^
+] [
+.B \-r
+.I file\^
+]
+[
+\fB\-w\fIn\fR
+]
+[
+.B \-R
+] [
+\fB+\fR\fIcommand\fR
+]  name ...
+.br
+.B vedit
+[
+.B \-t
+.I tag\^
+] [
+.B \-r
+.I file\^
+]
+[
+\fB\-w\fIn\fR
+]
+[
+.B \-R
+] [
+\fB+\fR\fIcommand\fR
+]  name ...
+.br
+.SH DESCRIPTION
+.I Vi\^
+(visual) is a display-oriented text editor based on
+an underlying line editor
+.IR ex (1).
+It is possible to use
+the command mode of
+.I ex\^
+from within
+.I vi\^
+and vice-versa.
+.PP
+When using 
+.IR vi ,
+changes you make to the file are reflected in what you see on your
+terminal screen.
+The position of the cursor on the screen indicates 
+the position within the file.
+.PP
+.SH INVOCATION
+The following invocation options are interpreted by
+.IR vi :
+.TP 15
+\f3\-t \f2tag\f\^
+Edit the file containing the 
+.I tag\^
+and position the editor at its definition.
+.TP
+.BI \-r file\^
+Recover
+.I file\^
+after an editor or system crash.
+If
+.I file\^ 
+is not specified a list of all 
+saved files will be printed.
+.TP
+.BI \-w n\^
+Set the default window size to
+.I n\^.
+This is useful when using the editor over a slow speed line.
+.TP
+.B \-R
+Read only mode; the
+.B readonly
+flag is set, preventing accidental overwriting of the file.
+.TP
+.BI \+ command
+The specified
+.I ex\^
+command is interpreted before editing begins.
+.PP
+The 
+.I name\^
+argument indicates files to be edited.
+.PP
+The
+.I view\^
+invocation is the same as
+.I vi\^
+except that the
+.B readonly
+flag is set.
+.PP
+The
+.I vedit\^
+invocation is intended for beginners.
+The
+.B report
+flag is set to 1, and the
+.B showmode
+and
+.B novice
+flags are set.
+These defaults make it easier to get started learning the editor.
+.SH VI MODES
+.TP 15 
+Command
+Normal and initial mode.  Other modes return to command mode
+upon completion.
+ESC (escape) is used to cancel a partial command.
+.TP
+Input
+Entered by the following options \fBa i A I o O c C s S\fP \fBR\fP.
+Arbitrary text may then be entered. 
+Input mode is normally terminated with ESC character,
+or abnormally with interrupt.
+.TP
+Last line
+Reading input for \fB: / ?\fP or \fB!\fP; terminate
+with  CR to execute, interrupt to cancel.
+.SH "COMMAND SUMMARY"
+.SS "Sample commands"
+.TS
+lw(1.5i)b lw(1.7i).
+\(<- \(da \(ua \(->	arrow keys move the cursor
+h j k l	same as arrow keys
+i\fItext\fP\fRESC\fP	insert text \fIabc\fP
+cw\fInew\fP\fRESC\fP	change word to \fInew\fP
+ea\fIs\fP\fRESC\fP	pluralize word
+x	delete a character
+dw	delete a word
+dd	delete a line
+3dd	... 3 lines
+u	undo previous change
+ZZ	exit vi, saving changes
+:q!\fBCR\fP	quit, discarding changes
+/\fItext\fBCR\fR	search for \fItext\fP
+^U ^D	scroll up or down
+:\fIex cmd\fBCR\fR	any ex or ed command
+.TE
+.SS "Counts before vi commands"
+Numbers may be typed as a prefix to some commands.
+They are interpreted in one of these ways.
+.TS
+lw(1.5i) lw(1.7i)b.
+line/column number	z  G  |	
+scroll amount	^D  ^U
+repeat effect	\fRmost of the rest\fP
+.TE
+.SS "Interrupting, canceling"
+.TS
+aw(0.75i)b aw(1.6i).
+\fBESC\fP	end insert or incomplete cmd
+^?	(delete or rubout) interrupts
+^L	reprint screen if \fB^?\fR scrambles it
+^R	reprint screen if ^L is \(-> key
+.TE
+.SS "File manipulation"
+.TS
+aw(0.75i)b aw(1.6i).
+:w\fBCR\fP	write back changes
+:q\fBCR\fP	quit
+:q!\fBCR\fP	quit, discard changes
+:e \fIname\fP\fBCR\fP	edit file \fIname\fP
+:e!\fBCR\fP	reedit, discard changes
+:e + \fIname\fP\fBCR\fP	edit, starting at end
+:e +\fIn\fR\fBCR\fP	edit starting at line \fIn\fR
+:e #\fBCR\fP	edit alternate file
+\^\^	synonym for \fB:e #\fP
+:w \fIname\fP\fBCR\fP	write file \fIname\fP
+:w! \fIname\fP\fBCR\fP	overwrite file \fIname\fP
+:sh\fBCR\fP	run shell, then return
+:!\fIcmd\fP\fBCR\fP	run \fIcmd\fR, then return
+:n\fBCR\fP	edit next file in arglist
+:n \fIargs\fP\fBCR\fP	specify new arglist
+^G	show current file and line
+:ta \fItag\fP\fBCR\fP	to tag file entry \fItag\fP
+^]	\fB:ta\fP, following word is \fItag\fP
+.TE
+In general, any
+.I ex\^
+or
+.I ed\^
+command (such as
+.I substitute
+or
+.IR global )
+may be typed, preceded by a colon and followed by a \fBCR\fP.
+.bp
+.SS "Positioning within file"
+.TS
+aw(0.75i)b aw(1.6i).
+^F	forward screen
+^B	backward screen
+^D	scroll down half screen
+^U	scroll up half screen
+G	go to specified line (end default)
+/\fIpat\fR	next line matching \fIpat\fR
+?\fIpat\fR	prev line matching \fIpat\fR
+n	repeat last \fB/\fR or \fB?\fR
+N	reverse last \fB/\fR or \fB?\fR
+/\fIpat\fP/+\fIn\fP	nth line after \fIpat\fR
+?\fIpat\fP?\-\fIn\fP	nth line before \fIpat\fR
+]]	next section/function
+[[	previous section/function
+(	beginning of sentence
+)	end of sentence
+{	beginning of paragraph
+}	end of paragraph
+%	find matching \fB( ) {\fP or \fB}\fP
+.TE
+.SS "Adjusting the screen"
+.TS
+aw(0.75i)b aw(1.6i).
+^L	clear and redraw
+^R	retype, eliminate @ lines
+z\fBCR\fP	redraw, current at window top
+z\-\fBCR\fP	... at bottom
+z\|.\fBCR\fP	... at center
+/\fIpat\fP/z\-\fBCR\fP	\fIpat\fP line at bottom
+z\fIn\fP\|.\fBCR\fP	use \fIn\fP line window
+^E	scroll window down 1 line
+^Y	scroll window up 1 line
+.TE
+.SS "Marking and returning
+.TS
+aw(0.5i)b aw(2.0i).
+\(ga\(ga	move cursor to previous context
+\(aa\(aa	... at first non-white in line
+m\fIx\fP	mark current position with letter \fIx\fP
+\(ga\fIx\fP	move cursor to mark \fIx\fP
+\(aa\fIx\fP	... at first non-white in line
+.TE
+.SS "Line positioning"
+.TS
+aw(0.5i)b aw(2.0i).
+H	top line on screen
+L	last line on screen
+M	middle line on screen
++	next line, at first non-white
+\-	previous line, at first non-white
+\fBCR\fP	return, same as +
+\(da \fRor\fP j	next line, same column
+\(ua \fRor\fP k	previous line, same column
+.TE
+.bp
+.SS "Character positioning"
+.TS
+aw(0.5i)b aw(2.0i).
+^	first non white
+0	beginning of line
+$	end of line
+h \fRor\fP \(->	forward
+l \fRor\fP \(<-	backwards
+^H	same as \fB\(<-\fP
+\fRspace\fP	same as \fB\(->\fP
+f\fIx\fP	find \fIx\fP forward
+F\fIx\fP	\fBf\fR backward
+t\fIx\fP	upto \fIx\fP forward
+T\fIx\fP	back upto \fIx\fP
+;	repeat last \fBf F t\fP or \fBT\fP
+,	inverse of \fB;\fP
+|	to specified column
+%	find matching \fB( { )\fP or \fB}\fR
+.TE
+.SS "Words, sentences, paragraphs"
+.TS
+aw(0.5i)b aw(2.0i).
+w	word forward
+b	back word
+e	end of word
+)	to next sentence
+}	to next paragraph
+(	back sentence
+{	back paragraph
+W	blank delimited word
+B	back \fBW\fP
+E	to end of \fBW\fP
+.TE
+.SS "Corrections during insert"
+.TS
+aw(.5i)b aw(2.0i).
+^H	erase last character
+^W	erase last word
+\fRerase\fP	your erase, same as \fB^H\fP
+\fRkill\fP	your kill, erase input this line
+\e	quotes \fB^H\fR, your erase and kill
+\fBESC\fP	ends insertion, back to command
+^?	interrupt, terminates insert
+^D	backtab over \fIautoindent\fP
+\(ua^D	kill \fIautoindent\fP, save for next
+0^D	... but at margin next also
+^V	quote non-printing character
+.TE
+.SS "Insert and replace"
+.TS
+aw(.5i)b aw(2.0i).
+a	append after cursor
+i	insert before cursor
+A	append at end of line
+I	insert before first non-blank
+o	open line below
+O	open above
+r\fIx\fP	replace single char with \fIx\fP
+R\fItext\fBESC\fR	replace characters
+.TE
+.bp
+.SS "Operators"
+Operators are followed by a cursor motion, and affect
+all text that would have been moved over.
+For example, since
+.B w
+moves over a word,
+.B dw
+deletes the word that would be moved over.
+Double the operator, e.g.,
+.B dd
+to affect whole lines.
+.TS
+aw(0.5i)b aw(2.0i).
+d	delete
+c	change
+y	yank lines to buffer
+<	left shift
+>	right shift
+!	filter through command
+\&\=	indent for \s-2LISP\s0
+.TE
+.SS "Miscellaneous Operations"
+.TS
+aw(0.5i)b aw(2.0i).
+C	change rest of line (\fBc$\fR)
+D	delete rest of line (\fBd$\fR)
+s	substitute chars (\fBcl\fR)
+S	substitute lines (\fBcc\fR)
+J	join lines
+x	delete characters (\fBdl\fR)
+X	... before cursor (\fBdh\fR)
+Y	yank lines (\fByy\fR)
+.TE
+.SS "Yank and Put"
+Put inserts the text most recently deleted or yanked.
+However, if a buffer is named,
+the text in that buffer is put instead.
+.TS
+aw(0.5i)b aw(2.0i).
+p	put back text after cursor
+P	put before cursor
+"\fIx\fPp	put from buffer \fIx\fP
+"\fIx\fPy	yank to buffer \fIx\fP
+"\fIx\fPd	delete into buffer \fIx\fP
+.TE
+.SS "Undo, Redo, Retrieve"
+.TS
+aw(0.5i)b aw(2.0i).
+u	undo last change
+U	restore current line
+\fB.\fP	repeat last change
+"\fId\fP\|p	retrieve \fId\fP'th last delete
+.TE
+.SH AUTHOR
+.I Vi
+and
+.I ex
+were developed by 
+The University of California,
+Berkeley California,
+Computer Science Division,
+Department of Electrical Engineering and Computer Science.
+.SH "SEE ALSO"
+ex (1).
+.br
+\f2\s-1UNIX\s+1 System V Editing Guide\fR.
+.SH BUGS
+.PP
+Software tabs using \fB^T\fR work only immediately after the
+.I autoindent.
+.PP
+Left and right shifts on intelligent terminals do not make use of
+insert and delete character operations in the terminal.
+.\"	@(#)vi.1	6.2 of 9/2/83

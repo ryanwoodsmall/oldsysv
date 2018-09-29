@@ -1,0 +1,177 @@
+#ident	"@(#)rfs.admin:resrcmgmt/advmgmt/unadvnow	1.8"
+#menu# unadvertise local resources immediately (if RFS is running)
+
+#help#
+#help#	When you no longer want to share a resource with other machines
+#help#	you withdraw your resource by unadvertising it.  
+#help#
+#help#	The subcommand "unadvnow" allows you to immediately unadvertise
+#help#	local resources when RFS is running.  When you unadvertise a 
+#help#	resource, no new client machines may access the resource.  
+#help#	Unadvertising does not take a resource away from client machines 
+#help#	that already have the resource mounted unless you force the 
+#help#	unmount to occur.  
+#help#	
+#help#	NOTE: This subcommand does NOT remove resources from the 
+#help#	Automatic Advertise List.  Use the subcommand "unadvauto"
+#help#	to remove resources from this list.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/unadv$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo '\n\n\t\tUNADVERTISE LOCAL RESOURCES IMMEDIATELY'
+
+# Define messages and questions
+DEF_INTRO="
+When you no longer want to share a resource with client machines you 
+unadvertise the resource.  This subcommand lets you unadvertise currently
+advertised resources.  
+
+When a resource is unadvertised, no new clients may access it.  
+Unadvertising does not take a resource away from client machines that 
+have already mounted it.  If any clients have mounted the resource you are
+unadvertising, the subcommand lets you force the resource to be unmounted.
+
+NOTE:  This subcommand does NOT remove resources from the Automatic 
+Advertise List.  Use the subcommand \"unadvauto\" to remove resources
+from this list."
+
+DEF_SYM_NAME="
+Enter the resource identifier that was assigned to the resource when 
+it was advertised.  Resource identifiers must be 1 to 14 printable 
+characters.  If you try to enter a resource identifier that is not 
+advertised, the  system will warn you and show you a list of the 
+locally advertised resources."
+
+QUEST3="
+Enter the resource identifier of the resource to be 
+unadvertised [?, q]:"
+
+FORCE_Q="
+Do you want to force the resource to be unmounted from these 
+client machines?"
+
+REDOQ="
+Do you want to unadvertise another resource?"
+
+CONT="
+Do you want to continue unadvertising the resource?"
+
+#initialization
+cflags="-qq -k$$"
+
+# Print description
+echo "$DEF_INTRO\n"
+	
+# Determine if RFS is running.  If not, then print the appropriate error message.
+if /usr/lbin/rfsrunning
+then
+	: OK !!!
+else
+	echo "\nRFS is NOT currently running on your machine." 
+	echo "There are no local resources currently advertised.\n"
+	exit
+fi
+
+# Determine if anything is currently advertised.  If not, then print
+# appropriate error message
+/usr/bin/adv >/usr/tmp/unadv$$ 2>/dev/null
+if [ ! -s /usr/tmp/unadv$$ ]
+then
+	echo "\nThere are no local resources currently advertised."
+	exit
+fi
+
+while /bin/true
+do
+	# Get the symbolic resource name
+	res=`/usr/lbin/checkre $cflags -fe			\
+	-H"$DEF_SYM_NAME"					\
+	"$QUEST3"						\
+	'^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+	'^[^ \.\/:]*$'  'The resource identifier must not contain a space, ":", "." or a "/".'`
+	
+	# determine if the resource is advertised; if not then print the
+	# resources that are currently advertised and ask the user to re-enter
+	# another resource
+	/usr/bin/adv | /bin/grep "^$res " 2>/dev/null 1>&2
+	if [ $? -ne 0 ] 
+	then
+		echo "\"$res\" is not currently advertised.\n"
+		echo "Local resource now advertised are:\n"
+		/usr/bin/adv | /bin/sed "s/ .*//
+			/^$/d
+			s/^/		/" | pg -e -p"Enter <RETURN> to continue:"
+		continue
+	else
+	# Determine if any clients are currently using the resource and ask to
+	# forcibly unadvertise them.  If no one is using the resource then just
+	# unadvertise them.
+		WARNMESS="
+Unadvertising a resource does not unmount it from any client machines that 
+may have it mounted.  The following machines have mounted \"$res\":"
+		clients=`/usr/bin/rmntstat -h "$res" 2>/dev/null | awk ' {print $3 }'`
+		# 
+		# Ask if you want to force any clients off the
+		# advertised resource.
+		#
+		if [ "$clients" != "" ]
+		then
+			echo "$WARNMESS"
+			echo "$clients" | /bin/sed "s/^/		/" | pg -e -p"Enter <RETURN> to continue:"
+			if /usr/lbin/checkyn $cflags -f "$FORCE_Q"
+			then
+				/usr/bin/fumount $res 2>/usr/tmp/unadv$$
+				if [ $? -ne 0 ]
+				then
+					echo "\nWARNING:\c"
+					/bin/sed "s/^.*fumount://" /usr/tmp/unadv$$
+				else
+					echo "\nResource \"$res\" has been unadvertised."
+					echo "\nResource \"$res\" has been
+unmounted from clients."
+				fi
+			elif /usr/lbin/checkyn $cflags -f "$CONT"
+			then
+				/usr/bin/unadv $res 2>/usr/tmp/unadv$$
+				if [ $? -ne 0 ]
+				then
+					echo "\nWARNING:\c"
+					/bin/sed "s/^.*unadv://" /usr/tmp/unadv$$
+				else
+					echo "\nResource \"$res\" has been unadvertised."
+				fi
+			else
+				echo "\nResource \"$res\" has NOT been unadvertised.\n"
+			fi
+		else
+			/usr/bin/unadv $res 2>/usr/tmp/unadv$$
+			if [ $? -ne 0 ]
+			then
+				echo "\nWARNING:\c"
+				/bin/sed "s/^.*unadv://" /usr/tmp/unadv$$
+			else
+				echo "\nResource \"$res\" has been unadvertised."
+			fi
+		fi
+	fi
+
+	# Check to see if there any more resources advertised; if not, then
+	# print the appropriate error message.  Else, ask the user whether to
+	# repeat the sequence.
+	/usr/bin/adv >/usr/tmp/unadv$$
+	if [ ! -s /usr/tmp/unadv$$ ]
+	then
+		echo "\nThere are no local resources currently advertised.\n"
+		exit
+	elif /usr/lbin/checkyn $cflags -f "$REDOQ"
+	then
+		continue
+	else
+		break
+	fi
+done

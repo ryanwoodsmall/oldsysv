@@ -1,0 +1,96 @@
+#ident	"@(#)sadmin:admin/menu/ttymgmt/mklineset	2.4"
+#menu# create new tty line settings and hunt sequences
+#help#
+#help#	This subcommand helps you create tty line setting entries.  You
+#help#	might want to add line settings that are not in the current set or
+#help#	create hunt sequences with only specific line settings in them.
+#help#	The created hunt sequences are circular; stepping past the last
+#help#	setting puts you on the first.
+
+flags="-q q -k $$"
+
+trap exit 1 2 15
+trap '	trap "" 1 2 15
+	rm -f /tmp/$$mkttybaud' 0
+
+list=`sed -n 's/[ #].*//p' /etc/gettydefs  |  sort -n`
+bauds=`sed -n '/^B[1-9][0-9]*	/s/B\([0-9]*\).*/\1/p' ${MENUTOP:?}/gettyvalues  |
+	sort -n  |  pr -t -o8 -w72 -7`
+prompt='login: '
+unset firstname
+
+while true
+do
+	echo ''
+	name=`checkre ${flags} -fe -r -H '
+	This is the name by which the tty line setting is known.  Usually it
+	has some relationship to the baud rate, but that is just common
+	practice.  The name must be 1 to 9 letters or numbers.' \
+	'Enter the name of the new tty line setting [?, q]:' \
+		'^[a-zA-Z0-9]\{1,9\}$' 'Name must be 1 to 9 letters or numbers.'`
+	if [ `echo "${list}"  |  grep "^${name}$"` ]
+	then
+		echo "	\"${name}\" is already used, choose another.
+	Existing names:"
+		echo "${list}"  |  sort -n  |  pr -o8 -t -w72 -7
+		continue
+	fi
+	if [ -n "${firstname}" ]
+	then
+		echo "${name}\\n" >> /tmp/$$mkttybaud
+	else
+		firstname=${name}
+	fi
+	list="${list}
+${name}"
+	baud=`checklist ${flags} -fe -H "Available baud rates:
+${bauds}" \
+		'Select a baud rate [?, q]:'  ${bauds}`
+	prompt=`checkre ${flags} -fe -D "${prompt}" -H '
+	This is the message printed the first time the login is requested.' \
+		"Enter the login prompt you want (default = \"${prompt}\") [?, q]:" \
+		-R '#'	'The "#" character may not be part of the prompt.'`
+	echo "${name}# B${baud} HUPCL # B${baud} SANE IXANY HUPCL TAB3 #${prompt}#\\c" >>/tmp/$$mkttybaud
+	checkyn ${flags} -f \
+		'Do you want to add another tty line setting to the sequence?'  ||
+		break
+done
+echo "${firstname}\\n" >>/tmp/$$mkttybaud
+echo '
+Here is the tty line setting sequence you created:
+'
+sed -n '/./s/#.*//p' /tmp/$$mkttybaud  |  pr -t -w80 -8  |
+	sed '1s/^[^ 	]*$/&	(does not sequence)/'
+ed - /tmp/$$mkttybaud <<-!
+	H
+	g/^\$/d
+	,s/^/Line Setting:		/
+	,s/ *# */#/g
+	,s/  */ /g
+	,s/#/\\
+	\	Initial Flags:	/
+	,s/#/\\
+	\	Final Flags:	/
+	,s/#/\\
+	\	Login Prompt:	/
+	,s/#/\\
+	\	Next Setting:	/
+	,p
+	v/ Flags:	/d
+	,s/.* Flags:	//
+	,s/[ 	][ 	]*/\\
+	/g
+	,g/^[ 	]*\$/d
+	,s;.*;/^&	/;
+	w !sort -u|ed - \${MENUTOP}/gettyvalues
+!
+if  checkyn ${flags} -f 'Do you want to install this sequence?'
+then
+	cat /tmp/$$mkttybaud >>/etc/gettydefs  || {
+		admerr $0 Cannot write into /etc/gettydefs.
+		exit 1
+	}
+	echo Installed.
+else
+	echo Not installed.
+fi

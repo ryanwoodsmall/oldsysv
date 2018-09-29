@@ -1,0 +1,28 @@
+
+\Spack\S:  Examples
+
+        pack story
+
+    Recodes the file "story" and renames the compressed file "story.z".
+
+    ---------------------------------------------------------------------------
+
+        pack -f BOOK/*
+
+    Recodes each file in the directory "BOOK" even if the files are smaller
+    than three blocks.  Renames every file with a ".z" suffix.
+
+
+
+
+
+    ---------------------------------------------------------------------------
+
+        pack - story
+
+    Recodes the file "story", renames it "story.z", and prints the percent
+    compression of the file, the savings in bytes, the structure of the file,
+    the number of characters used to recode the file the number of different
+    characters in the input, the number of bits of information that are coded
+    in every byte, and the theoretical number of bits that could have been
+    recoded in every byte.

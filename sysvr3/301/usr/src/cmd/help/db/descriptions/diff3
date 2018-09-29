@@ -1,0 +1,22 @@
+
+\Sdiff3\S:  Description
+
+Syntax Summary:
+      diff3 [-3] [-e] [-x] [-3] file_name1 file_name2 file_name3
+
+         where:  file_names  are names of files.
+
+Description:
+     \Sdiff3\S stands for "differential 3 way" file comparison.  \Sdiff3\S
+     compares the contents of three files.  Use \Sdiff3\S when you want to
+     identify how three files are different.  \Sdiff3\S lists the type of
+     changes necessary to make 3 files identical under one of four headings.
+     When <file_name1> is different \Sdiff3\S lists the changes under the
+     heading "====1". When <file_name2> or <file_name3> is different, \Sdiff3\S
+     lists the changes under the headings "====2", or "====3".  \Sdiff3\S
+     lists the changes under the heading "====" when all three files are
+     different.  \Sdiff3\S can create scripts that ed(1) uses to incorporate
+     differences between the files into <file_name1>.  
+     See also:  bdiff(1), comm(1), cmp(1), diff(1), dircmp(1), and sdiff(1)
+     for commands with functions similar to \Sdiff3\S.
+

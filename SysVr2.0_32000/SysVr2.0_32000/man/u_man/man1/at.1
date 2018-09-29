@@ -1,0 +1,210 @@
+.TH AT 1
+.SH NAME
+at, batch \- execute commands at a later time
+.SH SYNOPSIS
+.B at
+.I time
+[
+.I date
+]
+[
+.B +
+.I increment
+]
+.br
+.B at
+.IR \-r job ...
+.br
+.B at
+.IR \-l [ job ... ]
+.P
+.B batch
+.SH DESCRIPTION
+\fIAt\fP and \fIbatch\fP read commands from standard input to be
+executed at a later time.
+\fIAt\fP allows you to specify when the commands should be executed,
+while 
+jobs queued with \fIbatch\fP will execute
+when system load level permits.
+.I At
+\fB\-r\fR removes jobs previously scheduled with
+.I at.
+The 
+\fB\-l\fR
+option reports all jobs scheduled for the invoking user.
+.P
+Standard output and standard error output are
+mailed to the user unless they are redirected elsewhere.
+The shell environment variables, current directory,
+umask, and ulimit are retained when the commands
+are executed.
+Open file descriptors, traps, and priority are lost.
+.P
+Users are permitted to use
+.I at
+if their name appears in the file
+.BI /usr/lib/cron/at.allow .
+If that file does not exist,
+the file
+.B /usr/lib/cron/at.deny
+is checked to determine if the user
+should be denied access to
+.I at.
+If neither file exists, only root is allowed to
+submit a job.
+If either file is \f3at.deny\fR, global usage is permitted.
+The allow/deny files consist of one user name
+per line.
+.P
+The
+.I time
+may be specified as 1, 2, or 4 digits.
+One and two digit numbers are taken to be hours,
+four digits
+to be hours and minutes.
+The time may alternately be specified as two numbers
+separated by a colon, meaning
+.IR hour : minute .
+A suffix
+.B am
+or
+.B pm
+may be appended;
+otherwise a 24\-hour clock time is understood.
+The suffix
+.B zulu
+may be used to indicate GMT.
+The special names
+.BR noon ,
+.BR midnight ,
+.BR now ,
+and
+.B next
+are also recognized.
+.P
+An optional \fIdate\fP may be specified as either
+a month name followed by a day number
+(and possibly year number preceded by an optional comma)
+or
+a day of the week (fully spelled or abbreviated to three characters).
+Two special ``days'',
+.B today
+and
+.B tomorrow
+are recognized.
+If no
+.I date
+is given,
+.B today
+is assumed if the given hour is greater than the current hour
+and
+.B tomorrow
+is assumed if it is less.
+If the given month is less than the current month (and no year is
+given), next year is assumed.
+.P
+The optional
+.I increment
+is simply
+a number
+suffixed by one of the following:
+.BR minutes ,
+.BR hours ,
+.BR days ,
+.BR weeks ,
+.BR months ,
+or
+.BR years .
+(The singular form is also accepted.)
+.P
+Thus legitimate commands include:
+.P
+.RS 10
+at 0815am Jan 24
+.br
+at 8:15am Jan 24
+.br
+at now + 1 day
+.br
+at 5 pm Friday
+.RE
+.P
+\fIAt\fP and \fIbatch\fP write the job number and schedule time to standard
+error.
+.P
+.I Batch
+submits a batch job.
+It is almost equivalent to ``at~now'', but not quite.
+For one, it goes into a different queue.
+For another, ``at~now'' will respond with the
+error message too~late.
+.P
+.I At
+\f3\-r\fR
+removes jobs previously scheduled by
+.I at
+or
+.IR batch .
+The job number is the number given to you previously by the
+.I at
+or
+.I batch
+command.
+You can also get job numbers by typing
+.I at
+\f3\-l\fR.
+You can only remove your own jobs unless you are the super-user.
+.SH EXAMPLES
+The \fIat\fP and \fIbatch\fP commands read
+from standard input the commands to be executed
+at a later time.
+.IR Sh (1)
+provides different ways of specifying standard input.
+Within your commands, it may be useful to redirect standard output.
+.sp
+This sequence can be used at a terminal:
+.nf
+.in +1i
+batch
+nroff \fIfilename\fP >\fIoutfile\fP
+<control-D> (hold down 'control' and depress 'D')
+.in -1i
+.sp
+.fi
+This sequence, which demonstrates redirecting standard
+error to a pipe, is useful in a shell procedure (the sequence of
+output redirection specifications is significant):
+.nf
+.in +1i
+batch <<!
+nroff \fIfilename\fP 2>&1 >\fIoutfile\fP | mail \fIloginid\fP
+!
+.in -1i
+.sp
+.fi
+To have a job reschedule itself, invoke \fIat\fP from within the
+shell procedure, by including code similar to the following within the shell file:
+.nf
+.in +1i
+echo "sh \fIshellfile\fP" | at 1900 thursday next week
+.in -1i
+.fi
+.sp
+.SH FILES
+/usr/lib/cron - 		main cron directory
+.br
+/usr/lib/cron/at.allow -	list of allowed users 
+.br
+/usr/lib/cron/at.deny - 	list of denied users 
+.br
+/usr/lib/cron/queue - 	scheduling information
+.br
+/usr/spool/cron/atjobs -	spool area
+.SH SEE ALSO
+kill(1), mail(1), nice(1), ps(1), sh(1).
+.br
+cron(1M) in the
+\f2\s-1UNIX\s+1 System V Administrator Reference Manual\fR.
+.SH DIAGNOSTICS
+Complains about various syntax errors and times out of range.
+.\"	@(#)at.1	6.2 of 9/2/83

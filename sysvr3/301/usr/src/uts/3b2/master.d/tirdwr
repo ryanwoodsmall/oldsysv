@@ -1,0 +1,9 @@
+*#ident	"@(#)kern-port:master.d/tirdwr	10.3"
+*
+* TIRDWR  TLI read/write interface module
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+m	-	trw
+						trw_trw[#C] (%0xc)
+						trw_cnt (%i) = { #C }
+$$

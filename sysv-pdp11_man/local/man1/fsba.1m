@@ -1,0 +1,33 @@
+.TH FSBA 1M "not on PDP-11"
+.SH NAME
+fsba \- file system block analyzer
+.SH SYNOPSIS
+.B fsba     
+file-system ...
+.SH DESCRIPTION
+.I Fsba\^
+determines the number of extra sectors
+(1 sector has 512 bytes)
+needed when the file system logical
+block size is increased from 512 bytes
+per block to 1024 bytes/block.
+.I File-system\^
+should be specified by device name (e.g.,
+.BR /dev/rp11 ).
+.PP
+.I Fsba\^
+determines how many sectors are currently
+allocated for the 512 bytes/block file system,
+and how many sectors will be required for the
+1024 bytes/block converted file system.
+.I Fsba\^
+also prints out the number of  allocated
+and free i-nodes for each
+.I file system.\^
+.PP
+If the number of free sectors
+for the 1024 bytes/block file system 
+is negative, this indicates the file-system 
+is too large to convert to 1024 bytes/block.
+.SH SEE ALSO
+fs(4).

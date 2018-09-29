@@ -1,0 +1,17 @@
+
+\Sunpack\S:  Description
+
+Syntax Summary:  unpack file_name ...
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Sunpack\S expands files that you compressed with pack(1).  \Sunpack\S
+     expands the compressed files whether you refer to them as <file_name.z>
+     or <file_name>.  \Sunpack\S strips the ".z" from the file name when it
+     unpacks it.  \Sunpack\S lists the names of the files that it cannot
+     unpack.  \Sunpack\S will not work if a file is not a product of pack(1),
+     the unpacked file name already exists, or because it cannot create the
+     unpacked file name.  See also:  pack(1), pcat(1) for commands that 
+     might be used with \Sunpack\S.
+

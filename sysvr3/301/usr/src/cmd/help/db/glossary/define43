@@ -1,0 +1,18 @@
+
+\S option:  default-option \S
+
+An option is an "argument"\S*\S that changes the execution of the command.
+Options are currently one or more characters, and all options must be 
+preceded on the command line by a hyphen (-), plus (+), or an equal sign (=).
+In the future, all options will be one character and will be preceded by a 
+hyphen (-) only.  On the command line
+                                       pr -p temp
+
+the "p" is the option and causes the pr(1) command to pause and beep before
+it prints each page of output.  When you do not specify any options, 
+the command executes according to its default-options.  For example, 
+the file "temp" prints without stopping when you type the command
+
+                                        pr temp
+
+\S*\S defined in the \Sglossary\S

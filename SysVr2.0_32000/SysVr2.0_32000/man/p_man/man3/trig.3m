@@ -1,0 +1,101 @@
+.TH TRIG 3M 
+.SH NAME
+sin, cos, tan, asin, acos, atan, atan2 \- trigonometric functions
+.SH SYNOPSIS
+.B #include <math.h>
+.PP
+.B double sin (x)
+.br
+.B double x;
+.PP
+.B double cos (x)
+.br
+.B double x;
+.PP
+.B double tan (x)
+.br
+.B double x;
+.PP
+.B double asin (x)
+.br
+.B double x;
+.PP
+.B double acos (x)
+.br
+.B double x;
+.PP
+.B double atan (x)
+.br
+.B double x;
+.PP
+.B double atan2 (y, x)
+.br
+.B double y, x;
+.SH DESCRIPTION
+.IR Sin ,
+.I cos\^
+and
+.I tan\^
+return respectively the sine, cosine and tangent of their argument,
+.IR x ,
+measured in radians.
+.PP
+.I Asin\^
+returns the arcsine of
+.IR x ,
+in the range \-\(*p/2 to \(*p/2.
+.PP
+.I Acos\^
+returns the arccosine of
+.IR x ,
+in the range 0 to \(*p.
+.PP
+.I Atan\^
+returns the arctangent of
+.IR x ,
+in the range \-\(*p/2 to \(*p/2.
+.PP
+.I Atan2\^
+returns the arctangent of
+.IR y / x ,
+in the range \-\(*p to \(*p,
+using the signs of both arguments
+to determine the quadrant of the return value.
+.SH DIAGNOSTICS
+.IR Sin ,
+.IR cos ,
+and
+.I tan\^
+lose accuracy when their argument is far from zero.
+For arguments sufficiently large,
+these functions return zero when there would
+otherwise be a complete loss of significance.
+In this case a message indicating \s-1TLOSS\s+1 error is printed
+on the standard error output.
+For less extreme arguments causing partial loss of significance,
+a \s-1PLOSS\s+1 error is generated but no message is printed.
+In both cases,
+.I errno\^
+is set to
+.SM
+.B ERANGE.
+.PP
+If the magnitude of the argument of
+.IR asin " or " acos
+is greater than one,
+or if both arguments of
+.I atan2\^
+are zero,
+zero is returned and
+.I errno\^
+is set to
+.SM
+.BR EDOM .
+In addition, a message indicating \s-1DOMAIN\s+1 error is
+printed on the standard error output.
+.PP
+These error-handling procedures may be changed with the function
+.IR matherr (3M).
+.SH SEE ALSO
+matherr(3M).
+.\"	%W% of %G%

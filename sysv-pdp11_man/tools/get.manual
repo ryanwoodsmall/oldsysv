@@ -1,0 +1,92 @@
+########
+# Check if you want to grab the entries for editing
+#
+if [ $# = 3  -a  "$1" = "-e" ]; then
+	echo "Performing a get for editing."
+	ED=-e
+	shift
+else
+	echo "Getting the latest version for export (no editing)"
+	ED=""
+fi
+
+########
+# Check that two arguments are present, the sccs manual
+# and the manual for export or editing.
+#
+if [ $# != 2 ]; then
+	echo "Usage: $0 sccs-mandir edit-mandir"
+	exit 1
+fi
+
+########
+# If the directory for the sccs manual doesn't
+# exist, complain.
+#
+if [ -d $1 ]; then
+	SCCSMAN=$1
+else
+	echo "$0: $1 not a directory"
+	exit 1
+fi
+
+########
+# If the directory for the editing manual doesn't
+# exist, complain.
+#
+if [ -d $2 ]; then
+	EDITMAN=$2
+else
+	echo "$0: $2 not a directory"
+	exit 1
+fi
+
+########
+# Create the subdirectories if they do not exist
+#
+cd $EDITMAN
+for dir in local tmp altmp tools u_man a_man
+do
+	if [ ! -d $dir ]; then
+		mkdir $dir
+	fi
+done
+
+chmod 775 *
+chgrp bin *
+chown bin *
+
+for dir in 0 1 2 3 4 5 6 7 8
+do
+	if [ ! -d local/man${dir} ]; then
+		mkdir local/man${dir}
+	fi
+done
+
+for dir in 0 1 2 3 4 5 6
+do
+	if [ ! -d u_man/man${dir} ]; then
+		mkdir u_man/man${dir}
+	fi
+done
+
+for dir in 0 1 7 8
+do
+	if [ ! -d a_man/man${dir} ]; then
+		mkdir a_man/man${dir}
+	fi
+done
+
+chmod 775 local/* u_man/* a_man/*
+chgrp bin local/* u_man/* a_man/*
+chown bin local/* u_man/* a_man/*
+
+
+for dir in $EDITMAN/?_man/man? $EDITMAN/tools
+do
+	cd $dir
+	sccsdir=`echo $dir | sed "s:${EDITMAN}:${SCCSMAN}:"`
+	get $ED ${sccsdir}
+done
+echo "Remember to run mklinks for export version!"
+#	@(#)get.manual	5.3 of 5/19/82

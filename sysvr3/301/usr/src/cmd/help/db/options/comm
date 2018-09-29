@@ -1,0 +1,9 @@
+
+\Scomm\S:  Options
+
+     -1   suppresses the printing of the lines that are only in <file_name1>.
+
+     -2   suppresses the printing of the lines that are only in <file_name2>.
+
+     -3   suppresses the printing of the lines <file_name1> and <file_name2>
+          have in common.

@@ -1,0 +1,19 @@
+
+ \S Commands & Terms to Learn First \S
+
+    The most basic UNIX system commands and terms are listed here.  You
+    should understand these commands and terms before continuing.
+
+     \S UNIX Commands \S             |         \S UNIX Terms \S
+                                 |    
+     cat    ed    mv             |    argument          password
+     cd     grep  pwd            |    command           path name
+     chmod  ls    rm             |    directory         program
+     cp     mail  who            |    file              shell
+     date   mkdir                |    file system       syntax summary
+                                 |    login              UNIX system
+                                    
+     For information about a command or term, 
+           type: \Sq \S  to quit.
+           type: \Susage UNIX_command\S or \Sglossary UNIX_term\S
+           where:  UNIX_command and UNIX_term come from the lists above.

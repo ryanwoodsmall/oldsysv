@@ -1,0 +1,8 @@
+# @(#)cco	1.1
+BIN=${BIN=../../../bin}
+for i
+do prog=`echo $i | sed "s/\.c//"`
+   cc ${prog}.c  -s -o ${BIN}/${prog}
+   chmod 755 ${BIN}/${prog}
+   echo "${prog} done"
+done

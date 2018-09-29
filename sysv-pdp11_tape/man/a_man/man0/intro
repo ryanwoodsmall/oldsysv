@@ -1,0 +1,384 @@
+'\"       To get a copy of the front matter (intro, table of contents,
+'\"	  index), on your terminal, type:
+'\"              nroff [ intro ] [ tocin ] [ ptxin ]
+'\"	  To typeset a copy via GCAT, use:
+'\"		 troff [ -rs1 ] -g [ intro ] [ tocin ] [ ptxin ] | gcat
+'\"	  ("-rs1" forces small -- 6x9 inches -- format).
+'\"	  If typesetter is on-line, omit the "-g" and the "| gcat".
+.bd S B 3
+.nr )s 0
+.if t .if \ns .nr )s 1\"register )s=1 iff troff & small format; 0 otherwise
+.nr )t 0
+.if t .if !\ns .nr )t 1\"register )t=1 iff troff & large format; 0 otherwise
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 9
+.	     vs 10 \}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 10
+.	     vs 12 \}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .463i
+'	 br \}
+.ds Dt\"
+.ds Ed\"
+.ds ET\"
+.de HD
+.if t \{.po 0
+.	 lt 7.5i
+.	 if \\n()s .tl @\l@0.25i@@@\l@0.25i@\h@1i@\l@0.25i@@
+.	 if \\n()t .tl @\l@0.25i@@@\l@0.25i@@
+.	 lt
+.	 po
+'	 br \}
+.ie \\n()s 'sp 2v
+.el 'sp 3v
+.if e .tl @\s9\\*(ET\s0@@@
+.if o .tl @@@\s9\\*(ET\s0@
+.ie \\n()s 'sp 1.5v
+.el 'sp 3v
+.ns
+..
+.de FO
+'bp
+..
+.wh 0 HD
+.if \n()s .wh -3.5v FO
+.if \n()t .wh -6v FO
+.if n .wh -7v FO
+.if \n(nl .bp
+.br
+.de PP
+.if n .sp
+.if t .sp .5v
+.ne 1.1v
+..
+.hw print-out photo-type-setter
+.tr ~
+.hy 0
+.if t \{.ds ` ``
+.	 ds ' ''
+.	 ds d \-
+'	 br \}
+.if n \{.ds ` ""
+.	 ds ' ""
+.	 ds d " -- \"
+.	 na
+.	 rm ad \}
+.br
+.rs
+.ce 1000
+.if \n()t \{.sp |2.5i
+.	 ps 36
+\h'.1m'\(bs
+.	 sp |4.2i
+.	 ps
+'	 br \}
+.if \n()s .sp |3i
+.if n .sp |4.2i
+.ss 18
+.ft 3
+.ps 24
+.vs 33p
+U\s-6NIX*\s+6 System
+Administrator's Manual
+.ps
+.vs
+.sp 3.5v
+.ft
+.ps 14
+System V
+.if n .sp 4v
+.if t .sp 4v
+.ps 12
+.vs 15p
+'\"A. G. Petruccelli
+.sp .5v
+'\"W. J. Laauser
+.ce 1000
+.if \n()t .vs 12p
+.if \n()s .vs 10p
+.ft I
+'\"Editors
+.sp 4v
+.ft
+January 1983
+.br
+.ps 10
+.sp 4v
+.ft I
+.\" Not for use or disclosure outside the
+.\" Bell System except under written agreement.
+.br
+.ft
+.if n .sp \n(.tu-3v
+.if \n()t .sp \n(.tu-3v
+.if \n()s .sp \n(.tu-2.45v
+'\"Laboratory 4542
+'\"Bell Telephone Laboratories, Incorporated
+'\"Murray Hill, \s-1NJ\s+1 07974
+*\s-1UNIX\s+1 is a trademark of Bell Telephone Laboratories, Incorporated.
+.br
+.sp \n(.tu
+.ss 12
+.rs
+.if n .sp |3i
+.if \n()t .sp |3i
+.if \n()s .sp |2.45i
+Copyright \fB\^\s+8\v'.25m'\(co\v'-.25m'\s-8\|\fP1983 Western Electric Company, Incorporated.
+.br
+.sp 2v
+Portions of this document were copyrighted
+.br
+1979 Bell Telephone Laboratories, Incorporated.
+1980 Western Electric Company, Incorporated.
+.sp 1i
+.nf
+This document includes specific reference to the use of the UNIX
+System on a particular processor, the Western Electric Company 3B20S,
+which is not presently available except for internal use
+within the Bell System; however, the information contained herein is
+generally applicable to the use of the UNIX System on
+various processors which are available in the general trade.
+.fi
+.sp 1i
+PDP, VAX, DEC, UNIBUS, MASSBUS,
+.br
+and SBI are trademarks of Digital Equipment Corporation.
+.if n .sp \n(.tu-3v
+.if \n()t .sp \n(.tu-3v
+.if \n()s .sp \n(.tu-2.45v
+.ce 0
+.if \n()s .nr }I 0.97i
+.if \n()t .nr }I 1.62i
+.ll -\n(}Iu
+.in +\n(}Iu
+.ft I
+This manual was
+set on an \s-1AUTOLOGIC\s+1, Inc. \s-1APS\s+1-5
+phototypesetter driven by the \s-1TROFF\s+1
+formatter operating
+under the \s-1UNIX\s+1 system.\p
+.in -\n(}Iu
+.ll +\n(}Iu
+.ft
+.hy 14
+.ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i 6.5i
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 9
+.	     vs 10 \}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 10
+.	     vs 12 \}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .463i \}
+.if !\ns .ds Ed UNIX \|System \|V
+.if !\ns .ds Dt January \|1983
+.de FO
+.if \\n()s 'sp |\\n(.pu-1v-1p
+.if \\n()t 'sp |\\n(.pu-3v
+.if n 'sp |\\n(.pu-4v
+.if e .tl @\s9\\*(Dt@- % -@\\*(Ed\s0@
+.if o .tl @\s9\\*(Ed@- % -@\\*(Dt\s0@
+'bp
+..
+.pn 3\"INTRODUCTION
+.bp
+.ce
+\f3INTRODUCTION\fP
+.ds ET \s9\f2Introduction\fP\s0
+.sp 1v
+This manual is intended to supplement the information
+contained in the \f2U\s-1NIX\s+1 System User's Manual\fP and to
+provide an easy reference volume for those who must
+administer a \s-1UNIX\s+1 System.
+Accordingly, only those commands and descriptions deemed
+appropriate for system administrators have been included here.
+.PP
+This manual is divided into
+three sections:
+.PP
+.nf
+.ta 2m +\w'\1.~~'u +\w'1M.~~'u
+	1.	System Maintenance Commands and Application Programs
+	7.	Special Files.
+	8.	System Maintenance Procedures.
+.ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i 6.5i
+.fi
+.PP
+Throughout this volume, each reference of the form
+\f2name\fP\^(1M),
+\f2name\fP\^(7),
+or
+\f2name\fP\^(8),
+refers to entries in
+this manual,
+while all other references to entries of the
+form
+\f2name\fP\^(N),
+where \f2N\fP
+is a number possibly followed by a letter,
+refer to entry
+\f2name\fP\^
+in Section \f2N\fP
+of the
+\f2U\s-1NIX\s+1 System User's Manual\fP\^.
+.PP
+\f3Section~1\fP (\f2System Maintenance Commands and Application Programs\^\fP)
+contains system
+maintenance programs such as
+\f2fsck\^\fP, \f2mkfs\^\fP,
+etc., which generally reside in the
+directory
+\f3/etc\fP;
+these entries carry a sub-class designation of ``1M'' for
+cross referencing reasons.
+.PP
+\f3Section~7\fP
+(\f2Special Files\^\fP) discusses the characteristics of
+each system file that actually refers to an input/output device.
+The names in this
+section generally refer to
+device names for the hardware, rather than to the names of
+the special files themselves.
+.PP
+\f3Section~8\fP (\f2System Maintenance Procedures\^\fP) discusses
+crash recovery and boot procedures, facility descriptions, etc.
+.PP
+Each section consists of a number of independent
+entries of a page or so each.
+The name of the entry appears in the upper corners of its pages.
+Entries within each section are
+alphabetized,
+with the exception of the introductory entry
+that begins each section.
+The page numbers of each entry start at 1.
+Some entries may describe several routines, commands, etc.
+In such cases, the entry appears only once, alphabetized under
+its \*`major\*' name.
+.PP
+All entries are based on a common format,
+not all of whose parts always appear:
+.PP
+.in +2m
+The
+\f3\s-1NAME\s+1\fP
+part gives the name(s) of the entry and
+briefly
+states its purpose.
+.PP
+The
+\f3\s-1SYNOPSIS\s+1\fP
+part summarizes the use of the
+program being described.
+A few conventions are used, particularly in
+Section~1
+(\f2Commands\^\fP):
+.in +2m
+.PP
+\f3Boldface\fP
+strings are literals and
+are to be typed just as they appear.
+.PP
+\f2Italic\^\fP strings usually represent
+substitutable argument prototypes
+and program names found elsewhere in the manual (they are
+underlined
+in
+the typed version of the entries).
+.PP
+Square brackets \f3[\|]\fP around an argument prototype
+indicate that the argument is optional.
+When an argument prototype is given as
+\*`name\*' or \*`file\*',
+it always
+refers to a
+\f2file\^\fP
+name.
+.PP
+Ellipses \f3\^.\|.\|.\^\fP are used to show that the previous argument prototype
+may be repeated.
+.PP
+A final convention is used by the commands themselves.
+An argument beginning with a minus \f3\(mi\fP,
+plus \f3\(pl\fP,
+or equal sign \f3\(eq\fP
+is often taken to be some sort of flag argument,
+even if it appears in a position where a file name
+could appear.
+Therefore, it is unwise to have files
+whose names begin with \f3\(mi\fP,
+\f3\(pl\fP, or \f3\(eq\fP.
+.PP
+.in -2m
+The
+\f3\s-1DESCRIPTION\s+1\fP
+part discusses the subject at hand.
+.PP
+The
+\f3\s-1EXAMPLE(S)\s+1\fP
+part gives
+example(s) of usage, where appropriate.
+.PP
+The
+\f3\s-1FILES\s+1\fP
+part gives the file names that are
+built into the program.
+.PP
+The
+\f3\s-1SEE ALSO\s+1\fP
+part gives pointers to related information.
+.PP
+The
+\f3\s-1DIAGNOSTICS\s+1\fP
+part discusses
+the diagnostic indications that may be produced.
+Messages that are intended to be self-explanatory
+are not listed.
+.PP
+The
+\f3\s-1WARNINGS\s+1\fP
+part points out potential pitfalls.
+.PP
+The
+\f3\s-1BUGS\s+1\fP
+part gives
+known bugs and sometimes deficiencies.
+Occasionally, the suggested fix is
+also described.
+.in -2m
+.PP
+A table of contents
+and a permuted index
+precede Section~1.
+The permuted index contains entries from both the
+\f2U\s-1NIX\s+1 System User's Manual\fP and this volume, and
+on each
+line, the title
+of the
+entry to which
+that line refers is followed by the appropriate section number in parentheses.
+This is important because there is considerable
+duplication of names among the sections,
+arising principally from commands that
+exist only to exercise a particular system call.
+.PP
+On most systems, all entries are available \%on-line via the \f2man\^\fP(1)
+command, q.v.
+.\"	@(#)intro	5.2 of 5/18/82
+.\"	@(#)intro	5.2 of 5/18/82

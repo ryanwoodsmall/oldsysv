@@ -1,0 +1,166 @@
+#ident	"@(#)rfs.admin:startstop/startrfs	1.12"
+#menu# start RFS on your machine
+
+#help# 
+#help#	The subcommand "startrfs" starts the Remote File Sharing 
+#help#	feature on your machine.  Your machine must be set up to 
+#help#	run RFS before this subcommand can be successfully executed.  
+#help#	A convenient way to set up your machine is to use the "setuprfs" 
+#help#	subcommand found on the RFS Management Menu.  If you have  
+#help#	resources on the Automatic Advertise List or the Automatic 
+#help#	Mount List, the system will attempt to advertise and mount 
+#help#	these resources as RFS is started.
+#help# 	
+
+#set file permissions
+umask 066
+
+RFS_SECURITY="
+When the primary name server added your machine as a member of its
+domain it assigned an RFS PASSWORD to you.  You need to enter this 
+RFS password now in order to be recognized as a member of the domain.  
+If you do not know your password, ask the administrator of the primary 
+name server for your domain.  
+
+You will be prompted twice to enter the password so that you can be 
+sure of entering it correctly.  RFS may start even if the RFS password 
+you enter is incorrect, but you would not be able to share resources."
+# print heading
+echo "\n\n		START REMOTE FILE SHARING\n"
+
+#set trap
+trap '/bin/rm -f /usr/tmp/rfserr$$; /bin/stty echo; trap 0; exit' 0 1 2 3 15
+# initialization
+SERV_CODE=105
+
+# Determine if RFS is running; if not, then print appropriate error message
+if /usr/lbin/rfsrunning
+then
+	echo "\n		RFS is already running.\n"
+	exit
+fi
+
+echo "\nAttempting to start RFS."
+echo "This will take a few moments.  Please wait...\n"
+
+# Determine if network is set up for RFS
+NET_SPEC=`/usr/bin/dname -n 2>/dev/null`
+if [ "$NET_SPEC" = "" ]
+then
+	echo "\nThe transport provider for RFS has not been set."
+	echo "Your machine must be set up to run RFS before this command "
+	echo "can be successfully executed.  A convenient way to set up "
+	echo "RFS is to use the \"setuprfs\" subcommand from the RFS "
+	echo "Management Menu.\n"
+	echo "Unable to start RFS at this time.\n"
+	exit
+fi
+
+# Determine if the transport provider is running
+/usr/bin/nlsadmin -q $NET_SPEC 2>/dev/null
+if [ "$?" != "0" ]
+then
+	echo "\nThe network listener for your transport provider"
+	echo "is not running.  See your System Administrator's" 
+	echo "Guide for help with the network listener. \n"
+	echo "Unable to start RFS at this time.\n"
+	exit
+fi
+
+# Determine if the transport provider is set up for RFS
+/usr/bin/nlsadmin -q -z $SERV_CODE $NET_SPEC 2>/dev/null
+if [ "$?" != "0" ]
+then
+	echo "\nThe network listener is not set up for RFS."
+	echo "See your System Administrator's Guide for help"
+	echo "with the network listener.\n"
+	echo "Unable to start RFS at this time.\n"
+	exit
+fi
+
+# Determine if RFS has been set up; if not, then print appropriate error message
+if [ ! -s /usr/nserve/rfmaster ]
+then
+	echo "You cannot start RFS until you set up your domain"
+	echo "information.  To do this, use the \"setuprfs\" "
+	echo "subcommand on the RFS Management Menu.\n"
+	echo "Unable to start RFS at this time.\n"
+	exit
+fi
+
+# Start RFS
+if [ ! -f /usr/nserve/loc.passwd ]
+then
+	echo "\n$RFS_SECURITY\n"
+	/bin/stty -echo
+	while /bin/true
+	do
+		echo "Enter your RFS password:\c"
+		read PASSWD1
+		echo
+		echo "Re-enter your RFS password:\c"
+		read PASSWD2
+		echo
+		if [ "$PASSWD1" = "$PASSWD2" ]
+		then
+			echo "$PASSWD2\c" >/usr/nserve/loc.passwd
+			break
+		else
+			echo "Password entries do not match.\n"
+			continue
+		fi
+	done
+	/bin/stty echo
+fi
+
+/usr/bin/rfstart 2>/usr/tmp/rfserr$$
+if [ $? -gt 0 ]
+then
+	echo "\nRFS has NOT been started."
+	/bin/cat /usr/tmp/rfserr$$
+	echo "\nConsult your System Adminstrator's Guide.\n"
+	exit
+else
+	if [ -s /usr/tmp/rfserr$$ ]
+	then
+		echo
+		/bin/sed "s/^.*rfstart://" /usr/tmp/rfserr$$
+		echo
+	fi
+fi
+
+# Auto-advertise resources
+if [ -s /etc/rstab ]
+then
+	echo "\n                Advertising Local Resources"
+	echo " 	        on the Automatic Advertise List\n"
+	/bin/sh /etc/init.d/adv start 2>/usr/tmp/rfserr$$
+	if [ -s /usr/tmp/rfserr$$ ]
+	then
+		echo "\nERROR: Auto-Advertising"
+		/bin/sed "s/^.*adv:/	/" /usr/tmp/rfserr$$
+	fi
+fi
+
+# Auto-mount resources
+/bin/grep '^[^/\#]' /etc/fstab >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "\n		Mounting Remote Resources"
+	echo "		on the Automatic Mount List\n"
+	echo "\tThe system will now ATTEMPT to mount the resources you have"
+	echo "\tset up to be automatically mounted.  There are several conditions"
+	echo "\tthat may exist that would prevent a resource from being "
+	echo "\tsuccessfully mounted.  These are: "
+	echo "\t  - The machine owning the resource is not running RFS,"
+	echo "\t  - The machine owning the resource does not have it advertised,"
+	echo "\t  - The resource identifier in the Automatic Mount List is incorrect,"
+	echo "\t  - The local directory you chose as a mount point does not exist,"
+	echo "\t  - The local directory you chose as a mount point is busy."
+	echo "\tYour system will continue to try to mount a resource if it"
+	echo "\tcannot be mounted when RFS is first started.\n"
+	/etc/rmountall /etc/fstab
+fi
+
+# echo completion
+echo "\n	             RFS has been started.\n"

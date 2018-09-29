@@ -1,0 +1,139 @@
+.TH CP 1
+.SH NAME
+cp, ln, mv \- copy, link or move files
+.SH SYNOPSIS
+.B cp
+file1 [ file2 ...] target
+.br
+.B ln
+[ 
+.B \-f 
+] file1 [ file2 ...] target
+.br
+.B mv
+[ 
+.B \-f 
+] file1 [ file2 ...] target
+.SH DESCRIPTION
+.I File1\^
+is copied (linked, moved) to
+.IR target .
+Under no circumstance can
+.I file1\^
+and
+.I target\^
+be the same (take care when using
+.IR sh (1)
+metacharacters).
+If
+.I target\^
+is a directory, then one or more
+files are copied (linked, moved) to that directory.
+If 
+.I target\^
+is a file, its contents are destroyed.
+.PP
+If
+.I mv\^
+or
+.I ln\^
+determines that the mode of
+.I target\^
+forbids writing, it will
+print the mode [see
+.IR chmod (2)],
+ask for a response,
+and read the standard input for one line;
+if the line begins with
+.BR y ,
+the 
+.I mv\^
+or
+.I ln\^
+occurs, if permissable; if not, the command exits.
+No questions are asked
+and the
+.I mv\^
+or
+.I ln\^
+is done
+when the
+.B \-f
+option is used
+or if the standard input is not a terminal.
+.PP
+Only
+.I mv\^
+will allow
+.I file1\^
+to be a directory, in which case the directory rename
+will occur only if the two directories
+have the same parent;
+.I file1\^
+is renamed 
+.I target\^.
+If 
+.I file1\^ 
+is a file and
+.I target\^
+is a link to another file with links,
+the other links remain and 
+.I target\^
+becomes a new file.
+.PP
+When using 
+.IR cp ,
+if 
+.I target\^
+is not a file,
+a new file is created 
+which has the same mode as  
+.I file1\^
+except that the sticky bit 
+is not set
+unless you are super-user;
+the owner and group of 
+.I target\^
+are those of the user.
+If 
+.I target\^
+is a file, 
+copying a file into 
+.I target\^
+does not change its 
+mode, owner, nor group.
+The last modification time
+of
+.I target\^
+(and last access time,
+if 
+.I target\^
+did not exist)
+and the last access time
+of 
+.I file1\^
+are set to the time the copy was made.
+If 
+.I target\^
+is a link to a file,
+all links remain
+and the file is changed.
+.SH SEE ALSO
+cpio(1),
+rm(1).
+.br
+chmod(2) in the \f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH BUGS
+If
+.I file1\^
+and
+.I target\^
+lie on different file systems,
+.I mv\^
+must copy the file and delete the original.
+In this case any
+linking relationship with other files
+is lost.
+.PP
+.I Ln\^
+will not link across file systems.

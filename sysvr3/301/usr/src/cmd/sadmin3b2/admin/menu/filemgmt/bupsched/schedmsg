@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin3b2:admin/menu/filemgmt/bupsched/schedmsg	1.1"
+#menu#	schedule backup reminder message
+#help#
+#help#	Backup reminder messages are sent to the console if the machine
+#help#	is shutdown or a reminder check has scheduled. The user specifies
+#help#	the times at which it is appropriate to send a message and the
+#help#	file systems to be included in the message.
+
+exec ${MENUTOP:?}/bupsched -t m

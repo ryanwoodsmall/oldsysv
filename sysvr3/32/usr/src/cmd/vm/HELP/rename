@@ -1,0 +1,19 @@
+
+   The RENAME command allows you to change the name of an object.
+
+     1.  Use one of the options below to rename an object.  If the old
+         object name is not specified the current object is assumed.
+
+            - Function Key - Press CHG-KEYS, and then RENAME
+
+            - Command menu - Select RENAME + RETURN
+
+            - COMMAND LINE - Type rename [old_object_name]
+                               [to new_object_name] + RETURN
+
+     2.  The following prompt appears  if a new name was not specified
+         on the command line:
+
+          Enter the new object name:
+
+         Type in the new name and press RETURN.

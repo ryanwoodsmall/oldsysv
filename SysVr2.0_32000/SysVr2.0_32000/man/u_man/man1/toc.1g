@@ -1,0 +1,143 @@
+.TH TOC 1G
+.SH NAME
+toc \- graphical table of contents routines
+.SH SYNOPSIS
+\fBdtoc\fR [directory]
+.br
+\fBttoc\fR mm-file
+.br
+\fBvtoc\fR [\fB\-c\^d\^h\fRn\fB\^i\^m\^s\^v\fRn] [\s-1TTOC\s+1 file]
+.br
+.SH DESCRIPTION
+All of the commands listed below reside in
+.B /usr/bin/graf
+[see
+.IR graphics (1G)].
+.TP 10
+\fBdtoc\fR
+Dtoc makes a textual table of contents, \s-1TTOC\s+1,
+of all subdirectories
+beginning at
+.I directory\^
+(\fIdirectory\fR defaults to \fB.\fR).
+The list has one entry per directory.
+The entry fields from left to right are
+level number, directory name, and the number of
+ordinary readable files in the directory.
+.I Dtoc\^
+is useful in making a visual display of all or parts of a
+file system.
+The following will make a visual display
+of all the readable directories under
+\fB/\fR:
+.br
+	\fBdtoc / \||\| vtoc \||\| td\fR
+.TP 10
+\fBttoc\fR 
+Output is the table of contents generated 
+by the
+.SM .TC
+macro
+of \fImm\fR(1) translated to \s-1TTOC\s+1 format.  
+The input is assumed to be an \fImm\fR file that
+uses the .H family of macros for section headers.  If no \fIfile\fR is
+given, the standard input is assumed.
+.TP 10
+\fBvtoc\fR
+\fIVtoc\fR produces a \s-1GPS\s+1 describing a hierarchy chart from a \s-1TTOC\s+1.
+The output drawing consists of boxes containing
+text connected in a tree structure.
+If no \fIfile\fR is given, the standard input
+is assumed.
+Each \s-1TTOC\s+1 entry describes one box and has the form:
+.br
+	\fIid\fR [\fIline-weight\fR,\fIline-style\fR] "\fItext\|\fR" [\fImark\fR]
+.br
+where:
+.RS 10
+.TP 12
+\fIid\fR
+is an alternating sequence of numbers 
+and dots.
+The \fIid\fR specifies the position of the entry in the
+hierarchy.  The \fIid\fR\| \fB0.\fR is the root of the tree.
+.TP 12
+\fIline-weight\fR
+is either:
+.br
+		\fBn\fR, normal-weight; or
+.br
+		\fBm\fR, medium-weight; or
+.br
+		\fBb\fR, bold-weight.
+.TP 12
+\fIline-style\fR
+is either:
+.br
+		\fBso\fR, solid-line;  
+.br
+		\fBdo\fR, dotted-line;  
+.br
+		\fBdd\fR, dot-dash line; 
+.br
+		\fBda\fR, dashed-line; or 
+.br
+		\fBld\fR, long-dashed
+.br
+.TP 12
+\fItext\fR
+is a character string surrounded 
+by quotes.
+The characters between the quotes become the contents of the box.
+To include a quote within a box it must be escaped (\fB\\"\fR).
+.TP 12
+\fImark\fR
+is a character string (surrounded 
+by quotes if it contains spaces), with 
+included dots being escaped.
+The string is put above the top right corner 
+of the box.  To include either a quote or a dot within a
+\fImark\fR it must be escaped.
+.sp
+.RE
+.RS 10
+Entry example:  1.1 b,da "\s-1ABC\s+1" \s-1DEF\s+1
+.br
+Entries may span more than one line by escaping the new-line\fR (\fB\\new-line\fR).
+.sp
+Comments are surrounded by the \fB/\(**\fR,\fB\(**/\fR pair.  They may appear
+anywhere in a \s-1TTOC\s+1.
+.sp
+Options:
+.TP 5
+\fBc\fR
+Use text as entered (default is all 
+upper case).
+.TP 5
+\fBd\fR
+Connect the boxes with diagonal lines.
+.TP 5
+\fBh\fIn\fR
+Horizontal interbox space is \fIn\fR\^% of box 
+width.
+.TP 5
+\fBi\fR
+Suppress the box \fIid\fR.
+.TP 5
+\fBm\fR
+Suppress the box \fImark\fR.
+.TP 5
+\fBs\fR
+Do not compact boxes horizontally.
+.TP 5
+\fBv\fIn\fR
+Vertical interbox space is \fIn\fR\^% of box height.
+.sp
+.RE
+.sp
+.SH "SEE ALSO"
+graphics(1G). 
+.br
+gps(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)toc.1g	6.2 of 9/2/83

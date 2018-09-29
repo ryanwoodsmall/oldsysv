@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:admin/menu/softwaremgmt/DESC	1.2"
+#menu# software management menu
+
+#help# 
+#help#	These subcommands permit you to install new software, remove software,
+#help#	and run software directly from the removable disk it is delivered on.
+#help#	The "remove" and "run" capabilities are dependent on the particular
+#help#	software packages.  See the instructions delivered with each package.
+#head# 			SOFTWARE MANAGEMENT

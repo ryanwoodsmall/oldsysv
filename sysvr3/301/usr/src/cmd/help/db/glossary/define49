@@ -1,0 +1,15 @@
+
+\S prompt : prompt string : primary prompt:  secondary prompt \S
+
+A prompt is the character that tells you the shell is ready for you
+to type something.  Two types of prompts are used in a  UNIX system:
+primary and secondary.  A primary prompt  is the prompt you get
+when the system has finished executing a command and it is waiting
+for the next command. "Dollar sign ($)"\S*\S is the primary prompt
+unless you assign another character to be the prompt character. 
+UNIX systems also provide a secondary prompt which is a right arrow
+(>).  A secondary prompt is used when the information on a command
+line is incomplete.  For example, a secondary prompt is printed when
+you do not include  closing quotes on a command line.
+
+\S*\S defined in the \Sglossary\S

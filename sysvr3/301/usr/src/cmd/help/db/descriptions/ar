@@ -1,0 +1,35 @@
+
+\Sar\S:  Description
+
+Syntax Summary:
+      ar -d [s] archive_file file_name ...
+      ar -m [lsv] [a|b|i location] archive_file file_name ...
+      ar -p [s] archive_file [file_name ...]
+      ar -q [clsv] archive_file file_name ...
+      ar -r [clsuv][a|b|i location] archive_file file_name ...
+      ar -t [sv] archive_file [file_name ...]
+      ar -x [lsv] archive_file [file_name ...]
+
+         where:  location, archive_file and file_name are names of files.
+
+Description:
+     \Sar\S stands for "archive."  \Sar\S creates and maintains archives.
+     An archive is a file that is composed of a group of files. \Sar\S is
+     primarily used to archive files of object code to create libraries.
+     You can also use \Sar\S to archive text files and save them under one 
+     file name.  If the files are smaller than one block, archiving with \Sar\S
+     will save storage space in memory. \Sar\S is useful because it enables
+     you to extract, add, or delete files without disturbing the rest of the
+     files in the library. \Sar\S uses two types of options.  The first type
+     of options are independent but mandatory.  You can use one of these 
+     options alone with the command and operands, but you must use one if you 
+     want \Sar\S to execute.  These independent options dictate the function 
+     of \Sar\S.  With one of these you can create new archives, extract files
+     from archives, and replace, append, or move files to different positions
+     within an archive.  The second type of options are dependent options. 
+     You must use a dependent option with an independent option. Dependent 
+     options change the output of \Sar\S.  They suppress messages, or
+     describe the creation of an archive.  See also:  convert(1) for a command
+     that might be used with \Sar\S.
+
+

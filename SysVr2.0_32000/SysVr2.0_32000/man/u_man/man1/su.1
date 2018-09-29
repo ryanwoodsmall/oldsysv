@@ -1,0 +1,144 @@
+.TH SU 1
+.SH NAME
+su \- become super-user or another user
+.SH SYNOPSIS
+.B su
+[
+.B \-
+] [ name [ arg .\|.\|. ] ]
+.SH DESCRIPTION
+.I Su\^
+allows one to become another user without logging off.
+The default user
+.I name\^
+is
+.B root
+(i.e., super-user).
+.PP
+To use
+.IR su ,
+the appropriate password must be supplied
+(unless one is already \fBroot\fP).
+If the password is correct,
+.I su\^
+will execute a new shell with the real and effective user \s-1ID\s0 set to
+that of the specified user.
+The new shell will be the optional program
+named in the shell field of the specified user's password
+file entry (see
+.IR passwd (4)),
+or
+.B /bin/sh
+if none is specified (see
+.IR sh (1)).
+To restore normal user \s-1ID\s0 privileges,
+type an
+.SM
+.B EOF
+.RI ( cntrl-d )
+to the new shell.
+.PP
+Any additional arguments given on the command line are
+passed to the program invoked as the shell.
+When using programs like
+.IR sh (1),
+an
+.I arg\^
+of the form
+.B \-c
+.I string\^
+executes
+.I string\^
+via the shell and an arg of
+.B \-r
+will give the user a restricted shell.
+.PP
+The following statements are true only if the optional program named
+in the shell field of the specified user's password file entry is
+like \fIsh\fP(1).
+If the first argument to
+.I su
+is a
+.BR \- ,
+the environment will be changed
+to what would be expected if the user
+actually logged in as the specified user.
+This is done by invoking the program used as the shell with an
+.I arg0\^
+value whose first character is
+.BR \- ,
+thus causing first the system's profile (\fB/etc/profile\fP)
+and then the specified user's profile
+(\fB.profile\fP in the new HOME directory)
+to be executed.
+Otherwise, the environment is passed along with the possible exception of
+.SM
+.BR $PATH \*S,
+which is set to
+.B /bin:/etc:/usr/bin
+for
+.BR root .
+Note that if the optional program used as the shell is
+.BR /bin/sh ,
+the user's \fB.profile\fP can check
+.I arg0\^
+for
+.B \-sh
+or
+.B \-su
+to determine if it was invoked by \fIlogin\fP(1) or \fIsu\fP(1),
+respectively.
+If the user's program is other than \fB/bin/sh\fP, then \fB.profile\fP
+is invoked with an
+.I arg0\^
+of
+.BI - program
+by both \fIlogin\fP(1) and \fIsu\fP(1).
+.PP
+All attempts to become
+another user
+using \fIsu\fP are logged in the log file
+.BR /usr/adm/sulog .
+.SH EXAMPLES
+.PP
+To become user \fBbin\fP while retaining your previously
+exported environment, execute:
+.sp
+.RS
+su bin
+.RE
+.sp
+To become user \fBbin\fP but change the environment
+to what would be expected if \fBbin\fP had originally logged in,
+execute:
+.sp
+.RS
+su - bin
+.RE
+.sp
+To execute \fIcommand\fP with the temporary environment and permissions of
+user \fBbin\fP, type:
+.sp
+.RS
+su - bin -c "\fIcommand\fP \fIargs\fP"
+.RE
+.bp
+.SH FILES
+/etc/passwd		system's password file
+.br
+/etc/profile		system's profile
+.br
+.SM
+.RB $HOME\*S/ . "profile		user's profile"
+.br
+/usr/adm/sulog		log file
+.SH SEE ALSO
+env(1),
+login(1),
+sh(1).
+.br
+passwd(4),
+profile(4),
+environ(5) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)su.1	6.3 of 9/2/83

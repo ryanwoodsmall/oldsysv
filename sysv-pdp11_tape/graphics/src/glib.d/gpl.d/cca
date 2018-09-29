@@ -1,0 +1,11 @@
+# @(#)cca	1.1
+LIB=${LIB=../../../lib/glib.a}
+
+for i
+do prog=`echo $i | sed "s/\.c//"`
+   cc -c ${prog}.c
+   ar r ${LIB} ${prog}.o
+   rm ${prog}.o
+   chmod 644 $LIB
+   echo "${prog} done"
+done

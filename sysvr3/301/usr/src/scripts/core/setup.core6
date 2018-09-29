@@ -1,0 +1,157 @@
+#ident	"@(#)core:setup.core6	1.9"
+#
+#	Sets up 3B2 Core UNIX Part 6 file system on floppy 
+#
+
+echo "Setting up the \"3B2 Core UNIX Part 6\" floppy"
+
+set -u
+export PATH
+PATH=/sbin:/bin:/usr/bin:/etc
+ROOT=/install
+exec < /dev/null
+
+if [ ! -f /bin/strip -o ! -f /bin/touch ]
+then
+	echo ""
+	echo "This setup requires strip(1) and touch(1); one or more"
+	echo "of these commands are not present on the hard disk."
+	exit 2
+fi
+
+SCFGNEEDS=1800 	# Space for additional kernels and drivers
+SCFGSPACE="`df / 2>/dev/null`"
+SCFGSPACE=`expr "${SCFGSPACE}" : '.*: *\([0-9]*\)'`
+if [ "${SCFGSPACE}" -lt "${SCFGNEEDS}" ]
+then
+	echo ""
+	echo "Insufficient root filesystem space; make some room"
+	echo "here or try another machine."
+	exit 2
+fi
+
+if [ -d /boot ]
+then
+	rm -fr /OKboot
+	mv /boot /OKboot
+fi
+
+echo "Installing several temporary commands"
+rm -fr /sbin
+cd ${ROOT}
+find sbin -print | cpio -pdmu /
+cd ${ROOT}/etc
+cp ckauto mkboot mkunix /sbin
+cd /
+
+echo "Temporarily installing the desired bootstrap"
+if [ -f /lib/lboot ]
+then 
+	mv /lib/lboot /lib/OKlboot
+fi
+cp ${ROOT}/lib/lboot /lib/lboot
+dd if=/dev/dsk/c1d0s7 of=/Bootstrap bs=18b
+newboot -y ${ROOT}/lib/olboot ${ROOT}/lib/mboot /dev/dsk/c1d0s7
+
+echo "Installing the processed kernel and drivers on the hard disk"
+mkdir /boot
+cd ${ROOT}/boot
+cp KERNEL DISP HDELOG IDISK IUART MEM S5 STUBS /boot
+cd /boot
+strip -r KERNEL
+
+if [ -f /etc/system ]
+then 
+	mv /etc/system /etc/OKsystem
+fi
+cp ${ROOT}/inst/final/etc/system /etc/system
+
+rm -r ${ROOT}/sbin
+
+echo "Preparing a generic kernel for the first restore floppy"
+
+cat ${ROOT}/etc/master.d/kernel - <<-'!' > /tmp/kernel
+
+
+	* Added by setup.core6
+
+	NBUF = 30
+
+!
+
+mkboot -m /tmp -d /boot -k /boot/KERNEL
+rm -f /tmp/kernel
+cd /
+
+if [ -f /unix ]
+then
+	mv /unix /OKunix
+fi
+
+if [ -f /etc/rc2 ]
+then
+	mv /etc/rc2 /etc/OKrc2
+fi
+cat - <<-'!' > /etc/rc2
+	: Created by setup.scfg
+	exec < /dev/null
+	export PATH
+	PATH=/sbin:/bin:/usr/bin:/etc
+	ckauto
+	if [ $? -eq 1 ]
+	then
+		rm -f /boot/[!K]*		# clean up space now
+		echo "Generating a /COREunix"
+		UNAME=`uname -s`		# save our uname
+		uname -S unix			# set to unix to build COREunix
+		mkunix -i /boot/KERNEL -o /COREunix > /dev/null
+		rm -f /boot/KERNEL		# clean up rest of space now
+		strip /COREunix
+		absunix /COREunix
+		uname -S $UNAME			# restore our uname
+	fi
+	trap '' 2 3
+	rm /etc/rc2
+	if [ -f /etc/OKrc2 ]
+	then 
+		mv /etc/OKrc2 /etc/rc2
+	fi
+	echo "Restoring the original kernel and drivers"
+	if [ -f /OKunix ]
+	then
+		mv /OKunix /unix
+	fi
+	rm -rf /boot
+	if [ -d /OKboot ]
+	then
+		mvdir /OKboot /boot
+	fi
+	rm /etc/system
+	if [ -f /etc/OKsystem ]
+	then 
+		mv /etc/OKsystem /etc/system
+	fi
+	echo "Restoring the original bootstrap"
+	dd if=/Bootstrap of=/dev/dsk/c1d0s7 bs=18b
+	rm /lib/lboot
+	if [ -f /lib/OKlboot ]
+	then 
+		mv /lib/OKlboot /lib/lboot
+	fi
+	rm /Bootstrap
+	rm -r /sbin
+	trap 2 3
+	echo "Rebooting with the original kernel"
+	sync;sync;sync
+	exec uadmin 2 1
+!
+chmod 755 /etc/rc2
+
+rm ${ROOT}/setup
+
+echo "Rebooting to generate a core kernel" >&2
+echo "Remember to type 'debug mode off'" >&2
+echo "before booting /etc/system " >&2
+
+sync;sync;sync
+shutdown -y -g0 -i5 &

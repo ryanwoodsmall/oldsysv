@@ -1,0 +1,96 @@
+'\" t
+.TH UTMP 4
+.SH NAME
+utmp, wtmp \- utmp and wtmp entry formats
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B #include <utmp.h>
+.SH DESCRIPTION
+These files, which hold user and accounting information
+for such commands as
+.IR who (1),
+.IR write (1),
+and
+.IR login (1),
+have the following structure as defined by
+.BR <utmp.h> :
+.br
+.ne 4v
+.PP
+.nf
+.TS
+l lp-1 l.
+#define	UTMP_FILE	"/etc/utmp"
+#define	WTMP_FILE	"/etc/wtmp"
+.T&
+l l l.
+#define	ut_name	ut_user
+.TE
+.sp 1v
+.br
+.ne 14v
+.TS
+l1 l1 l1 l.
+.tr ~ 
+struct	utmp {
+	char	ut_user[8];	/\(** User login name \(**/
+	char	ut_id[4];	/\(** /etc/inittab id (usually line #) \(**/
+	char	ut_line[12];	/\(** device name (console, lnxx) \(**/
+	short	ut_pid;	/\(** process id \(**/
+	short	ut_type;	/\(** type of entry \(**/
+	struct	exit_status {
+	~~~~short	~~~~e_termination;	/\(** Process termination status \(**/
+	~~~~short	~~~~e_exit;	/\(** Process exit status \(**/
+	} ut_exit;		/\(** The exit status of a process
+			 \(** marked as \s-1DEAD_PROCESS\s+1. \(**/
+	time_t	ut_time;	/\(** time entry was made \(**/
+};
+.tr ~~
+.TE
+.sp 1v
+.br
+.ne 15v
+/\(**  Definitions for ut_type  \(**/
+.TS
+l1 l1p-1 l1 l.
+\s-1#define	EMPTY	0\s+1
+\s-1#define	RUN_LVL	1\s+1
+\s-1#define	BOOT_TIME	2\s+1
+\s-1#define	OLD_TIME	3\s+1
+\s-1#define	NEW_TIME	4\s+1
+\s-1#define	INIT_PROCESS	5	/\(** Process spawned by "init" \(**/\s+1
+\s-1#define	LOGIN_PROCESS	6	/\(** A "getty" process waiting for login \(**/\s+1
+\s-1#define	USER_PROCESS	7	/\(** A user process \(**/\s+1
+\s-1#define	DEAD_PROCESS	8\s+1
+\s-1#define	ACCOUNTING	9\s+1
+\s-1#define	UTMAXTYPE	\s-1ACCOUNTING\s+1	/\(** Largest legal value of ut_type \(**/\s+1
+.TE
+.sp 1v
+.br
+.ne 9v
+/\(**  Special strings or formats used in the "ut_line" field when  \(**/
+/\(**  accounting for something other than a process  \(**/
+/\(**  No string for the ut_line field can be more than 11 chars +  \(**/
+/\(**  a \s-1NULL\s+1 in length  \(**/
+.TS
+l1 l1p-1 l.
+#define	RUNLVL_MSG	"run\-level %c"
+#define	BOOT_MSG	"system boot"
+#define	OTIME_MSG	"old time"
+#define	NTIME_MSG	"new time"
+.TE
+.fi
+.bp
+.SH FILES
+/usr/include/utmp.h
+.br
+/etc/utmp
+.br
+/etc/wtmp
+.SH SEE ALSO
+getut(3C).
+.br
+login(1), who(1), write(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	%W% of %G%

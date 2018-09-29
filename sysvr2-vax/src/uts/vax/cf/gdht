@@ -1,0 +1,15 @@
+* @(#)gdht	6.3
+disk	8	0	5
+tu16	9	0	5
+root	disk	00
+swap	disk	00	8000	9000
+pipe	disk	00
+dump	tu16	0
+buffers	48
+inodes	125
+files	125
+mounts	8
+calls	50
+procs	65
+clists	150
+regions 163

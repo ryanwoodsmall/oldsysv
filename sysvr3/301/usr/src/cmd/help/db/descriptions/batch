@@ -1,0 +1,14 @@
+
+\Sbatch\S:  Description
+
+Syntax Summary:   batch
+
+Description:
+     Use \Sbatch\S to delay the execution of commands until the system does
+     not have a heavy work load.  \Sbatch\S reads commands from standard
+     input.  \Sbatch\S treats them as a single job, and a single job number is
+     assigned to all of them.  When the system load permits, \Sbatch\S
+     executes the job. The output of all the commands in the job is sent to you
+     through mail(1), unless you redirect it.  If you decide that you do not
+     want to execute the job, you can remove it using the at(1) command.  See
+     also:  at(1) and ps(1) for commands that might be used with \Sbatch\S.

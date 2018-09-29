@@ -1,0 +1,18 @@
+#
+#	Shell script for rebuilding the SVR3.1 UNIX Update
+#
+trap "exit 1" 1 2 3 15
+if [ "$ROOT" = "" ]
+then
+	PATH=/bin:/etc:/usr/bin; export PATH
+fi
+#	install /usr/include and /usr/include/sys header files
+./:mkhead
+./:mksyshead
+#	build all libraries
+./:mklib \*
+#	build all the  changed commands
+./:mkcmd `grep usr/src/cmd $ROOT/etc/updlist|egrep -v "cmd/.adm/|cmd/.cmd-3b2/" |cut -d/ -f4 | sort -u`
+#	build the OS itself
+./:mkuts
+exit 0

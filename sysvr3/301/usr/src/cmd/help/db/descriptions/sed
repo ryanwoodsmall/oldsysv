@@ -1,0 +1,27 @@
+
+\Ssed\S:  Description
+
+Syntax Summary:
+      sed [-n] [script] [file_name ...]
+      sed [-n] [-e script] [-f script_file] [file_name ...]
+
+         where:  script  is a list of editing commands.
+
+                 script_file  is the name of a file.
+
+                 file_name  is the name of a file.
+
+Description:
+     \Ssed\S stands for "stream editor." Use \Ssed\S to change the contents
+     of a file when it is sent to standard output or when it will be used as
+     input to another command. \Ssed\S does not change the contents of the
+     original file.  \Ssed\S changes files according to commands in a script
+     or a script file. The scripts are composed of the addresses of the lines
+     to be edited, (i.e., either line numbers or regular expressions), the
+     commands to change them, and arguments for the commands.  \Ssed\S is
+     different from ed(1) and red(1), because they copy the entire file into a
+     buffer and edit the file one command line at a time.  \Ssed\S copies one
+     line of text at a time into a buffer, and edits the line according to all
+     the commands in the script, or script file, that apply.  \Ssed\S prints
+     the modified copy of the file on your terminal unless you redirect it.
+     For more details on scripts, see the manual page for \Ssed\S.

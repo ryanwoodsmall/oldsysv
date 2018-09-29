@@ -1,0 +1,82 @@
+.tr ~
+.nr )s 0
+.if t .if \ns .nr )s 1\"register )s=1 iff troff & small format; 0 otherwise
+.nr )t 0
+.if t .if !\ns .nr )t 1\"register )t=1 iff troff & large format; 0 otherwise
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 7
+.	     vs 10p \}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 8
+.	     vs 12p \}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .5i \}
+.nr )y \n(.lu-.65i
+.nr )x \n()yu/2u
+.ds ET\"
+.de HD
+.if t \{.po 0
+.	 lt 7.5i
+.	 if \\n()s .tl @\l@0.25i@@@\l@0.25i@\h@1i@\l@0.25i@@
+.	 if \\n()t .tl @\l@0.25i@@@\l@0.25i@@
+.	 lt
+.	 po
+'	 br \}
+.ie \\n()s 'sp 2v
+.el 'sp 3v
+.if e .tl @\s9\\*(ET\s0@@@
+.if o .tl @@@\s9\\*(ET\s0@
+.ie \\n()s 'sp 1v
+.el 'sp 3v
+.ns
+..
+.de FO
+.if \\n()s 'sp |\\n(.pu-1v-1p
+.if \\n()t 'sp |\\n(.pu-3v
+.if n 'sp |\\n(.pu-4v
+.if e .tl @\s9\\*(Dt@- % -@\\*(Ed\s0@
+.if o .tl @\s9\\*(Ed@- % -@\\*(Dt\s0@
+'bp
+..
+.wh 0 HD
+.if \n()s .wh -3.5v FO
+.if \n()t .wh -6v FO
+.if n .wh -7v FO
+.if \n(nl .bp
+.br
+.nr % 1
+.ds ET \f2Permuted \|Index\^\fP
+.if !\n()s .ds Ed UNIX \|Release \|5.2
+.if !\n()s .ds Dt January \|1982
+.ce
+\f3PERMUTED \|INDEX\fP
+.sp 1v
+.if t .ps 7
+.if t .vs 9p
+.nf
+.cs 3 36
+.ds s2 ~~~\"	this is the center gap -- 1m wide
+.de xx
+.ds s1\"
+.if \w@\\$2@ .ds s1 ~\|\"
+.ds s3\"
+.if \w@\\$4@ .ds s3 ~\|\"
+.ds s4 ~\"
+.ds s5 ~\"
+.ds y \\*(s4\f3\a\fP\\*(s5
+.ta \\n()yu-\w@\\*(s5@u
+\h@\\n()xu-\w@\\$1\\*(s1\\$2\\*(s2@u@\\$1\\*(s1\\$2\\*(s2\\$3\\*(s3\\$4\\*y\\$5
+..
+.so ./ptxx
+.cs 3
+.if n .ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 80n
+.if t .ta 3.6m 7.2m 10.8m 14.4m 18m 21.6m 25.2m 28.8m 32.4m 36m 39.6m 43.2m 46.8m
+.\"	@(#)ptxin	5.2 of 5/18/82

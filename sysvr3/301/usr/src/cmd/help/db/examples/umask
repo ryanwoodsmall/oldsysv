@@ -1,0 +1,17 @@
+
+\Sumask\S:  Examples
+
+        umask
+
+   Prints the three digit octal code that sets the access permissions for the
+   files you create.
+
+   ---------------------------------------------------------------------------
+
+        umask 022
+
+   Changes the octal code that sets the access permissions for files you
+   create.  Before this command was included in your .profile, the access
+   permissions for your files might have been -rw-rw-rw-.  This mask changes
+   the permissions to -rw-r--r-- which is read only for the group and other
+   users.  The read and write permissions for the owner are not changed.

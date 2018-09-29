@@ -1,0 +1,115 @@
+'\" t
+.TH DSK 7 "3B20S only"
+.SH NAME
+dsk \- 3B20S moving-head disk
+.SH DESCRIPTION
+Two types of disk drives, 300 megabyte and 675 megabyte,
+are each divided into 16 sections.
+The files
+.BR dsk0 ", " ... ", " dsk8 ", "
+.BR ... ", " dskf
+refer to sections (a hexadecimal digit in the name) of the
+disk drive unit number 0.
+The files
+.BR dsk10 ", " ... ", " dsk18 ", "
+.BR ... ", " dsk1f
+refer to drive unit number 1, etc.
+This slicing allows the pack to
+be broken up into more manageable pieces.
+.PP
+The origin and size of the sections on each type of drive are
+as follows:
+.PP
+.RS
+.TS
+c6I cI s6 cI s
+c6I cI c6I cI cI
+c6 n n6 n n.
+	300 Mbyte	675 Mbyte
+section	start	length	start	length
+0	1	494304	1	1070080
+1	101	433504	101	942080
+2	251	342304	251	750080
+3	326	296704	326	654080
+4	476	205504	476	462080
+5	551	159904	551	366080
+6	701	68704	701	174080
+7	775	23712	776	78080
+8	0	495520	0	1072640
+13	204	370880	210	802560
+14	407	247456	419	535040
+15	610	124032	628	267520
+.TE
+.RE
+.PP
+The start address is a cylinder address and
+the length is in disk (512 byte) blocks.
+Each cylinder contains 608 disk blocks on the 300 megabyte drive
+and 1280 disk blocks on the 675 megabyte drive.
+There are 815 usable cylinders on the 300 megabyte drive
+and 838 usable cylinders on the 675 megabyte drive.
+Also it should be noted that the first cylinder is reserved
+for booting and the last cylinder for diagnostics.
+.PP
+Sections 0 through 7 and 13 through 15
+define file system space to be used according to local needs.
+Sections 9 through 12 define special use slices of the disk.
+Section 8 covers the entire usable area
+of the disk (including the boot and diagnostic cylinders).
+Sections 13 through 15 define slices that quarter the disk.
+The usable sections (0 - 7 and 13 - 15)
+define overlapping disk slices
+and care must taken in choosing a set for file systems
+on a disk.
+A section is no longer usable if the file system defined
+on the previous section overlaps it.
+.PP
+The
+.B dsk
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly
+one
+I/O
+operation
+and therefore raw
+I/O
+is considerably more efficient when
+many words are transmitted.
+The names of the raw
+disk files
+begin with
+.B rdsk
+and end with a number which selects the same disk
+section as the corresponding
+.B dsk
+file.
+.PP
+In raw
+I/O
+the buffer must begin on a word boundary,
+and counts must be a multiple of 64 bytes.
+The I/O must start on a disk block boundary.
+.PP
+In addition to the sections defined above two other special 
+files have been created to define areas on the disk. The first
+is
+.BR /dev/dump ?
+(section 10),
+where \fI?\fP is the disk unit number,
+which provides raw access to the section on the disk
+where dumps will be put.
+The second file is
+.BR /dev/boot ?
+(section 9)
+which provides
+raw access to the boot section. 
+.SH FILES
+/dev/dsk\(**, /dev/rdsk\(**, /dev/dump?, /dev/boot?
+.\"	@(#)dsk.7	5.2 of 5/18/82 modified by rem 9/17/82

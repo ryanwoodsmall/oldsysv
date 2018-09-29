@@ -1,0 +1,9 @@
+*#ident	"@(#)kern-port:master.d/ldterm	1.3"
+*
+* LDTERM Terminal Line Discipline  Module
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+m	-	ldtr	-	-	-
+						ldterm_tty[ #C ] (%0x128)
+						ldterm_cnt(%i) = { #C }
+$$

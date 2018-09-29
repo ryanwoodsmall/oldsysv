@@ -1,0 +1,61 @@
+.\" #ident	"@(#)mcs:mcs.1	1.2"
+.TH MCS 1 "Proposed" 7.0
+.SH NAME
+mcs \- manipulate the object file comment section
+.SH SYNOPSIS
+.B mcs
+[ options ] [ object-files ]
+.SH DESCRIPTION
+The
+.I mcs
+command manipulates the comment section in an object file.
+It is used to add to, delete, print, and compress the contents of the
+".comment" section in a UNIX object file.
+If the object file is an archive, the file is treated as a set of individual
+object files.
+As a result,
+if the \fB-a\fP option is specified, the string is appended to the
+comment section of each archive element.
+each archive element.
+.P
+The following options are available.
+.TP
+.BI \-a " string"
+Append
+.I string
+to the comment section of the object-file(s).
+.TP
+.B \-c
+Compress the contents of the comment section.
+All duplicate entries are removed.
+The ordering of the remaining entries is not disturbed.
+.TP
+.B \-d
+Delete the contents of the comment section from the object file.
+The object file
+comment section header is removed also.
+.TP
+.BI \-n "name"
+Specify the name of the section to access.
+By default, \fImcs\fP deals with the section named \fI.comment\fP.
+This option can be used to specify another section.
+.TP
+.B \-p
+Print the contents of the comment section on the standard output.
+If more than one name is specified, each entry printed is tagged by the
+name of the file it was extracted from.
+.TP
+.B \-P
+Prints the contents of the comment section.
+Each line is tagged by the name of the file the comment section was
+extraced from.
+The format used is "filename:string".
+.SH "EXAMPLES"
+.nf
+	mcs -p file	   # Print \fIfile\fP's \fI.comment\fP
+			     section.
+	mcs -a string file # Append \fIstring\fP to \fIfile\fP's
+			     \fI.comment\fP section
+.fi
+.SH "SEE ALSO"
+cpp(1),a.out(4).

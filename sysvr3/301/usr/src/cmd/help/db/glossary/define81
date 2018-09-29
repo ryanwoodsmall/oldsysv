@@ -1,0 +1,10 @@
+
+\S encrypt:  decrypt \S
+
+You encrypt a file when you want to keep its contents secret.  To encrypt a
+file, you specify a key or password that transforms the contents so that it
+is unintelligible and difficult to decode.  If the file contains encrypted
+information, then the key or password decrypts the information and returns
+it to its original form.  You can encrypt a file using the UNIX system
+command crypt(1).
+

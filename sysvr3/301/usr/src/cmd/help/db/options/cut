@@ -1,0 +1,16 @@
+
+\Scut\S:  Options
+
+     -c char_list      <char_list> specifies a list of character position
+                       numbers to cut on.  Each number is separated by commas,
+                       and "-" indicates ranges.
+
+     -f field_list     <field_list> specifies a list of field position numbers
+                       to cut on.  Each number is separated by commas, and "-"
+                       indicates ranges.
+
+     -d char   sets field separator to <char>. (A tab character is the
+               default).  Characters with special meaning to the shell, must be
+               quoted.
+
+     -s   suppress the printing of lines that do not have field separators.

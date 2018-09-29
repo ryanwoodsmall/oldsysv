@@ -1,0 +1,82 @@
+410 false
+2 0 0 #ident
+8 3 20 AN INTRODUCTION TO SDB 
+8 5 17 (Symbolic Debugging Program)
+705 8 8 62
+The "sdb" program allows you to debug a program at the source
+level.  It provides an environment in which you can monitor and
+control the execution of a program.  It also allows you to
+examine "core images" of aborted programs.
+706 
+520 arrow
+520 clearall
+520 redraw
+15 
+8 0 0 $
+520 code1
+15 
+705 19 7 71
+I'm going to show "sdb" on the left side of the screen, sample C code on
+the right side, and tell you about "sdb" here at the bottom. Sometimes
+I'll make "sdb" slower than it really is so you can see things better.
+706 
+520 arrow
+520 clearbot
+8 19 7 testdiv2.c is a program to test the function div2(k),
+8 20 7 which divides the number k by 2 
+520 arrow
+520 clearbot1
+8 19 7 First, we'll compile testdiv2.c
+15 
+1 2
+2 0 2
+15 
+1 1
+3 cc -g -o testdiv2 testdiv2.c
+15 
+1 1
+2 1 0
+15 
+1 1
+3 $ 
+15 
+705 19 7 63
+We used the -g option with the "cc" command.  The -g option
+causes the compiler to generate additional information about the
+variables and statements of the compiled program.
+706 
+520 arrow
+520 clearbot1
+8 19 7 Now we'll run the testdiv2 program. 
+15 
+1 2
+8 1 2 testdiv2 16
+15 
+1 1
+2 2 0
+15 
+1 1
+3 16/2 = 8
+15 
+8 1001 0 $ 
+15 
+18 
+1 1
+9 19 7 That seems to be working.  Let's try a negative number now.
+520 arrow
+520 clearbot1
+8 2000 2 testdiv2 -1
+15 
+1 1
+2 2001 0
+15 
+1 1
+3 -1/2 = 2147483647
+15 
+1 1
+8 2002 0 $ 
+15 
+9 19 7 Hmmm! Strange result!
+8 20 7 We'll use "sdb" to debug the program.
+15 
+520 arrow

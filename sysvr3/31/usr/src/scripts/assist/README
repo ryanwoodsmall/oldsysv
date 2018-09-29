@@ -1,0 +1,53 @@
+   The ASSIST Software Release 1.0, includes a menu/form interface to 
+   the UNIX system ("assist"), and a menu/form development tool ("astgen").
+   The binary files and libraries for "assist" and "astgen" require 2664 
+   blocks of space in /usr.  At installation time, you have the option
+   to install "assist" and "astgen", or just "assist".  If you specify "assist"
+   only, you will use two floppy  disks for installation.  If you specify
+   "assist" and "astgen",  you will use three floppy disks for installation. 
+   You can save 460 blocks of space if you only install "assist".  You
+   can always install "astgen" at a later date by reinstalling the three
+   floppy disks.  The installation procedure checks to ensure that there is 
+   enough space.  
+  
+   The following list shows where the files are located:
+  
+          Component                             Directory
+
+          "assist"                              /usr/bin
+          "astgen"                              /usr/bin
+          executables                           /usr/lib/assist/bin
+          datafiles                             /usr/lib/assist/lib
+             "astgen"                           /usr/lib/assist/lib/astgen
+             menu/command form                  /usr/lib/assist/lib/forms
+             search                             /usr/lib/assist/lib/search
+             setup                              /usr/lib/assist/lib/setup
+             walkthru                           /usr/lib/assist/lib/scripts
+
+   The directories listed above are the default directories.  The Release
+   Notes provide information describing the modifications necessary to
+   install ASSIST in a location other than the default.
+
+   When users invoke ASSIST for the first time, or when they use a different
+   type of terminal, ASSIST does some preliminary checks and verifications 
+   with a module called setup.  Setup does these checks by showing a 
+   series of test patterns and asking questions about what is seen on the 
+   screen.  
+
+   ASSIST's programs include:
+
+   "assist"
+        "assist" makes using the UNIX system easier.  It helps you 
+        locate a UNIX system command and build an executable UNIX
+        system command line.  The "assist" program provides a menu
+        system that organizes UNIX system commands according to 
+        function; command forms, which are interactive versions 
+        of UNIX system commands; walkthrus, which are interactive
+        simulations of UNIX system commands or concepts; and a 
+        key-word-based search for UNIX system commands and options.
+
+   "astgen"
+        "astgen" helps users to modify existing menus and command 
+        forms, and to create new menus and command forms.
+
+

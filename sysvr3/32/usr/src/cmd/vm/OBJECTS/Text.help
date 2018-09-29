@@ -1,0 +1,12 @@
+title=Help Facility: $ARG2
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'help facility overview'
+rows=12
+columns=72
+begrow=current
+begcol=current
+lifetime=longterm
+text="`pathconv -f -v "HELP/$ARG1" | readfile`"
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

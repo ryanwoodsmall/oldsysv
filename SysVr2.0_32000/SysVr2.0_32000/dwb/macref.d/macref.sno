@@ -1,0 +1,239 @@
+#  main parser for macref
+start	lines = "0"
+	name = ""
+	aline = ""
+	namel = "	"
+	namef = "	"
+
+nextl	"" aline		/f(nextl3)
+	lines = lines + "1"
+	lcnt = lines
+	lcnt = "     " lines "	"
+	lcnt ** *lcnt/"6"* "	"
+	rpt = ""
+	pline = ""
+	rqname = ""
+	line = syspit		/f(end)s(nlop)
+
+nextl3	rpt = ""
+	line = aline
+	aline = ""		/(text)
+
+nlop	line *ttt* '\"' ** = ttt
+nlop0	line *ttt* "\\" = ttt "\"	/s(nlop0)
+nlop1	line *ttt* "\!" = ttt		/s(nlop1)
+nlop2	line *ttt* "\{" = ttt		/s(nlop2)
+nlop3	line *ttt* "\}" = ttt		/s(nlop3)
+nlop4	line *ttt* "\." = ttt "."	/s(nlop4)
+nlop10	line *ttt* "	" = ttt " "	/s(nlop10)
+nlop11	line *ttt* "  " = ttt " "	/s(nlop11)
+nlopx	line "." = ""		/s(cline)
+	line "'" = "" 		/s(cline)
+
+text	line *pline* "\n+(" *manr/"2"* = ""	/s(tsetnr)
+	line *pline* "\n+" *manr/"1"* = ""	/s(tsetnr)
+	line *pline* "\n(" *manr/"2"* = ""	/s(trefnr)
+	line *pline* "\n" *manr/"1"* = ""	/s(trefnr)
+	line *pline* "\*(" *manr/"2"* = ""	/s(trefstr)
+	line *pline* "\*" *manr/"1"* = ""	/s(trefstr)
+	line *pline* '\$' *manr/"1"* = ""	/s(trefpar)
+
+	"" rqname		/s(nextl)
+	syspot = rqname "	" name "r" lcnt " "
+	rqname = ""		/(nextl)
+
+cline	line ' ' = ""
+	line *cmd/"2"* = ""	/f(cline2)
+	cmd *cmd/"1"* " "	/s(cline1)
+	line " " = ""
+	rqname = cmd
+
+	cmd "nr"		/s(setnr)
+	cmd "am"		/s(casede)
+	cmd "de"		/s(casede)
+	cmd "rm" 		/s(caserm)
+	cmd "rr"		/s(caserr)
+	cmd "ds"		/s(setstr)
+	cmd "ig"		/s(refmac)
+	cmd "mk"		/s(setnr)
+	cmd "as"		/s(setstr)
+	cmd "rn"		/s(caserr)
+	cmd "di"		/s(setdiv)
+	cmd "da"		/s(setdiv)
+	cmd "wh"		/s(casedt)
+	cmd "ch"		/s(setnr)
+	cmd "dt"		/s(casedt)
+	cmd "it"		/s(casedt)
+	cmd "em"		/s(refmac)
+	cmd "af"		/s(refnr)
+	cmd "if"		/s(caseif)
+	cmd "ie"		/s(caseif)
+	cmd "el"		/s(caseel)
+
+	cmd "ps"	/s(text)
+	cmd "ss"	/s(text)
+	cmd "cs"	/s(text)
+	cmd "bd"	/s(text)
+	cmd "ft"	/s(text)
+	cmd "fp"	/s(text)
+	cmd "pl"	/s(text)
+	cmd "bp"	/s(text)
+	cmd "pn"	/s(text)
+	cmd "po"	/s(text)
+	cmd "ne"	/s(text)
+	cmd "rt"	/s(text)
+	cmd "br"	/s(text)
+	cmd "fi"	/s(text)
+	cmd "nf"	/s(text)
+	cmd "ad"	/s(text)
+	cmd "na"	/s(text)
+	cmd "ce"	/s(text)
+	cmd "vs"	/s(text)
+	cmd "ls"	/s(text)
+	cmd "sp"	/s(text)
+	cmd "sv"	/s(text)
+	cmd "os"	/s(text)
+	cmd "ns"	/s(text)
+	cmd "rs"	/s(text)
+	cmd "ll"	/s(text)
+	cmd "in"	/s(text)
+	cmd "ti"	/s(text)
+	cmd "ta"	/s(text)
+	cmd "tc"	/s(text)
+	cmd "lc"	/s(text)
+	cmd "fc"	/s(text)
+	cmd "ec"	/s(text)
+	cmd "eo"	/s(text)
+	cmd "lg"	/s(text)
+	cmd "ul"	/s(text)
+	cmd "cu"	/s(text)
+	cmd "uf"	/s(text)
+	cmd "cc"	/s(text)
+	cmd "c2"	/s(text)
+	cmd "tr"	/s(text)
+	cmd "nh"	/s(text)
+	cmd "hy"	/s(text)
+	cmd "hc"	/s(text)
+	cmd "hw"	/s(text)
+	cmd "tl"	/s(text)
+	cmd "pc"	/s(text)
+	cmd "lt"	/s(text)
+	cmd "nm"	/s(text)
+	cmd "nn"	/s(text)
+	cmd "ev"	/s(text)
+	cmd "rd"	/s(text)
+	cmd "ex"	/s(text)
+	cmd "so"	/s(text)
+	cmd "nx"	/s(text)
+	cmd "pi"	/s(text)
+	cmd "mc"	/s(text)
+	cmd "tm"	/s(text)
+	cmd "pm"	/s(text)
+	cmd "fl"	/s(text)
+
+cline1	rqname = ""
+	namef *out* "	" cmd "	" = "	"	/s(cline3)
+	manr = cmd
+	markst = name "m" lcnt " "	/(mark2)
+cline2	"" line		/s(nextl)
+	cmd = line	/(cline1)
+
+cline3	out "	" = ""		/f(cline4)
+	out = out "	"
+cline4	namel *name* *ttt/"2"* "	" = name "	"
+	namel *ttt* " 	" = ttt "	"
+	"	" namel		/s(cline6)
+	out ** "	" = ""	/s(cline4)
+	namel " " *name* *ttt/"2"* "	"
+	ttt " " = ""
+	name = name "	"
+	name *uuu* " 	" = uuu
+	name *uuu* "	" = uuu
+	"" name			/s(cline5)
+	name = "(" name ")" ttt "-"	/(text)
+cline5	name = ttt "-"		/(text)
+
+cline6	name = ""	/(text)
+
+tsetnr	markst = name "n" lcnt "#"	/(mark2)
+
+trefnr	markst = name "n" lcnt		/(mark2)
+
+trefstr	markst = name "s" lcnt		/(mark2)
+
+trefpar	markst = name "p" lcnt		/(mark2)
+
+setnr	markst = name "n" lcnt "#"	/(mark)
+
+setmac	markst = name "m" lcnt "#"	/(mark)
+
+setstr	markst = name "s" lcnt "#"	/(mark)
+
+setdiv	markst = name "d" lcnt "#"	/(mark)
+
+refmac	markst = name "m" lcnt		/(mark)
+
+refnr	markst = name "n" lcnt		/(mark)
+
+mark	line *manr/"2"* = ""	/s(mark1)
+	"" line		/s(text)
+	manr = line
+	line = ""
+mark1	manr *manr/"1"* " "
+	line " " = ""
+
+mark2	manr ** "\"		/f(mark3)
+	markst *ttt/"1"*
+	markst ** "-" *ttt/"1"*
+	rrr = ""
+	markst ** "#"		/f(mark25)
+	rrr = "#"
+mark25	syspot = "~gen	" name ttt lcnt rrr
+	line = manr line
+	""  rpt		/f(mark5)s(mark4)
+
+mark3	syspot = manr "	" markst
+mark4	line = pline line
+	"" rpt		/f(mark)s(text)
+
+mark5	line *ttt* " " = ""	/f(mark6)
+	aline = aline ttt	/(mark4)
+mark6	rpt = ""		/(text)
+
+casedt	line *ttt* " " *uuu* = uuu " " ttt	/s(refmac)f(text)
+
+caseif	syspot = "if	" name "r" lcnt " "
+	rqname = ""
+	line *ttt* " " *rrr* = rrr
+	aline = aline ttt	/(nlopx)
+
+caserr	rpt = "yes"		/(setnr)
+
+caserm	rpt = "yes"		/(setmac)
+
+casede	tline = line
+	tline *name/"2"* = ""	/s(casede0)
+	"" tline		/s(text)
+	name = tline
+	tline = ""
+
+casede0	name *name/"1"* " "
+	namel *ttt* "	" = ttt " " name "	"
+	"	" namef		/f(casede4)
+
+casede1	name = name "-"
+	tline " " = ""
+	tline *manr/"2"* = ""	/s(casede2)
+	"" tline		/s(casede3)
+	manr = tline
+casede2	manr *manr/"1"* " "
+	namef = "	" manr namef	/(setmac)
+casede3	namef = "	." namef	/(setmac)
+
+casede4	namel " " *ttt* " " name "	"
+	name = "(" ttt ")" name		/(casede1)
+
+caseel	syspot = "el	" name "r" lcnt " "
+	rqname = ""		/(nlopx)
+
+end	bye bye "@(#)macref.sno	1.2"

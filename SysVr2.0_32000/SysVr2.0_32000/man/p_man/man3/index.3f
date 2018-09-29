@@ -1,0 +1,22 @@
+.TH INDEX 3F
+.SH NAME
+index \- return location of \s-1FORTRAN\s+1 substring
+.SH SYNOPSIS
+.nf
+.B "character\(**N1 ch1"
+.B "character\(**N2 ch2"
+.B "integer i"
+.P
+.B "i = index(ch1, ch2)"
+.SH DESCRIPTION
+.I Index\^
+returns the location of substring
+.I ch2\^
+in string
+.IR ch1 .
+The value returned is the position at which substring
+.I ch2\^
+starts, or 0 if it is not present in string
+.IR ch1 .
+If N2 is greater than N1, a zero is returned.
+.\"	@(#)index.3f	6.2 of 10/20/83

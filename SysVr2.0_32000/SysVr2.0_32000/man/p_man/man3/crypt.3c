@@ -1,0 +1,86 @@
+.TH CRYPT 3C
+.SH NAME
+crypt, setkey, encrypt \- generate hashing encryption
+.SH SYNOPSIS
+.nf
+.B char \(**crypt (key, salt)
+.B char \(**key, \(**salt;
+.PP
+.B void setkey (key)
+.B char \(**key;
+.PP
+.B void encrypt (block, fake)
+.B char \(**block;
+.B int fake;
+.SH DESCRIPTION
+.I Crypt\^
+is the password encryption function.
+It is based on a one way hashing encryption algorithm
+with
+variations intended (among other things) to frustrate use of hardware
+implementations of a
+key search.
+.PP
+.I Key\^
+is a user's typed password.
+.I Salt\^
+is a two-character string chosen from the
+set [\f3a-zA-Z0-9./\fP];
+this
+string is used to perturb the
+hashing
+algorithm in one of 4096
+different ways, after which the password
+is used as the key to encrypt repeatedly a constant string.
+The returned value points to the encrypted password.
+The first two characters are the salt itself.
+.PP
+The
+.I setkey\^
+and
+.I encrypt\^
+entries provide (rather primitive)
+access to the actual
+hashing
+algorithm.
+The argument of
+.I setkey\^
+is a character array of length 64 containing only the characters
+with numerical value 0 and 1.
+If this string is divided into groups of 8,
+the low-order bit in each group is ignored;
+this gives a 56-bit key which is set into the machine.
+This is the key that will be used
+with the hashing algorithm to encrypt
+the string
+.I block\^
+with the function
+.IR encrypt .
+.PP
+The argument to the
+.I encrypt\^
+entry is a character array of length 64
+containing only the characters with
+numerical value 0 and 1.
+The argument array is modified in place
+to a similar array
+representing the bits of the argument after having been
+subjected to the
+hashing
+algorithm using the key set by
+.IR setkey .
+.I Fake
+is not used and is ignored,
+but should be present if
+.IR lint (1)
+is used.
+.SH SEE ALSO
+getpass(3C), passwd(4).
+.br
+login(1), passwd(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.SH BUGS
+The return value
+points to static data that are overwritten
+by each call.
+.\"	@(#)crypt.3c	6.2 of 10/20/83

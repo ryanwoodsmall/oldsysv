@@ -1,0 +1,47 @@
+.TH SSR 1M "3B20S only"
+.SH NAME
+ssr, setssr, clrssr \- print or modify the System Status Register
+.SH SYNOPSIS
+.B /etc/ssr
+.PP
+.B /etc/setssr
+[ bit .\|.\|. ]
+.PP
+.B /etc/clrssr
+[ bit .\|.\|. ]
+.SH DESCRIPTION
+The System Status Register (\s-1SSR\s+1) serves as both a display
+for certain processor information
+as well as a mechanism for controlling
+various processor actions.
+Although implemented with negative logic in the hardware,
+these commands function in the normal logic sense.
+The
+.I bit
+argument is a decimal integer specifying the bit position in the
+.SM SSR\*S.
+.PP
+.I Ssr\^
+prints the current value of the \s-1SSR\s+1.
+.PP
+.I Setssr\^
+asserts the specified \fIbit\fP positions in the \s-1SSR\s+1.
+.PP
+.I Clrssr\^
+clears the specified \fIbit\fP positions in the \s-1SSR\s+1.
+.PP
+Extreme caution must be exercised when using these commands
+as the System Status Register can alter processor behavior.
+In particular, certain \fIbits\fP will isolate the I/O system
+from the processor, causing the system to crash.
+.PP
+.I Setssr\^
+and
+.I clrssr\^
+are most commonly used with bit \fB13\fP as an argument
+in order to enable or disable the cache bypass.
+.SH FILES
+/usr/include/sys/ssr.h
+.SH "SEE ALSO"
+3B20ops(8).
+.\"	@(#)ssr.1m	5.2 of 5/18/82

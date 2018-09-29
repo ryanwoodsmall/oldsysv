@@ -1,0 +1,17 @@
+
+\S process :  process number :  active process \S
+
+A process is the unit of computation for a UNIX system. Every time
+you type a name of a file that contains an executable program  (see
+"mode"\S*\S) you initiate a new process. Shell programs can cause 
+the initiation of many processes because they can contain many
+command lines.  An active process is a program that is being
+executed or is  waiting to be executed.  A process is active until
+its completion is recorded by the computer on an internal table.
+A process number is an integer value that is assigned to an active
+process.  The process status command, ps(1), will print the
+process numbers of all the processes that belong to you. You
+can use the kill(1) command to stop a process that is currently 
+active.
+
+\S*\S defined in the \Sglossary\S

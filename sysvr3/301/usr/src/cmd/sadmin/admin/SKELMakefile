@@ -1,0 +1,75 @@
+#ident	"@(#)sadmin:admin/SKELMakefile	2.4"
+#	skeleton Makefile for admin
+
+ADMINHOME = $(ROOT)/usr/admin
+BIN = $(ROOT)/usr/bin
+
+CMDS = --EXECUTABLES--
+
+DIRECTORIES = --DIRECTORIES--
+
+PARTS = $(CMDS) --FILES--
+
+ALL: \
+		$(PARTS) passwd
+
+passwd:	\
+		$(CMDS)
+	echo $(CMDS)  |  tr ' ' '\012'  | \
+	  sed 's;$$;::0:0:administration login:$(ADMINHOME):/bin/rsh;' >passwd
+
+install: \
+		$(PARTS) $(BIN) remove passwd
+	: 'Must be run by root or the owner of /usr and $(BIN) (sys)'
+	@echo '\nThe following entries must be added to /etc/passwd:'
+	@cat passwd
+	@echo "\\nSee the "passwd" file in `pwd`\\n"
+	-umask 022;  mkdir $(ADMINHOME);  cd $(ADMINHOME); \
+	  mkdir $(DIRECTORIES)
+	cp unixadmin $(BIN)
+	chmod +x,u+w,go-w $(BIN)/unixadmin
+	echo $(CMDS)  |  tr ' ' '\012'  | \
+	  xargs -i -t ln -f $(BIN)/unixadmin $(BIN)/{}
+	rm -f $(BIN)/unixadmin
+	umask 022;  ls $(PARTS)  |  cpio -pd $(ADMINHOME)
+	cd $(ADMINHOME);  chmod u+xw,go-xw $(CMDS)
+	cd $(ADMINHOME);  ln -f profile.dot .profile
+
+remove:
+	-cd $(ADMINHOME);  rm -f $(PARTS) .profile
+	-cd $(ADMINHOME);  \
+	  rmdir `echo $(DIRECTORIES)  |  tr ' ' '\012'  |  sort -r`
+	-rmdir $(ADMINHOME)
+	cd $(BIN);  rm -f $(CMDS)
+
+$(BIN):
+	mkdir $(BIN)
+	chmod 755 $(BIN)
+
+clean clobber:
+	rm -f passwd
+
+partslist:
+	@echo Makefile SKELMakefile $(PARTS)  |  tr ' ' '\012'  |  sort
+
+product:
+	@echo .profile $(PARTS)  |  tr ' ' '\012'  | \
+		sed 's;^;$(ADMINHOME)/;'
+	@echo $(CMDS)  |  tr ' ' '\012'  | \
+		sed 's;.*;$(BIN)/&	--linked to each other--;'
+
+productdir:
+	@echo $(BIN)
+	@echo $(ADMINHOME)
+	@echo $(DIRECTORIES)  |  tr ' ' '\012'  | \
+		sed 's;^;$(ADMINHOME)/;'
+
+srcaudit:
+	@(	find * -print;  \
+		ls -d $(DIRECTORIES) $(PARTS) SKELMakefile Makefile  \
+	)  |  sort  |  uniq -u  |  sed 's/$$/	unexpected/'
+
+newmakefile:	../tools/genmakefile SKELMakefile
+	cp Makefile OMakefile
+	../tools/genmakefile SKELMakefile *Makefile passwd >Makefile
+	rm -f OMakefile

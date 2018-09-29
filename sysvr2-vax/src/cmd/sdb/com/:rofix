@@ -1,0 +1,3 @@
+g/^[ 	]*\.data/s/data/text/
+w
+q

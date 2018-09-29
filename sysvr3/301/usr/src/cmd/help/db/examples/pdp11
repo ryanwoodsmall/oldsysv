@@ -1,0 +1,17 @@
+
+\S pdp11 \S:  Examples
+
+        if u3b5
+    then cc -Du3b5 format.c -o format.o
+        elif pdp-11
+    then cc -Dpdp11 format.c -o format.o
+        fi
+
+    This shell program compiles the program in the file "format.c".  
+    It puts the compiled version in "format.o".  The program checks if 
+    the computer is an AT&T 3B5 computer, a pdp-11/70 or pdp-11/45.  If the 
+    machine is a pdp-11/70 or a pdp-11/45, the second compile command 
+    compiles "format.c".  The "Dpdp11" option to cc(1) causes only the 
+    machine-dependent lines that pertain to pdp-11/70 or pdp-11/45 to be 
+    executed so that "format.o" is correct for the machine it is compiled on.
+    See the manual page for cpp(1) for an explanation of the "D" option.

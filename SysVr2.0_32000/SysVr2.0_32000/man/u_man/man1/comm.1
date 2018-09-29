@@ -1,0 +1,45 @@
+.TH COMM 1
+.SH NAME
+comm \- select or reject lines common to two sorted files
+.SH SYNOPSIS
+.B comm
+[
+.B \-
+[
+.B 123
+]
+] file1 file2
+.SH DESCRIPTION
+.I Comm\^
+reads
+.I file1\^
+and
+.IR file2 ,
+which
+should be ordered in \s-1ASCII\s0 collating sequence [see
+.IR sort (1)],
+and produces a three-column output: lines only in
+.IR file1 ;
+lines only in
+.IR file2 ;
+and lines in both files.
+The file name
+.B \-
+means the standard input.
+.PP
+Flags 1, 2, or 3 suppress printing of the corresponding
+column.
+Thus
+.B comm
+.B \-12
+prints only the lines common to the two files;
+.B comm
+.B \-23
+prints only lines in the first file but not in the second;
+.B comm
+.B \-123
+is a no-op.
+.PP
+.SH "SEE ALSO"
+cmp(1), diff(1), sort(1), uniq(1).
+.\"	@(#)comm.1	6.2 of 9/2/83

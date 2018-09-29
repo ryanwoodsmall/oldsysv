@@ -1,0 +1,17 @@
+menu="Preferences for $LOGNAME"
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.h531.pref Preferences
+
+name=change password
+action=`run sh -c 'echo To return to FACE without changing your password, hit BREAK or DEL; exec passwd "$LOGNAME"'`return nop
+
+name=folder options
+action=OPEN FORM OBJECTS/Form.fold
+
+name=office preferences
+action=OPEN FORM OBJECTS/Form.office
+
+name=permissions
+action=OPEN FORM OBJECTS/Form.perm "New Objects"
+
+`readfile $HOME/pref/preferences`

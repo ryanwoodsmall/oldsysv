@@ -1,0 +1,341 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/printers/change_p	1.8"
+## IDOC:   SCREEN 2.29: CHANGE PRINTER
+#menu# Change a printer configuration
+
+##+++ (help _H73)
+#help#        You use the "change" command to change the configuration  of
+#help#        a printer.  The same information you gave when you added the
+#help#        printer will provide the defaults  for  each  item  you  are
+#help#        asked  to  respecify,  so  you  can quickly step through the
+#help#        configuration to find the item you want to change.
+##--- (help _H73)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+DEF_p=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.29.1)
+chk_name \
+	"Enter the name of the printer:${DEF_p:+ (default: ${DEF_p})}" \
+	"${DEF_p}" \
+	"\
+        You are expected to enter the name of the printer  you  want
+        to change.  If you don't know the name, enter \"q\" and select
+        the \"status\" command from the \"printers\" menu, to get a list
+        of known printers.
+
+                                  WARNING
+Changing a printer configuration may cause print requests currently  waiting
+for  the  printer  to  become  ineligible  for printing on that printer.  If
+another printer cannot be found the requests will be  CANCELED.   Generally,
+changing  the  printer  type,  the  list  of  file  types acceptable without
+filtering, and the list forms allowed CAN cause a problem.
+
+        If you think the changes you are about to make might cause a
+        problem,  you  may  want  to  wait for requests currently in
+        queue to finish printing before making the  change.   To  do
+        this,  enter  a \"q\" and select the \"reject\" command from the
+        \"printers\" menu to reject further print  requests  for  this
+        printer.  Make sure the printer is enabled (use the \"enable\"
+        command in the \"printers\" menu) and let  the  print  service
+        finish  all  the  requests  waiting  for this printer.  Then
+        select the \"change\" command again.  \
+"
+OPT_p=${RESP}
+##--- (2.29.1)
+
+	if [ "${OPT_p}" = "any" -o "${OPT_p}" = "all" -o "${OPT_p}" = "none" ]
+	then
+		echo "You can not use \"any\", \"all\", or \"none\". Try again."
+		continue
+	fi
+
+	pfile=/usr/spool/lp/admins/lp/printers/${OPT_p}/configuration
+	if [ -r "${pfile}" ]
+	then
+		break
+	else
+		echo "That printer doesn't exist. Try again."
+	fi
+done
+
+OPT_onobanner=`grep 'Banner:.*Always' ${pfile} >/dev/null || echo yes`
+OPT_cpi=`sed -n -e '/CPI: /s///p' ${pfile}`
+###	OPT_c=`egrep "^${OPT_p}$" /usr/spool/lp/admins/lp/classes/* 2>/dev/null | cut -f8 -d\/ | cut -f1 -d:`
+OPT_ostty=`sed -n -e '/Stty: /s///p' ${pfile}`
+OPT_speed=`sed -n -e '/Speed: /s///p' ${pfile}`
+if [ -n "${OPT_ostty}" -o -n "${OPT_speed}" ]
+then
+	OPT_ostty="${OPT_ostty} ${OPT_speed}"
+fi
+if grep \(daisy\) ${pfile} 1>/dev/null
+then
+	OPT_S=`sed -n -e '/Character sets: (daisy)  /s///p' ${pfile}`	
+else
+	OPT_S=`sed -n -e '/Character sets: /s///p' ${pfile}`
+fi
+if [ -z "${OPT_S}" ]
+then
+	OPT_S=none
+fi
+OPT_I=`sed -n -e '/Content types: /s///p' ${pfile}`
+: ${OPT_I:=simple}
+OPT_v=`sed -n -e '/Device: /s///p' ${pfile}`
+OPT_U=`sed -n -e '/Dial: /s///p' ${pfile}`
+OPT_F=`sed -n -e '/Fault: /s///p' ${pfile}`
+: ${OPT_F:=continue}
+OPT_i=`sed -n -e '/Interface: /s///p' ${pfile}`
+OPT_itmp="${OPT_i}"
+if expr "${OPT_itmp}" : "/usr/spool/lp/model" >/dev/null
+then
+	OPT_m=`expr "${OPT_i}" : '/usr/spool/lp/model/\(.*\)'`
+	OPT_i=
+	OPT_e=
+else
+	OPT_e=
+	OPT_m=
+fi
+OPT_lpi=`sed -n -e '/LPI: /s///p' ${pfile}`
+OPT_length=`sed -n -e '/Length: /s///p' ${pfile}`
+OPT_width=`sed -n -e '/Width: /s///p' ${pfile}`
+OPT_l=`grep "Login:" ${pfile} >/dev/null && echo "yes"`
+OPT_T=`sed -n -e '/Printer type: /s///p' ${pfile}`
+OPT_D=`cat /usr/spool/lp/admins/lp/printers/${OPT_p}/comment 2>/dev/null`
+allow=/usr/spool/lp/admins/lp/printers/${OPT_p}/users.allow
+deny=/usr/spool/lp/admins/lp/printers/${OPT_p}/users.deny
+if [ -s "${allow}" ]
+then
+	OPT_uallow=`sort <${allow} | tr '\012' ','`
+	OPT_uallow=`expr "${OPT_uallow}" : '\(.*\),$'`
+	OPT_udeny=
+elif [ -f "${allow}" ]
+then
+	OPT_uallow=none
+	OPT_udeny=all
+elif [ -s "${deny}" ]
+then
+	OPT_uallow=
+	OPT_udeny=`sort <${deny} | tr '\012' ','`
+	OPT_udeny=`expr "${OPT_udeny}" : '\(.*\),$'`
+elif [ -f "${deny}" ]
+then
+	OPT_uallow=all
+	OPT_udeny=none
+else
+	OPT_uallow=none
+	OPT_udeny=all
+fi
+allow=/usr/spool/lp/admins/lp/printers/${OPT_p}/forms.allow
+deny=/usr/spool/lp/admins/lp/printers/${OPT_p}/forms.deny
+if [ -s "${allow}" ]
+then
+	OPT_fallow=`sort <${allow} | tr '\012' ','`
+	OPT_fallow=`expr "${OPT_fallow}" : '\(.*\),$'`
+	OPT_fdeny=
+elif [ -f "${allow}" ]
+then
+	OPT_fallow=none
+	OPT_fdeny=all
+elif [ -s "${deny}" ]
+then
+	OPT_fallow=
+	OPT_fdeny=`sort <${deny} | tr '\012' ','`
+	OPT_fdeny=`expr "${OPT_fdeny}" : '\(.*\),$'`
+elif [ -f "${deny}" ]
+then
+	OPT_fallow=all
+	OPT_fdeny=none
+else
+	OPT_fallow=none
+	OPT_fdeny=all
+fi
+alert=`/usr/lib/lpadmin -p ${OPT_p} -A list`
+case "${alert}" in
+"On fault: al"* )
+	OPT_Q=0
+	OPT_W=`expr "${alert}" : '.*every \(.*\) minute*'`
+	if [ -n "${OPT_W}" ]
+	then
+		:
+	else
+		OPT_W=0
+	fi
+	OPT_A=`expr "${alert}" : '.*with "\(.*\)" *'`
+	;;
+"On fault: ma"* )
+	OPT_Q=0
+	OPT_W=`expr "${alert}" : '.*every \(.*\) minute*'`
+	if [ -n "${OPT_W}" ]
+	then
+		:
+	else
+		OPT_W=0
+	fi
+	OPT_A=`expr "${alert}" : '.*to \(.*\) *'`
+	OPT_A=`echo ${OPT_A} | cut -f1 -d" " `
+	OPT_A="mail "${OPT_A}
+	;;
+"On fault: wr"* )
+	OPT_Q=0
+	OPT_W=`expr "${alert}" : '.*every \(.*\) minute*'`
+	if [ -n "${OPT_W}" ]
+	then
+		:
+	else
+		OPT_W=0
+	fi
+	OPT_A=`expr "${alert}" : '.*to \(.*\) *'`
+	OPT_A=`echo ${OPT_A} | cut -f1 -d" " `
+	OPT_A="write "${OPT_A}
+	;;
+"On fault: no"* )
+	OPT_Q=0
+	OPT_W=0
+	OPT_A=none
+	;;
+esac
+
+OPT_install=edit
+firsttime=yes
+while [ "edit" = "${OPT_install}" ]
+do
+	DEF_onobanner=${OPT_onobanner}
+	DEF_cpi=${OPT_cpi}
+	DEF_c=${OPT_c}
+	DEF_S=${OPT_S}
+	DEF_I=${OPT_I}
+	DEF_v=${OPT_v}
+	DEF_U=${OPT_U}
+	DEF_F=${OPT_F}
+	DEF_i=${OPT_i}${OPT_e}${OPT_m}
+	DEF_lpi=${OPT_lpi}
+	DEF_length=${OPT_length}
+	DEF_width=${OPT_width}
+	DEF_l=${OPT_l}
+	DEF_T=${OPT_T}
+	DEF_D=${OPT_D}
+	DEF_uallow=${OPT_uallow}
+	DEF_udeny=${OPT_udeny}
+	DEF_fallow=${OPT_fallow}
+	DEF_fdeny=${OPT_fdeny}
+	DEF_W=${OPT_W}
+	DEF_A=${OPT_A}
+	DEF_ostty=${OPT_ostty}
+
+	if [ "yes" != "${firsttime}" ]
+	then
+		echo "
+Edit the printer configuration:
+"
+	fi
+	firsttime=
+
+. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.25
+
+	echo
+
+	if [ "skip" = "${OPT_install}" ]
+	then
+		exit 0
+	fi
+
+	if [ "install" = "${OPT_install}" ]
+	then
+		OPT_install="edit"
+
+		easyopts="
+			${OPT_c:+-c ${OPT_c}}
+			${OPT_T:+-T ${OPT_T}}
+			${OPT_v:+-v ${OPT_v}}
+			${OPT_U:+-U ${OPT_U}}
+			${OPT_i:+-i ${OPT_i}}
+			${OPT_e:+-e ${OPT_e}}
+			${OPT_m:+-m ${OPT_m}}
+			${OPT_cpi:+-o cpi=${OPT_cpi}}
+			${OPT_lpi:+-o lpi=${OPT_lpi}}
+			${OPT_length:+-o length=${OPT_length}}
+			${OPT_width:+-o width=${OPT_width}}
+		"
+		/usr/lib/lpadmin -p ${OPT_p} ${easyopts} 2>${TMPDIR:-/tmp}/warnxxx || { cat ${TMPDIR:-/tmp}/warnxxx; continue; }
+
+		echo ${OPT_p} >${TMPDIR:-/tmp}/PRT.`basename \`tty\``
+
+		if [ "none" = "${OPT_D}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -D "" || continue
+		else
+			/usr/lib/lpadmin -p ${OPT_p} -D "${OPT_D}" || continue
+		fi
+		if [ -n "${OPT_uallow}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -u allow:"${OPT_uallow}" || continue
+		fi
+		if [ -n "${OPT_l}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -l || continue
+		else
+			/usr/lib/lpadmin -p ${OPT_p} -h || continue
+		fi
+		if [ -n "${OPT_onobanner}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -o nobanner || continue
+		else
+			/usr/lib/lpadmin -p ${OPT_p} -o banner || continue
+		fi
+		if [ -n "${OPT_udeny}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -u deny:"${OPT_udeny}" || continue
+		fi
+		if [ -n "${OPT_fallow}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -f allow:"${OPT_fallow}" || continue
+		fi
+		if [ -n "${OPT_fdeny}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -f deny:"${OPT_fdeny}" || continue
+		fi
+		if [ -n "${OPT_A}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -A "${OPT_A}" -W ${OPT_W} -F ${OPT_F} || continue
+		fi
+		if [ -n "${OPT_I}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -I "${OPT_I}" || continue
+		fi
+		if [ -n "${OPT_ostty}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -o stty="'${OPT_ostty}'" || continue
+		fi
+		if [ -n "${OPT_S}" ]
+		then
+			/usr/lib/lpadmin -p ${OPT_p} -S "${OPT_S}" || continue
+		fi
+
+		rm ${TMPDIR:-/tmp}/warnxxx 2>/dev/null
+		break
+	fi
+
+done

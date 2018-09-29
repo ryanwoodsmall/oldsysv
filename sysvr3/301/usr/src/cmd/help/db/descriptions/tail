@@ -1,0 +1,22 @@
+
+\Stail\S:  Description
+
+Syntax Summary:  tail [+|-[number] [b|l|c] [-f] [file_name]
+
+         where:  number  is an integer that specifies a distance
+                         from the beginning or end of the file.
+
+                 file_name  is the name of a file.
+
+Description:
+     \Stail\S prints the contents of a file starting from a point that you
+     specify.  Use \Stail\S if you want to see only a portion of the contents
+     of a file.  With only a file name as an argument, \Stail\S prints the
+     last 10 lines of the file.  You specify where you want \Stail\S to begin
+     by specifying <number> and a "+" for number of lines from the beginning or
+     "-" for number of lines from the end.  With an option, \Stail\S positions
+     itself either <number> blocks, lines, or characters from the beginning or
+     end of the file.  For example, if you use "+6" as an argument, \Stail\S
+     begins printing on line 7 of standard input.  \Stail\S prints standard
+     input if you do not specify a file name.  See also:  split(1) and pg(1)
+     for commands that function similar to \Stail\S.

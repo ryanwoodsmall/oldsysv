@@ -1,0 +1,16 @@
+
+\Smkdir\S:  Description
+
+Syntax Summary:  mkdir dir_name ...
+
+         where:  dir_name  is the name of a directory.
+
+Description:
+     \Smkdir\S creates new directories.  When you create a directory with
+     \Smkdir\S, it is empty.  If you give \Smkdir\S a simple directory name as
+     an argument, the new directory will be a subdirectory of the current
+     directory. If you give \Smkdir\S a full or relative path name, you can
+     make new directories anywhere in the file system. To create a new
+     directory, you must have permission to write in the directory where the
+     new directory will exist.  See also:  cd(1) for a command that might be
+     used with \Smkdir\S.

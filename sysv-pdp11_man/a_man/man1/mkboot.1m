@@ -1,0 +1,28 @@
+.TH MKBOOT 1M "3B20S only"
+.SH NAME
+mkboot \- convert a.out file to boot image
+.SH SYNOPSIS
+.B /etc/mkboot
+a.out-file boot-file
+.SH DESCRIPTION
+.I Mkboot
+creates
+.I boot-file
+as a main-memory image of the
+.IR a.out-file .
+.I Mkboot
+creates the boot-file with the text first,
+null byte padding from the end of the text to the start of the data,
+the data,
+null byte data for the bss,
+and null byte padding to bring the boot-file size up to a multiple of 512.
+.SH DIAGNOSTICS
+.I Mkboot
+prints the starting and ending addresses for text,
+data,
+and bss on the standard error output.
+.PP
+Self-explanatory complaints about bad arguments and bad
+.I a.out
+format.
+.\"	@(#)mkboot.1m	5.2 of 5/18/82

@@ -1,0 +1,21 @@
+
+ \Susage\S:  Information about Commands
+
+     \Susage\S provides information about specific UNIX System commands.
+
+            Within \Susage\S, double quotes " " mark options or literals, 
+     and angle brackets < > mark argument variables. 
+
+            You should see \Sstarter\S for basic UNIX system commands and
+     terms before going on to anything else.
+
+     Enter one of the choices below to proceed.
+
+              choices            description
+
+           \S UNIX_command \S        Obtain usage information for a command
+
+                \S p \S              Print a list of commands
+
+                \S r \S              Redirect to a file or a command
+                \S q \S              Quit

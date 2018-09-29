@@ -1,0 +1,21 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/printers/status_p	1.5"
+## IDOC:   SCREEN 2.36: CHECK PRINTER STATUS
+#menu# Check status of all printers
+
+##+++ (help _H95)
+#help#        You use the "status" command to get  a  quick  list  of  the
+#help#        printers  available,  and  to  check  on  whether  they  are
+#help#        currently  printing  a  request,  or  are  disabled  or  are
+#help#        rejecting requests.
+#help#
+#help#        If you want to get a listing of the  complete  configuration
+#help#        of a printer, use the "list" command in the "printers" menu.
+##--- (help _H95)
+
+##+++ (line 1)
+echo \
+"
+Printers currently available:"
+##--- (line 4)
+
+lpstat -p all -a all

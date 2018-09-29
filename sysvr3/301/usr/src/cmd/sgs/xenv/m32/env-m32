@@ -1,0 +1,36 @@
+#ident	"@(#)xenv:m32/env-m32	1.6"
+#
+#
+#	Template for the 3b15/3b5/3b2 cross environment setup script
+#	The purpose of this shell script is to put the user's cross bin
+#	first in the user's path and to define environment variables used
+#	when building the cross-libraries.
+#
+PATH=/xe/3b2sgs/3.0/n12/bin:$PATH
+ROOT=/xe/3b2/3.0
+SHELL=/bin/sh
+PS1="3b2crossenv: "
+export PATH ROOT SHELL PS1
+VARIANT=
+CFLAGS=
+PCFLAGS=
+PFX=
+CC=
+AR=
+STRIP=
+LORDER=
+LIB=
+LIBP=
+PROF=
+DONE=
+DEFLIST=
+INC=/xe/3b2sgs/3.0/n12/usr/include
+INCSYS=/xe/3b2sgs/3.0/n12/usr/include/sys
+CH='#'
+export VARIANT CFLAGS PCFLAGS PFX CC AR STRIP LORDER LIB LIBP PROF DONE DEFLIST INC INCSYS CH
+if [ $# = 0 ]
+then
+	exec /bin/sh
+else
+	exec "$@"
+fi

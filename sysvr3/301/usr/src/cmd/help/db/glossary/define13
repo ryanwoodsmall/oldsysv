@@ -1,0 +1,18 @@
+
+\S argument \S
+
+An argument is a character "string"\S*\S or number that follows a command
+on the command line and controls its execution in some way.  There are two
+types of arguments:  "options"\S*\S, and "operands"\S*\S.  Options
+change the execution or output of the command.  Operands specify files or
+directories that will be operated on by the command.  For example, in the
+command
+        	  pr -p	temp1 temp2
+
+"p", "temp1", and "temp2" are all arguments to the pr(1) command.  The "p"
+option causes the program to pause and the terminal to beep at the
+beginning of each page of output.  The program waits for you to enter a
+carriage return before printing the next page.  The operands "temp1" and
+"temp2" specify the files that will be printed.
+
+\S*\S defined in the \Sglossary\S

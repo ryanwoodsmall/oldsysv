@@ -1,0 +1,18 @@
+
+\S pwd \S:  Examples
+
+       pwd
+
+    Prints the full path name of the current working directory to the standard
+    output.  For a user on system "a8" with a login directory "xyz" who is
+    working in her login directory, the output of this command is "/a8/xyz".
+
+    ----------------------------------------------------------------------
+
+       cd EXPERIMENT; PATH=$PATH:`pwd`; cd $HOME
+
+    Moves you to the "EXPERIMENT" directory and changes the value of your 
+    "PATH" variable to include "EXPERIMENT".  Then cd(1) makes your "HOME" 
+    directory your current working directory.  With "PATH" redefined, you can
+    execute any files that are in "EXPERIMENT" from your "HOME" directory or
+    any other directory.

@@ -1,0 +1,8 @@
+
+\S root : root directory \S
+
+The  root directory  is the base of the tree structure of the  file
+system of a UNIX system. It is represented as a slash (/) at the
+beginning of  every "full pathname"\S*\S.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,195 @@
+/*	@(#)defs	1.4	*/
+
+/*	machine dependent include file for the DEC VAX-11 series */
+
+/*
+** Enable optimizer features
+*/
+
+#define	MAXOPS 6
+/* maximum number of operands per instruction */
+
+#define	NUMLBLS	((640*5)+1)
+/* 3201 labels */
+
+#define	PEEPHOLE 1
+/* invoke peephole optimizing hooks */
+
+#define LIVEDEAD 16
+/* perform live/dead register analysis using 16 bits */
+
+#define	USERDATA 1
+/* add declaration "USERTYPE userdata;" to node struct*/
+
+struct	instruc
+{
+	char		*instr;		/* instruction name */
+	char		code;		/* operation code */
+	char		nargs;		/* number of arguments */
+	unsigned char	args[MAXOPS];	/* operand information */
+};
+
+typedef	struct	instruc	*USERTYPE;
+
+/*
+** Fields and values for the args[] members of the instruc structure
+*/
+#define	ACC	0x07	/* Access mode of operand */
+#define	AA	0x01	/* Address of it */
+#define	AB	0x02	/* Branch displacement of it */
+#define	AI	0x03	/* Immediate value of it */
+#define	AM	0x04	/* Modify it (read then optional write) */
+#define	AR	0x05	/* Read it */
+#define	AW	0x06	/* Write it */
+
+#define	TYP	0x70	/* Type of operand (size) */
+#define	TB	0x10	/* Byte */
+#define	TW	0x20	/* Word */
+#define	TL	0x30	/* Long */
+#define	TQ	0x40	/* Quad */
+#define	TF	0x50	/* Float */
+#define	TD	0x60	/* Double */
+
+#define	optyp(x) ((x)&TYP)
+#define	opacc(x) ((x)&ACC)
+
+/*
+** Significant node types
+*/
+
+#define	LABEL	3
+#define	OTHER	4
+/* branches */
+#define	CALLS	5	/* function call */
+#define	RET	6	/* generic return */
+#define	RET0	7	/* void return */
+#define	RET1	8	/* int return */
+#define	RET2	9	/* long or double return */
+#define	JBR	10	/* shortenable goto */
+#define	JMP	11	/* long goto */
+#define	JEQ	12	/* conditional branches */
+#define	JNE	13
+#define	JLE	14
+#define	JGE	15
+#define	JLT	16
+#define	JGT	17
+#define	JLEU	18
+#define	JGEU	19
+#define	JLTU	20
+#define	JGTU	21
+#define	JBS	22	/* jumps on bits */
+#define	JBC	23
+#define	JLBS	24
+#define	JLBC	25
+#define	AOBLEQ	26	/* loop instructions */
+#define	AOBLSS	27
+#define	SOBGEQ	28
+#define	SOBGTR	29
+#define	ACB	30
+#define	CASE	31	/* switch instruction */
+#define	HBRAN	32	/* other branches with side effects */
+#define	HLABEL	33	/* non-removable label (and block) */
+/* miscellaneous */
+#define	PUSHA	34
+#define	DECR	35
+#define	INCR	36
+#define	TEST	37
+#define	PUSH	38
+#define	CLR	39
+#define	CVT	40
+#define	MOVA	41
+#define	ADD	42
+#define	MUL	43
+#define	BIS	44
+#define	XOR	45
+#define	SUB	46
+#define	DIV	47
+#define	BIC	48
+#define	ASH	49
+#define	MOV	50
+#define	BIT	51
+#define	MOVC	52	/* zaps r0-r5 */
+#define	MOVU	53	/* movzXX */
+#define	CMP	54
+#define	EXTV	55
+#define	EXTZV	56
+#define	INSV	57
+#define	JSB	58	/* needed for `jsb mcount' */
+#define	MNEG	59
+#define	MCOM	60
+#define	CMPV	61
+#define	CMPZV	62
+/* SDB information */
+#define	SDB_I	63
+#define	GDEF	(SDB_I+0)
+#define	GDIM	(SDB_I+1)
+#define	GENDEF	(SDB_I+2)
+#define	GLINE	(SDB_I+3)
+#define	GSCL	(SDB_I+4)
+#define	GSIZE	(SDB_I+5)
+#define	GTAG	(SDB_I+6)
+#define	GTYPE	(SDB_I+7)
+#define	GVAL	(SDB_I+8)
+/* Assembler pseudo-ops */
+#define	PSEUDOP	(SDB_I+9)
+#define	PALIGN	(PSEUDOP+0)
+#define	PBSS	(PSEUDOP+1)
+#define	PBYTE	(PSEUDOP+2)
+#define	PCOMM	(PSEUDOP+3)
+#define	PDATA	(PSEUDOP+4)
+#define	PDOUBL	(PSEUDOP+5)
+#define	PFILE	(PSEUDOP+6)
+#define	PFLOAT	(PSEUDOP+7)
+#define	PGLOBL	(PSEUDOP+8)
+#define	PLONG	(PSEUDOP+9)
+#define	PLN	(PSEUDOP+10)
+#define	PORG	(PSEUDOP+11)
+#define	PSET	(PSEUDOP+12)
+#define	PSPACE	(PSEUDOP+13)
+#define	PTEXT	(PSEUDOP+14)
+#define	PWORD	(PSEUDOP+15)
+
+/* begin comment character */
+
+#define	CC '#'
+
+/* predicates and functions */
+
+extern	int	isret();	/* sets RETREG, too */
+extern	int	RETREG;
+#define	setlab(p)	((p)->op = LABEL)
+#define	islabel(p)	((p) && (((p)->op == LABEL) || (p)->op == HLABEL))
+#define	ishl(p)		((p) && (((p)->op == HLABEL) || ((p)->op == LABEL && (p)->ops[0][0] != '.')))
+#define	setbr(p,l)	(chgop((p), JBR, "jbr"), (p)->ops[1] = l)
+#define	bboptim(x,y)	0
+#define	isbr(p)		((p)->op >= RET && (p)->op <= HBRAN)
+#define	isuncbr(p)	((p)->op >= RET && (p)->op <= JMP)
+#define	isrev(p)	((p)->op >= JEQ && (p)->op <= JLBC)
+#define	ishb(p)		((p)->op >= JBS && (p)->op <= HBRAN)
+
+#define	ispseudo(p)	((p)->op >= PALIGN && (p)->op <= PWORD)
+#define	iscop(p)	((p)->op >= ADD && (p)->op <= XOR)
+#define	isaop(p)	((p)->op >= ADD && (p)->op <= BIC)
+
+#ifdef	LIVEDEAD
+#define	R0	0x0001
+#define	R1	0x0002
+#define	R2	0x0004
+#define	R3	0x0008
+#define	R4	0x0010
+#define	R5	0x0020
+#define	R6	0x0040
+#define	R7	0x0080
+#define	R8	0x0100
+#define	R9	0x0200
+#define	R10	0x0400
+#define	R11	0x0800
+
+#define	REGS (R0|R1|R2|R3|R4|R5|R6|R7|R8|R9|R10|R11)
+#define	LIVEREGS 0x0000
+#endif
+
+/*
+** Assertion macro
+*/
+#define	assert(x) if(!(x))abort("x");

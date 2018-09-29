@@ -1,0 +1,7 @@
+#ident	"@(#)sadmin:admin/menu/machinemgmt/powerdown	1.2"
+#menu# stop all running programs then turn off machine
+#help# 
+#help#	Powerdown will stop all running programs, close any  open  files,
+#help#	write  out  information  to disk (such as directory information),
+#help#	then turn the machine power off.
+. ${MENUTOP:?}/powerdown

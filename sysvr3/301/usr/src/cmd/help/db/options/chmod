@@ -1,0 +1,64 @@
+
+\Schmod\S:  Options
+
+The following are the characters that you use to make up <mode>.
+
+     u     change owner permissions
+
+     g     change group permissions
+
+     o     change other user permissions
+
+     a     change permissions for all users (cannot be used with "u", "g",
+           or "o".  This is the default.)
+
+     +     add permission
+
+     -     remove permission
+
+     =     set permission (Removes all permissions except those you
+           specify.)
+
+     r     change read permissions
+
+     w     change write permissions
+
+     x     change execute permissions
+
+     You can use any combination of "u", "g" and "o", or you can use "a" with
+     one of the operators "+", "-", "=" and any combination of permissions "r",
+     "w", or "x".  You can also use the following as permissions on the 
+     \Schmod\S command line.  For details see the manual page for \Schmod\S.
+
+     l     Change record locking for all users.  ("u", "g" and "o" are not
+           effective with "l".  Record locking applies to all users.
+           Cannot be used with "x" or "s" permissions and you must be the
+           owner of the file.)
+
+     s     Set owner or groupID.  (Can only be used with "u" and/or "g" and
+           you must be the owner or a member of the group to use.)
+
+     t     Sets sticky bit.  Saves the text of the file if no users on the
+           system are using it.  (Can only be used by super user.)
+
+     Octal codes for \Schmod\S are one to four digit integers such as 0711.
+     The second, third and fourth set the permissions for the user, group and 
+     other users respectively.  The meanings of these integers is: 
+
+     0  is no permission
+     1  is execute permission
+     2  is write permission
+     4  is read permission
+     5  is execute and read permission
+     6  is write and read permission
+     7  is read, write, and execut permission.
+
+     The integers for the first digit of the octal code have the following
+     meanings:
+
+     1  saves text even if no one is using it.
+        Called setting the sticky bit.
+     2  sets the groupID
+     3  sets sticky bit and groupID
+     4  sets the userID
+

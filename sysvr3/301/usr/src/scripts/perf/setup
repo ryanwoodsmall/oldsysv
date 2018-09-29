@@ -1,0 +1,45 @@
+#ident	"@(#)pkg.perf:perf/setup	1.4"
+#
+# Install profiler driver and create the node for it
+#
+DRVPATH=/boot
+MAJOR=`/etc/drvinstall -d $DRVPATH/prf.o -v 1.0`
+rm -f $DRVPATH/prf.o
+/etc/mknod /dev/prf c $MAJOR 0
+#
+# Restrict write permission on profiling to root
+#
+chmod 644 /dev/prf
+#
+# Link /etc/init.d/perf with /etc/rc2.d/S21perf
+#
+/bin/ln /etc/init.d/perf /etc/rc2.d/S21perf
+#
+# Add cron entries for sa
+#
+CRONDIR=/usr/spool/cron/crontabs
+CRONTAB=/usr/spool/cron/crontabs/sys
+ENTRY1='0 * * * 0-6 /usr/lib/sa/sa1'
+ENTRY2='20,40 8-17 * * 1-5 /usr/lib/sa/sa1'
+ENTRY3='5 18 * * 1-5 /usr/lib/sa/sa2 -s 8:00 -e 18:01 -i 1200 -A'
+	if [ -d $CRONDIR ]; then
+		if [ ! -f $CRONTAB ]; then
+			> $CRONTAB
+			chmod 644  $CRONTAB 2>/dev/null
+			chown root $CRONTAB 2>/dev/null
+			chgrp sys  $CRONTAB 2>/dev/null
+		fi
+	else
+		echo "***WARNING*** cannot install cron entries for SAR"
+	fi
+	if [ -f $CRONTAB ]; then
+		if grep "sa1" $CRONTAB >/dev/null 2>&1 ; then  :
+		else
+			echo "$ENTRY1" >> $CRONTAB
+			echo "$ENTRY2" >> $CRONTAB
+		fi
+		if grep "sa2" $CRONTAB >/dev/null 2>&1 ; then  :
+		else
+			echo "$ENTRY3" >> $CRONTAB
+		fi
+	fi

@@ -1,0 +1,25 @@
+
+\Swrite\S:  Description
+
+Syntax Summary:  write login_name [terminal_line]
+
+         where:  login_name  is a user login name.
+
+                 terminal_line is a tty number.
+
+Description:
+     \Swrite\S sends messages to other users on your system. \Swrite\S
+     sends standard input to the user with the login name <login_name>.  After
+     you type your message, \Swrite\S notifies you if your message cannot be
+     sent because write permission is denied or the user is not logged on.  It
+     also notifies you if people can't write to you because write permissions
+     to your terminal are off.  If you aren't notified, your message did 
+     go through to the other user.  Wait for a response before sending your 
+     next message.  Each message should end in signal, "o" for over, and when
+     the conversation is over, the suggested signal is "oo" for over and out.
+     When both users have ended with "oo" you type control-d and \Swrite\S 
+     responds "EOT", and the conversation ends.  Use the <terminal_line> 
+     argument to specify the terminal number you want to write to when a 
+     user is logged on to two terminals.  See also:  mail(1) for a command 
+     whose function is similar to \Swrite\S, and mesg(1) for a command 
+     that might be used with \Swrite\S.

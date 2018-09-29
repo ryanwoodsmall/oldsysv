@@ -1,0 +1,102 @@
+.TH KASB 1 "DEC only"
+.SH NAME
+kasb, kunb \- assembler/un-assembler for the \s-1KMC\s+1\&11\s-1B\s+1 microprocessor
+.SH SYNOPSIS
+.B kasb
+[ name ]
+[
+.B \-o
+name1 ]
+[
+.B \-d
+name2 ]
+.PP
+.B kunb
+[ name ]
+[
+.B \-o
+name1 ]
+.SH DESCRIPTION
+.I Kasb\^
+is an assembler/debugger/loader for the
+.SM KMC\*S11B microprocessor.
+The optional argument
+.I name\^
+specifies the input file; default is standard input.
+The optional argument
+.B \-o
+indicates that the next argument
+.I name1\^
+will be the output of the assembler;
+default is
+.BR a.out .
+The optional argument
+.B \-d
+indicates that the assembler is to be used in debug mode and
+that the next argument
+.I name2\^
+is the device file name of the 
+microprocessor.
+No output file is created in debug mode.
+.PP
+Error diagnostics are written on the standard error output
+and contain the input file name and line number
+and a brief description of the error.
+C preprocessor control lines to change the file name and line number
+are recognized.
+This allows the use of the preprocessor to expand the input before
+assembly.
+.PP
+.I Kunb\^
+is an un-assembler for the \s-1KMC\s+1\&11/\s-1DMC\s+1\&11
+microprocessor.
+It produces an output listing, acceptable to the assembler
+.IR kasb ,
+from the input object.
+.PP
+The optional argument
+.I name\^
+specifies the input object, default is standard input.
+The format of the input is either
+assembler output (first word magic 0410), or
+formatted dump (first word magic 0440), or
+raw dump (anything else).
+In the first two cases, the header is ignored.
+.PP
+The optional argument
+.B \-o
+indicates that the next argument
+.I name1\^
+is to contain the output listing, default
+is standard output.
+.PP
+The input object is first scanned to determine branch
+destinations.
+Labels will be inserted at these locations with format
+.BI L int :\^\fR,
+where
+.I int\^
+is the octal value of the location in words.
+Immediate values of instructions are also printed in octal.
+Page breaks are noted by the labels
+.BR P0: ,
+.BR .\|.\|. ,
+.BR P3: .
+.SH FILES
+.PD 0
+.TP 1i
+a.out
+output object
+.TP
+/dev/kmc?
+microprocessor device
+.TP
+/lib/cpp
+C preprocessor
+.PD
+.SH "SEE ALSO"
+kmc(7), vpm(7).
+.br
+.I "Assembler for the \s-1DEC KMC\s+111 Microprocessor\^"
+by L. A. Wehr.
+.\"	@(#)kasb.1	5.2 of 5/18/82

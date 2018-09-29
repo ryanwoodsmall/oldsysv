@@ -1,0 +1,41 @@
+#ident	"@(#)sadmin:shell/diskumount	2.2"
+#	perform a umount, complain if it doesn't work
+
+#!	chmod +x ${file}
+
+#	$1 == the device mounted.
+#	$2 == the mount point directory (optional).
+
+ndrive='drive'
+
+case "$1" in
+-n )
+	ndrive=$2
+	shift
+	shift
+esac
+
+msg=`/etc/umount ${1:?} 2>&1`
+case "${msg}" in
+'' )
+	if [ -d "$2" ]
+	then
+		chmod 0 $2
+	fi
+	echo >&2 $2 ${2:+'unmounted. '} \
+		"You may now remove the medium from the ${ndrive}.\n"
+	;;
+*' busy' )
+	echo >&2 "
+	The file system is \"busy\" which means that either some command
+	is using files under ${2:-it} or someone is logged in and currently
+	in a directory within the file system."
+	exit 1
+	;;
+*' not mounted' )
+	;;
+* )
+	admerr $0 "/etc/umount got '${msg}'"
+	exit 1
+esac
+exit 0

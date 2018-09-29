@@ -1,0 +1,14 @@
+#ident "@(#)rfs.admin:startstop/isrfson	1.2"
+#menu#	check whether or not RFS is running
+
+#help#
+#help#	The subcommand "isrfson" reports whether or not RFS is running.
+#help#
+
+# Determine if RFS is on and print appropriate message
+if /usr/lbin/rfsrunning
+then
+	echo "\nRFS is running.\n"
+else
+	echo "\nRFS is NOT running.\n"
+fi

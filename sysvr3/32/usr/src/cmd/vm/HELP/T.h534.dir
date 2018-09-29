@@ -1,0 +1,55 @@
+
+   The Folder Options form allows you to set the way you would like to
+   see all your folder objects, including Filecabinet and Wastebasket,
+   displayed on your screen.  Use the CHOICES command  to  select  the
+   options described below.
+
+   FOLDER DISPLAY TYPE:
+
+      - NAME AND DESCRIPTION (default value):   For  each  object  the
+        name and object description are displayed.
+
+      - NAME ONLY:  For each object only the name is displayed.
+
+      - LONG FORM:  For each  object  the  name,  object  description,
+        object   type,   and   creation/modification   date  time  are
+        displayed.
+
+   FOLDER DISPLAY ORDER:
+
+      - ALPHABETICAL (default value): Names beginning with numbers are
+        displayed  first,  then  names beginning with capital letters,
+        followed by names beginning with lower case letters.
+
+      - ALPHABETICAL  BY  DESCRIPTION:   All  objects  with  the  same
+        description  are  grouped  together  and sorted alphabetically
+        within each group.  The object  description  groups  are  also
+        ordered  alphabetically  (e.g.  File  Folders  before Standard
+        Files).
+
+      - LEAST RECENT:  Objects least recently created or  changed  are
+        displayed first.
+
+      - MOST RECENT:  Objects most recently  created  or  changed  are
+        displayed first.
+
+   Folder displays may be changed for  individual  folders  using  the
+   ORGANIZE command.
+
+   Function Keys active for this form (in addition to  PREV-FRM,
+   NEXT-FRM, CMD-MENU, and HELP) are:
+
+      - CANCEL -- Cancels the form  without  saving  any  new   values
+        entered in the form, closes  the frame, and returns you to the
+        point in the interface that  you were at  prior  to  accessing
+        the form.
+
+      - CHOICES -- Allows you to view and select entries for the field
+        where the  cursor  resides.
+
+      - SAVE -- Saves all the field values entered in the form, closes
+        the frame, and returns you to the point in the interface that
+        you were at prior to accessing the form.
+
+      - RESET - resets the field back to the value in  effect  at  the
+        beginning of the current editing session.

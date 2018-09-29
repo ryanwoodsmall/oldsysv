@@ -1,0 +1,15 @@
+
+\S error message \S
+
+An error message is sent  from the system to inform you that one or
+more conditions  necessary for successful execution of a command, or
+other program, are not  present.  For example,  if you try to remove
+a file called "temp" using
+
+	rm temp
+
+
+and if no file named "temp" exists in the current working directory,
+you will get the error message
+
+	rm: temp non-existent

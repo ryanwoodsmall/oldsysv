@@ -1,0 +1,48 @@
+#ident	"@(#)bne.admin:lspoll	2.2"
+#	This shell is used to list poll entries from /usr/lib/uucp/Poll
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -r $POLL ]; then :
+else
+	echo "There is no '$POLL' file
+Use pollmgmt 'add' operation to add entries.\n"
+	exit
+fi
+
+syslist=`cut -f1 $POLL 2>/dev/null  |  sort -u  |
+		grep '^[A-Za-z0-9]'`
+
+if [ -z "${syslist}" ]; then
+	echo "There are no entries in the '$POLL' file
+Use pollmgmt 'add' operation to add entries.\n"
+	exit
+fi
+
+while $FIRST || chkyn ${flags} -f '
+Do you want to see another poll entry?' || break
+do
+FIRST=false
+
+	echo "\nThis is the current list of systems that are polled:\n"
+	echo "${syslist}"  |  pr -t -w80 -6
+
+	pollname=`chkyn ${flags} -fec '
+Enter system name you want to see in detail [q]:' \
+		${syslist}`
+
+	echo "Found the following entry:\n"
+	grep "^${pollname}[ 	]" $POLL
+done

@@ -1,0 +1,17 @@
+.TH SIGNAL 3F
+.SH NAME
+signal \- specify Fortran action on receipt of a system signal
+.SH SYNOPSIS
+.nf
+.B "integer i"
+.B "external integer intfnc"
+.P
+.B "call signal(i, intfnc)"
+.SH DESCRIPTION
+.I Signal\^
+allows a process to specify a function to be invoked upon receipt
+of a specific signal. The first argument specifies which fault or
+exception, the second argument the function to be invoked.
+.SH SEE ALSO
+kill(2), signal(2).
+.\"	@(#)signal.3f	5.2 of 5/18/82

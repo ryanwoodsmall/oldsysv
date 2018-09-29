@@ -1,0 +1,275 @@
+.TH RELOC 4 "not on PDP-11"
+.SH NAME
+reloc \- relocation information for a common object file
+.SH SYNOPSIS
+.B
+#include  <reloc.h>
+.SH DESCRIPTION
+Object files have one relocation entry for each
+relocatable reference in the text or data.
+If relocation information is present, it will
+be in the following format.
+.PP
+.if t .RS
+.ta \w'#define\ \ 'u +\w'R_DIR32S\ \ 'u +\w'r_symndx\ ;\ \ 'u
+.nf
+.lg 0
+struct	reloc
+{
+	long	r_vaddr ;	/\(** (virtual) address of reference \(*\(**/
+	long	r_symndx ;	/\(** index into symbol table \(*\(**/
+	short	r_type ;	/\(** relocation type \(*\(**/
+} ;
+
+.if '\*p'b16' \{\
+#define	R_ABS	0
+#define	R_DIR16	01
+#define	R_REL16	02
+#define	R_IND16	03
+\}
+.if '\*p'x86' \{\
+#define	R_ABS	0
+#define	R_DIR16	01
+#define	R_REL16	02
+#define	R_IND16	03
+#define	R_OFF8	07
+#define	R_OFF16	010
+#define	R_SEG12	011
+#define	R_AUX	013
+\}
+.if '\*p'3b' \{\
+#define	R_ABS	0
+#define	R_DIR24	04
+#define	R_REL24	05
+#define	R_DIR32	06
+#define	R_OPT16	014
+#define	R_IND24	015
+#define	R_IND32	016
+\}
+.if '\*p'm32' \{\
+#define	R_ABS	0
+#define	R_DIR32	06
+#define	R_DIR32S	012
+\}
+.if '\*p'' \{\
+
+/\(**
+ * All generics
+ *	reloc. already performed to symbol in the same section
+ \(**/
+#define  R_ABS		0
+
+/\(**
+ * 3B generic
+ *	24-bit direct reference
+ *	24-bit "relative" reference
+ *	16-bit optimized "indirect" TV reference
+ *	24-bit "indirect" TV reference
+ *	32-bit "indirect" TV reference
+ \(**/
+#define  R_DIR24	04
+#define  R_REL24	05
+#define  R_OPT16	014
+#define  R_IND24	015
+#define  R_IND32	016
+
+/\(**
+ * DEC Processors  VAX 11/780 and VAX 11/750
+ *
+ \(**/
+#define R_RELBYTE	017
+#define R_RELWORD	020
+#define R_RELLONG	021
+#define R_PCRBYTE	022
+#define R_PCRWORD	023
+#define R_PCRLONG	024
+
+\}
+.fi
+.lg
+.if t .RE
+.PP
+As the link editor reads each input section
+and performs relocation, the relocation entries are read. They
+direct how references found within the input section are treated.
+.if '\*p'b16' \{\
+.TP 12
+R_ABS
+The reference is absolute, and no relocation is necessary.
+The entry will be ignored.
+.TP 12
+R_DIR16
+A direct, 16-bit reference to a symbol's virtual address.
+.TP 12
+R_REL16
+A ``PC-relative'', 16-bit reference to a symbol's virtual address.
+Relative references occur in instructions such as
+jumps and calls.
+The actual address used is obtained by adding a constant to the
+value of the program counter at the time the instruction is
+executed.
+.TP 12
+R_IND16
+An indirect, 16-bit reference through a transfer vector.
+The instruction contains the virtual address of the transfer vector,
+where the actual address of the referenced word is stored.
+\}
+.if '\*p'x86' \{\
+.TP 12
+R_ABS
+The reference is absolute, and no relocation is necessary.
+The entry will be ignored.
+.TP 12
+R_DIR16
+A direct, 16-bit reference to a symbol's virtual address.
+.TP 12
+R_REL16
+A ``PC-relative'', 16-bit reference to a symbol's virtual address.
+Relative references occur in instructions such as
+jumps and calls.
+The actual address used is obtained by adding a constant to the
+value of the program counter at the time the instruction is
+executed.
+.TP 12
+R_IND16
+An indirect, 16-bit reference through a transfer vector.
+The instruction contains the virtual address of the transfer vector,
+where the actual address of the referenced word is stored.
+.TP 12
+R_OFF8
+A direct, 16-bit reference to the low-order 8 bits of a 20-bit
+virtual address. The 16-bit field has its high-order 8 bits forced
+to zero.
+.TP 12
+R_OFF16
+A direct, 16-bit reference to the low-order 8 bits of a 20-bit
+virtual address. The 16-bit field is treated as an unsigned integer.
+This relocation type is used when a (16-bit) constant
+modifies the virtual address.
+.TP 12
+R_SEG12
+A direct, 16-bit reference to the high-order 12 bits of a 20-bit
+virtual address.
+.TP 12
+R_AUX
+An "auxiliary entry", generated to permit the correct processing of
+relocation entries of type R_SEG12. Each R_SEG12 entry is followed
+immediately by a R_AUX entry.
+\}
+.if '\*p'3b' \{\
+.TP 12
+R_ABS
+The reference is absolute, and no relocation is necessary.
+The entry will be ignored.
+.TP 12
+R_DIR24
+A direct, 24-bit reference to a symbol's virtual address.
+.TP 12
+R_REL24
+A ``PC-relative'', 24-bit reference to a symbol's virtual address.
+Relative references occur in instructions such as
+jumps and calls.
+The actual address used is obtained by adding a constant to the
+value of the program counter at the time the instruction is
+executed.
+.TP 12
+R_DIR32
+A direct, 32-bit reference to a symbol's virtual address.
+.TP 12
+R_OPT16
+An optimized, indirect, 16-bit reference through a transfer vector.
+The instruction contains the offset into the transfer vector table
+to the transfer vector where the actual address of the referenced
+word is stored.
+.TP 12
+R_IND24
+An indirect, 24-bit reference through a transfer vector.
+The instruction contains the virtual address of the transfer vector,
+where the actual address of the referenced word is stored.
+.TP 12
+R_IND32
+An indirect, 32-bit reference through a transfer vector.
+The instruction contains the virtual address of the transfer vector,
+where the actual address of the referenced word is stored.
+\}
+.if '\*p'm32' \{\
+.TP 12
+R_ABS
+The reference is absolute, and no relocation is necessary.
+The entry will be ignored.
+.TP 12
+R_DIR32
+A direct, 32-bit reference to a symbol's virtual address.
+.TP 12
+R_DIR32S
+A direct, 32-bit reference to a symbol's virtual address. The 32-bit
+value is stored in reverse order in the object file.
+\}
+.if '\*p'' \{\
+.TP 12
+R_ABS
+The reference is absolute, and no relocation is necessary.
+The entry will be ignored.
+.TP 12
+R_DIR24
+A direct, 24-bit reference to a symbol's virtual address.
+.TP 12
+R_REL24
+A ``PC-relative'', 24-bit reference to a symbol's virtual address.
+Relative references occur in instructions such as
+jumps and calls.
+The actual address used is obtained by adding a constant to the
+value of the program counter at the time the instruction is
+executed.
+.TP 12
+R_OPT16
+An optimized, indirect, 16-bit reference through a transfer vector.
+The instruction contains the offset into the transfer vector table
+to the transfer vector where the actual address of the referenced
+word is stored.
+.TP 12
+R_IND24
+An indirect, 24-bit reference through a transfer vector.
+The instruction contains the virtual address of the transfer vector,
+where the actual address of the referenced word is stored.
+.TP 12
+R_IND32
+An indirect, 32-bit reference through a transfer vector.
+The instruction contains the virtual address of the transfer vector,
+where the actual address of the referenced word is stored.
+.TP 12
+R_RELBYTE
+A direct 8 bit reference to a symbol's virtual address.
+.TP 12
+R_RELWORD
+A direct 16 bit reference to a symbol's virtual address.
+.TP 12
+R_RELLONG
+A direct 32 bit reference to a symbol's virtual address.
+.TP 12
+R_PCRBYTE
+A ``PC-relative'', 8 bit reference to a symbol's virtual address.
+.TP 12
+R_PCRWORD
+A ``PC-relative'', 16 bit reference to a symbol's virtual address.
+.TP 12
+R_PCRLONG
+A ``PC-relative'', 32 bit reference to a symbol's virtual address.
+.PP
+On the
+.SM VAX
+processors relocation of a symbol index of -1 indicates that
+the relative difference between the current segment's start address and
+the program's load address is added to the relocatable address.
+\}
+.PP
+Other relocation types will be defined as they are needed.
+.PP
+Relocation entries are generated automatically by the
+assembler and automatically utilized by the link editor. A link editor
+option exists for removing the relocation entries from an object
+file.
+.SH "SEE ALSO"
+\*pld(1), \*pstrip(1), \*pa.out(4), syms(4).
+'\" \%W\%
+.\"	@(#)reloc.4	5.2 of 5/18/82

@@ -1,0 +1,17 @@
+
+\S line: port: terminal line: login port: line number:  port number:\S
+\Stty number \S
+
+When you log on to a computer that runs the UNIX system, information is
+passed between your terminal and the computer on a "transmission line"\S*\S.
+The data transmission line is called line or terminal line.  The place
+where the line attaches to the computer is called a port or login port.
+Every terminal line and its associated port has an integer that identifies
+it.  The integer is called the line number, port number or tty number.  The
+system knows each terminal by its tty number. The tty numbers, as well as 
+numbers for all the possible devices for your system, are listed in the 
+device directory which is called "dev". The tty numbers are named in one of 
+two ways:  1) tty followed by an integer; or 2) tty/ followed by an integer.
+You can find out your line number by executing the tty(1) command.
+
+\S*\S defined in the \Sglossary\S

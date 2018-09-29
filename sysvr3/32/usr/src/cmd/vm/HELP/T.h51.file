@@ -1,0 +1,17 @@
+
+   The Filecabinet object provides storage for your folders and files.
+   Just  as  the  normal  office uses filecabinets, folders and files,
+   FACE uses the same objects.
+
+   When you select Filecabinet from the Office menu, you are  shown  a
+   menu  of  the  stored  files  and  folders  along  with descriptive
+   information on  each  object  stored.   Opening  a  folder  in  the
+   Filecabinet  will  present  another frame containing that folder's
+   contents.  Opening a file  object  will  initiate  the  appropriate
+   application or the default editor (for Standard Files).
+
+   You can change the way objects are displayed (order of presentation
+   and  amount  of  information)  by using the ORGANIZE command for an
+   individual folder, or by changing the values in the Folder  Options
+   form,  accessed  through the  Preferences menu for the Filecabinet,
+   Wastebasket and all other folders on your system.

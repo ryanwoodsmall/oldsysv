@@ -1,0 +1,7 @@
+#ident	"@(#)pkg.dfm	1.2"
+#
+#	Sets up Directory and File Management Package on hard disk 
+#	by linking unpack to pcat
+#
+
+ln /usr/bin/unpack /usr/bin/pcat

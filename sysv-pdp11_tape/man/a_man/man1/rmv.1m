@@ -1,0 +1,26 @@
+.TH RMV 1M "3B20S only"
+.SH NAME
+rmv \- remove unit from service before on-line diagnostics
+.SH SYNOPSIS
+.B /dgn/bin/rmv
+name unit
+.SH DESCRIPTION
+\fIRmv\fP removes the device
+specified by \fIname\fP and \fIunit\fP
+from service.
+For example, the following command line removes
+\s-1DFC\s+1 1 (Disk File Controller 1) from service:
+.PP
+.RS
+rmv \|dfc \|1
+.RE
+.SH "SEE ALSO"
+dgn(1M),
+rst(1M).
+.br
+.IR "3B DMERT Output Messages" ,
+OM-4C000-01.
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)rmv.1m	5.2 of 5/18/82

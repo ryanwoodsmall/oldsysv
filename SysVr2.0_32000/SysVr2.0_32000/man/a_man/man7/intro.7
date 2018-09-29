@@ -1,0 +1,69 @@
+.TH INTRO 7
+.SH NAME
+intro \- introduction to special files
+.SH DESCRIPTION
+This section describes various special files
+that refer to specific
+hardware
+peripherals and
+.SM UNIX
+system device drivers.
+The names of the entries are generally
+derived from
+names for the hardware,
+as opposed to
+the names of the special files themselves.
+Characteristics of both the hardware device and the
+corresponding
+.SM UNIX
+system device driver are discussed where applicable.
+.PP
+Tape device file names are in the following format:
+.sp
+.ce
+\fB/dev/{r}mt/(c#d)#[hml]{n}\fR
+.sp
+where
+.B r
+indicates a raw device,
+.B c#d
+indicates the controller number (which is optionally specified by the
+system administrator),
+.B #
+is the device number,
+.B hml
+indicates the density
+.RB ( h
+(high) for 6250 bpi,
+.B m
+(medium) for 1600 bpi, and
+.B l
+(low density) for 800 bpi), and
+.B n
+indicates no rewind on close.
+(e.g., \f3/dev/mt/2mn\fR)
+.PP
+Disk device file names are in the following format:
+.sp
+.ce
+\fB/dev/{r}dsk/(r)(c#d)#s#\fR
+.sp
+where
+.B r
+indicates a raw interface to the disk, the second
+.B r
+indicates that this disk is on a remote system, the
+.B c#d
+indicates the controller number (which is optionally specified
+by the system administrator), and
+.B #s#
+indicates the drive and section numbers, respectively.
+.SH BUGS
+While the names of the entries
+.I generally\^
+refer to
+vendor
+hardware names, in certain cases
+these names are seemingly arbitrary for various
+historical reasons.
+.\"	@(#)intro.7	6.3 of 9/6/83

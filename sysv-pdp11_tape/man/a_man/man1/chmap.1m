@@ -1,0 +1,25 @@
+.TH CHMAP 1M "3B20S only"
+.SH NAME
+chmap \- change the diagnostic spooler map file
+.SH SYNOPSIS
+.B /dgn/bin/chmap
+.SH DESCRIPTION
+\fIChmap\fP informs the on-line
+diagnostic spooler to reread the spooler map file.
+The spooler map file, \fB/dgn/dgnc/map\fP,
+contains a list of at most 10 file names.
+Each file name is contained on
+a separate line.
+All diagnostic output messages will be appended
+to each file that is specified within the
+map file.
+If the first line of the map file is
+the character string \fBstamp\fP,
+then all diagnostic output messages are
+prefixed with a time stamp.
+.SH FILES
+/dgn/dgnc/map
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)chmap.1m	5.2 of 5/18/82

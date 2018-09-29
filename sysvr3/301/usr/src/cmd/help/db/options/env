@@ -1,0 +1,5 @@
+
+\Senv\S:  Options
+
+     -   ignores the current environment, and executes the command using the
+         environment you create with variable assignments on the command line.

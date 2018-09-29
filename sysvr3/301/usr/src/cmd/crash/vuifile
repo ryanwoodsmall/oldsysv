@@ -1,0 +1,3 @@
+/* #ident	"@(#)crash-3b2:vuifile	1.3" */
+mmusrama = 0x40600;
+mmusramb = 0x40700;

@@ -1,0 +1,67 @@
+#ident	"@(#)bne:preinstall	1.9"
+#	Pre installation procedure for "Basic Networking Utilities"
+
+flags="-qq -k$$"
+INITTAB=/etc/inittab
+savefiles="Devices Dialers Systems Permissions Dialcodes Poll Maxuuxqts Maxuuscheds remote.unknown Sysfiles Devconfig"
+
+
+#Check if this is the first time uucp has been installed by checking the
+#existance of the /usr/lib/uucp directory. If it is NOT the first time
+#create a directory to hold any existing system files.  The user will have
+#the options of reinstalling these files once installation is complete.
+
+if [ -d /usr/lib/uucp ]
+then
+	if [ -f /usr/lib/uucp/uugetty ]
+	then
+		cp $INITTAB /usr/lib/uucp/inittab.save	# save for postinstall
+
+		ed - $INITTAB <<-! >/dev/null 2>&1
+			H
+			g/uugetty/s/respawn/off/
+			w
+			q
+		!
+	
+		if [ $? != 0 ]; then
+			admerr $0 Could not edit $INITTAB
+			rm -f /usr/lib/uucp/inittab.save
+			exit 1
+		fi
+		# execute init to reread inittab
+		/etc/init q 2>/dev/null
+		mv /usr/lib/uucp/uugetty /usr/lib/uucp/RM_THIS_uugetty	
+	fi
+	mkdir /usr/lib/uucp/OlD
+	for i in $savefiles
+	do
+		if [ -s /usr/lib/uucp/$i ]
+		then
+			mv /usr/lib/uucp/$i /usr/lib/uucp/OlD/$i
+		fi
+	done
+fi
+file=`find ${MENUTOP:=/usr/admin} -name nodename -print`
+if [ -r ${file} ]
+then
+	/bin/sh ${file}
+else
+	NAME=`uname`
+	echo "
+The UUCP node name of your system is '$NAME'.
+This name should be unique on your network."
+
+	NAME=`chkyn ${flags} -D '' -ref  "
+The node name on this machine is '${NAME}'.
+If this is not correct, enter the correct name of your machine.
+Hit <RETURN> to leave it as '$NAME': " \
+	'^[0-9A-z][0-9A-z-]*$' 'Name is letters, digits, "-" character only'`
+
+	if [ -n "$NAME" ]; then
+		uname -S $NAME
+		echo "
+Your new node name is '`uname`'
+"
+	fi
+fi

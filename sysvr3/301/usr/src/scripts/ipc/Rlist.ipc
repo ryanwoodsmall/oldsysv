@@ -1,0 +1,3 @@
+/bin/ipcrm
+/bin/ipcs
+/usr/options/ipc.name

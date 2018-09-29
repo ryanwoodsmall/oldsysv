@@ -1,0 +1,10 @@
+
+\S block :  block number \S
+
+A block is an area of internal storage, or space in the computer
+memory, that the computer handles as a single unit.  A block on a 
+UNIX system contains 512 or 1024 "bytes"\S*\S of information.
+When a block is created it is labeled with a block number, which
+is an integer that is used to identify the block.
+
+\S*\S defined in the \Sglossary\S

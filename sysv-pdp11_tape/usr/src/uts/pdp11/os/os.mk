@@ -1,0 +1,500 @@
+# @(#)os.mk	1.4
+LIBNAME = ../lib1
+INCRT = /usr/include
+CFLAGS = -O -I$(INCRT)
+FRC =
+FILES = \
+	$(LIBNAME)(main.o)\
+	$(LIBNAME)(trap.o)\
+	$(LIBNAME)(sysent.o)\
+	$(LIBNAME)(sys1.o)\
+	$(LIBNAME)(sys2.o)\
+	$(LIBNAME)(sys3.o)\
+	$(LIBNAME)(sys4.o)\
+	$(LIBNAME)(acct.o)\
+	$(LIBNAME)(alloc.o)\
+	$(LIBNAME)(clock.o)\
+	$(LIBNAME)(errlog.o)\
+	$(LIBNAME)(fio.o)\
+	$(LIBNAME)(iget.o)\
+	$(LIBNAME)(lock.o)\
+	$(LIBNAME)(machdep.o)\
+	$(LIBNAME)(malloc.o)\
+	$(LIBNAME)(maus.o)\
+	$(LIBNAME)(msg.o)\
+	$(LIBNAME)(nami.o)\
+	$(LIBNAME)(pipe.o)\
+	$(LIBNAME)(prf.o)\
+	$(LIBNAME)(rdwri.o)\
+	$(LIBNAME)(sem.o)\
+	$(LIBNAME)(ipc.o)\
+	$(LIBNAME)(sig.o)\
+	$(LIBNAME)(slp.o)\
+	$(LIBNAME)(subr.o)\
+	$(LIBNAME)(text.o)\
+	$(LIBNAME)(ubm.o)\
+	$(LIBNAME)(ureg.o)\
+	$(LIBNAME)(utssys.o)
+
+
+all:	$(LIBNAME) 
+
+.PRECIOUS:	$(LIBNAME)
+
+$(LIBNAME):	$(FILES)
+	strip $(LIBNAME)
+	-chown bin $(LIBNAME)
+	-chgrp bin $(LIBNAME)
+	-chmod 664 $(LIBNAME)
+
+clean:
+	-rm -f *.o
+
+clobber:	clean
+	-rm -f $(LIBNAME)
+
+$(LIBNAME)(acct.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/acct.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/inode.h\
+	$(FRC)
+$(LIBNAME)(alloc.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/filsys.h\
+	$(INCRT)/sys/fblk.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/ino.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(clock.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(INCRT)/sys/callo.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/text.h\
+	$(INCRT)/sys/psl.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(errlog.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/utsname.h\
+	$(INCRT)/sys/elog.h\
+	$(INCRT)/sys/erec.h\
+	$(INCRT)/sys/err.h\
+	$(INCRT)/sys/iobuf.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/seg.h\
+	$(FRC)
+$(LIBNAME)(fio.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/filsys.h\
+	$(INCRT)/sys/file.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/acct.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(FRC)
+$(LIBNAME)(iget.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/ino.h\
+	$(INCRT)/sys/filsys.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(ipc.o):\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/ipc.h\
+	$(FRC)
+$(LIBNAME)(lock.o):\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/text.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/lock.h\
+	$(FRC)
+$(LIBNAME)(machdep.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/reg.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/psl.h\
+	$(INCRT)/sys/utsname.h\
+	$(FRC)
+$(LIBNAME)(main.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/filsys.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/tty.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(malloc.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/map.h\
+	$(FRC)
+$(LIBNAME)(maus.o):\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/maus.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/reg.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(FRC)
+$(LIBNAME)(msg.o):\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/ipc.h\
+	$(INCRT)/sys/msg.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(FRC)
+$(LIBNAME)(nami.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(pipe.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/file.h\
+	$(FRC)
+$(LIBNAME)(prf.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/elog.h\
+	$(INCRT)/sys/iobuf.h\
+	$(FRC)
+$(LIBNAME)(rdwri.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/file.h\
+	$(INCRT)/sys/systm.h\
+	$(FRC)
+$(LIBNAME)(sem.o):\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/ipc.h\
+	$(INCRT)/sys/sem.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/buf.h\
+	$(FRC)
+$(LIBNAME)(sig.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/reg.h\
+	$(INCRT)/sys/text.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/psl.h\
+	$(FRC)
+$(LIBNAME)(slp.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/text.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/file.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/lock.h\
+	$(FRC)
+$(LIBNAME)(subr.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/buf.h\
+	$(FRC)
+$(LIBNAME)(sys1.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/reg.h\
+	$(INCRT)/sys/file.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/acct.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/lock.h\
+	$(FRC)
+$(LIBNAME)(sys2.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/file.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(FRC)
+$(LIBNAME)(sys3.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/ino.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/filsys.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/file.h\
+	$(INCRT)/sys/conf.h\
+	$(INCRT)/sys/stat.h\
+	$(INCRT)/sys/ttold.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(sys4.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(sysent.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/systm.h\
+	$(FRC)
+$(LIBNAME)(text.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/text.h\
+	$(INCRT)/sys/inode.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(FRC)
+$(LIBNAME)(trap.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/reg.h\
+	$(INCRT)/sys/psl.h\
+	$(INCRT)/sys/trap.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/sysinfo.h\
+	$(FRC)
+$(LIBNAME)(ubm.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/seg.h\
+	$(INCRT)/sys/map.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/var.h\
+	$(FRC)
+$(LIBNAME)(ureg.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/sysmacros.h\
+	$(INCRT)/sys/systm.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/proc.h\
+	$(INCRT)/sys/text.h\
+	$(INCRT)/sys/seg.h\
+	$(FRC)
+$(LIBNAME)(utssys.o):\
+	$(INCRT)/sys/param.h\
+	$(INCRT)/sys/types.h\
+	$(INCRT)/sys/buf.h\
+	$(INCRT)/sys/filsys.h\
+	$(INCRT)/sys/mount.h\
+	$(INCRT)/sys/dir.h\
+	$(INCRT)/sys/signal.h\
+	$(INCRT)/sys/user.h\
+	$(INCRT)/sys/errno.h\
+	$(INCRT)/sys/var.h\
+	$(INCRT)/sys/utsname.h\
+	$(FRC)
+FRC:

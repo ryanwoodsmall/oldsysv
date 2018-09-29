@@ -1,0 +1,40 @@
+.TH CHROOT 1M
+.SH NAME
+chroot \- change root directory for a command
+.SH SYNOPSIS
+.B /etc/chroot
+newroot command
+.SH DESCRIPTION
+The given command is executed
+.IR "relative to the new root" .
+The meaning of any initial slashes
+.RB ( /\^ )
+in path names is changed for a command and any of its children to
+.IR newroot .
+Furthermore, the initial working directory is
+.IR newroot .
+.PP
+Notice that:
+.PP
+.RS
+chroot \|newroot \|command \|>x
+.RE
+.PP
+will create the file
+.B x
+relative to the original root, not the new one.
+.PP
+This command is restricted to the super-user.
+.PP
+The new root path name is always relative to the current root: even if a
+.I chroot\^
+is currently in effect, the
+.I newroot\^
+argument is relative to the current root of the
+running process.
+.SH SEE ALSO
+chdir(2).
+.SH BUGS
+One should exercise extreme caution when referencing special files
+in the new root file system.
+.\"	@(#)chroot.1m	6.2 of 9/2/83

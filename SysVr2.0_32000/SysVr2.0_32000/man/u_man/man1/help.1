@@ -1,0 +1,61 @@
+.TH HELP 1
+.SH NAME
+help \- ask for help
+.SH SYNOPSIS
+.B help
+[\^args\^]
+.SH DESCRIPTION
+.I Help\^
+finds information to explain a message from a command or explain the use of
+a command.
+Zero or more arguments may be supplied.
+If no arguments are given,
+.I help\^
+will prompt for one.
+.PP
+The arguments may be either
+message numbers (which normally appear in parentheses following messages)
+or command names,
+of one of the following types:
+.PP
+.RE 
+.RS 10
+.TP 10
+type 1
+Begins with non-numerics, ends in numerics.
+The non-numeric prefix is usually an abbreviation for the program or
+set of routines which produced the message
+(e.g., \fBge6\fP, for message 6 from the
+.I get\^
+command).
+.PP
+.RE 
+.RS 10
+.TP 10
+type 2
+Does not contain numerics (as a command, such as
+.BR get )
+.PP
+.RE 
+.RS 10
+.TP 10
+type 3
+Is all numeric (e.g., \fB212\fP)
+.RE
+.PP
+The response of the program will be the explanatory information related
+to the argument, if there is any.
+.PP
+When all else fails, try ``help stuck''.
+.SH FILES
+.TP 25
+/usr/lib/help
+directory containing files of message text.
+.TP 25
+/usr/lib/help/helploc
+file containing locations of help files not in \fB/usr/lib/help\fP.
+.SH DIAGNOSTICS
+Use
+.IR help (1)
+for explanations.
+.\"	@(#)help.1	6.2 of 9/2/83

@@ -1,0 +1,16 @@
+
+\Sdirname\S: Description
+
+Syntax Summary:   dirname path_name
+
+         where:  path_name  is a full or relative path name.
+
+Description:
+     \Sdirname\S stands for "directory name."  Use \Sdirname\S to identify
+     the path name of the parent directory of a file or directory.  This
+     command drops the file name or directory name that is at the end of
+     the path and prints the path name of the directory to standard output.
+     The primary use of \Sdirname\S is in shell programs to identify parent
+     directories.  See also:  basename(1) for a command with a function
+     similar to \Sdirname\S.
+

@@ -1,0 +1,20 @@
+* @(#)holidays	1.2 of 6/22/82
+* Prime/Nonprime Table for UNIX Accounting System
+*
+* Curr	Prime	Non-Prime
+* Year	Start	Start
+*
+  1982	0830	1700
+*
+* Day of	Calendar	Company
+* Year		Date		Holiday
+*
+    1		Jan 1		New Year's
+    2		Jan 2		day after New Year's
+   46		Feb 15		Wash. Birthday
+  152		May 31		Memorial Day
+  186		Jul 5		Indep. Day
+  249		Sep 6		Labor Day
+  329		Nov 25		Thanksgiving
+  330		Nov 26		day after
+  358		Dec 24		Christmas

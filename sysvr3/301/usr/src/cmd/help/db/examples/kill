@@ -1,0 +1,13 @@
+
+\Skill\S:  Examples
+
+        kill 8345
+
+   Kills the process identified by the process ID "8345".
+
+   ---------------------------------------------------------------------------
+
+        kill -9 8345
+
+   Kills the process numbered "8345" with the signal number "9".  This kill
+   cannot be stopped, and it is considered a sure kill.

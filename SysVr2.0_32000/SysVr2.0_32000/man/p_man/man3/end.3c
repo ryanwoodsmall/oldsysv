@@ -1,0 +1,46 @@
+.TH END 3C 
+.SH NAME
+end, etext, edata \- last locations in program
+.SH SYNOPSIS
+.B extern end;
+.br
+.B extern etext;
+.br
+.B extern edata;
+.SH DESCRIPTION
+These names refer neither to routines
+nor to locations with interesting contents.
+The address of
+.I etext\^
+is the first address above the program text,
+.I edata\^
+above the initialized data region, and
+.I end\^
+above the uninitialized data region.
+.PP
+When execution begins, the program break
+[the first location beyond the data)
+coincides with
+.IR end ,
+but the program break may be reset by
+the routines of
+.IR brk (2),
+.IR malloc (3C), 
+standard input/output
+.RI ( stdio (3S)],
+the profile
+.RB ( \-p )
+option of 
+.IR cc (1),
+and so on.
+Thus, the current value of the program break
+should be determined by
+.B sbrk(0)
+[see
+.IR brk (2)].
+.SH "SEE ALSO"
+brk(2), malloc(3C), stdio(3S).
+.br
+cc(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	%W% of %G%

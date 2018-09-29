@@ -1,0 +1,330 @@
+.TH PS 1
+.SH NAME
+ps \- report process status
+.SH SYNOPSIS
+.B ps
+[ options ]
+.SH DESCRIPTION
+.I Ps\^
+prints certain information about active
+processes.
+Without
+.IR options ,
+information is printed about
+processes associated with the current terminal.
+The output consists of a short listing containing only the process ID,
+terminal identifier, cumulative execution time, and the command name.
+Otherwise, the information that is displayed is controlled
+by the selection of
+.IR options .
+.PP
+\fIOptions\fP using lists as arguments can have the list specified
+in one of two forms: a list of identifiers separated from one
+another by a comma, or a list of identifiers enclosed
+in double quotes and separated from one another by a comma and/or
+one or more spaces.
+.PP
+The \fIoptions\fP are:
+.PP
+.PD 0
+.TP 12
+.B \-e
+Print information about all processes.
+.TP
+.B \-d
+Print information about all processes, except process group leaders.
+.TP
+.B \-a
+Print information about all processes, except process
+group leaders and processes not associated with a terminal.
+.TP
+.B \-f
+Generate a
+.I full\^
+listing.
+(See
+below for meaning of columns in a full listing).
+.TP
+.B \-l
+Generate a
+.I long\^
+listing.
+See below.
+.TP
+.BI \-c " corefile\^"
+Use the file
+.I corefile\^
+in place of
+.BR /dev/mem .
+.TP
+.BI \-s " swapdev\^"
+Use the file
+.I swapdev\^
+in place of
+.BR /dev/swap .
+This is useful when examining a
+.IR corefile ;
+a
+.I swapdev\^
+of
+.B /dev/null\^
+will cause the user block to
+be zeroed out.
+.TP
+.BI \-n " namelist\^"
+The argument will be taken as the name of an alternate
+system
+.I namelist\^
+file in place of
+\fB/unix\fP.
+.TP
+.BI \-t " termlist\^"
+Restrict listing to data about the
+processes associated with the terminals given in
+.IR termlist .
+Terminal identifiers may be specified in one of two forms:  the device's
+file name (e.g., \fBtty04\fP) or if the device's file name starts
+with \fBtty\fP, just the digit identifier (e.g., \fB04\fP).
+.TP
+.BI \-p " proclist\^"
+Restrict listing to data about
+processes whose process
+.SM ID
+numbers are given
+in
+.IR proclist .
+.TP
+.BI \-u " uidlist\^"
+Restrict listing to data about processes
+whose user
+.SM ID
+numbers or login names are given in
+.IR uidlist .
+In the listing, the numerical user
+.SM ID
+will be printed
+unless the
+.B \-f
+option is used, in which case
+the login name
+will be printed.
+.TP
+.BI \-g " grplist\^"
+Restrict listing to data about processes
+whose process group leaders are given in
+.IR grplist .
+.PD
+.PP
+The column headings and the meaning of the columns in a
+.I ps\^
+listing
+are given below; the letters
+.B f
+and
+.B l
+indicate the
+option
+.RI ( full\^
+or
+.IR long )
+that causes the corresponding heading to appear;
+.B all
+means that the heading
+always appears.
+Note that these two options determine
+only
+what information is provided for a process; they do
+.I not\^
+determine which processes will be listed.
+.bp
+.ta .65i
+.ne 7
+.PP
+.PD 0
+.TP 16
+.SM
+.BR F\*S "	(l)"
+Flags (octal and additive) associated with the process:
+.RS 19
+.TP 7
+\  0
+swapped;
+.TP 7
+\  1
+in core;
+.TP 7
+\  2
+system process;
+.TP 7
+\  4
+locked-in core (e.g., for physical
+.SM I/O\*S);
+.TP 7
+\ 10
+being swapped;
+.TP 7
+\ 20
+being traced by another process;
+.TP 7
+\ 40
+another tracing flag;
+.TP 7
+100
+text pointer valid;
+.TP 7
+200
+process is partially swapped.
+.RE
+.TP
+.SM
+.BR S\*S "	(l)"
+The state of the process:
+.RS 20
+.TP 6
+0
+non-existent;
+.TP 6
+S
+sleeping;
+.TP 6
+W
+waiting;
+.TP 6
+R
+running;
+.TP 6
+I
+intermediate;
+.TP 6
+Z
+terminated;
+.TP 6
+T
+stopped;
+.TP 6
+X
+growing.
+.RE
+.br
+.ne 2
+.TP
+.SM
+.BR UID\*S "	(f,l)"
+The user
+.SM ID
+number of the process owner;
+the login name
+is printed under the
+.B \-f
+option.
+.TP
+.SM
+.BR PID\*S "	(all)"
+The process
+.SM ID
+of the process; it is possible to kill a process
+if you know this datum.
+.TP
+.SM
+.BR PPID\*S "	(f,l)"
+The process
+.SM ID
+of the parent process.
+.TP
+.SM
+.BR C\*S "	(f,l)"
+Processor utilization for scheduling.
+.TP
+.SM
+.BR PRI\*S "	(l)"
+The priority of the
+process; higher numbers mean lower priority.
+.TP
+.SM
+.BR NI\*S "	(l)"
+Nice value; used in priority computation.
+.TP
+.SM
+.BR ADDR\*S "	(l)"
+The memory address of the process
+(a pointer to the segment table array on the AT&T 3B20S computer),
+if resident;
+otherwise, the disk address.
+.TP
+.SM
+.BR SZ\*S "	(l)"
+The size in blocks of the core image of the process.
+.TP
+.SM
+.BR WCHAN\*S "	(l)"
+The event for which the process is waiting or sleeping;
+if blank, the process is running.
+.TP
+.SM
+.BR STIME\*S "	(f)"
+Starting time of the process.
+.TP
+.SM
+.BR TTY\*S "	(all)"
+The controlling terminal for the process.
+.TP
+.SM
+.BR TIME\*S "	(all)"
+The cumulative execution time for the process.
+.TP
+.SM
+.BR CMD\*S "	(all)"
+The command name; the full command name and its arguments are printed
+under the
+.B \-f
+option.
+.DT
+.PD
+.PP
+A process that has exited and has a parent, but has not
+yet been waited for by the parent, is marked
+.BR <defunct> .
+.PP
+Under the
+.B \-f
+option,
+.I ps\^
+tries to determine the command name
+and arguments given when the process was created
+by examining memory or the swap area.
+Failing this, the command name, as it 
+would appear without the
+.B \-f
+option, is printed in square brackets.
+.SH FILES
+.PD 0
+.TP "\w'/etc/ps_data\ \ \ 'u"
+/unix
+system namelist
+.TP
+/dev/mem
+memory
+.TP
+/dev/swap
+the default swap device
+.TP
+/etc/passwd
+supplies \s-1UID\s+1 information
+.TP
+/etc/ps_data
+internal data structure
+.TP
+/dev
+searched to find terminal (``tty'') names
+.DT
+.PD
+.bp
+.SH SEE ALSO
+acctcom(1), kill(1), nice(1).
+.SH BUGS
+Things can change while
+.I ps\^
+is running; the picture it gives is only a close
+approximation to reality.
+Some data printed for defunct processes are irrelevant.
+.\"	@(#)ps.1	6.3 of 9/2/83

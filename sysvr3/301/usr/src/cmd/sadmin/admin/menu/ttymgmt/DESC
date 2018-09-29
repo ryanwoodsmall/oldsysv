@@ -1,0 +1,7 @@
+#ident	"@(#)sadmin:admin/menu/ttymgmt/DESC	2.3"
+#head#				TTY MANAGEMENT
+#menu# tty management menu
+#help#
+#help#	This menu provides subcommands to change the characteristics of tty
+#help#	lines.  Included are the ability to make lines available for login and
+#help#	to create new line setting hunt sequences.

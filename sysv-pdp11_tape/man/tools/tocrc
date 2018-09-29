@@ -1,0 +1,121 @@
+invoked=$0
+set x $*
+. ./.param
+
+trap "rm $TMPDIR/tmp.$$ ; exit" 2 3 15
+
+# If troff in large format, specify -p option
+P=65
+p=""
+if [ "$PFLAG" -eq 1 ]
+then
+	P=108
+	p=""
+fi
+
+if test $# -eq 0
+then
+	echo "tocrc: no argument"
+	exit
+fi
+
+if test $# -eq 2
+then
+	: create toc input file for one section only
+
+	> $TMPDIR/tocx$1
+	for file in $MANDIR/man$1/*.$1*
+	do
+		if test ! -s $file
+		then
+			echo "tocrc error on $file" >> $TMPDIR/tocrc.err
+			continue
+		fi
+		so=`line < $file`
+		case "$so" in
+		.so*)
+			continue
+			;;
+		*)
+			ed - $file > $TMPDIR/tmp.$$ <<-!
+				H
+				/^\.TH/p
+				q
+				!
+			grep "local" $TMPDIR/tmp.$$ > /dev/null
+			if [ $? = 0 ]; 	then continue; fi
+			name=`basename $file | sed "s/\.\(.\{1,2\}\)\$/(\1)/"`
+			ed - $file > $TMPDIR/tmp.$$ <<-!
+				/^.SH NAME/+p
+				q
+				!
+			desc=`line < $TMPDIR/tmp.$$`
+			desc=`echo $desc | sed -e "s/.s-1//g" -e "s/.s0//g"  -e "s/.s+1//g"   -e "s/ .- /: /"  -e "s/^/$name /"  -e "s/$/./" -e "s/.\*N/3B20S/"`
+			desc=`echo $desc | sed -e "s/\.dc\./.dec./" -e "s/\.3b\./.u3b./"`
+			if test -n "$desc"
+			then
+				echo $desc >> $TMPDIR/tocx$1
+			else
+				echo "$0: NULL description: $file" >> $TMPDIR/tocrc.err
+			fi
+			rm -f $TMPDIR/tmp.$$
+			;;
+		esac
+	done
+else case $1 in
+	all )
+		:   tocx files for all sections and everything else
+
+		for x in $DIRLST
+		do
+			$invoked $p $x $x
+		done
+		$invoked $p t
+		;;
+	t )
+		:   permuted index and toc files
+
+		if test ! -f $TMPDIR/tocx1
+		then
+			echo "tocrc: some tocx? files missing"
+			exit
+		fi
+		cat $TMPDIR/tocx? > $TMPDIR/cattoc
+		ed - $TMPDIR/cattoc <<-\!
+			H
+			g/(1c)/s//(1C)/
+			g/(1m)/s//(1M)/
+			g/(1g)/s//(1G)/
+			g/(3c)/s//(3C)/
+			g/(3m)/s//(3M)/
+			g/(3s)/s//(3S)/
+			g/(3x)/s//(3X)/
+			g/(3f)/s//(3F)/
+			g/"\."/d
+			g/\\\*./s///g
+			g/\\\*(../s///g
+			w
+			q
+			!
+		ptx -r -t -b $TOOLS/break -f -w $P -i $TOOLS/ignore $TMPDIR/cattoc $MANDIR/man0/ptxx
+		for x in $DIRLST
+		do
+			ed - $TMPDIR/tocx$x <<-!
+			H
+				/^intro/m0
+				g/ .*:/s///
+				g/.$/s///
+				g/([1-8][a-z]\{0,1\}) /s//" "/
+				g/.*/s//.xx "&"/
+				g/""/d
+				w $MANDIR/man0/toc$x
+				q
+			!
+		done
+		;;
+	* )
+		$invoked $p $1 $1
+		;;
+	esac
+fi
+#	@(#)tocrc	5.2 of 5/19/82

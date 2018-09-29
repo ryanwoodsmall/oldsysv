@@ -1,0 +1,40 @@
+.TH STRIP 1 "PDP-11 only"
+.SH NAME
+strip \- remove symbols and relocation bits
+.SH SYNOPSIS
+.B strip
+name ...
+.SH DESCRIPTION
+.I Strip\^
+removes the symbol
+table and relocation bits ordinarily attached to the output
+of the assembler and link editor.
+This is useful to save space after a program has been
+debugged.
+.PP
+The effect of
+.I strip\^
+is the same as use of the
+.B \-s
+option
+of
+.IR ld (1).
+.PP
+If
+.I name\^
+is an archive file,
+.I strip\^
+will remove the local symbols from any
+.I a.out\^
+format files it finds in the archive.
+Certain libraries, such as those residing in
+.BR /lib ,
+have no need for local symbols.
+By deleting them, the size of the archive is decreased and link editing
+performance is increased.
+.SH FILES
+/tmp/stm\(**	temporary file
+.SH "SEE ALSO"
+ld(1), ar(4), a.out(4).
+'\" \%W\%
+.\"	@(#)strip.pdp.1	5.2 of 5/18/82

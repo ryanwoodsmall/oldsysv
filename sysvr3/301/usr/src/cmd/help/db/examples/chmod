@@ -1,0 +1,25 @@
+
+\Schmod\S:  Examples
+
+              chmod -w prog1
+
+    Removes write permission for the owner, group and other users for the
+    file "prog1".
+
+    ---------------------------------------------------------------------------
+
+              chmod 640 junk
+
+    Changes the access permissions for the file "junk" in the current
+    working directory.  The "6" gives the owner of the file read and write
+    permission, the "4" gives the group read permission, and 0 gives other
+    users no permissions for the file "junk".
+
+
+    ---------------------------------------------------------------------------
+
+              chmod go+rw /tmp/junk
+
+    Changes the permission for the file "tmp/junk".  The group and others,
+    "go", are granted read and write permission, "+rw".
+

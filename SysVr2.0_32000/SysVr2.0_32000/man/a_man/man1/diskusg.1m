@@ -1,0 +1,116 @@
+.TH DISKUSG 1M
+.SH NAME
+diskusg - generate disk accounting data by user ID
+.SH SYNOPSIS
+.B diskusg
+[\^options\^] [\^files\^]
+.SH DESCRIPTION
+.I Diskusg
+generates intermediate disk accounting information
+from data in
+.I files,
+or the standard input if omitted.
+.I Diskusg
+output lines on the standard output, one per user, in the following format:
+.SP 2
+.IP "" 10
+.I "uid login #blocks"
+.P
+where
+.TP 12
+uid -
+the numerical user ID of the user.
+.TP 12
+login -
+the login name of the user; and
+.TP 12
+#blocks -
+the total number of disk blocks
+allocated to this user.
+.P
+.I Diskusg
+normally reads only the i-nodes
+of file systems for disk accounting.
+In this case,
+.I files
+are the special filenames of these devices.
+.P
+.I Diskusg
+recognizes the following options:
+.TP 12
+.B -s
+the input data
+is already in
+.I diskusg
+output
+format.
+.I Diskusg
+combines
+all lines for a single user
+into a single line.
+.TP 12
+.B -v
+verbose.  Print a list on standard error
+of all files that are charged to no one.
+.TP 12
+.BI -i " fnmlist "
+ignore the data on those file systems whose
+file system name is in
+.I fnmlist.
+.I Fnmlist
+is a list of file system names separated
+by commas or enclose within quotes.
+.I Diskusg
+compares each name in this list with the file system
+name stored in the volume ID [see
+.I volcopy(1M)].
+.TP 12
+.BI -p " file "
+use
+.I file
+as the name of the password file to generate
+login names.
+.B /etc/passwd
+is used by default.
+.TP 12
+.BI -u " file "
+write records to
+.I file
+of files that are charged to no one.
+Records consist of the special file name,
+the i-node number, and the user ID.
+.P
+The output of
+.I diskusg
+is normally the input to
+.I acctdisk
+[see
+.IR acct (1M)]
+which generates total
+accounting records that can be
+merged with other accounting records.
+.I Diskusg
+is normally run in
+.I dodisk
+[see
+.IR acctsh (1M)].
+.SH EXAMPLES
+The following will generate daily disk accounting information:
+
+for i in /dev/rp00 /dev/rp01 /dev/rp10 /dev/rp11; do
+.br
+	diskusg $i > dtmp.`basename $i` &
+.br
+done
+.br
+wait
+.br
+diskusg -s dtmp.* | sort +0n +1 | acctdisk > disktacct
+.br
+.SH FILES
+.TP 20
+/etc/passwd
+used for user ID to login name conversions
+.SH SEE ALSO
+acct(1M), acctsh(1M), acct(4)
+.\"     @(#)diskusg.1m	1.2 of 9/2/83

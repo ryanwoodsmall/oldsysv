@@ -1,0 +1,15 @@
+
+\Scd\S:  Description
+
+Syntax Summary:  cd [dir_name]
+
+         where:  dir_name  is the name of a directory.
+
+Description:
+     \S cd \S stands for "change directory."  Use \S cd \S to change your
+     current working directory.  The directory name you give can be the full or
+     relative path name of any directory in the file system that you have
+     permission to enter.  If you don't name any directory, your "HOME"
+     directory will become your current working directory.  See also:  pwd(1)
+     for a command that might be used with \S cd \S.
+

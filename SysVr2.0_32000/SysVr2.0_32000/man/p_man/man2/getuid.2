@@ -1,0 +1,34 @@
+.TH GETUID 2 
+.SH NAME
+getuid, geteuid, getgid, getegid \- get real user, effective user, real group, and effective group \s-1ID\s+1s
+.SH SYNOPSIS
+.B unsigned short getuid (\|)
+.PP
+.B unsigned short geteuid (\|)
+.PP
+.B unsigned short getgid (\|)
+.PP
+.B unsigned short getegid (\|)
+.SH DESCRIPTION
+.I Getuid\^
+returns the real user
+.SM ID
+of the calling process.
+.PP
+.I Geteuid\^
+returns the effective user
+.SM ID
+of the calling process.
+.PP
+.I Getgid\^
+returns the real group
+.SM ID
+of the calling process.
+.PP
+.I Getegid\^
+returns the effective group
+.SM ID
+of the calling process.
+.SH "SEE ALSO"
+intro(2), setuid(2).
+.\"	@(#)getuid.2	6.2 of 9/6/83

@@ -1,0 +1,27 @@
+
+\S ' ' :  " ":  quote:  quotes:  double quotes \S
+
+Single quotes and double quotes are used to delimit "strings"\S*\S
+on command lines.  Single quotes show that the string within them is
+a literal string.  For example,
+
+	echo '$HOME'
+
+causes the system to print the literal string 
+
+	$HOME 
+
+Single quotes suspend the meaning of all "special characters"\S*\S
+Except for the single quote itself. 
+
+Double quotes show that "shell variables"\S*\S within the  string 
+will be replaced by their values.  In the example,
+
+	echo "$HOME is my login directory."
+
+$HOME is replaced by the pathname of your login directory, and the
+remainder of the string is printed just as it appears in the quotes.
+Double quotes suspend the meaning of all special characters except
+for "dollar sign ($)"\S*\S and "grave accent (`)"\S*\S.
+
+\S*\S defined in the \Sglossary\S

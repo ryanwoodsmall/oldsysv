@@ -1,0 +1,20 @@
+#ident	"@(#)pkg.perf:perf/unsetup	1.3"
+#
+# Deinstall profiler driver and remove the prf node
+#
+DRVPATH=/etc/master.d
+if [ -f $DRVPATH/prf ]
+then
+	MAJOR=`/etc/drvinstall -u -m $DRVPATH/prf -v 1.0`
+fi
+#
+# Remove cron entries
+#
+CRONTAB=/usr/spool/cron/crontabs/sys
+
+	ed $CRONTAB <<-! >/dev/null 2>&1
+		g/sa1/d
+		g/sa2/d
+		w
+		q
+	!

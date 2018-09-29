@@ -1,0 +1,101 @@
+.TH KMC 7 "DEC only"
+.SH NAME
+kmc \- \s-1KMC\s+1\&-11B/\s-1KMS\s+1\&11 microprocessor
+.SH DESCRIPTION
+The files
+.B kmc?
+are used to manipulate the
+.SM KMC11-B
+or
+.SM KMS\*S11
+microprocessor.
+The device handler provides the basic mechanism needed
+to load, run, and debug programs on the microprocessor.
+The open is exclusive; at most one open at a time.
+.PP
+Addresses 0\-8195 reference the 4096 words of instructions
+in the control memory of the
+microprocessor.
+This portion is word oriented, that is, the address and byte count
+must be even.
+.PP
+Addresses 8196\-12211 reference the 4096 bytes of data in
+the data memory of the
+microprocessor.
+The data portion may be read or written with no restrictions on
+addressing.
+.PP
+The
+.IR ioctl (2)
+function is used to provide access to the basic
+microprocessor capabilities.
+.PP
+.RS
+.nf
+#include <sys/kmc.h>
+ioctl \|(fildes, \|command, \|arg)
+struct \|kmcntl \|{
+	int	kmd;
+	short	\(**kcsr;
+	int	kval;
+} \|\(**arg;
+.fi
+.RE
+.PP
+The only
+.I command
+available is
+.SM KCSETA\*S.
+The pointer
+.I kcsr\^
+contains the address of a 4 word buffer for the
+.SM UNIBUS
+Control and Status Registers associated with
+the microprocessor.
+The value of
+.I kmd\^
+determines the function:
+.PP
+.PD 0
+.RS
+.TP .5i
+1
+single step and return \s-1CSR\s+1s in
+.IR kcsr .
+.TP
+2
+maintenance step: execute 
+.I value\^
+and then return \s-1CSR\s+1s.
+.TP
+3
+return \s-1CSR\s+1s.
+.TP
+4
+stop: clear the run bit.
+.TP
+5
+reset: set then clear the master clear bit.
+.TP
+6
+run: set the run bit and set the software state to
+.I kval\^
+and running.
+.TP
+7
+line unit maintenance: set the line unit bits from
+.IR kval .
+.TP
+8
+set \s-1CSR\s+1 sel6 to
+.IR kval .
+.TP
+9
+clear: first reset, then empty the input queue.
+.RE
+.PD
+.SH FILES
+/dev/kmc?
+.SH "SEE ALSO"
+kasb(1), dz(7), vpm(7).
+.\"	@(#)kmc.7	5.2 of 5/18/82

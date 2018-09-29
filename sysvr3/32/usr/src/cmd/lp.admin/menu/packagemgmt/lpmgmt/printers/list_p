@@ -1,0 +1,98 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/printers/list_p	1.4"
+## IDOC:   SCREEN 2.33: LIST PRINTERS
+#menu# List available printers
+
+##+++ (help _H85)
+#help#        You  use  the  "list"  command  to  examine   the   complete
+#help#        configuration  of  one or more printers.  You may want to do
+#help#        this, for instance, if you suspect a  configuration  mistake
+#help#        is causing a problem.  If you just want a quick status check
+#help#        to see what printers are available, use the "status" command
+#help#        in the "printers" menu, instead.
+#help#
+#help#        If you are trying to add a new printer and want  to  use  an
+#help#        existing   printer   as  a  basis  for  defining  a  similar
+#help#        configuration, you can use the "list" command to examine it,
+#help#        or  better  yet,  just start adding the printer--you will be
+#help#        able to specify the name of the similar printer and  the  LP
+#help#        Print Service will use it as a configuration template.
+##--- (help _H85)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_printer_list () {
+# listof: printer-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!printer-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo ${RESP} | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then :; else if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid printer name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"Enter the names of the printers for which you
+want to see a complete configuration.
+Separate multiple names with a space or comma."
+##--- (line 3)
+
+DEF_p=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.33.4)
+chk_printer_list \
+	"Enter printers: ${DEF_p:+(default: ${DEF_p})}" \
+	"${DEF_p}" \
+	"\
+        You are expected to enter the name of the printer  you  want
+        to  examine.   If  you  don't  know  the name, enter \"q\" and
+        select the \"status\" command from the \"printers\" menu, to get
+        a list of known printers.  You can give several names if you
+        separate them with spaces or commas.  \
+"
+OPT_p=${RESP}
+##--- (2.33.4)
+
+##+++ (line 5)
+echo \
+"
+Printer configurations:"
+##--- (line 9)
+
+	lpstat -p "${OPT_p}" -l && break
+done

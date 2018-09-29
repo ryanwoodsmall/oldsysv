@@ -1,0 +1,12 @@
+*#ident	"@(#)kern-port:master.d/xt	10.4"
+*
+* XT
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ocst	-	xt	-	2
+						xtin(){}
+						xtout(){}
+						xtvtproc(){}
+						errlayer(){}
+						xtbuffer[#D] (%0x8c0)
+						xt_cnt (%i) = {#D}

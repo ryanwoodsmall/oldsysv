@@ -1,0 +1,41 @@
+#ident	"@(#)sadmin:shell/filecheck	1.3"
+#	check for files added and deleted below the given directory
+# 	Must be able to create or write files .today and .yesterday in the
+#	given directory.
+
+#!	chmod +x ${file}
+
+if [ $# -ne 1 ]
+then
+	echo >&2 "Usage:  $0 directory
+For more detail type:	prtdoc devcmd.$0"
+	exit 1
+fi
+cd $1
+
+#	Getaround for those who don't want service
+if [ -f .yesterday  -a  \( ! -r .yesterday  -o  ! -w .yesterday  \) ]
+then
+	exit 0
+fi
+
+if [ -f .yesterday ]
+then
+	date=`fdate -'%h %d, 19%y' .yesterday`
+else
+	cp /dev/null .yesterday
+fi
+find . -print  |  sed -n 's:^\./::p'  |  sort  > .today
+if  cmp -s .today .yesterday
+then
+	echo "	No changes under $1 since ${date-?}"
+	rm -f .today
+	exit
+fi
+echo "	_____ _____files added under $1 since ${date-?}"
+comm -13 .yesterday .today
+echo "	_____ _______files deleted"
+comm -23 .yesterday .today
+echo "	old total number of files\c" ; wc -l  < .yesterday
+mv .today .yesterday 2>/dev/null  ||  cp .today .yesterday
+echo "	new total number of files\c" ; wc -l  < .yesterday

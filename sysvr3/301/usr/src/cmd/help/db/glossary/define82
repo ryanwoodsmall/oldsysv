@@ -1,0 +1,15 @@
+
+\S environment:  environment variable \S
+
+Your environment is composed of "shell variables"\S*\S and their values.
+HOME and PATH are two examples of shell variables that are part of your
+environment.  They are called environment variables.  When you log in, the
+system executes programs that create most of the environment variables that
+you need. These variables come from /etc/profile, the shell, login(1), and
+your ".profile"\S*\S.  You can add variables to your environment either
+permanently by adding them in you .profile, or temporarily through the
+env(1) command.  Environment variables are important because UNIX system
+commands use them.  If you do not have them available for the commands to
+use, the commands will fail.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,26 @@
+
+\Spcat\S:  Examples
+
+        pcat chapter4.z
+
+    Prints an unpacked version of "chapter4.z" to standard output.
+
+    ---------------------------------------------------------------------------
+
+        pcat records.z|sort -u
+
+    Prints an unpacked version of "record.z".  It prints the lines of the file
+    in alphabetical and numerical order according to the first character of
+    each line.
+
+
+
+
+    ---------------------------------------------------------------------------
+
+        pcat THESIS/* | pr -n -p -h "THESIS"
+
+    Prints an unpacked version of the ".z" files that exist in the directory
+    "THESIS".  pr(1) prompts the user to hit carriage return before it prints
+    each 66 line page. It prints "THESIS" at the top of each page, and numbers
+    each line.

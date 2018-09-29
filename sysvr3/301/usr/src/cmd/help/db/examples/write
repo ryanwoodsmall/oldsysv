@@ -1,0 +1,28 @@
+
+\S write \S:  Examples
+
+    This is an example of how \S write \S is used.  First, you initiate the 
+    conversation by typing \S write \S followed by another user's login name.
+    The write command sends the user a message that says "MESSAGE FROM ABC".
+    Then the other user knows to respond. Imagine that you typed the lines 
+    that are highlighted, and the user you are writing to typed the other 
+    lines.  You end each line with "o" to signal that this line is over.  
+    When you want to end the conversation you tell the other user with "oo" 
+    for over and out.  The conversation ends when you depress the control key
+    and strike the letter d simultaneously.  This is called hitting control-d.
+    \S write \S signals that the conversation is over by printing "EOT".
+
+ 
+    \S write xyz \S
+
+    MESSAGE FROM ABC
+    
+    \S How are you doing?o\S
+    write abc
+    I'm doing fine.o
+    \S Could we have a meeting over lunch today?o \S
+    Sure, how about 11:30?o
+    \S See you then.oo \S
+    \S O.K.oo \S
+    \S control-d \S
+    EOT

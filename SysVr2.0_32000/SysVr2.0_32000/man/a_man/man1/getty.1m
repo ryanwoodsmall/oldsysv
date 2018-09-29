@@ -1,0 +1,233 @@
+.TH GETTY 1M
+.SH NAME
+getty  \- set terminal type, modes, speed, and line discipline
+.SH SYNOPSIS
+.B /etc/getty
+[
+.B \-h
+] [
+.B \-t
+timeout
+]
+line
+[
+speed
+[
+type
+[
+linedisc
+] ] ]
+.br
+.B /etc/getty \-c
+file
+.SH DESCRIPTION
+.I Getty
+is a program that is invoked by
+.IR init (1M).
+It is the second process in the series,
+.RI ( init-getty-login-shell )
+that ultimately connects a user with the \s-1UNIX\s0 system.
+Initially
+.I getty
+generates a system identification message from the values
+returned by the
+.IR uname (2)
+system call.
+Then, if
+.B /etc/issue
+exists,
+it outputs this to the user's terminal, followed finally by the
+login message field for the entry it is using from
+.BR /etc/gettydefs .
+.I Getty
+reads the user's login name and invokes the
+.IR login (1)
+command
+with the user's name as argument.
+While reading the name,
+.I getty
+attempts to adapt the system to the speed and type of terminal
+being used.
+.PP
+.I Line
+is the name of a tty line in \f3/dev\fP to which
+.I getty
+is to attach itself.
+.I Getty
+uses this string as the name of a file in the \f3/dev\fP directory
+to open for reading and writing.
+Unless
+.I getty
+is invoked with the
+.B \-h
+flag,
+.I getty
+will force a hangup on the line by setting the speed to zero
+before setting the speed to the default or specified speed.
+The
+.B \-t
+flag plus \fItimeout\fP in seconds, specifies that
+.I getty
+should exit if the open on the line succeeds and no
+one types anything in the specified number of seconds.
+The optional second argument,
+.IR speed ,
+is a label to a speed and tty definition in the file
+.BR /etc/gettydefs .
+This definition tells
+.I getty
+at what speed to initially run, what the login message should look
+like, what the initial tty settings are, and what speed to try next
+should the user indicate that the speed is inappropriate (by typing a
+.I <break>
+character).
+The default \fIspeed\fP is 300 baud.
+The optional third argument,
+.IR type ,
+is a character string describing to
+.I getty
+what type of terminal is
+connected to the line in question.
+.I Getty
+understands the following types:
+.P
+.RS
+.nf
+\f3none\f1		default
+\f3vt61\f1		\s-1DEC\s+1 vt61
+\f3vt100\f1		\s-1DEC\s+1 vt100
+\f3hp45\f1		Hewlett-Packard \s-1HP\s+145
+\f3c100\f1		Concept 100
+.fi
+.RE
+.P
+The default terminal is \f3none\fP; i.e.,
+any crt or normal terminal unknown to the system.
+Also, for terminal type to have any meaning, the virtual
+terminal handlers must be compiled into the operating system.
+They are available, but not compiled in the default condition.
+The optional fourth argument,
+.IR linedisc ,
+is a character string describing which line discipline to use
+in communicating with the terminal.
+Again the hooks for line disciplines are available in the
+operating system but there is only one presently available,
+the default line discipline,
+.SM
+.BR LDISC0\*S .
+.PP
+When given no optional arguments,
+.I getty
+sets the \fIspeed\fP of the interface to 300 baud,
+specifies that raw mode is to be used (awaken on every character),
+that echo is to be suppressed, 
+either parity allowed,
+new-line characters will be converted to carriage return-line feed,
+and tab expansion performed on the standard output.
+It types the login message before reading
+the user's name a character at a time.
+If a null character (or framing error) 
+is received, it is assumed to be the result
+of the user pushing the ``break'' key.
+This will cause
+.I getty
+to attempt the next \fIspeed\fP in the series.
+The series that
+.I getty
+tries is determined by what it finds in
+.BR /etc/gettydefs .
+.PP
+The user's name is terminated by a new-line or
+carriage-return character.
+The latter results in the system being set to
+treat carriage returns appropriately (see
+.IR ioctl (2)).
+.PP
+The user's name is scanned to see if
+it contains any lower-case alphabetic characters; if not,
+and if the name is non-empty, the
+system is told to map any future upper-case characters
+into the corresponding lower-case characters.
+.PP
+In addition to the standard
+.SM UNIX
+system erase and kill characters (\fB#\fP and \fB@\fP),
+.I getty
+also understands \f3\eb\fP and \f3^U\fP.
+If the user uses a \fB\eb\fP as an erase, or \fB^U\fP as
+a kill character,
+.I getty
+sets the standard erase character and/or kill character to match.
+.PP
+.I Getty
+also understands the ``standard'' \s-1ESS\s+12
+protocols for erasing, killing and aborting a line, and terminating
+a line.  If
+.I getty
+sees the \s-1ESS\s+1
+erase character,
+\fB_\fP,
+or kill character,
+\fB$\fP,
+or abort character,
+\fB&\fP,
+or the \s-1ESS\s+1
+line terminators, \fB/\fP or \fB!\fP, it
+arranges for this set of characters to be used for these functions.
+.PP
+Finally,
+.I login
+is called with the user's name as an argument.
+Additional arguments may be typed after the login name.  These are
+passed to
+.IR login ,
+which will place them in the environment (see
+.IR login (1)).
+.PP
+A check option is provided.  When
+.I getty
+is invoked with the
+.B \-c
+option and \fIfile\fP, it scans the file as if it were scanning
+.B /etc/gettydefs
+and prints out the results to the standard output.  If there
+are any unrecognized modes or improperly constructed entries, it
+reports these.  If the entries are correct, it prints out the
+values of the various flags.  See
+.IR ioctl (2)
+to interpret the
+values.  Note that some values are added to the flags automatically.
+.SH FILES
+/etc/gettydefs
+.br
+/etc/issue
+.SH "SEE ALSO"
+ct(1C),
+init(1M),
+login(1),
+ioctl(2),
+gettydefs(4),
+inittab(4),
+tty(7).
+.SH BUGS
+While
+.I getty
+does understand simple single character quoting conventions, it is
+not possible to quote the special control characters that
+.I getty
+uses to determine when the end of the line has been reached, which
+protocol is being used, and what the erase character is.  Therefore
+it is not possible to login via
+.I getty
+and type a \fB#\fP,
+\fB@\fP,
+\fB/\fP,
+\fB!\fP,
+\fB_\fP,
+backspace,
+\fP^U\fP,
+\fB^D\fP,
+or \fB&\fP as part
+of your login name or arguments.  They will always be interpreted
+as having their special meaning as described above.
+.\"	@(#)getty.1m	6.2 of 9/2/83

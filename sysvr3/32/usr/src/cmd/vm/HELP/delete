@@ -1,0 +1,15 @@
+
+   The DELETE command allows you to remove objects  from  the  system.
+   Objects  deleted  will  be  placed  in  your wastebasket for a time
+   period you specify on the Office Preferences form accessed from the
+   Preferences menu.  Objects deleted from the wastebasket are removed
+   from the system. (Mail messages are not placed in the wastebasket.)
+
+   To DELETE an object use one of the options  below.   If  an  object
+   name is not specified the current object is assumed.
+
+      - Function Key - Press DELETE
+
+      - Command menu - Select DELETE + RETURN
+
+      - COMMAND LINE - Type delete [frame# | object_name] + RETURN

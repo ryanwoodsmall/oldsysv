@@ -1,0 +1,118 @@
+.TH NSCLOOP 1M
+.SH NAME
+nscloop \- perform the \s-1NSC\s+1 local network loopback functions
+.SH SYNOPSIS
+.B /usr/nsc/nscloop
+[netname\fB.\|.\|.\fP]
+.RB [ \-l ]
+.RB [ \-s ]
+.RB [ \-c ]
+.RB [ \-u " units]"
+.RB [ \-d " names]"
+.RB [ \-f " file]"
+.RB [ \-m " login]"
+.SH DESCRIPTION
+.I Nscloop
+uses the message loopback feature of the \s-1NSC\s+1 adapter hardware to
+gather network statistics and to operationally query the availability
+of remote adapters.
+.I Nscloop
+generates and prints a brief report on the standard output.
+The first argument to
+.I nscloop
+may be one or more network names (see
+.IR nscmon(1M)
+for a complete description of a network).
+If no network is given, all the networks specified in the
+network file,
+.BR /usr/nsc/nets
+will be accessed.
+If more than one network is specified, the
+.B \-f,
+.B \-d,
+.B \-u
+options are disabled.
+For each network specified, the
+.B \-l,
+.B \-s,
+and/or
+.B \-c
+functions are performed on all known adapters, as determined
+by the network topological file,
+.BR /etc/nsc.
+.I Nscloop
+recognizes the following options:
+.TP "\w'\fB\-m\fP login\ \  'u"
+.B \-l
+Loop a message and associated data block off each
+specified adapter.
+Compare each byte sent with each byte
+returned and report comparison errors.
+This is the default mode.
+.TP
+.B \-s
+Gather and report the trunk statistics for the specified adapters.
+.TP
+.B \-c
+Gather, report, and clear the trunk statistics for the specified
+adapters.
+This function is reserved to the super-user.
+.TP
+.BR \-f " file"
+Use
+.I file
+as the network topological file for the specified network.
+This file
+contains the symbolic names of each
+machine on the network.
+A report is generated for each unique adapter
+that configured hosts are connected to.
+.I File 
+format is assumed to be as follows:
+.sp .5v
+.RS
+           machine_name:anything:anything:device
+.RE
+.sp .5v
+.TP
+.BR \-d " names"
+Perform the indicated function to only
+those adapters on the specified network where the host
+.I name
+is connected.
+.TP
+.BR \-u " units"
+Perform the indicated functions to only those
+adapters on the specified network whose unit number is
+.IR unit .
+.TP
+.BR \-m " login"
+Send mail to
+.I login
+if any error is detected.
+.PP
+By default, option
+.B \-l
+is enabled.
+If more that one of
+.BR \-l ,
+.BR \-s ,
+or
+.BR \-c
+are specified, each function will be performed
+on the indicated adapters.
+If no adapters are
+explicitly selected for reporting,
+.I nscloop
+will query all adapters for the specified network found in the
+network topological file,
+.BR /etc/nsc .
+.SH FILES
+.TP "\w'/usr/nsc\ \ \ \ \ 'u"
+/etc/nsc
+the \s-1NSC\s+1 network topological file
+.SH "SEE ALSO"
+nscmon(1M).
+.SH DIAGNOSTICS
+All error messages are designed to be self-explanatory.
+.\"	@(#)nscloop.1m	5.2 of 5/18/82

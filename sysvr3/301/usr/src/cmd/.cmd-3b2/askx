@@ -1,0 +1,167 @@
+#ident	"@(#)cmd-3b2:askx	1.2"
+#
+# ask
+#
+# Ask a question.
+#
+
+set -ue
+
+exprpfx="#"			# To avoid expr "/" bug
+
+exprnum="^${exprpfx}[0-9][0-9]*$"
+exprpath="^${exprpfx}/[-a-zA-Z0-9_./]*$"
+exprstr="^${exprpfx}[-a-zA-Z0-9_./]*$"
+
+aflag=
+choice=
+default=
+help=
+hidden=
+menu=
+num_max=
+num_min=
+pflag=
+question=
+split=' '
+
+while [ $# -ne 0 ]
+do
+	case "${1}" in
+	-H) hidden="${hidden} ${2}" ; shift 2 ;;
+	-a) aflag=y ; shift 1 ;;
+	-c) choice="${choice} ${2}" ; shift 2 ;;
+	-d) default="${2}" ; shift 2 ;;
+	-h) help="${2}" ; shift 2 ;;
+	-m) menu="${2}" ; shift 2 ;;
+	-p) pflag=y ; shift 1 ;;
+	-q) question="${2}" ; shift 2 ;;
+	-s) split='\n' ; shift 1 ;;
+	-n)
+		eval `echo "${2}" | (IFS="${IFS}:" ; read num_min num_max ;\
+			 echo num_min=\'${num_min}\' num_max=\'${num_max}\')`
+		shift 2 ;;
+	-*)
+		echo "${0}: \"${1}\": Unknown option" >&2
+		exit 1 ;;
+	*)
+		echo "${0}: \"${1}\": Unknown operand" >&2
+		exit 1 ;;
+	esac
+done
+
+if [ -n "${num_min}" -a -n "${default}" ]
+then
+	if expr "${exprpfx}${default}" : "${exprnum}" > /dev/null
+	then
+		if [ ${default} -lt ${num_min} ]
+		then
+			default=${num_min}
+		elif [ ${default} -gt ${num_max} ]
+		then
+			default=${num_max}
+		fi
+	fi
+fi
+
+while true
+do
+	if [ -n "${menu}" ]
+	then
+		echo "\n${menu}" >&2
+	fi
+	while true
+	do
+		echo "\n${question:-Choice?}${split}[${num_min:+ (${num_min} - ${num_max})}${aflag:+ (alphanumeric string)}${pflag:+ (pathname)}${choice}${help:+ help} ]${default:+ (default ${default})} \07\c" >&2
+		if read answer
+		then
+			:
+		else
+			echo "EOF" >&2
+			continue
+		fi
+		if [ "'${answer}'" = "''" ]
+		then
+			if [ -z "${default}" ]
+			then
+				echo "\nThere is no default answer." >&2
+				continue
+			fi
+			answer="${default}"
+		fi
+		if [ "'${answer}'" = "'magic mode'" ]
+		then
+			if [ -n "${hidden}" ]
+			then
+				choice=" `echo ${choice} ${hidden}`"
+				hidden=
+				echo "\nPOOF!" >&2
+			else
+				echo "\nYour incantation has no effect." >&2
+			fi
+			continue
+		fi
+		if [ -n "${num_min}" ]
+		then
+			if expr "${exprpfx}${answer}" : "${exprnum}" > /dev/null
+			then
+				if [ ${answer} -ge ${num_min} -a ${answer} -le ${num_max} ]
+				then
+					echo ${answer}
+					exit 0
+				fi
+			fi
+		fi
+		if [ -n "${help}" -a "'${answer}'" = "'help'" ]
+		then
+			echo "\n${help}\n\nPress RETURN to continue \c" >&2
+			read x
+			break
+		fi
+		if [ ${aflag:-n} = y ]
+		then
+			if expr "${exprpfx}${answer}" : "${exprstr}" > /dev/null
+			then
+				echo "${answer}"
+				exit 0
+			fi
+		fi
+		if [ ${pflag:-n} = y ]
+		then
+			if expr "${exprpfx}${answer}" : "${exprpath}" > /dev/null
+			then
+				echo "${answer}"
+				exit 0
+			fi
+		fi
+		for x in ${choice}
+		do
+			if [ "'${answer}'" = "'${x}'" ]
+			then
+				echo "${answer}"
+				exit 0
+			fi
+		done
+		echo "\nInvalid response ... please enter one of:" >&2
+		if [ -n "${num_min}" ]
+		then
+			echo "\to A number from ${num_min} thru ${num_max}" >&2
+		fi
+		if [ ${aflag:-n} = y ]
+		then
+			echo "\to A string made up of letters, numbers, '-', '_' and '.'" >&2
+		fi
+		if [ ${pflag:-n} = y ]
+		then
+			echo "\to An absolute pathname (\"/name[/name ...]\")" >&2
+		fi
+		for x in ${choice}
+		do
+			echo "\to ${x}" >&2
+		done
+		if [ -n "${help}" ]
+		then
+			echo "\to help" >&2
+		fi
+	done
+done

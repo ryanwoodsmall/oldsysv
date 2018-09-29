@@ -1,0 +1,12 @@
+
+\Srm\S:  Options
+
+     -f   Removes files that you do not have write permission for without 
+          asking any questions.
+
+     -i   interactive option.  Asks you whether each file should be removed.
+          If you respond "y", the file is removed.  If you respond "n", 
+          the file is not removed.
+
+     -r   recursive option.  Removes contents of the named directories and 
+          their subdirectories, and then removes the directory itself.

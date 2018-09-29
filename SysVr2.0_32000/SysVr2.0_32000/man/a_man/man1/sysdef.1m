@@ -1,0 +1,36 @@
+.TH SYSDEF 1M
+.SH NAME
+sysdef \- system definition
+.SH SYNOPSIS
+.B /etc/sysdef
+[ opsys [ master ] ]
+.SH DESCRIPTION
+.I Sysdef\^
+analyzes the named operating system
+file and extracts configuration information.
+This includes all hardware devices
+as well as system devices and all tunable parameters.
+.PP
+The output of
+.I sysdef\^
+can usually be used directly by
+.IR config (1M)
+to regenerate the appropriate
+configuration files.
+.SH FILES
+/unix		default operating system file
+.br
+/etc/master	default table for hardware specifications
+.SH "SEE ALSO"
+config(1M), master(4).
+.SH BUGS
+For devices that have interrupt vectors but are not interrupt-driven,
+the output of
+.I sysdef\^
+cannot be used for
+.I config.\^
+Because information regarding
+.I config\^
+aliases is not preserved by the system,
+device names returned might not be accurate.
+.\"	@(#)sysdef.1m	6.2 of 9/2/83

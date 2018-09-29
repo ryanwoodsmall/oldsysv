@@ -1,0 +1,73 @@
+.TH OD 1 
+.SH NAME
+od \- octal dump
+.SH SYNOPSIS
+.B od
+[
+.B \-bcdosx
+] [ file ] [ [
+.B +
+]offset[
+.BR ". " "]["
+\fBb\fR ] ]
+.SH DESCRIPTION
+.I Od\^
+dumps
+.I file\^
+in
+one or more formats
+as
+selected by the first argument.
+If the first argument is missing,
+.B \-o
+is default.
+The meanings of the format options are:
+.TP 6
+.B  \-b
+Interpret bytes in octal.
+.TP
+.B  \-c
+Interpret bytes in \s-1ASCII\s0.
+Certain non-graphic characters appear as C escapes:
+null=\f3\e0\fP,
+backspace=\f3\eb\fP,
+form-feed=\f3\ef\fP,
+new-line=\f3\en\fP,
+return=\f3\er\fP,
+tab=\f3\et\fP;
+others appear as 3-digit octal numbers.
+.TP
+.B  \-d
+Interpret words in unsigned decimal.
+.TP
+.B  \-o
+Interpret words in octal.
+.TP
+.B  \-s
+Interpret 16-bit words in signed decimal.
+.TP
+.B  \-x
+Interpret words in hex.
+.PP
+The
+.I file\^
+argument specifies which file is to be dumped.
+If no file argument is specified,
+the standard input is used.
+.PP
+The offset argument specifies the offset
+in the file where dumping is to commence.
+This argument is normally interpreted
+as octal bytes.
+If \fB.\fR is appended, the offset is interpreted in
+decimal.
+If \fBb\fR is appended, the offset is interpreted in
+blocks of 512 bytes.
+If the file argument is omitted,
+the offset argument must be preceded by
+.BR + .
+.PP
+Dumping continues until end-of-file.
+.SH "SEE ALSO"
+dump(1).
+.\"	@(#)od.1	6.2 of 9/2/83

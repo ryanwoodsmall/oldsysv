@@ -1,0 +1,4 @@
+#	@(#)uucp	1.1
+56 * * * * /usr/lib/uucp/uudemon.hr > /dev/null
+0 4 * * * /usr/lib/uucp/uudemon.day > /dev/null
+30 5 * * 1 /usr/lib/uucp/uudemon.wk > /dev/null

@@ -1,0 +1,218 @@
+520 clearall
+705 0 0 72
+             INTRODUCTION TO STANDARD INPUT AND OUTPUT
+
+       In this part of the UNIX System walkthru, you will learn
+about standard input and standard output.  These are important
+concepts, and you should understand them before learning about
+redirection of input and output (the subject of other parts of
+the UNIX System walkthru).
+
+
+	As with the rest of the UNIX System walkthru, the top left portion
+of your screen will simulate a UNIX System session.  You will be entering
+commands there, and the output of the commands will also appear there.  
+The top right side of the screen will be used to present diagrams to 
+help explain concepts.  You will see explanatory text on the bottom 
+half of your screen, and on occasion, you will see the instruction 
+to type a command.  
+706 
+520 arrow
+520 clearall
+2 13 0
+34 alt
+700 r79
+35 alt
+30 
+8 14 25 STANDARD OUTPUT
+31 
+2 15 0
+19 
+2 0 0
+18 
+705 3000 3001 78
+    You may have noticed that there are different types of commands in the UNIX
+System.  Some produce no output.  The "cd" ("change directory") command is an 
+example of this.  Other commands produce output that goes into a file.  For 
+example, the "cp" ("copy") command copies the contents of one file to another 
+file.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Finally, some commands produce output on your terminal.  For example, the "ls" 
+("list") command will list the names of files on your terminal.  This section 
+of the UNIX System walkthru will apply to this last group of UNIX System 
+commands:  Those that print things on your terminal.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+Although you see the output of these commands on your terminal, the commands 
+themselves do not know that they are sending their output to your terminal.  
+They send their output to a thing called "standard output."
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Each time you log in, the UNIX System automatically defines "standard output" 
+to be your terminal screen.  In this way all commands that send their output to
+"standard output" will print their output on your terminal screen.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 25
+Maybe a picture will help.
+706 
+520 cmdview
+520 arrow
+520 clearbot
+520 cleartop
+520 unixview
+520 arrow
+520 userview
+520 arrow
+520 cleartop
+520 clearbot
+705 3000 3001 78
+In later parts of this walkthu, you will learn how to change this definition 
+of standard output.  Once you learn this, you will be able to direct the output
+of a command to someplace other than your terminal.
+706 
+520 arrow
+520 clearbot
+520 cleartop
+30 
+8 14 25 STANDARD INPUT
+31 
+705 3000 3001 78
+     Just as commands differ in the type of output they produce, UNIX System 
+commands also differ in the type of input they expect. As you probably noticed,
+some of the commands that you have learned require a file or directory name as 
+an argument.  The "mkdir" ("make directory") command is one such example.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Other commands need no arguments or other information.  For example, the "pwd" 
+("print working directory") command just prints out the current directory name.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+You will come across some commands that will take input from your terminal.  
+For example, if you have learned to use the "ed" or "vi" editors, you know that
+you enter commands from your keyboard.  Commands like these take input from 
+"standard input."
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Just as many commands send output to "standard output," many commands accept 
+input from "standard input."  As you can probably guess, the UNIX System takes 
+care of setting "standard input" to be your terminal.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 72
+As a side note, you will come across several commands that can take
+their input from either a file, or from standard input.  For these
+commands, if you enter a file name as an argument, then the command
+acts on the file.  If you do not specify a file name (or you enter
+a lone hyphen instead of the file name), the command uses standard input.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+Let's look at an example.  You may remember the "cat" command, which prints
+out the contents of a specified file on your terminal.  Just as a refresher, 
+print out the contents of the file "junk."
+706 
+520 cleartop
+8 0 0 $
+520 instruct
+3 display the contents of "junk"
+2 0 2
+253 %0cat%0junk%0
+254 cat junk
+520 shansloop
+8 1 0 This file doesn't contain
+8 2 0 anything of interest,
+8 3 0 and can be removed.
+8 4 0 $
+520 clearbot
+705 3000 3001 74
+So, when you include a file name, the contents of the file are displayed.  
+Now try the "cat" command with the special "-" argument.
+706 
+520 instruct
+3 type "cat -"
+2 4 2
+18 
+253 %0cat%1-%0
+254 cat -
+520 ansloop
+520 clearbot
+705 3000 3001 77
+Note that no output appeared, and that your "$" prompt did not reappear.  This
+is because the "-" argument told the command to take input from "standard 
+input," and not from a file.  The command is waiting for you to enter input.
+Try typing the word "hello."
+706 
+520 instruct
+3 type "hello"
+2 5 0
+18 
+253 hello
+254 hello
+520 sploop
+8 5 0 hello
+8 6 0 hello
+520 clearbot
+705 3000 3001 66
+You can see that your input was echoed on the screen.  Again, note
+that your prompt has not reappeared.  This raises another important
+point:  when a command is reading from standard input, it will keep
+reading until it sees a ^D (control-D, remember?).  If you were to
+enter another line of input, the "cat" command would echo it.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 43
+Instead, terminate input of the command now.
+706 
+520 instruct
+3 use ^D to terminate input
+2 7 0
+18 
+2 2000 2000
+256 4
+254 control-D (^D)
+520 ansloopa
+8 7 0 $
+520 clearbot
+705 3000 3001 77
+You can tell that the command has terminated, since you see your prompt again.
+
+In later sections of the walkthru, you will learn how to redirect standard 
+input.
+706 
+520 arrow
+520 clearall
+520 clearall
+705 0 0 64
+               SUMMARY OF STANDARD INPUT AND OUTPUT
+
+     You now have an understanding of the terms "standard input" 
+and "standard output."  Remember that most of the time, standard
+input will come from your terminal keyboard (that is, standard
+input is what you type in).  Remember also that standard output
+is usually your terminal screen.
+
+     In later sections of this walkthru, you will learn how
+to redirect standard input and output.  Redirection of input
+and output will save you much time and effort, as you become
+more familiar with this capability.
+706 
+520 arrow
+520 clearall

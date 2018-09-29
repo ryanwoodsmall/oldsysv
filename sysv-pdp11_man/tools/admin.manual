@@ -1,0 +1,24 @@
+MAN=/sccs/man
+MAN2=/usr/man
+for dir in $MAN/?_man/man?
+do
+	cd $dir
+	newdir=`echo $dir | sed "s:$MAN:$MAN2:"`
+	for file in *
+	do
+		echo $file
+		ed - $file  <<-\!
+		g/@(#)/d
+		$a
+		.\"	@(#)admin.manual	5.2 of 5/19/82
+		.
+		w
+		q
+		!
+		admin -n -i${file} -r5 -y"starting base for 5.0" -fn s.${file}
+		rm ${file}
+		get -e s.${file}
+		mv ${file} ${newdir}
+	done
+done
+#	@(#)admin.manual	5.2 of 5/19/82

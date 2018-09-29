@@ -1,0 +1,24 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/crypt/Rlist.crypt
+	INSTALL		---555 2 2	./install/crypt/INSTALL
+	UNINSTALL	---555 2 2	./install/crypt/UNINSTALL
+$
+new	d--775 0 3
+	bin	d--775 2 2
+		crypt	---555 2 2	../bin/crypt
+	$
+	usr	d--775 0 3
+		lib	d--775 0 3
+			libcrypt.a	---444 2 2	../usr/lib/libcrypt.a
+			makekey		---555 2 2	../usr/lib/makekey
+		$
+		options	d--775 0 3
+			crypt.name	---444 2 2	./install/crypt/crypt.name
+		$
+	$
+$
+$
+#ident "@(#)pkg.crypt:proto	1.16"

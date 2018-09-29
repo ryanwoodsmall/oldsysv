@@ -1,0 +1,43 @@
+
+\Sps\S:  Options
+
+     -a   prints the basic information about all process linked to a terminal.
+
+     -d   prints all the basic information except process group leaders.
+
+     -e   prints the basic information about all processes.
+
+     -f   generates a full listing including the 1) userID; 2) processID 
+          number; 3) processID of the parent process; 4) scheduling 
+          information; 5) process starting time; 6) the tty number of the 
+          terminal; 7) the time the command took to execute ; and 
+          8) the command and its options.
+
+     -l   generates a long listing that contains 1) a flag that, for example,
+          states whether the process is a parent or child; 2) a status that
+          gives information on whether the process is waiting, running, or
+          swapped; 3) the priority; 4) a nice value; 5) memory address of the
+          process; 6) size; 7) and wait channel which is the memory address 
+          of the process that the shell is waiting on to finish.
+
+    -c alternate_mem   uses <alternate_mem> in place of /dev/mem.  (See the
+                         manual page for \Sps\S for details on /dev/mem.
+                         Not available on the 3b2.)
+
+     -g grp_list   only prints the data about processes whose process group
+                  leaders are given in <grp_list>.  Group leaders are integers
+                  that are the names of processes that are parents of other
+                  processes, i.e. your login shell.  They are  separated
+                  by commas, spaces, or both.
+
+     -n name_list  replaces system name_list file "/unix" with the <name_list>.
+                   Names are separated from one another by commas, spaces, or
+                   both.
+
+     -s alternate_swap  uses <alternate_swap> in place of /dev/swap.  (See the
+                        manual page for \Sps\S for details on /dev/swap.  
+                        not available on the 3b2.)
+
+     -t term_list  prints only the data about terminals listed in <term_list>.
+                   Terminal identifiers are separated from one another by
+                   commas, spaces or both.

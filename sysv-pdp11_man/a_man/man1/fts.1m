@@ -1,0 +1,55 @@
+.tr ~ 
+.TH FTS 1M "3B20S only"
+.SH NAME
+fts \- Field Test Set interface
+.SH SYNOPSIS
+.B /etc/fts find
+util-id
+.br
+.B /etc/fts stat
+file
+.br
+.B /etc/fts set
+hex-num command args
+.SH DESCRIPTION
+\fIFts\fP provides an interface to the 3B20S
+Field Test Set \s-1(FTS)\s+1.
+The \s-1FTS\s+1 is a hardware device for tracing
+the execution of a process based on its utility \s-1ID\s+1.
+.PP
+For the \s-1UNIX\s+1 System, the utility \s-1ID\s+1 of a process is a 24 bit
+quantity divided into two fields.
+By default:
+the low order 16 bits contain the
+i-number of the process file, and
+the high order 8 bits contain the minor device
+number of the filesystem on which the process file exists.
+.PP
+After a \fIfork\fP(2) system call, the child process's utility \s-1ID\s+1 is the same
+as the parent's.
+After an \fIexec\fP(2) system call, if the process's utility \s-1ID\s+1 had previously
+been modified (see below), it remains unchanged, otherwise
+it is set to the default value.
+.PP
+The following options are recognized by \fIfts\fP:
+.TP \w'\fBfind\fP~\fIutil-id\fP\ \ 'u
+.BI find ~util-id
+Prints on the standard output, the device name and path name
+of a file that has utility \s-1ID\s+1 of \fIutil-id\fP.
+\fIUtil-id\fP is interpreted as a hexadecimal constant.
+.TP
+.BI stat ~file
+Prints on the standard output, the utility \s-1ID\s+1 of \fIfile\fP.
+.TP
+.BI set hex-num~command~args
+Changes its own utility \s-1ID\s+1, and then overlays itself
+with \fIcommand\fP. The new utility \s-1ID\s+1 is as follows: the high order 8 bits
+have the value \-1 (all bits set), and the low order 16 bits
+are set to \fIhex-num\fP.
+\fIHex-num\fP is interpreted as a hexadecimal constant.
+.SH "SEE ALSO"
+exec(2),
+fork(2),
+sys3b(2).
+.tr ~~
+.\"	@(#)fts.1m	5.2 of 5/18/82

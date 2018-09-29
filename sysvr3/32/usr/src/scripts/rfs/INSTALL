@@ -1,0 +1,291 @@
+#
+#ident	"@(#)pkg.rfs:rfs/INSTALL	1.8.3.1"
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/rfs.name`
+PKGNAME1=/usr/options/rfs.name
+
+LAST=2
+
+#
+#	find mount device
+#
+
+if	test -b "$1"
+then
+	mntdev=$1
+elif	test -b /dev/diskette
+then
+	mntdev=/dev/diskette
+elif	test -b /dev/install
+then
+	mntdev=/dev/install
+else
+	echo "**ERROR**	Can't find mount device"
+	exit
+fi
+mntname="${2:-/install}"
+
+echo "Installing the ${PKGNAME}"
+echo "Copyright (c) 1985 AT&T"
+echo "All Rights Reserved"
+
+#
+# Check that the necessary packages have already been installed.
+#	If this package has no dependencies, then the following code
+#	is deleted.
+#
+
+if
+	test ! -s /usr/options/sysadm.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the System Administration Utilities to be installed first."
+	exit
+fi
+
+if
+	test ! -s /usr/options/nsu.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the Networking Support Utilities to be installed first."
+	exit
+fi
+
+if
+	test ! -s /usr/options/dfm.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the Directory and File Management Utilities to be installed first."
+	exit
+fi
+
+#
+#	The machine must have 2 Meg of memory to run.
+#
+
+MEG=`expr "\`/etc/prtconf\`" : ".*Memory size: \([0-9]*\).*"`
+
+if
+	test "$MEG" = ""
+then
+	MEG=1
+fi
+
+if
+	test  $MEG -lt 2
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "At least 2 Megabytes of memory must be available."
+	exit
+fi
+
+if
+	test -s ${PKGNAME1}
+then
+	#
+	#	package is already on machine - check for
+	#	Issue and Version
+	#
+	ISS=`expr "\`cat ${PKGNAME1}\`" : '.*Issue[ 	]*\([^ 	]\).*'`
+	VER=`expr "\`cat ${PKGNAME1}\`" : '.*Version[ 	]*\([^ 	]\).*'`
+	if
+		test "$ISS" = ""
+	then
+		ISS=1
+	fi
+	if
+		test "$VER" = ""
+	then
+		VER=0
+	fi
+
+	FISS=`expr "${PKGNAME}" : '.*Issue[ 	]*\([^ 	]\).*'`
+	FVER=`expr "${PKGNAME}" : '.*Version[ 	]*\([^ 	]\).*'`
+
+	if
+		test $ISS -gt $FISS
+	then
+		echo "**WARNING**  This will install an older"
+		echo "Issue/Version ($FISS/$FVER) over the current Issue/Version ($ISS/$VER)"
+		answer=""
+		while 
+			[ "$answer" != y -a "$answer" != n ]
+		do
+			echo "Type 'y' to install over current Issue or\c"
+			echo " 'n' to stop installation:  \c"
+			read answer
+			case $answer in
+				n)	exit
+					;;
+			
+				y)	;; #continue installation
+			esac
+		done
+	elif
+		test $ISS -eq $FISS
+	then
+		if
+			test $VER -gt $FVER
+		then
+			echo "**WARNING**  This will install an older"
+			echo "Issue/Version ($FISS/$FVER) over the current Issue/Version ($ISS/$VER)"
+			answer=""
+			while 
+				[ "$answer" != y -a "$answer" != n ]
+			do
+				echo "Type 'y' to install over current Issue or\c"
+				echo " 'n' to stop installation:  \c"
+				read answer
+				case $answer in
+					n)	exit
+						;;
+				
+					y)	;; #continue installation
+				esac
+			done
+		fi
+	fi
+fi
+
+expect=1
+while	[ $expect -le $LAST ]
+do
+
+	if	[ $expect -gt 1 ]
+	then
+		cd /
+		/etc/umount $mntdev 2>/dev/null
+		echo "Remove floppy and insert floppy number $expect"
+		echo "Type <return> when ready: \c"
+		read answer
+		/etc/mount $mntdev $mntname -r 2>/dev/null
+	fi
+
+	#
+	# Check to make sure that this floppy belongs to the package
+	#
+
+	while	[ ! -s ${INSPATH}/usr/options/rfs.name -o "${PKGNAME}" != "`cat ${INSPATH}/usr/options/rfs.name`" ]
+	do
+		echo "**ERROR**	Floppy does not belong to the ${PKGNAME}"
+		cd /
+		/etc/umount $mntdev 2>/dev/null
+		echo "Remove floppy and insert correct floppy"
+		echo "Type <return> when ready: \c"
+		read answer
+		/etc/mount $mntdev $mntname -r 2>/dev/null
+	done
+
+	#
+	# Check to make sure this is the correct floppy of the set
+	#
+
+	while	[ "`cat /install/install/ORDER`" != "$expect" -a "$answer" != y ]
+	do
+		echo "**WARNING**	Floppy out of sequence"
+		echo "Expecting floppy diskette number $expect"
+		while [ "$answer" != y -a "$answer" != n ]
+		do
+			echo "Type 'y' to continue or \c"
+			echo "'n' to try another floppy: \c"
+			read answer
+		done
+		case $answer in
+		n)	cd /
+			/etc/umount $mntdev 2>/dev/null
+			echo "Remove floppy and insert correct floppy"
+			echo "Type <return> when ready: \c"
+			read answer
+			answer=""
+			/etc/mount $mntdev $mntname -r 2>/dev/null
+			;;
+		y)	expect=`cat /install/install/ORDER`
+			;;
+		esac
+	done
+	#
+	#	Determine how much space is needed by usr and root.
+	#	NOTE:  Since a mkboot is done in the setup script,
+	#	extra spece is added for a temporary copy of
+	#	/boot/KERNEL (if the sum of the software drivers
+	#	du.o, dufst.o, and sp.o were greater than that of
+	#	the KERNEL, then that sum would be added instead).
+	#	Also, a factor of 100 is added to allow for block
+	#	size differences.
+	#
+
+	USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+	ROOTneeds=`expr "\`du -s ${INSPATH}/\`" : "\([0-9]*\).*"`
+	if [ $expect -eq 1 ]
+	then
+		ROOTextra=`expr "\`ls -s /boot/KERNEL\`" : " *\([0-9]*\).*"`
+	else
+		ROOTextra=0
+	fi
+	ROOTneeds=`expr ${ROOTneeds} + ${ROOTextra}`
+	ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+	ROOTneeds=`expr ${ROOTneeds} + 100`
+	USRneeds=`expr ${USRneeds} + 100`
+
+	#
+	#	Determine how much space is available.
+	#
+
+	USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+	ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+	#
+	#	Determine if the pagkage fits.
+	#
+
+	if
+		[ ${USRspace} -lt ${USRneeds} ]
+	then
+		echo "**ERROR**  ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are ${USRspace} blocks available on the"
+		echo "/usr file system --"
+		echo "${USRneeds} blocks are needed."
+		exit
+	elif
+		[ ${ROOTspace} -lt ${ROOTneeds} ]
+	then
+		echo "**ERROR**  ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are ${ROOTspace} blocks available on the"
+		echo "/ (root) file system --"
+		echo "${ROOTneeds} blocks are needed."
+		exit
+	fi
+
+	#
+	#	Install the package.
+	#
+
+	cd ${INSPATH}
+	echo "The following files are being installed: "
+	find . -print | cpio -pduvm /
+
+	#
+	#	Invoke Setup Script (if this is floppy 2).
+	#
+
+	if [ $expect -eq 2 ]
+	then
+		/install/install/setup
+	fi
+
+	echo "Floppy diskette number $expect is complete"
+	expect=`expr $expect + 1`
+done
+
+#
+# Closing message installation complete
+#
+
+echo "Installation of ${PKGNAME} is completed.\n"
+echo 'Execute "shutdown -i6 -g0 -y" and'
+echo 'wait for the "Console Login:" prompt.'
+exit

@@ -1,0 +1,22 @@
+#ident	"@(#)xenv:m32/make-m32	1.7"
+#
+#	Front end script to "make" for use in cross compilation of
+#	3b15/3b5/3b2 SGS
+#
+
+MAKECMD=scpmake
+
+PFX=${PFX-m32}
+
+MAKEOPTS="MAKE=make AS=${PFX}as CC=${PFX}cc LD=${PFX}ld \
+	OL=$ROOT/ SL=$ROOT/usr/src/cmd \
+	ROOT=$ROOT INCSYS=$INCSYS INC=$INC NM=${PFX}nm\
+	LORDER=${PFX}lorder STRIP=${PFX}strip PFX=${PFX}"
+
+echo ${PFX}-make
+if [ $# = 0 ]
+then
+	exec $MAKECMD $MAKEOPTS
+else
+	exec $MAKECMD $MAKEOPTS "$@"
+fi

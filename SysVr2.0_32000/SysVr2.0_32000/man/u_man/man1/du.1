@@ -1,0 +1,64 @@
+.TH DU 1
+.SH NAME
+du \- summarize disk usage
+.SH SYNOPSIS
+.B du
+[
+.B \-ars
+] [ names ]
+.SH DESCRIPTION
+.I Du\^
+gives the number of blocks contained in all files
+and (recursively) directories within each directory and
+file
+specified by
+the
+.I names\^
+argument.
+The block count includes the indirect blocks
+of the file.
+If
+.I names\^
+is missing,
+.B .
+is used.
+.PP
+The optional argument
+.B \-s
+causes only the grand total
+(for each
+of the specified
+.IR names )
+to be given.
+The optional argument
+.B \-a
+causes an entry to be generated
+for each file.
+Absence of either causes an entry to be generated for
+each directory only.
+.PP
+.I Du\^
+is normally silent about directories that cannot be read,
+files that cannot be opened, etc.
+The
+.B \-r
+option will cause
+.I du\^
+to generate messages in such instances.
+.PP
+A file with two or more links is only counted once.
+.SH BUGS
+If the
+.B \-a
+option is not used,
+non-directories
+given as arguments
+are not listed.
+.br
+If there are too many distinct linked files,
+.I du\^
+will count the excess files more than once.
+.br
+Files with holes in them will get an incorrect
+block count.
+.\"	@(#)du.1	6.2 of 9/2/83

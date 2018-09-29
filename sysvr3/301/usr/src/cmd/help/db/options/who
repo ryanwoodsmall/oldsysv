@@ -1,0 +1,33 @@
+
+\Swho\S: Options
+
+     -H   prints column headings above the output.
+
+     -T   reports on the state of the write permissions for the terminals "+"
+          for writable by anyone and "-" if not, as well as listing the users
+          names, line numbers and the times when they logged on to the system.
+
+     -a   processes "/etc/utmp" or the <file_name> with all options.
+
+     -b   prints the time and date of last system start up.
+
+     -d   lists processes that have died and not been restarted by "init".
+
+     -l   lists terminal lines that are available.
+
+     -p   lists system-initiated processes that are active.
+
+
+     -q   prints only the names and the number of users on the system.
+
+     -r   prints the current run-level of the "init" process.
+
+     -s   lists login names, line numbers, and times when the users logged on.
+          This is the default.
+
+     -t   prints the last change to the system clock.
+
+     -u   prints a long listing of information about current users.
+
+     am i    am I       identify the user who is executing command.
+

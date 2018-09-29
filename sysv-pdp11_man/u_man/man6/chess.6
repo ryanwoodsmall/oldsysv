@@ -1,0 +1,42 @@
+.TH CHESS 6 "PDP-11 only"
+.SH NAME
+chess \- the game of chess
+.SH SYNOPSIS
+.B /usr/games/chess
+.SH DESCRIPTION
+.I Chess\^
+is a computer program that plays class D chess.
+Moves may be given either in standard (descriptive) notation
+or in algebraic notation.
+The symbol
+.B +
+must be placed at the end of a line when the move on
+that line places the opponent's king in check.
+.B o-o
+and 
+.B o-o-o
+specify castling, king side or queen side, respectively.
+.PP
+The user is prompted for a move or command by a
+.BR \(** .
+To play black, type 
+.B first
+at the onset of the game.
+To print a copy of the board in play, type a carriage return only.
+Each move is echoed in the appropriate notation, followed by the program's
+reply.
+Near the middle and end games, the program can take considerable time in
+computing its moves.
+.PP
+A
+.B ?
+or 
+.B help
+may be typed to get a help message that briefly describes
+the possible commands.
+.SH DIAGNOSTICS
+The most cryptic diagnostic is ``eh?'' which
+means that the input was syntactically incorrect.
+.SH BUGS
+Pawns may be promoted only to queens.
+.\"	@(#)chess.6	5.2 of 5/18/82

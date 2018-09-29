@@ -1,0 +1,21 @@
+
+\Segrep\S:  Options
+
+     -b   precedes each line by the block number on which it was found.
+
+     -c   prints only a count of the lines containing the pattern.
+
+     -i   ignores upper/lower case distinctions.
+
+     -l   prints filenames once.  Does not repeat the names of files when the
+          pattern is found more than once.
+
+     -n   precedes each line with its relative line number.
+
+     -v   prints all lines except those that contain the pattern.
+
+     -e special_expr   searches for <special_expr>.  <special_expr> is a full
+                       regular expression that begins with a "-".
+
+
+     -f file_name  searches for regular expressions in <file_name>.

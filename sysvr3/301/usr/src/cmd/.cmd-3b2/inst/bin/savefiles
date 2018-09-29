@@ -1,0 +1,14 @@
+bin/ed
+bin/red
+etc/inittab
+etc/system
+etc/master.d/hdelog
+etc/master.d/iuart
+etc/master.d/idisk
+etc/master.d/kernel
+etc/master.d/mem
+etc/master.d/stubs
+etc/master.d/gentty
+etc/master.d/disp
+etc/master.d/s5
+etc/master.d/ports

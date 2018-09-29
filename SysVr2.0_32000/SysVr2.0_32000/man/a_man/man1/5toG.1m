@@ -1,0 +1,17 @@
+.TH 5TOG 1M
+.SH NAME
+\fB5toG\fR \- creates ROM monitor executable files from UNIX system V executable files.
+.SH SYNOPSIS
+\f35toG\f1 \fB<SysVfile\fR \fBROMfile\fR
+.SH DESCRIPTION
+\f25toG\fR reads in from the standard input a \s-1UNIX\s+1 System V a.out
+formatted file and writes to the standard output a \s-1ROM\s+1 monitor
+formatted a.out file.  The System V file is unchanged.
+The symbol table will be stripped from the \s-1ROM\s+1 monitor file.
+.P
+This command is useful for creating stand-alone executable files
+that can be booted from the \s-1ROM\s+1 stand-alone boot program instead of
+being run from the stand-alone shell.
+.SH FILES
+/usr/nsc/5toG
+.\"	@(#)5toG.1m	5.2 of 10/15/84

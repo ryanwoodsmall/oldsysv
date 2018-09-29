@@ -1,0 +1,143 @@
+#ident	"@(#)rfs.admin:resrcmgmt/mountmgmt/unmntnow	1.9"
+#menu# unmount remote resources immediately (if RFS is running)
+
+#help# 
+#help# 	When you no longer want to use a remote resource you can unmount
+#help#	it from your file system. As soon as the resource is unmounted
+#help# 	local users on your machine will no longer be able to access
+#help#	the resource.
+#help#	
+#help#	The subcommand "unmntnow" lets you immediately unmount remote 
+#help# 	resources that have been mounted on your file system.  Any 
+#help# 	local process using resources that you unmount will no longer 
+#help# 	be able to access those resources.  You can only access this 
+#help#	subcommand if RFS is running.
+#help#
+#help# 	NOTE: This subcommand will not remove the remote resources from 
+#help# 	the Automatic Mount List.  Use the subcommand "unmntauto" to 
+#help#	remove resources from this list.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/unmnt$$ /usr/tmp/mnterr$$; trap 0; exit' 0 1 2 3 15
+
+# print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo '\n\n\t\tUNMOUNT REMOTE RESOURCES IMMEDIATELY'
+
+#define messages and questions
+DEF_INTRO="
+When you no longer want to use remote resources you can unmount them from 
+your file system.  If RFS is running and the resources are currently mounted 
+you use this subcommand to immediately unmount the resources.
+
+NOTE: This subcommand does not remove the resources from the Automatic Mount
+List. Use the subcommand \"unmntauto\" to remove resources from this list."
+
+DEF_SYM_NAME="
+The resource identifier is the name that was assigned to the resource
+when it was advertised.  If you enter a resource identifier that is not
+mounted the system will warn you and show you a list of the remote 
+resource that are mounted."
+
+QUEST3="
+Enter the resource identifier of the remote resource 
+to be unmounted [?, q]:"
+
+REDOQ="
+Do you want to unmount another resource?"
+
+#initialiation
+cflags="-qq -k$$"
+
+# print description of program
+echo "$DEF_INTRO\n"
+
+# Determine if remote resources are currently mounted.  If not, then print appropriate
+# error message
+/etc/mount | /bin/grep "\/remote on" >/usr/tmp/unmnt$$
+if [ ! -s /usr/tmp/unmnt$$ ]
+then
+	echo "\nThere are no remote resources mounted on your machine.\n"
+	exit
+fi
+	
+# Determine if RFS is currently running.  If not, then print appropriate error message.
+if /usr/lbin/rfsrunning
+then
+while /bin/true
+do
+	while /bin/true
+	do
+		# Get symbolic name of the resource.
+		res=`/usr/lbin/checkre $cflags -fe			\
+		-H"$DEF_SYM_NAME"					\
+		"$QUEST3"						\
+		'^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+		'^[^ \.\/:]*$'  'The resource identifier must not contain a space, ":", "." or a "/".'`
+
+		# Determine if the resource is mounted.  If not, then print appropriate
+		# warning message and the remote resources that are currently mounted.
+		intbl=`/bin/grep "on $res " /usr/tmp/unmnt$$ 2>/dev/null`
+		if [ "$intbl" = "" ] 
+		then
+			echo "Resource \"$res\" is not mounted on your machine.\n"
+			if [ -s /usr/tmp/unmnt$$ ]
+			then
+				echo "Currently mounted resources are:\n"
+				/usr/bin/awk '{ printf "\t%s\n", $3}' /usr/tmp/unmnt$$ | pg -e -p"Enter <RETURN> to continue:"
+			fi
+			continue
+		fi
+	
+		WARNMESS="
+If you unmount \"$res\", any local process using \"$res\" will no 
+longer be able to access it.  In addition, those processes currently
+accessing it will be killed.
+
+If any local users are now in the directory being unmounted, they
+will be logged off."
+		CONTQ="
+Do you want to continue to unmount \"$res\"?"
+	
+		# Print message about mounting forcibly and ask wheather are not to
+		# continue.
+		echo "$WARNMESS\n"
+		if /usr/lbin/checkyn $cflags -f "$CONTQ"
+		then
+			: OKAY
+		else 
+			echo "\n\"$res\" will NOT be unmounted.\n"
+			break
+		fi
+
+		# kill all processes using the resource, and unmount it.  Print
+		# appropriate message for success or completion.
+		/etc/fuser -k $res 2>/dev/null 1>&2
+		/etc/umount -d $res 2>/usr/tmp/mnterr$$
+		if [ $? -ne 0 ]
+		then
+			echo "\nWARNING:\c"
+			/bin/sed "s/^.*umount://" /usr/tmp/mnterr$$
+		else
+			echo "\n\"$res\" has been unmounted."
+		fi
+		break
+	done
+	
+	# Determine if any more remote are mounted.  If so, then ask the user to
+	# repeat the sequence, else print the appropriate error message.
+	/etc/mount | /bin/grep "\/remote on" >/usr/tmp/unmnt$$
+	if [ ! -s /usr/tmp/unmnt$$ ]
+	then
+		echo "\nThere are no remote resources mounted on your machine.\n"
+		exit
+	elif /usr/lbin/checkyn $cflags -f "$REDOQ"
+	then
+		continue
+	else
+		break
+	fi
+done
+fi

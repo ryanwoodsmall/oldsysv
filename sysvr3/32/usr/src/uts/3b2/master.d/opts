@@ -1,0 +1,10 @@
+*#ident	"@(#)kern-port:master.d/opts	1.1"
+*
+* PTTY  - slave half driver
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ocs	-	pts	26	10	-
+						pts_cnt(%i) ={NPTTY}
+						pts_tty[NPTTY] (%0x58)
+$$$
+NPTTY = 10

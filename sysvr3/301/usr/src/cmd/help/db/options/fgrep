@@ -1,0 +1,24 @@
+
+\Sfgrep\S:  Options
+
+     -b   precedes each line by the block number on which it was found.
+
+     -c   only prints a count of the lines containing the pattern.
+
+     -i   ignores upper/lower case distinctions.
+
+     -l   prints filenames once.  Does not repeat the names of files when the
+          pattern is found more than once.
+
+     -n   precedes each line by its relative line number.
+
+     -v   prints all lines except those that contain the pattern.
+
+     -x   prints only the lines matched entirely.
+
+
+
+     -e special_string  searches for <special_string>.  <special_string> is a
+        string that begins with a "-".
+
+     -f file_name   searches for the string in <file_name>.

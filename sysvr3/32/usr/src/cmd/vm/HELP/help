@@ -1,0 +1,44 @@
+
+   The HELP command creates an active frame containing a text  message
+   which  describes either the action you are trying to perform or the
+   current object or form.  From this  context-specific  help  message
+   you can navigate through the entire Help facility via  the Table of
+   Contents  menu by pressing  the CONTENTS Function Key.  To exit the
+   Help facility, press the CANCEL Function Key.
+
+   The following list describes the information that will be presented
+   in  the help message.  If a command name is specified with the HELP
+   command, a message describing the function, syntax and use  of  the
+   command is displayed.
+
+      - menu:  information about the menu's contents
+
+      - form:  definition and field requirements of the form
+
+      - pop-up frame:  information about  the command or form you  are
+        trying  to  complete which caused  the pop-up frame to appear,
+        or simply about the items in the pop-up menu in  the  case  of
+        the FRM-MGMT "list" menu.
+
+      - Command menu:  function, syntax, and use  of  the  highlighted
+        command.
+
+      - COMMAND LINE:  a pop-up menu of all commands is presented  for
+        you to select the command you would like help on.
+
+      - from a command  prompt:   function,  syntax  and  use  of  the
+        command,  including  how to complete any prompts that are part
+        of the command procedure.
+
+      - from an error message:  information about the action you  were
+        trying to perform when the error occurred.
+
+   To access HELP use one of the following options.  If no argument is
+   specified  the system assumes you want help on the current frame or
+   on what you are currently doing.
+
+         - Function Key - Press HELP
+
+         - Command menu - Select HELP + RETURN
+
+         - COMMAND LINE - Type help [command_name] + RETURN

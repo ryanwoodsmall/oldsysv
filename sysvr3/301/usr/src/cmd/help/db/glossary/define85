@@ -1,0 +1,12 @@
+
+\S filter \S
+
+A filter is a program that reads input, transforms it, and writes some
+output.  Filters are different from "editors"\S*\S and other commands because
+filters do not change the contents of a file.  Examples of filters are
+grep(1) and tail(1) which select and print part of the input, sort(1) which
+sorts the input, and wc(1) which counts the number of words in the input.
+sed(1) and awk(1) are also filters but they are called programmable filters
+or data transformers because you write a program that transforms the input.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,190 @@
+.TH PROF 1
+.SH NAME
+prof \- display profile data
+.SH SYNOPSIS
+.B prof
+.RB [ \-tcan ]
+.RB [ \-ox ]
+.RB [ \-g ]
+.RB [ \-z ]
+.RB [ \-h ]
+.RB [ \-s ]
+.RB [ \-m "\ mdata]"
+[prog]
+.SH DESCRIPTION
+.I Prof\^
+interprets a profile file
+produced by the
+.IR monitor (3C)
+function.
+The symbol table in the object file
+.I prog\^
+.RB ( a.out
+by default)
+is read and correlated with a profile file
+.RB ( mon.out
+by default).
+For each external text symbol the percentage
+of time spent executing between the address of that symbol
+and the address of the next
+is printed, together with the number of times that function
+was called and the average number of milliseconds per call.
+.PP
+The mutually exclusive options
+.B t, c, a,\^
+and
+.B n\^
+determine the type of sorting of the output lines:
+.TP
+.B \-t
+Sort by decreasing percentage of total time (default).
+.TP
+.B \-c
+Sort by decreasing number of calls.
+.TP
+.B \-a
+Sort by increasing symbol address.
+.TP
+.B \-n
+Sort lexically by symbol name.
+.PP
+The mutually exclusive options
+.B o\^
+and
+.B x\^
+specify the printing of the address of each symbol monitored:
+.TP
+.B \-o
+Print each symbol address (in octal) along with the symbol name.
+.TP
+.B \-x
+Print each symbol address (in hexadecimal) along with the symbol name.
+.PP
+The following options may be used in any combination:
+.TP
+.B \-g
+Include non-global symbols (static functions).
+.TP
+.B \-z
+Include all symbols in the profile range (see
+.IR monitor (3C)),
+even if associated with zero number of calls and zero time.
+.TP
+.B \-h
+Suppress the heading normally printed on the report.
+(This is useful if the report is to be processed further.)
+.TP
+.B \-s
+Print a summary of several of the
+monitoring parameters and statistics on the standard error output.
+.TP
+.BR \-m " mdata\^"
+Use file
+.I mdata\^
+instead of
+.B mon.out
+as the input profile file.
+.PP
+A program creates a profile file if it has been loaded with
+the 
+.B \-p
+option of
+.IR cc (1).
+This option to the
+.I cc\^
+command arranges for calls to
+.IR monitor (3C)
+at the beginning
+and end of execution.
+It is the call to
+.I monitor\^
+at the end of
+execution that causes a 
+profile file to be written.
+The number of calls to a function is tallied
+if the
+.B \-p
+option
+was used when the file containing the
+function was compiled.
+.PP
+The name of the file created by a profiled program is
+controlled by the environment variable
+\s-1PROFDIR\s+1.
+If 
+.SM PROFDIR
+does not exist, ``mon.out'' is produced in the directory current when the
+program terminates.
+If 
+.SM PROFDIR
+= string, ``string/pid.progname'' is produced,
+where 
+.I progname
+consists of argv[0] with any path prefix removed,
+and 
+.I pid
+is the program's process id.
+If 
+.SM PROFDIR
+= nothing, no profiling output is produced.
+.PP
+A single function may be split into subfunctions for profiling
+by means of the 
+.SM MARK
+macro (see 
+.IR prof (5)).
+.bp
+.SH FILES
+.ta \w'mon.out  'u
+mon.out	for profile
+.br
+a.out	for namelist
+.SH SEE ALSO
+cc(1).
+.br
+exit(2), profil(2), monitor(3C), prof(5) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+.ne 6v
+.SH WARNING
+The times reported in successive identical runs may show variances
+of 20% or more, because of varying cache-hit ratios
+due to sharing of the cache with other processes.
+Even if a program seems to be the only one using the
+machine, hidden background or asynchronous
+processes may blur the data.
+In rare cases, the clock ticks initiating recording
+of the program counter may ``beat'' with loops in a
+program, grossly distorting measurements.
+.PP
+Call counts are always recorded precisely, however.
+.SH BUGS
+Only
+programs that call
+.IR exit (2)
+or return from
+.I main\^
+will cause a
+profile file to be produced, 
+unless a final call to monitor is explicitly coded.
+.PP
+The use of the 
+.B \-p 
+option 
+.IR cc (1)
+to invoke
+profiling imposes a limit of 600
+functions that may have
+call counters established during program execution.
+For more counters you must call 
+.IR monitor (3C)
+directly.
+If this
+limit is exceeded, other data will be overwritten and the
+.B mon.out
+file will be corrupted.
+The number of call counters used will be reported
+automatically by the
+.I prof\^
+command whenever the number exceeds 5/6 of the maximum.
+.\"	@(#)prof.1	6.2 of 9/2/83

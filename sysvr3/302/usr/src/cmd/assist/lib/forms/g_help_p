@@ -1,0 +1,8 @@
+NAVIGATING, EXECUTING       CURSOR POSITIONING          MISCELLANEOUS 
+f1 Select current item   RETURN, DOWN Next item       f3 Redraw screen
+f2 Clear help or prompt            UP Previous item   f6 Current item help
+f4 Return to menu or form       RIGHT ...             f7 Current menu help
+f5 ...                           LEFT ...             f8 ASSIST help
+^T Top menu                        ^U ...             ^K ...
+^D Exit ASSIST                                        ^C ...
+^E ...                       <letter> Go to item that starts with <letter>

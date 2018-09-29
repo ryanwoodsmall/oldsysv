@@ -1,0 +1,55 @@
+.TH USTAT 2
+.SH NAME
+ustat \- get file system statistics
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B #include <ustat.h>
+.sp
+.B int ustat (dev, buf)
+.br
+.B int dev;
+.br
+.B struct ustat \(**buf;
+.SH DESCRIPTION
+.I Ustat\^
+returns information about a mounted file system.
+.I Dev\^
+is a device number identifying a device containing
+a mounted file system.
+.I Buf\^
+is a pointer to a
+.I ustat\^
+structure that includes to following elements:
+.PP
+.RS
+.nf
+.ta 8n 25n 30n
+daddr_t	f_tfree;	/\(** Total free blocks \(**/
+ino_t	f_tinode;	/\(** Number of free inodes \(**/
+char	f_fname[6];	/\(** Filsys name \(**/
+char	f_fpack[6];	/\(** Filsys pack name \(**/
+.fi
+.RE
+.PP
+.I Ustat\^
+will fail if one or more of the following are true:
+.TP 15
+.TP
+.SM
+\%[EINVAL]
+.I Dev\^
+is not the device number of a device containing a mounted file system.
+.TP
+.SM
+\%[EFAULT]
+.I Buf\^
+points outside the process's allocated address space.
+.SH "RETURN VALUE"
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+stat(2), fs(4).
+.\"	@(#)ustat.2	6.2 of 9/6/83

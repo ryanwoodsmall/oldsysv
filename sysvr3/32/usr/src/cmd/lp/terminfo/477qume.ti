@@ -1,0 +1,40 @@
+#ident	"@(#)nlp:terminfo/477qume.ti	1.5"
+#01-06-88
+
+477qume|att477qume|AT&T 477 qume emulation,
+
+	daisy,
+
+	bufsz#8192,
+	cols#136,
+	lines#66,
+	orc#12,
+	orhi#120,
+	orl#8,
+	orvi#48,
+	cps#80,
+
+	cr=^M,
+	cud1=^J,
+	cuf1=\s,
+	chr=%?%p1%{100}%<%t\EE%p1%02d%e%p1%{110}%<%t\EEA%p1%{100}%-%d%e%p1%{120}%<%t\EEB%p1%{110}%-%d%e%p1%{130}%<%t\EEC%p1%{120}%-%d%e%p1%{140}%<%t\EED%p1%{130}%-%d%e%p1%{150}%<%t\EEE%p1%{140}%-%d%e%p1%{160}%<%t\EEF%p1%{150}%-%d%;,
+	cvr=%?%p1%{100}%<%t\EL%p1%02d%e%p1%{110}%<%t\ELA%p1%{100}%-%d%e%p1%{120}%<%t\ELB%p1%{110}%-%d%e%p1%{130}%<%t\ELC%p1%{120}%-%d%e%p1%{140}%<%t\ELD%p1%{130}%-%d%e%p1%{150}%<%t\ELE%p1%{140}%-%d%e%p1%{160}%<%t\ELF%p1%{150}%-%d%;,
+	ff=^L,
+	hpa=%?%p1%{100}%<%t\EC%p1%02d%e%p1%{110}%<%t\ECA%p1%{100}%-%d%e%p1%{120}%<%t\ECB%p1%{110}%-%d%e%p1%{130}%<%t\ECC%p1%{120}%-%d%e%p1%{140}%<%t\ECD%p1%{130}%-%d%e%p1%{150}%<%t\ECE%p1%{140}%-%d%e%p1%{160}%<%t\ECF%p1%{150}%-%d%;,
+
+#Auto CR/LF off, Auto LF off, Right Margin Control on,Undeline Bold and Shadow  off, no print off, clear tabs, graphics off, wps off
+	is2=\E\015P\EW\E.\EL08\EY,
+	lpi=%?%p1%{2}%=%t\EL24%e%p1%{3}%=%t\EL16%e%p1%{4}%=%t\EL12%e%p1%{6}%=%t\EL08%e%p1%{8}%=%t\EL06%e%p1%{12}%=%t\EL04%;,
+	smul=\EI,
+	rmul=\EJ,
+	smgb=\E-,
+	smgl=\E9,
+	smgr=\E0,
+	smgt=\E+,
+#Set form length
+	u9=\EF%p1%02d,
+	vpa=%?%p1%{100}%<%t\EP%p1%02d%e%p1%{110}%<%t\EPA%p1%{100}%-%d%e%p1%{120}%<%t\EPB%p1%{110}%-%d%e%p1%{130}%<%t\EPC%p1%{120}%-%d%e%p1%{140}%<%t\EPD%p1%{130}%-%d%e%p1%{150}%<%t\EPE%p1%{140}%-%d%e%p1%{160}%<%t\EPF%p1%{150}%-%d%;,
+
+477-455|att477-455|AT&T 477 with 455 emulation,
+
+	use=477qume,

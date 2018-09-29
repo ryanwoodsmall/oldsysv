@@ -1,0 +1,17 @@
+
+\S option argument: \S
+
+An option argument is an argument to an option.  The option argument
+follows the option on the command line.  It is generally a file or
+directory, character or integer.  The relationship between the option-
+argument and the option is similar to the relationship between the operand
+and the command.  Option-arguments and operands give the option or command
+something to work on or work with.  Take for example, the command line
+
+       fgrep [-f temp] new.directory
+
+In this example, the "f" option requires an option argument because it
+needs a file to extract strings from.  The file "temp" is the option-
+argument. The command fgrep(1) requires an operand that it will search to
+find lines that contain strings.  The directory "new.directory" is the
+operand.

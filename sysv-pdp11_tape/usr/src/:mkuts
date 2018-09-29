@@ -1,0 +1,29 @@
+#	@(#):mkuts	1.5
+
+: make UNIX libraries and initial systems
+
+if /bin/vax
+then
+	cd /usr/src/uts/vax/cf
+	for i in gdgt gdts
+	do
+		config $i
+		make install SYS=unix NODE=unix REL=sysV VER=$i
+	done
+elif /bin/pdp11
+then
+	cd /usr/src/uts/pdp11/cf
+	for i in gdht gdtm rpht rptm
+	do
+		config $i
+		make install SYS=unix NODE=unix REL=sysV VER=$i
+	done
+elif /bin/u3b
+then
+	cd /usr/src/uts/3b/cf
+	for i in system.32 system.52
+	do
+		config /etc/$i
+		make install SYS=unix NODE=unix REL=sysV VER=$i
+	done
+fi

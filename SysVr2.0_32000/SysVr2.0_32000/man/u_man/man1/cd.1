@@ -1,0 +1,50 @@
+.TH CD 1
+.SH NAME
+cd \- change working directory
+.SH SYNOPSIS
+.B cd
+[ directory ]
+.SH DESCRIPTION
+If
+.I directory\^
+is not specified, the value of shell parameter
+.B
+.SM $HOME
+is used as the new working directory.
+If
+.I directory\^
+specifies a complete path starting with
+.BR / ,
+.BR \&. ,
+.BR \&.\|. ,
+.I directory\^
+becomes the new working directory.
+If neither case applies,
+.I cd\^
+tries to find the designated directory relative to one of the
+paths specified by the
+.B
+.SM $CDPATH
+shell variable.
+.B
+.SM $CDPATH
+has the same syntax as, and similar semantics to, the
+.B
+.SM $PATH
+shell variable.
+.I Cd\^
+must have execute (search) permission in
+.IR directory\^ .
+.PP
+Because a new process is created to execute each command,
+.I cd\^
+would be ineffective if it were written as a
+normal command;
+therefore, it is recognized and is internal to
+the shell.
+.SH SEE ALSO
+pwd(1), sh(1).
+.br
+chdir(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)cd.1	6.2 of 9/2/83

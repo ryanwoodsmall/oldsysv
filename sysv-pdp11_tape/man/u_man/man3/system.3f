@@ -1,0 +1,16 @@
+.TH SYSTEM 3F
+.SH NAME
+system \- issue a shell command from Fortran
+.SH SYNOPSIS
+.B "character\(**N c"
+.P
+.B "call system(c)"
+.SH DESCRIPTION
+.I System\^
+causes its character argument to be given to
+.IR sh (1)
+as input, as if the string had been typed at a terminal. The current
+process waits until the shell has completed.
+.SH SEE ALSO
+sh(1), exec(2), system(3S).
+.\"	@(#)system.3f	5.2 of 5/18/82

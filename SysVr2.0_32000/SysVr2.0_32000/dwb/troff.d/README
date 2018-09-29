@@ -1,0 +1,54 @@
+
+The troff in this directory
+is a troff that produces machine-independent output.
+It requires a file of descriptive information about
+the particular typesetter you have in mind, and produces
+output parameterized for that device.
+
+Thus:
+	troff -Taps ...
+produces output for the Autologic APS-5.
+(This is the default.)
+
+To make this work, one needs to create a set of
+device and font descriptions in the directory
+	/usr/lib/font/devxxx
+where "xxx" is your device name.
+Currently supported devices are
+	aps	Autologic APS-5
+
+The file "DESC" contains information about the
+device itself and the character set.  The file devaps/DESC
+is a good example; follow the format closely.
+
+In addition, each font needs a description of its
+characters, width and device-driving codes;
+see devaps/R and S for typical examples.
+
+The program "makedev" will convert these text
+descriptions into a binary form that the troff can
+slurp up in a single gulp during initialization;
+these wind up in devaps/DESC.out (which includes
+default font info) and XX.out for info about font XX.
+
+The second half of the job is to write a post-processor
+that converts the more or less machine-independent troff
+output into specific codes for your favorite typesetter.
+daps.c is the driver for the APS-5;
+it will serve as a useful prototype.  In particular,
+it contains a precise description of the output language.
+Other postprocessors are
+	tc	tektronix 4014
+	hc	hp2621 (mainly for crude graphics)
+	ta	prints ascii on ordinary terminals (crudely)
+
+The aps driver writes onto /dev/aps in the same way that
+old troff writes on /dev/cat; to get its output on the std output,
+use, e.g., daps -t ... >file.
+
+One can always simply run
+	troff
+and look at the output; it is guaranteed to be ascii text
+and thus safe to edit, grep, etc.
+(Since it is ascii, it is also guaranteed to be quite voluminous.)
+SCCS @(#)README	1.3

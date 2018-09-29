@@ -1,0 +1,16 @@
+
+\Sexpr\S:  Examples
+
+        a=`expr $a + 1`
+
+   Evaluates the expression "$a + 1" and adds 1 to the value of variable "a".
+
+   ---------------------------------------------------------------------------
+
+        expr $a : ".*"
+
+   Evaluates the expression "$a : ".*"".  The operator ":" is the matching
+   operator.  It checks the number of characters in the second argument that
+   match the first argument.  Here it is matching the regular expression ".*"
+   and the value of the variable "a".  ".*" matches any character, therefore
+   \Sexpr\S returns the number of characters in the value of "a".

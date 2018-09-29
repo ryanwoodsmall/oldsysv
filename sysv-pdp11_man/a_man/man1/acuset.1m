@@ -1,0 +1,82 @@
+.TH ACUSET 1M "3B20S only"
+.SH NAME
+acuset \- connect \s-1ACU\s+1s and communication lines
+.SH SYNOPSIS
+.B /etc/acuset
+\|filen
+.SH DESCRIPTION
+.PP
+The
+.I acuset
+command provides a means for dynamically associating \fIUN56\fR
+.SM ACU
+minor devices with communication lines.
+The connections are specified in 
+.IR filen ;
+the format of this file is described below.
+Until these connections have been made,
+a program cannot dial out on an 
+.SM ACU.
+The connections can be changed dynamically.
+The only processes affected
+are those trying to dial out
+on the connections being changed.
+.PP
+.I Filen\^
+consists of one or more lines of the following form:
+.IP
+/dev/acu? unit port \|[ \|line \|]
+.PP
+where
+.I /dev/acu?\^
+is the
+.SM ACU
+device name,
+.I unit
+is the 
+.SM ACU
+unit number,
+.I port\^
+is the port number,
+and 
+.I line\^
+is the line number in an
+.SM ACU
+sharing arrangement.
+A non-shared \s-1ACU\s+1 does not have a line number.
+.PP
+Here is a sample file for four \s-1ACU\s+1s
+with no sharing arrangements.
+.RS
+.nf
+/dev/acu0 0 0
+/dev/acu1 0 1
+/dev/acu2 0 2
+/dev/acu3 0 3
+.fi
+.RE
+.PP
+Here is a sample file for one \s-1ACU\s+1
+in a sharing arrangement with twelve data sets.
+.RS
+.nf
+/dev/acu0 0 0 1
+/dev/acu1 0 0 2
+/dev/acu2 0 0 3
+/dev/acu3 0 0 4
+/dev/acu4 0 0 5
+/dev/acu5 0 0 6
+/dev/acu6 0 0 7
+/dev/acu7 0 0 8
+/dev/acu8 0 0 9
+/dev/acu9 0 0 10
+/dev/acu10 0 0 11
+/dev/acu11 0 0 12
+.fi
+.RE
+.PP
+Non-shared and shared \s-1ACU\s+1s may be attached to
+different ports of a single \fIUN56\fP.
+.SH SEE ALSO
+acu(7).
+.\"	@(#)acuset.1m	5.2 of 5/18/82

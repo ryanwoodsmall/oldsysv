@@ -1,0 +1,159 @@
+.TH X25ALNK 3C
+.SH NAME
+x25alnk, x25ilnk \- attach or install a \s-1BX\s+1.25 link
+.SH SYNOPSIS
+.nf
+.B #include <x25lib.h>
+.PP
+.B int x25alnk (linkid, devname, lineno, modname, flags)
+.B int linkid, lineno;
+.B char \(**devname, \(**modname;
+.B unsigned flags;
+.PP
+.B int x25ilnk (linkid, pktsize, flags)
+.B int linkid, pktsize;
+.B unsigned flags;
+.SH DESCRIPTION
+.I X25alnk\^
+is used to attach a
+.SM BX\*S.25
+logical link specified by
+.IR linkid
+to a level 2 device whose name is
+.IR devname
+by making the necessary connections between
+data structures.
+.PP
+.I Linkid\^
+is the identifier for the link data structure
+to be used in the operating system.
+This identifier
+can be thought of as the connector between
+.I x25ipvc\^
+calls and the
+.I x25alnk\^
+call for the physical link on which the channels are
+multiplexed.  An example of a link identifier is 1.
+.PP
+.I Devname\^
+is the name of the physical device running the interpreter and
+script for this link, e.g.,
+.BR /dev/kmc0 .
+.PP
+.I Lineno\^
+is the physical line number (range 0-7) for a logical link
+on a physical unit, e.g., 4.
+.PP
+.I Modname\^
+is the name of the synchronous modem control device.
+If the
+.SM LNKMOD
+flag is specified, the standard modem
+control functions performed for the line are to raise data
+terminal ready and request to send.
+An example of
+.I modname\^
+is
+.BR /dev/kdm0 .
+.PP
+.I Flags\^
+specifies the options for the attach call, e.g.,
+.SM LNKBACK
+requests
+.I devname\^
+as a backup device.
+The permissible
+.I flags\^
+bit settings for attach are:
+.RS
+.TP \w'\s-1LNKBACK\s+1\ \ 'u
+.PD 0
+.SM LNKMOD
+\fImodname\fP
+specified.
+.TP
+.SM LNKBACK
+attach a backup rather a primary device.
+.PD
+.RE
+.PP
+.I X25ilnk\^
+is used to initialize a link; more precisely, to start
+the level 2 protocol in the associated device
+and to start the level 3 protocol in the \s-1UNIX\s+1 System driver
+for the link specified by
+.IR linkid .
+.PP
+.I Pktsize\^
+is the packet size to be used for level 3 data packets.
+.I Pktsize\^
+must be a number that is a power of 2 between 16 and 1024 inclusive.
+The default packet size is 128.
+The
+.SM LNKPKT
+flag must be raised to set a non-default size.
+.PP
+.I Flags\^
+specifies the options for the initialization call, e.g.,
+.SM LNKISB
+requests the B address.
+The permissible
+.I flags\^
+bit settings for initialization are:
+.RS
+.TP \w'\s-1LNKBACK\s+1\ \ 'u
+.PD 0
+.SM LNKPKT
+packet size specified
+.TP
+.SM LNKISB
+tell interpreter line is an X.25 B address; default is A.
+.TP
+.SM LNKBACK
+initialize the backup device.
+.TP
+.SM LNKFAST
+the device speed is greater than 9.6
+.SM KB\*S.
+.PD
+.SH SEE ALSO
+ioctl(2),
+open(2),
+stat(2),
+perror(3C),
+x25clnk(3C),
+x25hlnk(3C).
+.br
+x25pvc(1M), nc(7), vpm(7), x25(7) in the
+.IR "\s-1UNIX\s+1 System Administrator's Manual" .
+.br
+.IR "Operations Systems Network Protocol Specification: BX.25 Issue 2" ,
+Bell Laboratories.
+.SH DIAGNOSTICS
+.PD 0
+.TP \w'\s-1ELNKMCO\s+1\ \ 'u
+.SM ELNKPKT
+packet size specified is illegal.
+.TP
+.SM ELNKNCO
+network control device \fIopen\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKNCI
+network control device \fIioctl\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKDS
+\fIstat\fP of physical device failed; check \fIerrno\fP.
+.TP
+.SM ELNKDNC
+file associated with device name not a character special device.
+.TP
+.SM ELNKMCO
+modem control device \fIopen\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKMCI
+modem control device \fIioctl\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKLNO
+device line number illegal.
+.PD
+.\"	@(#)x25alnk.3c	5.2 of 5/18/82

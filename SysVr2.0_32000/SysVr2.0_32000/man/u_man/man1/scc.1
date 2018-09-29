@@ -1,0 +1,43 @@
+.TH SCC 1
+.SH NAME
+scc \- C compiler for stand-alone programs
+.SH SYNOPSIS
+.B scc
+[ option ] ... [ file ] ...
+.SH DESCRIPTION
+.I Scc\^
+prepares the named files for stand-alone execution.
+The
+.I option\^
+and
+.I file\^
+arguments may be anything that can legally
+be used with the
+.I cc\^
+command;
+it should be noted, though, that the
+.B \-p
+(profiling) option, as well as any object module
+that contains system calls, will cause
+the executable not to run.
+.PP
+.I Scc\^
+defines the compiler constant,
+.BR \s-1STANDALONE\s+1 ,
+so that sections of C programs may be compiled
+conditionally when the executable will be run
+stand-alone.
+.SH FILES
+.nr t1 \w'/usr/lib/lib2A.a   '
+.nr t2 \n(t1+\w'+A configuration library   '
+.ta \n(t1u \n(t2u
+/lib/crt2.o	execution start-off
+.br
+/usr/lib/lib2.a	stand-alone library
+.SH SEE ALSO
+cc(1),
+ld(1).
+.br
+a.out(4) in the
+\f2\s-1\UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	%W% of %G%

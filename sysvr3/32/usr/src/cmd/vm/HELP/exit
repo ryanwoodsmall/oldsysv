@@ -1,0 +1,13 @@
+
+   Use the EXIT command to exit from FACE.  When  you  reenter
+   FACE,  the  Office Frame will be opened as well as any other
+   frames you have selected to be open on the office preferences form
+   accessed from the preferences menu.
+
+   To EXIT use one of the following options:
+
+      - Command Menu - Select EXIT + RETURN
+
+      - Typed Command - Type exit + RETURN
+
+      - Office Frame - Select Exit FACE

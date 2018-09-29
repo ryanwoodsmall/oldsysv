@@ -1,0 +1,29 @@
+menu="Office of $LOGNAME"
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.m.office Office
+
+name=filecabinet
+action=OPEN DIRECTORY $HOME/FILECABINET
+
+name=other_users
+action=OPEN MENU $VMSYS/OBJECTS/Menu.users
+
+name=preferences
+action=OPEN MENU preferences
+
+name=services
+action=OPEN MENU services
+
+name=wastebasket
+action=OPEN DIRECTORY $HOME/WASTEBASKET
+
+name=Exit FACE
+action=exit
+
+name=Services Administration
+action=OPEN MENU $VMSYS/OBJECTS/Menu.install
+
+`readfile $HOME/pref/office`
+
+name=UNIX_System
+action=unix

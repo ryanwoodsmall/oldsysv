@@ -1,0 +1,34 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/spell/Rlist.spell
+	INSTALL		---555 2 2	./install/spell/INSTALL
+	UNINSTALL	---555 2 2	./install/spell/UNINSTALL
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		bin	d--775 2 2
+			spell		---555 2 2	../usr/bin/spell
+			deroff		---555 2 2	../usr/bin/deroff
+		$
+		lib	d--775 0 3
+			spell	d--755 2 2
+				compress	---555 2 2	../usr/lib/spell/compress
+				hashcheck	---555 2 2	../usr/lib/spell/hashcheck
+				hashmake	---555 2 2	../usr/lib/spell/hashmake
+				hlista		---644 2 2	../usr/lib/spell/hlista
+				hlistb		---644 2 2	../usr/lib/spell/hlistb
+				hstop		---644 2 2	../usr/lib/spell/hstop
+				spellhist	---666 2 2	../usr/lib/spell/spellhist
+				spellin		---555 2 2	../usr/lib/spell/spellin
+				spellprog	---555 2 2	../usr/lib/spell/spellprog
+			$
+		$
+		options	d--775 0 3
+			spell.name	---555 2 2	./install/spell/spell.name
+		$
+	$
+$
+$
+#ident "@(#)pkg.spell:spell/proto	1.5"

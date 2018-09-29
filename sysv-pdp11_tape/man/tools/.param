@@ -1,0 +1,112 @@
+export MANDIR TMPDIR TOOLS
+export DIRLST FILLST
+export LFLAG PFLAG ID
+
+if [ "$MANDIR" = "" ]; then MANDIR=/usr/man/u_man; fi
+if [ "$TMPDIR" = "" ]; then TMPDIR=/usr/man/tmp; fi
+if [ "$TOOLS" = "" ]; then TOOLS=/usr/man/tools; fi
+DIRLST=
+FILLST=
+LFLAG=
+PFLAG=
+ID=
+
+shift
+
+while [ $# -gt 0 ]
+do
+	case $1 in
+	-m)
+		shift
+		MANDIR=$1
+		shift
+		;;
+
+	-t)
+		shift
+		TMPDIR=$1
+		TOOLS=`dirname $TMPDIR`/tools
+		shift
+		;;
+
+	-d | -l)
+		LFLAG=1
+		shift
+		;;
+
+	-p)
+		PFLAG=1
+		shift
+		;;
+
+	-i | -o)
+		shift
+		ID=$1
+		shift
+		;;
+
+	-s)
+		shift
+		while [ $# -gt 0 ]
+		do
+			case $1 in
+			[1-8])
+				DIRLST="$DIRLST $1"
+				shift
+				;;
+
+			*)
+				break
+				;;
+			esac
+		done
+		;;
+
+	-f)
+		shift
+		while [ $# -gt 0 ]
+		do
+			case $1 in
+			-*)
+				break
+				;;
+
+			*)
+				FILLST="$FILLST $1"
+				shift
+				;;
+			esac
+		done
+		;;
+
+	-*)
+		echo $0: unknown option $1
+		exit 2
+		;;
+	*)
+		break
+		;;
+	esac
+done
+
+if [ -z "$DIRLST"  ]
+then
+	case $MANDIR in 
+		*u_man|*u_man/)
+			DIRLST="1 2 3 4 5 6"
+			;;
+		*a_man|*a_man/)
+			DIRLST="1 7 8"
+			;;
+		*)
+			echo "invalid manual name"
+			exit 2
+			;;
+	esac
+fi
+
+if [ -z "$FILLST" ]
+then
+	FILLST=*.*
+fi
+

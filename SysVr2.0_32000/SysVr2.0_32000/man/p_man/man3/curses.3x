@@ -1,0 +1,387 @@
+.TH CURSES 3X
+.UC 4
+.SH NAME
+curses \- CRT screen handling and optimization package
+.SH SYNOPSIS
+.B #include <curses.h>
+.br
+.B cc
+[ flags ] files
+.B \-lcurses
+[ libraries ]
+.SH DESCRIPTION
+These routines give the user a method
+of updating screens with reasonable optimization.
+In order to initialize the routines,
+the routine
+.I initscr(\|)
+must be called before any of the other routines
+that deal with windows and screens
+are used.
+The routine
+.I endwin(\|)
+should be called before exiting.
+To get character-at-a-time input without echoing,
+(most interactive, screen oriented-programs want this)
+after calling
+.I initscr(\|)
+you should call
+.I "``nonl(\|); cbreak(\|); noecho(\|);''"
+.PP
+The full curses interface permits manipulation of data structures
+called
+.I windows
+which can be thought of as two dimensional arrays of characters
+representing all or part of a \s-1CRT\s+1 screen.
+A default window called
+.B stdscr
+is supplied, and others can be created with
+.BR newwin .
+Windows are referred to by variables declared ``\s-1WINDOW\s+1 *'',
+the type \s-1WINDOW\s+1 is defined in curses.h to be a C structure.
+These data structures are manipulated with functions described below,
+among which the most basic are
+.BR move ,
+and
+.BR addch .
+(More general versions of these functions are included with names
+beginning with `w', allowing you to specify a window.
+The routines not beginning with `w' affect
+.BR stdscr .)
+Then
+.I refresh(\|)
+is called,
+telling the routines to make the users CRT screen look
+like
+.BR stdscr .
+.PP
+Mini-Curses is a subset of curses which does not allow
+manipulation of more than one window.
+To invoke this subset, use -\s-1DMINICURSES\s+1 as a \fBcc\fR option.
+This level is smaller and faster than full curses.
+.PP
+If the environment variable \s-1TERMINFO\s+1 is defined, any program
+using curses will check for a local terminal definition before
+checking in the standard place.
+For example, if the standard place is \fB/usr/lib/terminfo\fR, and \s-1TERM\s+1 is
+set to ``vt100'', then normally the compiled file is found in
+\fB/usr/lib/terminfo/v/vt100\fR.  (The ``v'' is copied from the first letter
+of ``vt100'' to avoid creation of huge directories.)
+However, if \s-1TERMINFO\s+1 is set to \fB/usr/mark/myterms\fR, curses
+will first check \fB/opusr/mark/myterms/v/vt100\fR, and if that fails,
+will then check \fB/usr/lib/terminfo/v/vt100\fR.
+This is useful for developing experimental definitions or
+when write permission in \fB/usr/lib/terminfo\fR is not available.
+.SH "SEE ALSO"
+terminfo(4).
+.SH FUNCTIONS
+.PP
+Routines listed here may be called when using the full curses.
+Those marked with an asterisk may be called when using Mini-Curses.
+.LP
+.nf
+.ta 2.5i
+.ds w \fIwin\fR
+.ds s \fIstdscr\fR
+\s-1addch(ch)*	add a character to \*s 
+	(like putchar) (wraps to next
+	line at end of line)
+addstr(str)*	calls addch with each character in \fIstr\fP
+attroff(attrs)*	turn off attributes named
+attron(attrs)*	turn on attributes named
+attrset(attrs)*	set current attributes to \fIattrs\fP
+baudrate(\|)*	current terminal speed
+beep(\|)*		sound beep on terminal
+box(win, vert, hor)	draw a box around edges of \*w
+	\fIvert\fP and \fIhor\fP are chars to use for vert.
+	and hor. edges of box
+clear(\|)	clear \*s
+clearok(win, bf)	clear screen before next redraw of \*w
+clrtobot(\|)	clear to bottom of \*s
+clrtoeol(\|)	clear to end of line on \*s
+cbreak(\|)*	set cbreak mode
+delay_output(ms)*	insert ms millisecond pause in output
+delch(\|)	delete a character
+deleteln(\|)	delete a line
+delwin(win)	delete \*w
+doupdate(\|)	update screen from all wnooutrefresh
+echo(\|)*	set echo mode
+endwin(\|)*	end window modes
+erase(\|)	erase \*s
+erasechar(\|)	return user's erase character
+fixterm(\|)	restore tty to "in curses" state
+flash(\|)		flash screen or beep
+flushinp(\|)*	throw away any typeahead
+getch(\|)*	get a char from tty
+getstr(str)	get a string through \*s
+gettmode(\|)	establish current tty modes
+getyx(win, y, x)	get (y, x) co-ordinates
+has_ic(\|)	true if terminal can do insert character
+has_il(\|)	true if terminal can do insert line
+idlok(win, bf)*	use terminal's insert/delete line if bf != 0
+inch(\|)	get char at current (y, x) co-ordinates
+initscr(\|)*	initialize screens
+insch(c)	insert a char
+insertln(\|)	insert a line
+intrflush(win, bf)	interrupts flush output if bf is TRUE
+keypad(win, bf)	enable keypad input
+killchar(\|)	return current user's kill character
+leaveok(win, flag)	OK to leave cursor anywhere after refresh if
+	flag!=0 for \*w, otherwise cursor must be left
+	at current position.
+longname(\|)	return verbose name of terminal
+meta(win, flag)*	allow meta characters on input if flag != 0
+move(y, x)*	move to (y, x) on \*s
+mvaddch(y, x, ch)	move(y, x) then addch(ch)
+mvaddstr(y, x, str)	similar...
+mvcur(oldrow, oldcol, newrow, newcol)
+.br
+	low level cursor motion
+mvdelch(y, x)	like delch, but move(y, x) first
+mvgetch(y, x)	etc.
+mvgetstr(y, x)
+mvinch(y, x)
+mvinsch(y, x, c)
+mvprintw(y, x, fmt, args)
+mvscanw(y, x, fmt, args)
+mvwaddch(win, y, x, ch)
+mvwaddstr(win, y, x, str)
+mvwdelch(win, y, x)
+mvwgetch(win, y, x)
+mvwgetstr(win, y, x)
+mvwin(win, by, bx)
+mvwinch(win, y, x)
+mvwinsch(win, y, x, c)
+mvwprintw(win, y, x, fmt, args)
+mvwscanw(win, y, x, fmt, args)
+newpad(nlines, ncols)	create a new pad with given dimensions
+newterm(type, fd)	set up new terminal of given type to output on fd
+newwin(lines, cols, begin_y, begin_x)\ 
+.br
+	create a new window
+nl(\|)*	set newline mapping
+nocbreak(\|)*	unset cbreak mode
+nodelay(win, bf)	enable nodelay input mode through getch
+noecho(\|)*	unset echo mode
+nonl(\|)*	unset newline mapping
+noraw(\|)*	unset raw mode
+overlay(win1, win2)	overlay win1 on win2
+overwrite(win1, win2)	overwrite win1 on top of win2
+pnoutrefresh(pad, pminrow, pmincol, sminrow,
+.br
+smincol, smaxrow, smaxcol)
+.br
+	like prefresh but with no output until doupdate called
+prefresh(pad, pminrow, pmincol, sminrow,
+.br
+smincol, smaxrow, smaxcol)
+.br
+	refresh from pad starting with given upper left
+	corner of pad with output to given 
+	portion of screen
+printw(fmt, arg1, arg2, ...)
+.br
+	printf on \*s
+raw(\|)*	set raw mode
+refresh(\|)*	make current screen look like \*s
+resetterm(\|)*	set tty modes to "out of curses" state
+resetty(\|)*	reset tty flags to stored value
+saveterm(\|)*	save current modes as "in curses" state
+savetty(\|)*	store current tty flags
+scanw(fmt, arg1, arg2, ...)
+.br
+	scanf through \*s
+scroll(win)	scroll \*w one line
+scrollok(win, flag)	allow terminal to scroll if flag != 0
+set_term(new)	now talk to terminal new
+setscrreg(t, b)	set user scrolling region to lines t through b
+setterm(type)	establish terminal with given type
+setupterm(term, filenum, errret)
+standend(\|)*	clear standout mode attribute
+standout(\|)*	set standout mode attribute
+subwin(win, lines, cols, begin_y, begin_x)\ 
+.br
+	create a subwindow
+touchwin(win)	\*(lqchange\*(rq all of \*w
+traceoff(\|)	turn off debugging trace output
+traceon(\|)	turn on debugging trace output
+typeahead(fd)	use file descriptor fd to check typeahead
+unctrl(ch)*	printable version of \fIch\fR
+waddch(win, ch)	add char to \*w
+waddstr(win, str)	add string to \*w
+wattroff(win, attrs)	turn off \fIattrs\fP in \*w
+wattron(win, attrs)	turn on \fIattrs\fP in \*w
+wattrset(win, attrs)	set attrs in \*w to \fIattrs\fP
+wclear(win)	clear \*w
+wclrtobot(win)	clear to bottom of \*w
+wclrtoeol(win)	clear to end of line on \*w
+wdelch(win, c)	delete char from \*w
+wdeleteln(win)	delete line from \*w
+werase(win)	erase \*w
+wgetch(win)	get a char through \*w
+wgetstr(win, str)	get a string through \*w
+winch(win)	get char at current (y, x) in \*w
+winsch(win, c)	insert char into \*w
+winsertln(win)	insert line into \*w
+wmove(win, y, x)	set current (y, x) co-ordinates on \*w
+wnoutrefresh(win)	refresh but no screen output
+wprintw(win, fmt, arg1, arg2, ...)\ 
+.br
+	printf on \*w
+wrefresh(win)	make screen look like \*w
+wscanw(win, fmt, arg1, arg2, ...)\ 
+.br
+	scanf through \*w
+wsetscrreg(win, t, b)	set scrolling region of \*w
+wstandend(win)	clear standout attribute in \*w
+wstandout(win)	set standout attribute in \*w\s+1
+.fi
+.SH "TERMINFO LEVEL ROUTINES"
+.PP
+These routines should be called by programs wishing to deal directly
+with the terminfo database.
+Due to the low level of this interface, it is discouraged.
+Initially,
+.I setupterm
+should be called.
+This will define the set of terminal dependent variables defined in terminfo(4).
+The include files <curses.h> and <term.h>
+should be included to get the definitions
+for these strings, numbers, and flags.
+Parmeterized strings should be passed through
+.I tparm
+to instantiate them.
+All terminfo strings (including the output of tparm) should be printed with
+.I tputs
+or
+.I putp .
+Before exiting,
+.I resetterm
+should be called to restore the tty modes.
+(Programs desiring shell escapes or suspending with control Z can call
+.I resetterm
+before the shell is called and
+.I fixterm
+after returning from the shell.)
+.nf
+.ta 2.5i
+\s-1fixterm(\|)	restore tty modes for terminfo use
+	(called by setupterm)
+resetterm(\|)	reset tty modes to state before program entry
+setupterm(term, fd, rc)	read in database.  Terminal type is the
+	character string \fIterm\fP, all output is to \s-1UNIX\s+1
+	System file descriptor \fIfd\fP.  A status value is
+	returned in the integer pointed to by \fIrc\fP: 1
+	is normal.  The simplest call would be
+	\fIsetupterm(0, 1, 0)\fP which uses all defaults.
+tparm(str, p1, p2, ..., p9)
+.br
+	instantiate string str with parms p\di\u.
+tputs(str, affcnt, putc)	apply padding info to string \fIstr\fP.
+	\fIaffcnt\fP is the number of lines affected,
+	or 1 if not applicable.  \fIPutc\fP is a
+	putchar-like function to which the characters
+	are passed, one at a time.
+putp(str)	handy function that calls tputs
+	(str, 1, putchar)
+vidputs(attrs, putc)	output the string to put terminal in video
+	attribute mode \fIattrs\fP, which is any 
+	combination of the attributes listed below.
+	Chars are passed to putchar-like
+	function \fIputc\fR.
+vidattr(attrs)	Like vidputs but outputs through
+	putchar\s+1
+.fi
+.SH "TERMCAP COMPATIBILITY ROUTINES"
+.PP
+These routines were included as a conversion aid for
+programs that use termcap.
+Their parameters are the same as for termcap.
+They are emulated using the \f2terminfo\fR database.
+They may go away at a later date.
+.nf
+.ta 2.5i
+tgetent(bp, name)	look up termcap entry for name
+tgetflag(id)		get Boolean entry for id
+tgetnum(id)		get numeric entry for id
+tgetstr(id, area)	get string entry for id
+tgoto(cap, col, row)	apply parms to given cap
+tputs(cap, affcnt, fn)	apply padding to cap calling fn as putchar
+.fi
+.SH ATTRIBUTES
+.PP
+The following video attributes can be passed to the
+functions
+.IR attron , attroff , attrset .
+.nf
+.ta 1.5i
+A_STANDOUT	Terminal's best highlighting mode
+A_UNDERLINE	Underlining
+A_REVERSE	Reverse video
+A_BLINK	Blinking
+A_DIM	Half bright
+A_BOLD	Extra bright or bold
+A_BLANK	Blanking (invisible)
+A_PROTECT	Protected
+A_ALTCHARSET	Alternate character set
+.fi
+.SH "FUNCTION KEYS"
+.PP
+The following function keys might be returned by
+.I getch
+if
+.I keypad
+has been enabled.
+Note that not all of these are currently supported, due to
+lack of definitions in
+.IR terminfo
+or the terminal not transmitting a unique code when the key is pressed.
+.nf
+.ta 1.5i 2.4i
+\s-1\fIName	Value	Key name\fP
+KEY_BREAK	0401	break key (unreliable)
+KEY_DOWN	0402	The four arrow keys ...
+KEY_UP	0403
+KEY_LEFT	0404
+KEY_RIGHT	0405	...
+KEY_HOME	0406	Home key (upward+left arrow)
+KEY_BACKSPACE	0407	backspace (unreliable)
+KEY_F0	0410	Function keys.  Space for 64 is reserved.
+KEY_F(n)	(KEY_F0+(n))	 Formula for fn.
+KEY_DL	0510	Delete line
+KEY_IL	0511	Insert line
+KEY_DC	0512	Delete character
+KEY_IC	0513	Insert char or enter insert mode
+KEY_EIC	0514	Exit insert char mode
+KEY_CLEAR	0515	Clear screen
+KEY_EOS	0516	Clear to end of screen
+KEY_EOL	0517	Clear to end of line
+KEY_SF	0520	Scroll 1 line forward
+KEY_SR	0521	Scroll 1 line backwards (reverse)
+KEY_NPAGE	0522	Next page
+KEY_PPAGE	0523	Previous page
+KEY_STAB	0524	Set tab
+KEY_CTAB	0525	Clear tab
+KEY_CATAB	0526	Clear all tabs
+KEY_ENTER	0527	Enter or send (unreliable)
+KEY_SRESET	0530	soft (partial) reset (unreliable)
+KEY_RESET	0531	reset or hard reset (unreliable)
+KEY_PRINT	0532	print or copy
+KEY_LL	0533	home down or bottom (lower left)\s+1
+.fi
+.bp
+.SH WARNING
+.PP
+The plotting library
+.IR plot (3X)
+and the curses library
+.IR curses (3X)
+both use the names erase(\|) and move(\|).  The curses versions are macros.
+If you need both libraries, put the
+.IR plot (3X)
+code in a different source file than the
+.IR curses (3X)
+code, and/or #undef move(\|) and erase(\|) in the
+.IR plot (3X)
+code.
+	.\"	%W% of %G%

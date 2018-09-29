@@ -1,0 +1,35 @@
+.TH LOG 3F
+.SH NAME
+log, alog, dlog, clog \- \s-1FORTRAN\s+1 natural logarithm intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.B "complex cx1, cx2"
+.P
+.B "r2 = alog(r1)"
+.B "r2 = log(r1)"
+.P
+.B "dp2 = dlog(dp1)"
+.B "dp2 = log(dp1)"
+.P
+.B "cx2 = clog(cx1)"
+.B "cx2 = log(cx1)"
+.SH DESCRIPTION
+.I Alog\^
+returns the real natural logarithm of its real argument.
+.I Dlog\^
+returns the double-precision natural logarithm of its double-precision argument.
+.I Clog\^
+returns the complex logarithm of its complex argument.
+The generic function
+.I log\^
+becomes a call to
+.IR alog ,
+.IR dlog ,
+or
+.I clog\^
+depending on the type of its argument.
+.SH SEE ALSO
+exp(3M).
+.\"	%W% of %G%

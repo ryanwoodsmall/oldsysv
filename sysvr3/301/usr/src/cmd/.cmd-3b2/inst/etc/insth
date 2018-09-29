@@ -1,0 +1,290 @@
+#ident	"@(#)cmd-3b2:inst/etc/insth	1.24"
+#
+# insth
+#
+# Install the remainder of the core UNIX system (while booted from
+# the hard disk).
+#
+
+. /inst/etc/define
+
+read LAST < /inst/etc/last
+read TYPE < /inst/etc/type
+
+
+echo "\nChecking the hard disk file systems." >&2
+
+fsck -y -D -b ${ROOT_0}
+
+fstab < /etc/fstab | while read dev dir ronly
+do
+	ignore fsck -y -D ${dev}
+	if fsinfo -s ${dev}
+	then
+		fsys -m ${dir} ${dev}
+	else
+		echo "The ${dev} (${dir}) file system is corrupt." >&2
+		if [ ${TYPE} != part -a "'${dir}'" = "'/usr'" ]
+		then
+			fstabmnt -u < /etc/fstab
+			exit 1
+		else
+			continue
+		fi
+	fi
+done
+
+ignore	rm -f /usr/admin/menu/usermgmt/modgroup  2> /dev/null
+
+for seq in 2 3 4 5 6
+do
+	if [ ${seq} -le "${LAST}" ]
+	then
+		continue
+	fi
+	while true
+	do
+		set +x
+		case `askx -H shell -H trace -m "\
+Please insert the 3B2 Core System floppy number ${seq}." \
+			-q "Type \"go\" when ready" -h "\
+There are six floppy diskettes labelled \"3B2 Core System\". Please
+place the one identified as \"#${seq}\" in the floppy drive and close
+the door." \
+			-c go -c quit` in
+		go)
+			;;
+		quit)
+			exit 0
+			;;
+		shell)
+			trap ":" 2 3
+			if /bin/sh
+			then :
+			else :
+			fi
+			trap '' 2 3
+			read LAST < /inst/etc/last
+			continue
+			;;
+		trace)
+			set -x
+			;;
+		esac
+		if fsys -s -f install \
+			-v ${VOL}/${seq} -m /install -r ${FLOPPY}
+		then
+			break
+		else
+			echo "
+Incorrect floppy" >&2
+		fi
+	done
+	echo "
+Installing additional core system files. This should take no more than
+ten minutes." >&2
+	cd /install
+	FILES="`find . -print`"
+	echo "${FILES}" | cpio -pdmu /
+	cd /
+	fsys -u ${FLOPPY}
+	sync
+	echo "${seq}" > /inst/etc/last
+done
+
+echo "
+You may now remove the last 3B2 Core System floppy." >&2
+
+cd /inst/final
+FILES="`find . -print`"
+echo "${FILES}" | cpio -pdmu /
+cd /
+
+if [ ${TYPE} != part ]
+then
+	hdelogger -i
+else
+	(
+	umask 022
+	echo "\
+*
+* FLOPPY RESTORE PROCEDURE - PARTIAL RESTORE SAVED FILES
+*
+* The \"Partial Restore Procedure\"  has  saved  (what it considers to be) 
+* the basic system configuration files. Copies of replaced configuration
+* files are placed within  /usr/old.  You may wish to compare these with 
+* the new files and consider similar tuning of your new system." \
+	> /usr/old/README
+	)
+	echo "
+See /usr/old/README regarding changes to system configuration files." >&2
+fi
+
+if [ ${TYPE} = upgrade ]
+then
+	###  rm old rc.d stuff that has been moved to init.d
+	###  it has been saved in /usr/old
+	cd /etc/rc.d
+	rm -f 0_firstcheck .0_firstcheck 
+	rm -f ANNOUNCE MOUNTFILESYS README RMTMPFILES
+	rm -f acct autoconfig cron disks ports sysetup uucp
+	rm -f /etc/shutdown.d/ANNOUNCE
+
+	cd /usr/tmp/move
+	###  lots of inittab changes;
+	###  start with new, add in old tty lines, expanding 
+	###  xx:2:....:/etc/getty tty....     to
+	###  xx:234:....    for new init 3 and 4 states.
+	###  keep initdefault line
+	if [ -f etc/inittab ]
+	then
+		x=`ignore grep :initdefault: etc/inittab 2> /dev/null`
+		y="is:2:initdefault:"
+		sed \
+			-e '/:.*:respawn:/d' \
+			-e '/:.*:off:/d' \
+			-e "s/^$y/${x:-$y}/" \
+				< /etc/inittab > etc/Ninittab
+		sed -n \
+			-e '/:.*:respawn:/p' \
+			-e '/:.*:off:/p' \
+				< etc/inittab |
+			sed \
+			-e '/^[1-9][0-9]*[1-5]:.*:off:/s/:.*:off:/:234:off:/' \
+			-e '/^ct:.*:off:/s//ct:234:off:/' \
+			-e '/^co:.*:off:/s//co:234:off:/' \
+			-e '/^he:.*:off:/s//he:234:off:/' \
+			-e '/^[1-9][0-9]*[1-5]:.*:respawn:/s/:.*:respawn:/:234:respawn:/' \
+			-e '/^ct:.*:respawn:/s//ct:234:respawn:/' \
+			-e '/^co:.*:respawn:/s//co:234:respawn:/' \
+			-e '/^he:.*:respawn:/s//he:234:respawn:/' \
+				>> etc/Ninittab
+		cp etc/Ninittab etc/inittab # preserve modes, etc
+		rm etc/Ninittab 
+	fi
+	if [ -f etc/profile ]
+	then
+		sed \
+			-e '/	stty ixon -ixany$/d' \
+			-e '/	echo "UNIX System V Release .*"$/,/	echo .Copyright (c) 1984 AT&T Technologies, Inc..*/d' \
+			< etc/profile > etc/Nprofile
+		cp etc/Nprofile etc/profile # preserve modes, etc
+		rm etc/Nprofile 
+	fi
+
+	find . ! -type d -print | cpio -pdum /
+
+	### Add new "hangup upon last close" gettydefs entries. ###
+	if grep '^conttyH#' /etc/gettydefs > /dev/null
+	then
+		:
+	else
+		cat <<-! >> /etc/gettydefs
+
+conttyH# B9600 OPOST ONLCR # B9600 HUPCL SANE IXANY TAB3 #login: #contty1H
+
+contty1H# B1200 OPOST ONLCR # B1200 HUPCL SANE IXANY TAB3 #login: #contty2H
+
+contty2H# B300 OPOST ONLCR # B300 HUPCL SANE IXANY TAB3 #login: #contty3H
+
+contty3H# B2400 OPOST ONLCR # B2400 HUPCL SANE IXANY TAB3 #login: #contty4H
+
+contty4H# B4800 OPOST ONLCR # B4800 HUPCL SANE IXANY TAB3 #login: #contty5H
+
+contty5H# B19200 OPOST ONLCR # B19200 HUPCL SANE IXANY TAB3 #login: #conttyH
+
+!
+	fi
+
+	###  If user has XDC, need to mkboot HDELOG
+	if [ -f /boot/XDC ]
+	then
+		if [ -f /usr/old/etc/master.d/hdelog ]
+		then
+			cp /usr/old/etc/master.d/hdelog /etc/master.d/hdelog 
+			ignore /etc/mkboot /boot/HDELOG
+		fi
+	fi
+
+	### If already on 3.0 keep /etc/system and /etc/master.d/kernel
+	UOE=/usr/old/etc
+	if grep NSRMOUNT $UOE/master.d/kernel > /dev/null 2>&1  &&
+		[ "`cd / ; ignore what etc/master.d/kernel`"  = \
+			"`cd /usr/old; ignore what etc/master.d/kernel`" ]
+	then
+		if [ -f $UOE/system ]
+		then
+			cp /etc/system $UOE/system.3.0
+			cp $UOE/system /etc/system 
+		fi
+		if /etc/mkboot -m $UOE/master.d -k /boot/KERNEL > /dev/null 2>&1
+		then
+			cp /etc/master.d/kernel $UOE/master.d/kernel.3.0
+			cp $UOE/master.d/kernel /etc/master.d/kernel
+		else 
+			echo /etc/mkboot of /boot/KERNEL failed
+			echo check $UOE/master.d/kernel file
+		fi
+	fi
+
+	(
+	umask 022
+	echo "\
+*
+* FLOPPY RESTORE PROCEDURE - UPGRADE SAVED FILES
+*
+* The \"Release Upgrade Procedure\" has saved (what it considers to be) 
+* the basic system configuration files.  Most of these files are copied 
+* back to their original  location;  a few are replaced with new (core) 
+* distribution copies. A new /etc/system file was provided as part of
+* the new release. It will include only the MAU driver.
+* Optional packages must be reinstalled.
+*
+* Pre-upgrade  copies of  replaced configuration files are placed within
+* /usr/old. You may wish to compare these with the new files and consider
+* similar tuning of your new system." > /usr/old/README
+	)
+	echo "
+See /usr/old/README regarding changes to system configuration files." >&2
+fi
+
+# Tty simple administration has been change. Remove old files.
+
+	ignore rm -f /usr/admin/menu/ttymgmt/baud
+	ignore rm -f /usr/admin/menu/ttymgmt/disable
+	ignore rm -f /usr/admin/menu/ttymgmt/enable
+
+# create /usr/lib/cron/log if it is not there
+if [ ! -f /usr/lib/cron/log ]
+then
+	> /usr/lib/cron/log
+	chmod 644 /usr/lib/cron/log
+	chown bin /usr/lib/cron/log
+	chgrp bin /usr/lib/cron/log
+fi
+
+cd /
+sync;sync;sync
+rmdir /inst/LOCK < /dev/null  # remove lock directory first
+sync;sync;sync
+rm -rf /usr/tmp/move < /dev/null
+
+fstabmnt -u < /etc/fstab
+
+if [ ${TYPE} != full ]
+then
+	rm -f /etc/rc2.d/S00firstcheck < /dev/null
+	rm -f /etc/rc.d/setup < /dev/null
+fi
+
+rm -r /inst < /dev/null
+
+echo "
+Installation is now complete. The system is restarting itself from
+the hard disk. It will be ready to use when you receive the \"Console
+Login\" prompt. This should take no more than five minutes." >&2
+
+sync;sync;sync
+sleep 5  # Because uadmin(2) doesn't wait for terminal output to complete
+
+exec uadmin 2 1

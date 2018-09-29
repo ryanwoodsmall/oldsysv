@@ -1,0 +1,71 @@
+.ds < \s-2<\h@-.2m@<\h@-.2m@<\s+2
+.ds > \s-2>\h@-.2m@>\h@-.2m@>\s+2
+.TH VCF 1M "VAX-11/780 stand-alone only"
+.SH NAME
+vcf \- \s-1VAX\s+1-11/780 configuration verification program
+.SH DESCRIPTION
+This program scans hardware registers and software configuration
+tables in order to verify device availability and addressing.
+.PP
+With the system halted, any of the console commands
+may be executed as described in 
+.IR 780ops (8)
+under
+.IR "Console Operation" .
+The following is an example of execution of 
+.I vcf
+as seen on the console, starting with a halted system:
+.PP
+.RS
+.nf
+.ss 18
+.TP
+\*>H<cr>
+\s-1HALTED\s+1 \s-1AT\s+1 \f2nnnnnnnn\^\fP
+.TP
+\*>B<cr>
+\s-1CPU\s+1 \s-1HALTED\s+1
+\s-1INIT\s+1 \s-1SEQ\s+1 \s-1DONE\s+1
+\s-1HALT\s+1 \s-1INST\s+1 \s-1EXECUTED\s+1
+\s-1HALTED\s+1 \s-1AT\s+1 \f2nnnnnnnn\^\fP
+\s-1LOAD\s+1 \s-1DONE\s+1, \f2nnnnnnnn\^\fP \s-1BYTES\s+1 \s-1LOADED\s+1
+.TP
+$$
+.fi
+.ss 12
+.RE
+.PP
+The
+.B $$
+prompt indicates that the stand-alone shell
+.RI ( sash )
+is ready to accept commands.
+To execute the configuration verification program, type:
+.PP
+.RS
+$$ \|stand/vcf \|[\|\fIunix_a.out\fP\|]
+.RE
+.PP
+Default for the
+.I unix_a.out
+file is
+.BR /unix .
+.PP
+.I Vcf
+will scan the \s-1VAX\s+1 machine registers looking for
+Memory,
+\s-1MASSBUS\s+1 Adapters (\s-1MBA\s+1s),
+and \s-1UNIBUS\s+1 Adapters (\s-1UBA\s+1s).
+For memory and \s-1MASSBUS\s+1 devices, hardware status information
+is reported.
+Information on \s-1UNIBUS\s+1 devices is obtained from configuration information
+in the \s-1UNIX\s+1 System executable, and an attempt is made to verify device address
+and interrupt vectors.
+.RE
+.SH FILES
+/unix (or other \s-1UNIX\s+1 System executable)
+.br
+/stand/vcf
+.SH SEE ALSO
+780ops(8).
+.\"	@(#)vcf.1m	5.2 of 5/18/82

@@ -1,0 +1,72 @@
+.TH VLX 1M "VAX-11/780 only"
+.SH NAME
+vlx \- \s-1VAX\s+1-11/780 \s-1LSI\s+1 console floppy interface
+.SH SYNOPSIS
+.B vlx
+key [ files ]
+.SH DESCRIPTION
+.I Vlx\^
+is used to maintain the console floppy.
+The floppy is in
+.SM DEC
+.SM RT\*S-11
+format.
+Hence, a
+.I file\^
+name is restricted to
+a 1- to 6-character alphanumeric name
+optionally followed by
+a
+.B \&.
+character separator and
+a 1- to 3-character alphanumeric extension.
+Upper and lower cases are mapped together.
+Only the last component of a path name is used.
+.PP
+.I Key\^
+is one character from the set
+.BR drtx ,
+optionally concatenated with
+one or both of
+.BR vf .
+The meanings of the
+.I key\^
+characters are:
+.TP 4
+.B d
+Delete the named files from the floppy.
+.TP
+.B r
+Replace the named files on the floppy.
+.TP
+.B t
+Print a table of contents of the floppy.
+If no names are given, all files are tabled.
+If names are given, only those files are tabled.
+.TP
+.B x
+Extract the named files from the floppy.
+If no names are given, all files are
+extracted.
+.TP
+.B v
+Verbose.
+When used with
+.BR t ,
+it gives a long listing of all information about the files.
+When used with
+.BR x ,
+it precedes each file with a name.
+.TP
+.B f
+Use the next name as the floppy file name, instead of the default
+.BR /dev/conf\&lp .
+.SH FILES
+/dev/conf\&lp	console floppy
+.SH SEE ALSO
+780ops(8).
+.SH BUGS
+Dependent on knowledge and correctness of
+.SM DEC
+software.
+.\"	@(#)vlx.1m	5.2 of 5/18/82

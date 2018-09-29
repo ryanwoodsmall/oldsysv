@@ -1,0 +1,220 @@
+#ident	"@(#)cmd-3b2:inst/bin/upgrade	1.6"
+#
+# upgrade
+#
+# Upgrade a single-disk system to a dual-disk one.
+#
+
+set -ue
+myname="${0}"
+args="${*:-}"
+
+rel=unk
+root=/
+
+while [ $# -ne 0 ]
+do
+	case "${1}" in
+	-g)
+		rel="${2}" ; shift 2 ;;
+	-r)
+		root="${2}" ; shift 2 ;;
+	*)
+		echo "Usage: ${myname} [ -g rel ] [ -r rootdir ]" >&2 ; exit 1 ;;
+	esac
+done
+
+etc="${DBUGETC:-${root}/etc}"
+inst="${DBUGINST:-/inst}"
+
+eval `fmthard -i -c2 ${RSIX_1} | while read line
+	do
+		case ${line:-'*'} in
+		\**)
+			continue ;;
+		esac
+		set -- ${line}
+		if [ ${5} -eq 0 ]
+		then
+			continue
+		fi
+		case "${1}" in
+		2 | 02)
+			echo vtocusr=${5} vtagusr=${2}
+			;;
+		6 | 06)
+			echo vtocdisk=${5} \
+				vargdisk="\"${1} ${2} ${3} ${4} ${5}\""
+			;;
+		7 | 07)
+			echo vtocboot=${5} \
+				vargboot="\"${1} ${2} ${3} ${4} ${5}\""
+			;;
+		esac
+	done`
+
+if [ -z "${vtocusr:-}" -o -z "${vtocdisk:-}" -o -z "${vtocboot:-}" ]
+then
+	echo "${myname}: ${data}: Incomplete" >&2
+	exit 1
+fi
+
+vtocmax=`ignore expr ${vtocdisk} - ${vtocboot}`
+
+default=`askx -q "\
+Use the default dual-disk layout?" \
+	-h "\
+By default, the \"usr\" partition is moved to disk 2 (the new hard disk).
+This typically improves system performance. The space freed from the old
+\"usr\" partition (on disk 1) is made into a new partition, named \"usr2\"." \
+	-H y-trace -H n-trace -c y -c n -c quit`
+
+if [ ${default} = quit ]
+then
+	exit 1
+elif [ ${default} = y-trace ]
+then
+	set -x
+	default=y
+elif [ ${default} = n-trace ]
+then
+	set -x
+	default=n
+fi
+
+eval usrneeds=\`ignore expr `fsinfo -f ${USR_0}` + 2000\`
+
+if [ ${usrneeds} -gt ${vtocmax} ]
+then
+	usrmove=n
+elif [ ${default} = y ]
+then
+	usrmove=y
+else
+	usrmove=`askx -q "\
+Move the \"usr\" partition to disk 2?" \
+		-h "\
+To improve system performance, the \"usr\" partition may be moved from
+disk 1 to disk 2. This partition contains many heavily-used files and
+most optional packages. It also typically contains user login directories
+(although this may have been overridden when the logins were placed on
+the system). Answer \"y\" to move the partition, \"n\" to leave it alone,
+\"again\" to begin again or \"quit\" to abort." \
+		-c y -c n -c again -c quit -d y`
+	if [ ${usrmove} = again ]
+	then
+		exec ${myname} ${args}
+	elif [ ${usrmove} = quit ]
+	then
+		exit 1
+	fi
+fi
+
+if [ ${usrmove} = n ]
+then
+	echo "${vargdisk}\n${vargboot}" | fmthard -s - ${RSIX_1}
+else
+	if [ ${default} = y ]
+	then
+		usrsize=${vtocmax}
+	else
+		usrsize=`askx -s -q "\
+Allocate how many blocks for the \"usr\" partition on disk 2?" \
+			-h "\
+There are ${vtocmax} blocks available on disk 2. At least ${usrneeds} of them
+are necessary for the \"usr\" partition. The default configuration
+would use ${vtocusr} blocks. Please enter the number of blocks to
+be allocated to the \"usr\" partition, \"again\" to begin again or
+\"quit\" to abort.  NOTE: partition sizes are always rounded up to 
+cylinder ( ${CYLSIZE_1} block ) boundaries." \
+			-n ${usrneeds}:${vtocmax} -c again -c quit \
+			-d ${vtocusr}`
+		if [ ${usrsize} = again ]
+		then
+			exec ${myname} ${args}
+		elif [ ${usrsize} = quit ]
+		then
+			exit 1
+		fi
+	fi
+	usrsize=`ignore expr \( ${usrsize} + ${CYLSIZE_1} - 1 \) / ${CYLSIZE_1} \* ${CYLSIZE_1}`
+	if [ ${usrsize} -gt ${vtocmax} ]
+	then
+		usrsize=${vtocmax}
+	fi
+	echo "2 ${vtagusr} 0 ${vtocboot} ${usrsize}\n${vargdisk}\n${vargboot}" \
+		| fmthard -s - ${RSIX_1} > /dev/null
+	echo "
+Moving the \"usr\" partition to disk 2. This typically takes about fifteen
+minutes; a large file system may require as much as forty-five minutes." >&2
+	vmkfs ${RUSR_1} > /dev/null
+	dlabelit ${USR_1} usr ${rel} > /dev/null
+	fsys -m ${root}/usr ${USR_1}
+	mklost+found ${root}/usr ${USR_1}
+	ignore mkdir ${root}/mnt 2>/dev/null
+	fsys -r -m ${root}/mnt ${USR_0}
+	cd ${root}/mnt
+	find . -print | cpio -pdmu ../usr
+	cd /
+	fsys -u ${USR_0}
+	fsys -u ${USR_1}
+	echo "${USR_1}\t/usr" > ${etc}/Nfstab
+	while read dev dir ronly junk
+	do
+		case "${dev}" in
+		/*)
+			if [ "'${dir}'" = "'/usr'" ]
+			then
+				continue
+			fi
+			;;
+		esac
+		echo "${dev}" "${dir}" "${ronly}" "${junk}"
+	done < ${etc}/fstab >> ${etc}/Nfstab
+	cp ${etc}/Nfstab ${etc}/fstab < /dev/null
+	rm ${etc}/Nfstab < /dev/null
+	if [ ${default} = n ]
+	then
+		fmthard -d 2:0:1:0:0 ${RSIX_0} > /dev/null
+	else
+		eval `prtvtoc -h ${RSIX_0} |
+			while read part tag flag base size junk
+			do
+				if [ ${part} -eq 2 ]
+				then
+					echo base=${base} size=${size}
+					break
+				fi
+			done`
+		fmthard -d 2:0:1:0:0 ${RSIX_0} > /dev/null
+		fmthard -d 5:0:0:${base}:${size} ${RSIX_0} > /dev/null
+		vmkfs ${RFIVE_0} > /dev/null
+		seq=2
+		while [ -r ${root}/usr${seq} ]
+		do
+			seq=`ignore expr ${seq} + 1`
+		done
+		(umask 022; exec mkdir ${root}/usr${seq} )
+		dlabelit ${FIVE_0} usr${seq} ${rel} > /dev/null
+		fsys -m ${root}/usr${seq} ${FIVE_0}
+		mklost+found ${root}/usr${seq} ${FIVE_0}
+		fsys -u ${FIVE_0}
+		echo "${FIVE_0}\t/usr${seq}" >> ${etc}/fstab
+		echo "
+The space from the old \"usr\" partition has been reclaimed. It is now
+called /usr${seq} (\"${FIVE_0}\"). It may be used for any purpose.
+You may wish to place new user logins there." >&2
+	fi
+fi
+
+fstabmnt -r ${root} < ${etc}/fstab
+
+if [ ${default} = n ]
+then
+	for drive in 0 1
+	do
+		eval cylsize=\${CYLSIZE_${drive}} rall=\${RALL_${drive}}
+		optpart -c ${cylsize} -d `ignore expr ${drive} + 1` \
+		    -g ${rel} -r ${root} ${rall}
+	done >> ${etc}/fstab
+fi

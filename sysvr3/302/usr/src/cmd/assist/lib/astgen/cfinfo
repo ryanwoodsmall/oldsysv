@@ -1,0 +1,20 @@
+   Type the layout as you want it to appear to the user.
+
+   Use % to indicate the end of a description and the beginning of user input.
+   Use & to indicate that the field continues on the next line.
+
+   NOTE: If you want a %, &, or # character to appear in your text, then you
+         must take away the special meaning of the character by preceding
+         it with a backslash. (# is used on menu layouts.)
+
+         Avoid using the tab character in your layout file because it may
+         cause alignment errors.
+
+   Here is an sample command form layout:
+
+                NAME(S) OF INPUT FILES(S):%
+
+                OUTPUT OBJECT FILE:%a.out
+
+                SUPPRESS LINK EDIT PHASE \& FORCE AN&
+                  OBJECT FILE TO BE PRODUCED [-o] (y/n):%n

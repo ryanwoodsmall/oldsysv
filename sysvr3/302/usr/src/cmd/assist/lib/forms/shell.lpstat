@@ -1,0 +1,60 @@
+#ident	"@(#)forms.files:shell.lpstat	1.1"
+#this is the shell script that is used to validate the
+#lpstat command form.
+SPOOL=/usr/spool/lp
+CLASS=${SPOOL}/class
+MEM=${SPOOL}/member
+DEST=${SPOOL}/request
+
+#need routine to cut into pieces
+if [ "$1" != "r" -a "$2" = "all" ]
+then exit
+fi
+for i in `echo "$2" | tr , " " | sed 's/  */ /g' | tr " " "\012"`
+do
+case $1 in
+   #printer names  
+   p)   
+      if [ ! "`ls $MEM | grep $i`" ]
+      then echo "$i IS NOT A VALID PRINTER NAME"
+      exit
+      fi;;
+   #printer names and/or classes
+   pc)
+      if [ ! "`ls $MEM | grep $i`" -a ! "`ls $CLASS | grep $i`" ]
+      then echo "$i IS NOT A VALID PRINTER OR CLASS NAME"
+      exit
+      fi;;
+   #printer names, classes, or request ids
+   pcu)
+      if [ ! "`ls $MEM | grep $i`" -a ! "`ls $CLASS | grep $i`" ]
+      then if [ ! "`echo $i | grep -`" -o ! -d ${DEST}/`echo $i | cut -f1 -d-` ]
+           then echo "$i IS NOT A VALID PRINTER NAME, CLASS NAME, OR REQUEST ID"
+           exit
+           fi
+      fi;;
+   #user ids
+   u)
+      if [ ! "`grep \"^$i:\" /etc/passwd`" ]
+      then echo "$i IS NOT A VALID USER ID"
+      exit
+      fi;;
+   #printer classes
+   c)
+      if [ ! "`ls $CLASS | grep $i`" ]
+      then echo "$i IS NOT A VALID CLASS NAME"
+      exit
+      fi;;
+   #legal destination
+   d)   if [ ! -d ${DEST}/$i ]
+      then echo "$i IS NOT A LEGAL DESTINATION"
+      exit
+      fi;;
+   #request ids
+   r)
+      if [ ! "`echo $i | grep -`" -o ! -d ${DEST}/`echo $i | cut -f1 -d-` ]
+      then echo "$i IS NOT A VALID REQUEST ID"
+      exit
+      fi;;
+esac
+done

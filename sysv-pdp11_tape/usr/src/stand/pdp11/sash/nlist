@@ -1,0 +1,10 @@
+#	@(#)nlist	1.1
+nm -n sash >nm.out
+ed - nm.out << !
+v/ [tdbTDB] /d
+g/ L/d
+g/~/d
+w
+q
+!
+pr -3 nm.out

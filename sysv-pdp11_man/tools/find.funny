@@ -1,0 +1,22 @@
+MAN=${1-/usr/man}
+TMPDIR=$MAN/tmp
+# set x $*
+# . ./.param
+
+if [ -d $MAN ]; then
+	date > $TMPDIR/funny.chars
+	echo "Manual: $MAN" >> $TMPDIR/funny.chars
+	echo "================================" >> $TMPDIR/funny.chars
+else
+	echo "$0: $1 not a directory"
+	exit 1
+fi
+
+for editdir in $MAN/?_man/man?
+do
+	echo "\nSection: $editdir" >> $TMPDIR/funny.chars
+	echo "-----------------------" >> $TMPDIR/funny.chars
+	cd $editdir
+	funny * >> $TMPDIR/funny.chars
+done
+#	@(#)find.funny	5.2 of 5/19/82

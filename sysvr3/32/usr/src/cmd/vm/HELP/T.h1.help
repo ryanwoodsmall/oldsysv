@@ -1,0 +1,38 @@
+
+   Help is  accessed by pressing  the HELP Function  Key, typing HELP
+   on the Command Line, or selecting HELP from the Command Menu.
+
+   You recieve  help for the current object.  You may navigate to the
+   Table  of Contents for  help by pressing  the Function Key labeled
+   CONTENTS.  There you may get help for  other items.  To  return to
+   what you were working on, you must close the HELP frame.
+
+   Based on what you were doing, or what you requested help  on,  you
+   will get the following information:
+
+      - menu:  information about the menu
+
+      - form:  definition and field requirements of the form
+
+      - pop-up frame:  information  about the command or form you were
+        trying  to complete  when you requested the pop-up frame. Some
+        pop-ups  have  help  on  the  items in the pop-up,  as in  the
+        FRM-MGMT "list" menu
+
+      - Command Menu:  function, syntax, and use  of  the  highlighted
+        command
+
+      - Command Line:  a pop-up menu of all commands is presented  for
+        you to select the command you would like help on.
+
+      - from a command  prompt:   function,  syntax  and  use  of  the
+        command,  including  how to complete any prompts that are part
+        of the command procedure.
+
+      - from an error message:  information about the action you  were
+        trying  to perform or the frame that was active when the error
+        occurred.
+
+   Each time you  access a new help menu or message a new  help  frame
+   will  be  opened.   You can  navigate between help frames as you do
+   between other frames.

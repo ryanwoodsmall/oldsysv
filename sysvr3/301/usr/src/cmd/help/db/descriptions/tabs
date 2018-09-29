@@ -1,0 +1,27 @@
+
+\Stabs\S:  Description
+
+Syntax Summary:
+      tabs [-arbitrary] [-canned] [-repetitive]
+           [+mmargin] [-Tterminal_type] [--file_name]
+
+         where:  canned, repetitive, and arbitrary  are strings.
+
+                 file_name  is the name of a file.
+        
+                 margin  is an integer.
+        
+                 terminal  is a terminal type.
+
+Description:
+     \Stabs\S sets the tab stops on your terminal.  Use a tab specification
+     from among the <canned> tab specifications to set your tab stops to match
+     the normal tab stops for different computer languages.  You create your
+     own tab specifications with integers for <arbitrary> and <repetitive>. 
+     With <repetitive> you specify tabs that will be set at regular intervals.
+     <arbitrary> gives you a way to set tabs at irregular intervals.  You can
+     also create a tab specification in a file and use <file_name> on the
+     command line.  The "T" option allows you to set the tab stops as they
+     would be set for a certain terminal type.  If you don't specify your 
+     tab stops, they are set every 8 characters.  For more information read 
+     the manual page for \Stabs\S.

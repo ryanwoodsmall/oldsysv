@@ -1,0 +1,159 @@
+#ident	"@(#)lp:model/5310	1.1"
+#
+# lp model for AT&T 5310/20 Matrix Printer
+#
+#
+# All output is passed through the /usr/bin/53filter filter unless
+# the -f option is specified (uses /bin/cat then).
+# If the filter is not executable or returns a exit code other than
+# 0, the printer will be disabled.
+# The options accepted are as follows:
+#
+#       -f  =  Do not use filter
+#
+#       -nc  =  Do not produce cover and trailer sheets
+#
+#       -l6 or -l8  =  Set Lines-per-inch accordingly
+#
+#       -c10 or -c12 or -c16.7  =  Set Characters-per-inch accordingly
+#
+# The printer options that should be set are as follows:
+#  (all other options can be any value you prefer)
+#
+#       WRAP: YES
+#       EMUL: ANSI
+#       LFON: NO
+#       CRON: NO
+#       CMOD: NOMD
+#       PRTY: EVEN
+#       BAUD: 9600
+#       FLOW: CHAR
+#       DC24: NO
+#       DEOT: NO
+#       ECHO: NO
+#       ABAA: NO
+#
+#  Note: Tabs are not expanded to spaces by the TTY driver.  Therefore
+#        you should make sure the 5310/20 tab settings are what you wish.
+#        The default values are compatible with UNIX default values.
+#
+
+stty parenb -parodd 9600 cs7 cread clocal ixon -ignbrk -brkint -ignpar\
+ -parmrk -inpck -istrip -inlcr -igncr -iuclc -ixany opost -ocrnl onlcr\
+ -onlret tab0 0<&1
+
+x="\033P2q!750d\033\0134"
+printer=`basename $0`
+filter=/usr/bin/53filter
+CPI=10
+LPI=6
+id=$1
+name=$2
+title=$3
+copies=$4
+
+for i in $5
+do
+        case "$i" in
+        6 | -6 | -l6)
+                LPI=6
+                ;;
+        8 | -8 | -l8)
+                LPI=8
+                ;;
+        10 | -10 | -c10)
+                CPI=10
+                ;;
+        12 | -12 | -c12)
+                CPI=12
+                ;;
+        16.7 | 16 | -16.7 | -16 | -c16.7 | -c16)
+                CPI=16
+                ;;
+        f | -f)
+                filter=/bin/cat
+                ;;
+        nc | -nc)
+                cover=no
+                ;;
+        esac
+done
+
+if [ -n "$filter" -a ! -x $filter ]
+then
+        disable -r"can't execute $filter filter" $printer
+        exit 1
+fi
+
+shift; shift; shift; shift; shift
+files="$*"
+echo "\014\c"
+if [ -z "$cover" ]
+then
+  echo "\033[w\033[z\033[10e"
+  echo "$x\n\n\n\n\n"
+  banner "$name"
+  echo "\n"
+  echo "Request id: $id"  
+  date
+  if [ -n "$title" ]
+  then
+        echo "\n"
+        banner $title
+  fi
+  echo "\n\n\n\n\n"
+  echo "$x"
+  echo "\014\c"
+fi
+
+case $CPI in
+10)
+        echo "\033[w\c"
+        ;;
+12)
+        echo "\033[2w\c"
+        ;;
+16)
+        echo "\033[4w\c"
+        ;;
+esac
+case $LPI in
+6)
+        echo "\033[z\c"
+        ;;
+8)
+        echo "\033[2z\c"
+        ;;
+esac
+
+i=1
+while [ $i -le $copies ]
+do
+        for file in $files
+        do
+                case $file
+                in
+                        *.g|*.n|*.mm)
+                        stty -opost 0<&1
+                        ;;
+                esac
+                $filter "$file" 2>&1
+                if [ $? -ne 0 ]
+                then
+                        disable -r"Error code $? from $filter filter" $printer
+                        exit 1
+                fi
+                stty opost -ocrnl onlcr -onlret tab0 0<&1
+                echo "\014\c"
+        done
+        i=`expr $i + 1`
+done
+if [ -z "$cover" ]
+then
+  echo "\033[w\033[z\033[10e"
+  echo "$x\n\n\n\n\n\n"
+  banner "END"
+  echo "\n\n\n\n\n$x"
+  echo "\014\c"
+fi
+exit 0

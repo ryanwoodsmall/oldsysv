@@ -1,0 +1,28 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/diskuse	2.4"
+#menu# display how much of the built-in disks are being used
+
+#help# 
+#help#	Diskuse lets you know what percentage of the built-in disks are
+#help#	currently occupied by files.  The list is organized by file
+#help#	system names.
+
+fslist=`/etc/mount  |  cut -d' ' -f1  |  sort`
+echo "
+FILE SYSTEM USAGE AS OF" `date '+%m/%d/%y %T'` "
+
+File		Free	Total	Percent
+System		Blocks	Blocks	Full
+------		------	------	-------"
+for fs in ${fslist}
+{
+	eval `df -t ${fs}  |
+		sed '	1s/.*): *\([0-9]*\) .*/free=\1/
+			2s/[^0-9]*\([0-9]*\) .*/total=\1/'`
+	if [ "${total}" -gt 0 ]
+	then
+		percent=`expr \( ${total} - ${free} \) \* 100 / ${total}`%
+	else
+		percent=
+	fi
+	echo "${fs}		${free}	${total}	${percent}"
+}

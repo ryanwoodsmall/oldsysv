@@ -1,0 +1,222 @@
+/*LINTLIBRARY*/
+
+/*	from file allowed.c */
+#include "string.h"
+#include "unistd.h"
+#include "lp.h"
+#include "access.h"
+
+/**
+ ** is_user_admin() - CHECK IF CURRENT USER IS AN ADMINISTRATOR
+ **/
+int			is_user_admin ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** is_user_allowed() - CHECK USER ACCESS ACCORDING TO ALLOW/DENY LISTS
+ **/
+int			is_user_allowed (user, allow, deny)
+	char			*user,
+				**allow,
+				**deny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** is_user_allowed_form() - CHECK USER ACCESS TO FORM
+ **/
+int			is_user_allowed_form (user, form)
+	char			*user,
+				*form;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** is_user_allowed_printer() - CHECK USER ACCESS TO PRINTER
+ **/
+int			is_user_allowed_printer (user, printer)
+	char			*user,
+				*printer;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** is_form_allowed_printer() - CHECK FORM USE ON PRINTER
+ **/
+int			is_form_allowed_printer (form, printer)
+	char			*form,
+				*printer;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** allowed() - GENERAL ROUTINE TO CHECK ALLOW/DENY LISTS
+ **/
+int			allowed (item, allow, deny)
+	char			*item,
+				**allow,
+				**deny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file change.c */
+#include "errno.h"
+
+/**
+ ** deny_user_form() - DENY USER ACCESS TO FORM
+ **/
+int			deny_user_form (user_list, form)
+	char			**user_list,
+				*form;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** allow_user_form() - ALLOW USER ACCESS TO FORM
+ **/
+int			allow_user_form (user_list, form)
+	char			**user_list,
+				*form;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** deny_user_printer() - DENY USER ACCESS TO PRINTER
+ **/
+int			deny_user_printer (user_list, printer)
+	char			**user_list,
+				*printer;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** allow_user_printer() - ALLOW USER ACCESS TO PRINTER
+ **/
+int			allow_user_printer (user_list, printer)
+	char			**user_list,
+				*printer;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** deny_form_printer() - DENY FORM USE ON PRINTER
+ **/
+int			deny_form_printer (form_list, printer)
+	char			**form_list,
+				*printer;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** allow_form_printer() - ALLOW FORM USE ON PRINTER
+ **/
+int			allow_form_printer (form_list, printer)
+	char			**form_list,
+				*printer;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** chgaccess() - UPDATE ALLOW/DENY ACCESS OF ITEM TO RESOURCE
+ **/
+
+/**
+ ** empty_list() - CREATE AN EMPTY LIST
+ **/
+
+/*	from file dumpaccess.c */
+#include "stdio.h"
+
+/**
+ ** dumpaccess() - DUMP ALLOW OR DENY LISTS
+ **/
+int			dumpaccess (dir, name, prefix, pallow, pdeny)
+	char			*dir,
+				*name,
+				*prefix,
+				***pallow,
+				***pdeny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** _dumpaccess() - DUMP ALLOW OR DENY FILE
+ **/
+
+/*	from file files.c */
+/**
+ ** getaccessfile() - BUILD NAME OF ALLOW OR DENY FILE
+ **/
+char			*getaccessfile (dir, name, prefix, base)
+	char			*dir,
+				*name,
+				*prefix,
+				*base;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file loadaccess.c */
+/**
+ ** load_userform_access() - LOAD ALLOW/DENY LISTS FOR USER+FORM
+ **/
+int			load_userform_access (form, pallow, pdeny)
+	char			*form,
+				***pallow,
+				***pdeny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** load_userprinter_access() - LOAD ALLOW/DENY LISTS FOR USER+PRINTER
+ **/
+int			load_userprinter_access (printer, pallow, pdeny)
+	char			*printer,
+				***pallow,
+				***pdeny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** load_formprinter_access() - LOAD ALLOW/DENY LISTS FOR FORM+PRINTER
+ **/
+int			load_formprinter_access (printer, pallow, pdeny)
+	char			*printer,
+				***pallow,
+				***pdeny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** loadaccess() - LOAD ALLOW OR DENY LISTS
+ **/
+int			loadaccess (dir, name, prefix, pallow, pdeny)
+	char			*dir,
+				*name,
+				*prefix,
+				***pallow,
+				***pdeny;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** _loadaccess() - LOAD ALLOW OR DENY FILE
+ **/

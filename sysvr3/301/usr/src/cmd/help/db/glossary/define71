@@ -1,0 +1,11 @@
+
+\S baud rate:  transmission rate \S
+
+When information is transmitted between the computer and your terminal it
+is transmitted at a certain speed.  This speed is called transmission rate
+or baud rate and it is measured in "bits"\S*\S per second.  The most
+common baud rates are 300 and 1200 bits per second.  If you divide the baud
+rate by 10, you get a rough measure of how many characters are transmitted
+from the computer to your terminal per second.
+
+\S*\S defined in the \Sglossary\S

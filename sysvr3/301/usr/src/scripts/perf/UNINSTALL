@@ -1,0 +1,25 @@
+#ident	"@(#)pkg.perf:perf/UNINSTALL	1.4"
+#
+#	@(#)UNINSTALL	1.3
+#	This command will remove portions of previously installed command set.
+#
+
+INSPATH=/install/new
+RPATH=/install/install
+PKGNAME=`cat ${INSPATH}/usr/options/perf.name`
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:\n"
+
+/install/install/unsetup
+
+for i in `cat ${RPATH}/Rlist`
+do
+	echo $i
+	rm -f $i
+done
+
+echo "The ${PKGNAME} has been removed."
+echo
+echo 'Execute "shutdown -i6 -g0 -y" and'
+echo 'wait for the "Console Login:" prompt.'

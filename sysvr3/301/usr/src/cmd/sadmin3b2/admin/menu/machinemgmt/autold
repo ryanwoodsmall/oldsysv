@@ -1,0 +1,60 @@
+#ident	"@(#)sadmin3b2:admin/menu/machinemgmt/autold	2.1"
+#menu# set automatic boot device, default manual boot program
+
+#help#
+#help#	This procedure specifies the default manual program to boot from
+#help#	firmware and/or the device to be used when automatically booting.
+
+echo '
+You may specify the default file for manual load, the device for auto load,
+or both.
+
+Typical files to be loaded are /unix, a fully configured UNIX, or /etc/system,
+a system specification file.  The latter implies a self-configuration boot,
+i.e.  the version of UNIX to be used will be generated as the system loads.
+Note that the file name is not validated until boot time so make sure it is
+correct.
+
+Typical devices to be used for auto load are hard disks, e.g. HD30.
+Note that the peripheral floppy cannot be used for auto load purposes.
+'
+
+trap exit 1 2 15
+
+if [ ! -x /etc/fltboot ]
+then
+	admerr $0 /etc/fltboot not found.
+	exit 1
+fi
+
+if  checkyn -q q -k $$ -f \
+	'Change the manual load program or auto load device?'
+then
+	/etc/fltboot
+	case `checklist -fe -p -H '
+	If you continue, you will then cause the type of load you just
+	specified to be used the next time the system is booted.
+	If you go to firmware, you will see the default program setting when
+	you request a "boot".
+	If you reboot the system, you will then cause an automatic load from
+	the device you just specified.
+	If you powerdown, maybe to install or remove hardware, the device will
+	be used when you turn the power back on.' \
+		'
+Select what to do next:
+	continue this session
+	firmware
+	powerdown
+	reboot
+[c, f, p, r, ?]:' \
+		continue firmware powerdown reboot` in
+	firmware )
+		exec sysadm firmware
+		;;
+	powerdown )
+		exec sysadm powerdown
+		;;
+	reboot )
+		exec sysadm reboot
+	esac
+fi

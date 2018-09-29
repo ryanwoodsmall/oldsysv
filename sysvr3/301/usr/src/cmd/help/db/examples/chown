@@ -1,0 +1,16 @@
+
+\Schown\S:  Examples
+
+        chown xyz new.text
+
+   If you own a file named "new.text", this command line changes the owner to
+   the user with the login name "xyz". "xyz" must be a valid login name listed
+   in the /etc/passwd file.
+
+   ---------------------------------------------------------------------------
+
+        chown 32045 new.text
+
+   If you own a file "new.text", this command changes the owner to the user
+   with the numeric user ID "32045".  "32045" must be a valid user ID in the
+   /etc/passwd file.

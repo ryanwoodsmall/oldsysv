@@ -1,0 +1,52 @@
+# Find all entries that don't appear to be a valid
+# manual page and optionally blast it from existence
+# with the -c option specified.
+
+MANUAL=/usr/man
+cd $MANUAL
+for sec in 1 2 3 4 5 6 7 8
+do
+	if [ "$1" = "-c" ]; then
+		/bin/ls [ua]_man/man${sec}/*.[!${sec}]* |
+		while read trash
+		do
+			case ${trash} in
+				a_man/man1/vpmc.dec.1m)  continue;;
+				a_man/man1/vpmc.u3b.1m)  continue;;
+				a_man/man1/vpmset.3b.1m)  continue;;
+				a_man/man1/vpmset.dc.1m)  continue;;
+				a_man/man1/x25pvc.3b.1m)  continue;;
+				a_man/man1/x25pvc.dc.1m)  continue;;
+				u_man/man1/as.pdp.1)  continue;;
+				u_man/man1/as.u3b.1)  continue;;
+				u_man/man1/as.vax.1)  continue;;
+				u_man/man1/cc.dec.1)  continue;;
+				u_man/man1/cc.u3b.1)  continue;;
+				u_man/man1/fget.demon.1c)  continue;;
+				u_man/man1/ld.dec.1)  continue;;
+				u_man/man1/ld.u3b.1)  continue;;
+				u_man/man1/nm.dec.1)  continue;;
+				u_man/man1/nm.u3b.1)  continue;;
+				u_man/man1/prof.dec.1)  continue;;
+				u_man/man1/prof.u3b.1)  continue;;
+				u_man/man1/size.dec.1)  continue;;
+				u_man/man1/size.u3b.1)  continue;;
+				u_man/man1/strip.dec.1)  continue;;
+				u_man/man1/strip.u3b.1)  continue;;
+				u_man/man4/a.out.4)  continue;;
+				u_man/man4/master.dec.4)  continue;;
+				u_man/man4/master.u3b.4)  continue;;
+				a_man/man7/nc.dec.7)  continue;;
+				a_man/man7/nc.u3b.7)  continue;;
+				a_man/man7/vpm.dec.7)  continue;;
+				a_man/man7/vpm.u3b.7)  continue;;
+				a_man/man8/crash.dec.8)  continue;;
+				a_man/man8/crash.u3b.8)  continue;;
+			esac
+			rm ${trash}
+		done
+	else
+		/bin/ls [ua]_man/man${sec}/*.[!${sec}]*
+	fi
+done
+#	@(#)purge	5.2 of 5/19/82

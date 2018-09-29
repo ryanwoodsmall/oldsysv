@@ -1,0 +1,18 @@
+.TH STRCMP 3F
+.SH NAME
+lge, lgt, lle, llt \- string comparison intrinsic functions
+.SH SYNOPSIS
+\fBcharacter*\s-1N\s+1 a1, a2\fR
+.br
+\fBlogical l\fR
+.sp
+\fBl = lge(a1, a2)\fR
+.br
+\fBl = lgt(a1, a2)\fR
+.br
+\fBl = lle(a1, a2)\fR
+.br
+\fBl = llt(a1, a2)\fR
+.SH DESCRIPTION
+These functions return .\s-1TRUE\s+1. if
+the inequality holds and .\s-1FALSE\s+1. otherwise.

@@ -1,0 +1,36 @@
+#ident	"@(#)pkg.nlp:lp/uninstall	1.3"
+
+CRONTAB=/usr/spool/cron/crontabs/lp
+
+##########
+#
+# Shut down the Spooler.
+##########
+/usr/lib/lpshut 2>/dev/null >/dev/null
+
+##########
+#
+# Remove the startup/shutdown files.
+##########
+rm -f /etc/rc0.d/K20lp /etc/rc2.d/S80lp
+
+##########
+#
+# Remove the crontab entry. Use the crontab command to
+# delete it from cron's memory.
+##########
+su lp <<-EOF
+	crontab </dev/null
+EOF
+rm -f ${CRONTAB}
+
+##########
+#
+# Remove default names from the temporary directory,
+# to avoid confusing anybody if they re-install the software.
+##########
+rm -f \
+	${TMPDIR:-/tmp}/PRT.* \
+	${TMPDIR:-/tmp}/FLT.* \
+	${TMPDIR:-/tmp}/FRM.* \
+	${TMPDIR:-/tmp}/warnxxx

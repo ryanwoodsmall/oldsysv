@@ -1,0 +1,110 @@
+.TH VPMTEST 1M "DEC only"
+.SH NAME
+vpmtest \- test \s-1KMC\s+1 lines
+.SH SYNOPSIS
+.PP
+.B /etc/vpmtest
+.B \-t
+top
+.B \-k
+kmc
+.B \-n
+line
+.PP
+.SH DESCRIPTION
+.PP
+.I Vpmtest
+performs a series of loopback tests on a
+specified
+synchronous line interface of a specified
+.SM KMC\*S.
+.I Top
+is a path name that specifies the
+.SM VPM
+protocol driver minor device to be used for the test.
+.I Kmc
+is the path name for the
+.SM KMC
+on which the test is to be run.
+.I Line
+specifies the particular line number (0-7) on a KMS;
+for a
+.SM KMC
+equipped with a single-line line interface
+.I line
+should be 0.
+The
+.SM KMC
+must have been previously loaded with the
+.SM LAPB
+script
+.RI ( cslapb.r )
+using
+.IR vpmstart .
+The
+.I top
+device must not be open for reading or writing;
+this is the same restriction as for doing a
+.IR vpmset .
+The equivalent of a
+.I vpmset
+is performed to associate the specified
+.I top
+device
+with the specified
+.SM KMC
+and line number.
+.PP
+The first test uses the maintenance mode of the line unit hardware
+to perform an internal loopback test;
+this test is independent of the modem to which the line is attached.
+A failure at this point indicates a problem with the
+.SM KMC
+or line unit hardware
+or with the
+.SM VPM
+or
+.SM KMC
+software.
+The second test requires the local
+(near end)
+modem to be placed in the analog loopback mode;
+on a
+.SM WECO
+209A dataset this is accomplished by depressing the
+.SM AL
+button on the front of the dataset.
+A failure at this point indicates a problem with the modem
+or with the interface between the modem and the line unit;
+a faulty or disconnected cable is the most likely possibility.
+The third test performs a loopback from the remote
+(far end)
+modem.
+This requires placing the 
+.I remote
+modem in the digital loopback mode;
+on a
+.SM WECO
+209A dataset this is accomplished by depressing the
+.SM DL
+button
+on the front of the dataset.
+The local
+(near end)
+modem should be in the normal mode for this test.
+A failure at this point indicates trouble with
+one or both of the modems
+or with the telephone line
+connecting them.
+At the end of each test the
+.SM VPM
+error counters associated with the particular line
+are printed.
+.PP
+.SH EXAMPLE
+.IP
+/etc/vpmtest \-t \|/dev/vpm1 \-k \|/dev/kmc1 \-n \|7
+.PP
+.SH SEE ALSO
+kmc(7), vpm(7).
+.\"	@(#)vpmtest.1m	5.2 of 5/18/82

@@ -1,0 +1,78 @@
+#
+# Copyright  (c) 1985 AT&T
+#	All Rights Reserved
+#
+#ident	"@(#)pkg.vm:setup	1.4"
+#
+# Invoked as getlogins logname groupname [ logname groupname ... ]
+
+PATH=$PATH:/usr/lbin export PATH
+export logdir
+
+trap 'exit 0' 1 2 15
+while [ "$#" -ge 3 ]
+do
+	pwent=`grep "^$1:" /etc/passwd`
+	if [ -n "$pwent" ]
+	then
+		echo "$pwent" | sed -e 's/.*:\([^:][^:]*\):[^:]*$/\1/'
+		shift 3
+		continue
+	fi
+	grent=`grep "^$2:" /etc/group`
+	if [ -z "$grent" ]
+	then
+		echo >&2 "adding group $2 to /etc/group"
+		gid=`sed -e 's/^.*:\([0-9][0-9]*\):[^:]*$/\1/' < /etc/group | sort -n -r | line`
+		gid=`expr "$gid" + 1`
+		if [ "$gid" -lt 100 ]
+		then
+			gid=100
+		fi
+		echo "$2::$gid:$1" >> /etc/group
+	else
+		gid=`echo "$grent" | sed -e 's/^.*:\([0-9][0-9]*\):[^:]*$/\1/'`
+	fi
+
+	userid=`sed -e 's/^[^:][^:]*:[^:]*:\([0-9][0-9]*\):.*$/\1/' < /etc/passwd | sort -n -r | line`
+	userid=`expr "$userid" + 1`
+	if [ "$userid" -lt 100 ]
+	then
+		userid=100
+	fi
+	logdir="/usr/$1"
+	if [ -f "${logdir}" -o -s "${logdir}" ]
+	then
+		echo >&2 "${logdir} already exists."
+		echo >&2 "${logdir} is needed to install AT&T FACE files."
+		echo >&2 "Cannot continue installation until ${logdir} is removed\n"
+		exit 1
+	fi
+
+	echo >&2 "\\nThis is the information for the new login:
+	User's name:	$3
+	login ID:	$1
+	user ID:	${userid}
+	group ID:	${gid}	$2
+	home directory:	${logdir}"
+	echo >&2 "adding $1 login to /etc/passwd"
+	if [ -x /usr/bin/passmgmt ]
+	then
+		/usr/bin/passmgmt -a -u ${userid} -g ${gid} -h ${logdir} -c "$3" $1
+		/bin/passwd -x 60 -n 7 -d -f $1
+	else
+		chmod 644 /etc/passwd
+		echo "$1:,2:${userid}:${gid}:$3:${logdir}:" >> /etc/passwd
+		chmod 444 /etc/passwd
+	fi
+	mkdir ${logdir}
+	cp /etc/stdprofile ${logdir}/.profile
+	chgrp $2 ${logdir} ${logdir}/.profile
+	chown $1 ${logdir} ${logdir}/.profile
+	chmod 755 ${logdir}
+	chmod 644 ${logdir}/.profile
+	echo >&2 "\007\007Remember to give $1 a password!!!"
+	echo $logdir
+	shift 3
+done
+exit 0

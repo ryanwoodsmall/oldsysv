@@ -1,0 +1,29 @@
+#ident	"@(#)sadmin:include/SKELMakefile	2.2"
+#	skeleton Makefile for include
+
+PARTS = --FILES--
+
+ALL:		$(PARTS)
+
+install:	remove
+
+remove:
+
+clean clobber:
+
+partslist:
+	@echo Makefile SKELMakefile $(PARTS)  |  tr ' ' '\012'  |  sort
+	
+product:
+
+productdir:
+
+srcaudit:
+	@(	find * -print;  \
+		ls -d $(PARTS) SKELMakefile Makefile  \
+	)  |  sort  |  uniq -u  |  sed 's/$$/	unexpected/'
+
+newmakefile:	../tools/genmakefile SKELMakefile
+	cp Makefile OMakefile
+	../tools/genmakefile SKELMakefile *Makefile >Makefile
+	rm -f OMakefile

@@ -1,0 +1,21 @@
+.TH DIM 3F
+.SH NAME
+dim, ddim, idim \- positive difference intrinsic functions
+.SH SYNOPSIS
+\fBinteger a1, a2, a3\fR
+.br
+\fBa3 = idim(a1, a2)\fR
+.sp
+\fBreal a1, a2, a3\fR
+.br
+\fBa3 = dim(a1, a2)\fR
+.sp
+\fBdouble precision a1, a2, a3\fR
+.br
+\fBa3 = ddim(a1, a2)\fR
+.SH DESCRIPTION
+These functions return:
+.br
+	a1\-a2	if a1 > a2
+.br
+	0	if a1 <= a2

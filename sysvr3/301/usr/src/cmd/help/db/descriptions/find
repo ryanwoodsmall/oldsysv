@@ -1,0 +1,17 @@
+
+\Sfind\S:  Description
+
+Syntax Summary:  find name ... logical_expr ...
+
+         where:  name  is a file name or directory name.
+
+                 logical_expr  is a logical expression.
+
+Description:
+     \Sfind\S is used to locate files.  It begins searching at the directory
+     or file that you list on the command line.  Which files it locates, and
+     the action it takes when it finds them, are both determined by the logical
+     expression.  \Sfind\S can print the path name of a file, check for files
+     of certain size or check for files that belong to a certain user.  Check
+     the examples given here, and see the manual page for \Sfind\S for
+     information on creating logical expressions.

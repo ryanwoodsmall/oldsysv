@@ -1,0 +1,36 @@
+
+\S request:  macro:  register:  macro package \S
+
+Requests, registers, and macros are all used as instructions for formatting
+text using the text processors troff(1) and nroff(1).  When a text
+processing program encounters one of these in your file, it interprets it
+and formats your file accordingly.
+
+Requests are instructions that are predefined by your text processing
+program.  A request effects the text that immediately follows it. You can
+intersperse text and requests throughout the document.  Requests are
+usually represented as two lower case letters that are alone on a line.
+
+Macros are used to represent many requests that you use often.  They keep
+you from typing many requests over and over again.  When you execute the
+text processing programs nroff(1) or troff(1), the macros are replaced by
+the requests they represent.  Macros are usually one or two upper case
+letters that appear alone on a line.
+
+Macro packages further simplify the job of formatting text.  These packages
+have macros to create headers, titles, footnotes and various other jobs
+that complicate text formatting.  nroff(1) offers three macro packages:  mm
+to format memorandums; man for formatting manual pages; and mptx for
+formatting permuted indices.  To use these packages, you include the name
+of the macro package as an option on the nroff(1) command line.
+
+Registers are used to define formatting for sections of your document.
+Each register controls a different attribute of the text such as the size
+and type of message in the footer, the spacing for paragraphs, and
+indenting of paragraphs.  You include the register name plus an integer on
+the nroff(1) command line.  The integer dictates which of the choices for
+the register you would like to use.  The attribute that the register
+controls will be handled the same way throughout the document.  Registers
+are typically an upper case letter followed by a lower case letter.  See
+the "Documenter's Workbench Software Technical Discussion and Reference
+Manual" for details on text formatting.

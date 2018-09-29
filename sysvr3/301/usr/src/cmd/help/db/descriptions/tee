@@ -1,0 +1,14 @@
+
+\Stee\S:  Description
+
+Syntax Summary:  tee [-a] [-i] file_name ...
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Stee\S prints text to standard output and puts a copy of it in
+     <file_name> at the same time.  \Stee\S reads the standard input, and
+     copies it to the standard output and to one or more files.  \Stee\S is
+     normally used in shell programs, and in command lines containing pipes.
+
+

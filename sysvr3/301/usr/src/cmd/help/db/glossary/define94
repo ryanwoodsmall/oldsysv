@@ -1,0 +1,13 @@
+
+\S network hop \S
+
+Some computers on UNIX systems are organized into networks.  Within a
+network, information can be transmitted to any system.  Sometimes the
+connection between one system and another is direct and sometimes the
+information must be transmitted to an intermediate system before it reaches
+its destination.  Every time information is passed from one system to
+another, the information makes a network hop.  In the case where an
+intermediate system is needed to reach a destination, the information makes
+2 network hops.  The uname(1) command lists all of the systems that are
+only one network hop from your system.
+

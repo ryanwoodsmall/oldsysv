@@ -1,0 +1,6 @@
+
+\S local system:  remote system \S
+
+Your local system refers to the UNIX system that you are logged in on.
+Remote systems are UNIX systems on other computers.
+

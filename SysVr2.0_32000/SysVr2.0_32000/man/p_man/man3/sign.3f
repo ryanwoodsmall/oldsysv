@@ -1,0 +1,28 @@
+.TH SIGN 3F
+.SH NAME
+sign, isign, dsign \- \s-1FORTRAN\s+1 transfer-of-sign intrinsic function
+.SH SYNOPSIS
+.nf
+.B "integer i, j, k"
+.B "real r1, r2, r3"
+.B "double precision dp1, dp2, dp3"
+.P
+.B "k = isign(i, j)"
+.B "k = sign(i, j)"
+.P
+.B "r3 = sign(r1, r2)"
+.P
+.B "dp3 = dsign(dp1, dp2)"
+.B "dp3 = sign(dp1, dp2)"
+.SH DESCRIPTION
+.I Isign\^
+returns the magnitude of its first argument
+with the sign of its second argument.
+.I Sign\^
+and
+.I dsign\^
+are its real and double-precision counterparts, respectively.
+The generic version is
+.I sign\^
+and will devolve to the appropriate type depending on its arguments.
+.\"	%W% of %G%

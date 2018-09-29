@@ -1,0 +1,6 @@
+Title="Output of $ARG1"
+
+rows=8
+columns=60
+
+text="`sh -c $ARG1' 2>&1'`"

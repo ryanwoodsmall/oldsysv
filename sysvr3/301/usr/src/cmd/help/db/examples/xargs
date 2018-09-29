@@ -1,0 +1,42 @@
+
+\S xargs \S: Examples
+
+        ls|xargs -n1 -t sum
+
+    \Sxargs\S takes one file name at a time from the list of file names from
+    the current directory and uses it as input to the sum(1) command.  When
+    sum(1) is executed, \Sxargs\S prints "sum file_name" followed by the
+    checksum and number of blocks for the file.
+
+
+
+
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+    You would use \Sxargs\S in the following command line to execute diff(1)
+    several times, each time comparing "record" to a different file.
+
+        \Sxargs -t -irpl diff record rpl \S
+
+    \Sxargs\S waits for you to type a file name that it can substitute for
+    "rpl" on the command line. If you type
+
+        \S record2 \S
+
+    diff(1) compares "record" to "record2".  \Sxargs\S prints
+
+        diff record record 2
+
+    and then it prints the output of diff(1).  After the output, \Sxargs\S
+    waits for another file name to replace "rpl".  
+    If you do not want to compare any more files, you type a control 
+    character and the letter "d" simultaneously and \Sxargs\S will terminate.
+
+        \S control-d \S
+
+

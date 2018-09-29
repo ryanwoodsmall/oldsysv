@@ -1,0 +1,9 @@
+
+\Snews\S:  Options
+
+     -a   prints all news files regardless of modification time.
+
+     -n   prints the names of current news without printing contents.
+
+     -s   prints the number of current news files that exist.
+

@@ -1,0 +1,26 @@
+menu=Mail Services
+help=OPEN TEXT OBJECTS/Text.mfhelp T.mail 'Mail Services'
+
+name="new mail  "
+description=read newly arrived mail
+action=`message "Checking mailbox.  Please wait.";
+	shell "
+		if
+			mail -e
+		then
+			echo true
+		else
+			echo false
+		fi
+	" | set -l MAILSTAT;
+	regex -v "$MAILSTAT"
+		true	'message "Retrieving mail messages.  Please wait.";sleep 2; message ""'
+		false	'message -b 1 "No mail available for \"$LOGNAME\"."' | set -l CMD;
+	regex -v "$MAILSTAT"
+		true	'run /usr/bin/mailx'
+		false	'nop'			| set -l TOKEN;
+	$CMD`$TOKEN
+
+name="send mail "
+description=send mail
+action=OPEN FORM $VMSYS/OBJECTS/Form.send Send

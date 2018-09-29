@@ -1,0 +1,26 @@
+
+\S help \S:  Examples
+
+       help
+
+    Prints the menu that lists the parts of the UNIX system's on-line 
+    assistance facility.
+
+    ----------------------------------------------------------------------
+
+       help glossary
+
+    Enters the glossary module of the help facility and displays a list of
+    the terms it includes.  This is the same as typing "glossary" by itself.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       help locate print file format
+
+    Initiates a keyword search for a UNIX system command using the keywords
+    "print", "file", and "format", then displays the list of UNIX system
+    commands that it found.  This is the same as typing "locate print file
+    format".

@@ -1,0 +1,27 @@
+.TH DMC 7 "DEC only"
+.SH NAME
+dmc \- communications link with built-in \s-1DDCMP\s+1 protocol
+.SH DESCRIPTION
+The
+.SM DMC\*S11
+allows local connection of
+.SM PDP\*S-11
+systems over high-speed
+(1Mb or 56kb) links and remote connection over leased (up to 19.2kb)
+or dial-up (up to 4,800b) lines.
+It implements in hardware the
+.SM DDCMP
+data-link
+protocol, which includes error control.
+This driver handles two
+.SM DMC\*S11
+devices.
+.SH FILES
+/dev/dmc
+.SH BUGS
+There are quite a few bugs in the
+.SM DEC
+microcode for the different
+versions of the
+.SM DMC\*S11.
+.\"	@(#)dmc.7	5.2 of 5/18/82

@@ -1,0 +1,22 @@
+.TH SIGNAL 3F
+.SH NAME
+signal \- specify \s-1FORTRAN\s+1 action on receipt of a system signal
+.SH SYNOPSIS
+.nf
+.B "integer i, intfc"
+.B "external intfc"
+.P
+.B "call signal(i, intfc)"
+.SH DESCRIPTION
+The argument \fBi\fR specifies the signal to be caught.
+.I Signal\^
+allows a process to specify a function to be invoked upon receipt
+of a specific signal.
+The first argument specifies which fault or exception.
+The second argument specifies the function to be invoked.
+.br
+\f3\s-1NOTE:\fR\s+1  The interrupt processing function, \f2intfc\fR,
+does not take an argument.
+.SH SEE ALSO
+kill(2), signal(2).
+.\"	@(#)signal.3f	6.2 of 10/20/83

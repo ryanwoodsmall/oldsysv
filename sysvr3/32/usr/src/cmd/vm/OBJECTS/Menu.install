@@ -1,0 +1,15 @@
+menu=Services Administration
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.sadm "Services Administration"
+
+name=Add Services
+action=OPEN FORM $VMSYS/OBJECTS/Form.add
+
+name=Modify Services
+action=OPEN MENU $VMSYS/OBJECTS/Menu.list "-m" "HOME"
+
+name=Remove Services
+action=OPEN MENU $VMSYS/OBJECTS/Menu.list "-d" "HOME"
+
+name=Personal Services
+action=OPEN MENU $VMSYS/OBJECTS/Menu.list "" "HOME"

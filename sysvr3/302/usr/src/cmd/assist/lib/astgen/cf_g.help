@@ -1,0 +1,67 @@
+0
+This line specifies the command name associated with this command 
+form.  It will appear on the ASSIST screen first line after 
+"CURRENT FORM:" and on the command line.  Use ^G or f1 to specify 
+or modify the command name. You may also use ^E to be placed in 
+the editor to specify or modify this string.
+
+NOTE: Use of ^G or f1 to modify this string will first delete the 
+      existing value, while use of ^E will preserve it.
+WARNING: Command lines that start with "cd" or "umask" may not
+      be processed correctly in ASSIST.
+WARNING: Command lines are not allowed to exceed 17 characters.
+1
+This line represents the command line order attribute of the command 
+form.  The order in which fields appear on the command form does not
+need to be identical to their order on the command line.  If you select
+this line with ^G or f1, will move to another screen where you may 
+modify the current command line order. 
+2
+This line tells you how many lines of the command form help message 
+have been written for the current command form.  The command form
+help message will be presented to the user when ^O or f7 has been 
+entered.  You may write or edit the form help message by entering
+^G or f1 here.  You will then be placed in the editor.
+3
+This line specifies whether an exit message should be given to the user
+upon execution of the command form.  The exit message is designed to
+provide the user with essential information about what will happen after 
+the command has been invoked or executed. For example, a user that is
+about to invoke an interactive command or editor will need to know how
+to quit.  ^G or f1 may be used to toggle through three specifica- 
+tions of the exit message: never, unconditionally, and conditionally.
+   "never" will, of course, not present the user with an exit message
+upon execution.  This is the typical case for non-interactive commands. 
+   "unconditionally" will present the user with an exit message every 
+time the command is executed.  In this case, a new line will be added
+to your current screen that will allow you to write the message.
+   If you specify "conditionally" for this line, the user will receive 
+the exit message only if a particular field is set to specific values.
+In this case, new lines will be added to your current screen that will
+enable you to write or modify the message, select the conditional 
+field, and set the conditional exit values.
+4
+This line tells you how many lines of an exit message have been 
+specified.  The exit message is designed to provide the ASSIST
+user with essential information about what will happen after the
+command has been invoked or executed.  For example, users will
+need to know how to exit an editor (see "vi" command form exit 
+message.)  You may write or edit the current exit message by
+entering ^G or f1 here.  You will then be placed in the editor.
+5
+This line shows you the field on which the exit message is to be
+conditionally given.  You may select or change this field by
+typing ^G or f1 here. 
+
+NOTE: You must specify the values that, when entered by the user
+      for the conditional field, will cause the exit message to
+      be displayed (conditional exit values), otherwise the 
+      exit message will be presented unconditionally. 
+6
+This field tells you how many conditional exit values have been
+specified. Conditional exit values define the ASSIST user input
+values for the conditional exit field that will cause the exit
+message to be displayed.  If you do not specify at least one 
+conditional exit value, the exit message will be displayed 
+unconditionally.  Use ^G or f1 to add, change, or delete the
+values.  A maximum of five values may be specified.

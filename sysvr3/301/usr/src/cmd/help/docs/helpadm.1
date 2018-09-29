@@ -1,0 +1,88 @@
+.TH HELPADM 1
+.SH NAME
+helpadm \- make changes to the 
+.I help
+database
+.SH SYNOPSIS
+.B helpadm
+.SH DESCRIPTION
+The UNIX System \fIhelp\fP Facility Administration command 
+.I helpadm
+allows UNIX administrators and command developers to define the
+content of 
+.I help
+for their specific commands and to monitor use of the 
+.I help
+facility.  
+.I helpadm
+can only be executed by login root, login bin, or a login that is a
+member of group bin.
+.PP
+.I helpadm
+prints a menu of 3 types of 
+.I help
+data which can be modified, and 2 choices relating to monitoring use
+of the 
+.I help
+facility.  The five choices are:
+.PD 0
+.TP 11
+- modify \fIstartup\fP data
+.TP 
+- add, modify, or delete a \fIglossary\fP term
+.TP
+- add, modify, or delete command data (description, options, 
+examples, and keywords)
+.TP
+- prevent monitoring use of the \fIhelp\fP facility (login root 
+and login bin only)
+.TP 
+- permit monitoring use of the \fIhelp\fP facility (login root and
+login bin only)
+.PD
+.PP
+The user may make one of the above choices by entering its
+corresponding letter (given in the menu), or
+may exit to the shell by typing \fBq\fP (for "quit").
+.PP
+If one of the first three choices is chosen, then the user is
+prompted for additional information; specifically, which 
+.I startup
+screen, 
+.I glossary
+term definition, or command is to be modified.  The user may also be
+prompted for information to identify whether the changes to the
+database are additions, modifications, or deletions.  If the user is
+modifying existing data or adding new data, then they are prompted
+to make the appropriate modifications/additions.  If the user is
+deleting a 
+.I glossary
+term or a command from the database, then they
+must respond affirmatively to the next query in order for the
+deletion to be done.  In any case, before the user's changes are
+final, they must respond affirmatively when asked whether they are
+sure they want their requested database changes to be done.
+.PP
+By default, 
+.I helpadm
+will put the user into 
+.I ed
+to make additions/modifications to 
+database information.  If the user wishes to be put into a different
+editor, then they should set the EDITOR variable in their
+environment to the desired editor, and then export EDITOR.
+.PP
+If the user chooses to monitor/prevent monitoring use of the
+.I help
+facility, no further interaction occurs between the user and the 
+.I help
+administration utilities.
+.SH SEE ALSO
+help(1)
+.SH WARNINGS
+When the UNIX System is delivered to a customer, /etc/profile
+exports the LOGNAME variable.  If /etc/profile has been changed so
+that LOGNAME is not exported, then the options to monitor/prevent monitoring
+use of the 
+.I help
+facility may not work properly.

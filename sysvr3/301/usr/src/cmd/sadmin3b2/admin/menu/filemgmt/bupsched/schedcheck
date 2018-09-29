@@ -1,0 +1,10 @@
+#ident	"@(#)sadmin3b2:admin/menu/filemgmt/bupsched/schedcheck	1.1"
+#menu#	schedule backup reminder checks
+#help#
+#help#	Backup reminder checks are run at specific times to check
+#help#	to see if any reminders are scheduled.  The user specifies
+#help#	the time at which the check is to be run.  Checks are run
+#help#	for the reminder messages scheduled by schedmsg.
+
+exec ${MENUTOP:?}/bupsched -t c
+

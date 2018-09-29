@@ -1,0 +1,33 @@
+
+\S redirection \S
+
+Redirection is the assignment of "standard input"\S*\S, "standard 
+output"\S*\S, or "standard error output"\S*\S to other files or
+terminals. A left arrow (<) is used to redirect standard input to a
+command. For example, a message that is contained in the file named
+"letter" can be sent to the user with the login name "sandy" by
+using a left arrow:
+			mail sandy < letter
+
+The right arrow (>) is used to redirect standard output and standard
+error output.  For example, the following command redirects standard
+output for the print command, pr(1), to the file "temp".
+
+			pr memo >temp
+
+When a right arrow is used the output writes over any text that
+already exists in "temp".  Double right arrows (>>) can be used to
+add the output  to the end of the file rather than write over the 
+contents of the file.  Standard error output is redirected by using
+a right arrow preceded by the file descriptor2. For example
+,
+		cp text textnew 2> texterror
+
+makes a copy of "text" and puts it in "textnew", and the  "error
+messages"\S*\S are sent to "texterror".  The file descriptor 2
+followed by double arrows (2>>) can be used to add standard error
+output to the end of a file,  in the same way double arrows are used
+for standard output. Details about redirection can be found on the
+"manual page"\S*\S for the shell command, sh(1).
+
+\S*\S defined in the \Sglossary\S

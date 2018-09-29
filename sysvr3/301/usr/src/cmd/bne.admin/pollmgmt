@@ -1,0 +1,59 @@
+#ident	"@(#)bne.admin:pollmgmt	2.2"
+#menu# manage poll entries (list, add, delete)
+#help#
+#help#	This subcommand allows you to list, add or delete
+#help#	entries used to poll other systems.
+
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+cmdlist='
+	1 list
+	2 add
+	3 delete
+'
+flags="-qq -k$$"
+trap exit 1 2 15
+
+echo "
+This procedure is used to list, add, and delete entries in the
+$PACKAGE '$POLL' file.
+This file contains information about what systems and
+the times (hours) the systems should be polled.
+
+Type 'q' at any time to quit the current operation.
+If a '?' appears as a choice, type '?' for help.
+
+If a default appears in the question, type <RETURN> for the default.
+"
+
+while true
+do
+	CMD=`chkyn ${flags} -fec -Dlist "Enter the operation you want to perform:
+${cmdlist}
+(default list)[q]:  " ${cmdlist}`
+
+	case "$CMD" in
+	list|1)
+		/bin/sh lspoll
+		;;
+	add|2)
+		/bin/sh addpoll
+		;;
+	delete|3)
+		/bin/sh delpoll
+		;;
+
+	*)
+		break;
+		;;
+	esac
+
+done

@@ -1,0 +1,99 @@
+#ident	"@(#)rfs.admin:confgmgmt/lsmember	1.9"
+#menu# list machines in your domain (primary only)
+
+#help# 
+#help#	The subcommand "lsmember" allow you to see the list of all the  	
+#help# 	machines that are members of your domain.  This subcommand may 
+#help#	ONLY be accessed from PRIMARY machines. 
+
+#set trap
+trap '/bin/rm -rf /usr/tmp/rfmaster$$ /usr/tmp/sec$$ /usr/tmp/mem$$ /usr/tmp/mems$$; trap 0; exit' 0 1 2 3 15
+# Determine if the domain configuration has been established; if not, then print
+# appropriate error message
+if [ ! -s /usr/nserve/rfmaster ]
+then
+	echo "\nThe domain configuration must be set up before"
+	echo "member machines can exist.  To set up the domain"
+	echo "configuration, use the \"setuprfs\" subcommand"
+	echo "under the RFS Management Menu.\n"
+	exit
+fi
+
+# Determine if the domain has been established; if not, then print
+# appropriate error message
+domname=`/usr/bin/dname -d 2>/dev/null`
+if [ "$domname" = "" ]
+then
+	echo "\nThe domain name has not been set.  To set up the"
+	echo "domain configuration use the \"setuprfs\" subcommand"
+	echo "under the RFS Management Menu.\n"
+	exit
+fi
+
+#reformat /usr/nserve/rfmaster.  Done so format will be consistent
+#get rid of comment lines
+/bin/grep -v "^\#" /usr/nserve/rfmaster |
+	/usr/bin/awk  "
+	#determine if an entry ends with a backslash
+		/\\\\$/ {
+			#put the entry into an array
+			x[0]=\$0
+			#print all characters of entry except the last
+			#one, which is a backslash, and no new line.
+			printf substr(x[0],0,length-1)
+		}
+
+	#determine if an entry does NOT end with a backslash
+		!/\\\\$/ {
+			#print all chars of the entry followed by a new line.
+			print \$0
+		}" |
+	# format to normal standards
+	/usr/bin/awk '{
+		for ( i = 1; i <= NF; i++) {
+			if ( i == NF )
+				printf "%s\n", $i
+			else
+				printf "%s ", $i
+		}
+	}' >/usr/tmp/rfmaster$$ 2>/dev/null
+
+#Check to see if this machine is primary; if not, then print the appropriate error
+# message.
+prim=`/bin/grep "^$domname[ 	][ 	]*[Pp]" /usr/tmp/rfmaster$$  2>/dev/null | /usr/bin/cut -d'.' -f2`
+
+if [ "$prim" != "`/bin/uname 2>/dev/null`" ]
+then
+	echo "\nOnly the primary name server machine for a domain"
+	echo "can access the list of machines in the domain.  "
+	echo "The primary name server for domain $domname is $prim.\n"
+	exit
+fi
+
+# Determine secondary name servers
+/bin/grep "^$domname[ 	][ 	]*[Ss]" /usr/tmp/rfmaster$$  2>/dev/null | /usr/bin/cut -d'.' -f2 >/usr/tmp/sec$$
+
+# Determine all the members of the domain
+members=`/usr/bin/cut -d':' -f1  /usr/nserve/auth.info/$domname/passwd 2>/dev/null | /bin/sort -u `
+
+# Print members of the domain
+echo "\n\n	MEMBERS OF DOMAIN: $domname\n"
+echo "	Node name: $prim	Primary name server"
+echo "$members" | /bin/grep -v "^$prim\$" >/usr/tmp/mem$$ 2>/dev/null
+
+if [ -s /usr/tmp/sec$$ ]
+then
+	/bin/cp /usr/tmp/mem$$ /usr/tmp/mems$$
+	/bin/sort -o /usr/tmp/sec$$ -u /usr/tmp/sec$$
+	/usr/bin/comm -23 /usr/tmp/mems$$ /usr/tmp/sec$$ >/usr/tmp/mem$$
+	for mem in `/bin/cat /usr/tmp/sec$$`
+	do
+		echo "	Node name: $mem		Secondary name server"
+	done
+fi
+
+for mem in `/bin/cat /usr/tmp/mem$$`
+do
+	echo "	Node name: $mem"
+done
+echo

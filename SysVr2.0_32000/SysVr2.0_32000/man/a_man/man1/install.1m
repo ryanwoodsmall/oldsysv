@@ -1,0 +1,130 @@
+.TH INSTALL 1M
+.SH NAME
+install \- install commands
+.SH SYNOPSIS
+.B /etc/install
+.RB  [ \-c " dira]"
+.RB  [ \-f " dirb]"
+.RB  [ \-i ]
+.RB  [ \-n " dirc]"
+.RB  [ \-o ]
+.RB  [ \-s ]
+file [dirx .\|.\|.]
+.SH DESCRIPTION
+.I Install\^
+is a command most commonly used in ``makefiles''
+(see
+.IR make (1))
+to install a
+.I file\^
+(updated target file) in a specific place within a file system.
+Each
+.I file\^
+is installed by copying it into the appropriate directory, thereby retaining the
+mode and owner of the original command.
+The program prints messages telling the user exactly what files it is
+replacing or creating and where they are going.
+.PP
+If no options or directories
+.RI ( dirx " .\|.\|.)"
+are given,
+.I install\^
+will search
+a set of default directories
+.RB ( /bin ,
+.BR /usr/bin ", " /etc ", " /lib ,
+and
+.BR /usr/lib ,
+in that order)
+for a file with the same name as 
+.IR file .
+When the first occurrence is found,
+.I install\^
+issues a message saying that it is overwriting that file with
+.IR file ,
+and proceeds to do so.
+If the file is not found, the program states this and exits without
+further action.
+.PP
+If one or more directories
+.RI ( dirx " .\|.\|.)"
+are specified after
+.IR file ,
+those directories will be searched before the directories specified
+in the default list.
+.PP
+The meanings of the options are:
+.PP
+.RS 5
+.TP 15
+.BI \-c "  dira\^"
+Installs a new command (\fIfile\fP\^) in the directory specified by
+.IR dira ,
+only if it is
+not
+found.
+If it is found,
+.I install\^
+issues a message saying that the file already
+exists, and exits without overwriting it.
+May be used alone or with the
+.B \-s
+option.
+.TP 15
+.BI \-f "  dirb\^"
+Forces
+.I file\^
+to be installed in given directory, whether or not one already exists.
+If the file being installed does not already exist, the mode and owner
+of the new file will be set to \fB755\fP and \fBbin\fP, respectively.
+If the file already exists, the mode and owner will be that of the
+already existing file.
+May be used alone or with the
+.B \-o
+or
+.B \-s
+options.
+.TP 15
+.B \-i
+Ignores default directory list, searching only through the given directories
+.RI ( dirx " .\|.\|.)."
+May be used alone or with any other options other than
+.B \-c
+and
+.BR \-f .
+.TP 15
+.BI \-n "  dirc\^"
+If
+.I file\^
+is not found in any of the searched directories, it is put in the directory
+specified in
+.IR dirc .
+The mode and owner of the new file will be set to \fB755\fP and \fBbin\fP, respectively.
+May be used alone or with any other options other than
+.B \-c
+and
+.BR \-f .
+.TP 15
+.B \-o
+If
+.I file\^
+is found, this option saves the ``found'' file by copying it to
+.BI \s-1OLD\s0 file\^
+in the directory in which it was found.
+This option is useful when installing a normally text busy file such as
+.B /bin/sh
+or
+.BR /etc/getty ,
+where the existing file cannot be removed.
+May be used alone or with any other options other than
+.BR \-c .
+.TP 15
+.B \-s
+Suppresses printing of messages other than error messages.
+May be used alone or with any other options.
+.RE
+.SH SEE ALSO
+cpset(1M),
+make(1),
+mk(8).
+.\"	@(#)install.1m	6.2 of 9/2/83

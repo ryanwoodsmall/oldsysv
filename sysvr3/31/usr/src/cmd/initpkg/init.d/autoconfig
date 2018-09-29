@@ -1,0 +1,26 @@
+#ident	"@(#)initpkg:init.d/autoconfig	1.4"
+
+#  if a self configuration occurred during the boot
+#  sequence, the following must be done:
+#
+#     run mkunix to generate an absolute UNIX file
+#
+#  ckauto -- is a program that is used to determine if an
+#   	     auto configuration took place
+#
+#  /etc/.madeunix -- is an empty file whose presence signals
+#            that a mkunix has been done since the last boot.
+#            This file is explicitly removed each time the system
+#            is booted by the /etc/bcheckrc script.
+
+/etc/ckauto
+if  [ $? -eq 1 ]
+then
+	if [ ! -f /etc/.madeunix ]
+	then
+		echo 'Generating a new /unix'
+		/etc/mkunix -o /unix > /dev/null
+		> /etc/.madeunix
+	fi
+fi
+

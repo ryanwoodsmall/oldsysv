@@ -1,0 +1,100 @@
+.TH CAT 1
+.SH NAME
+cat \- concatenate and print files
+.SH SYNOPSIS
+.B cat
+[
+.B \-u
+]
+[
+.B \-s
+]
+[
+.B \-v
+.RB [ \-t ]
+.RB [ \-e ]
+]
+file .\|.\|.
+.SH DESCRIPTION
+.I Cat\^
+reads each
+.I file\^
+in sequence
+and writes it on the standard output.
+Thus:
+.PP
+.RS
+cat file
+.RE
+.PP
+prints the file, and:
+.PP
+.RS
+cat file1 file2 >file3
+.RE
+.PP
+concatenates the first two files and places the result on the third.
+.PP
+If no input file is given,
+or if the argument
+.B \-
+is encountered,
+.I cat\^
+reads from the standard
+input file.
+Output is buffered unless the
+.B \-u
+option is specified.
+The
+.B \-s
+option makes
+.I cat\^
+silent about non-existent files.
+.PP
+The
+.B \-v
+option causes non-printing characters
+(with the exception of tabs, new-lines
+and form-feeds)
+to be printed visibly.
+Control characters are printed
+.BI ^ X
+.RI (control- x );
+the DEL character (octal 0177) is printed
+.BR ^? .
+Non-ASCII characters (with the high bit set) are printed as
+.BI M- x,
+where
+.I x
+is the character specified by the seven low order bits.
+.PP
+When used with the
+.B \-v
+option,
+.B \-t
+causes tabs to be printed as
+.BR ^I 's,
+and
+.B \-e
+causes a
+.B $
+character to be printed at the end of each line
+(prior to the new-line).
+The
+.B \-t
+and
+.B \-e
+options are ignored if the
+.B \-v
+option is not specified.
+.SH WARNING
+Command formats such as
+.RS
+cat file1 file2 >file1
+.RE
+will cause
+the original data in \fIfile1\fP to be lost;
+therefore, take care when using shell special characters.
+.SH SEE ALSO
+cp(1), pg(1), pr(1).
+.\"	@(#)cat.1	6.3 of 9/2/83

@@ -1,0 +1,36 @@
+menu="Help Facility: Table"
+begrow=current
+begcol=current
+
+name="Using Help"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h1.help
+
+name="System Overview"
+action=OPEN TEXT $VMSYS/OBJECTS/Text.help T.h2.system 'System Overview'
+
+name="Frames Overview"
+action=OPEN TEXT $VMSYS/OBJECTS/Text.help T.h3.frames "Frames Overview"
+
+name="Objects Overview"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h4.obj
+
+name="Office Overview"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h5.off
+
+name="Commands Overview"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h6.clist
+
+name="Using the Command Menu"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h7.cmd
+
+name="Using the Integrated Editor"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h8.ed
+
+name="Print Job Options"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.h9.print
+
+name="Accessing Registered Applications"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.ha.reg
+
+name="Accessing Installed Applications"
+action=OPEN MENU $VMSYS/OBJECTS/Menu.hb.inst

@@ -1,0 +1,20 @@
+
+\Susage\S:  Description
+
+Syntax Summary:  usage [-d] [-e] [-o] [command_name] 
+                 help usage [-d] [-e] [-o] [command_name]
+
+         where:  command_name  is a UNIX system command.
+
+Description:
+     \Susage\S gives information on UNIX system commands, and it is one module
+     of the UNIX system on-line help facility.  Use \Susage\S to get details
+     on how to use commands.  If you type \Susage\S followed by a command
+     name, \Susage\S displays information about specific UNIX system commands,
+     including a syntax summary, and a description of what the command can do.
+     With the "e" and "o" options, you can get examples of command use and a
+     list of the options for the command.  If you do not use a command name,
+     \Susage\S prints a list of the commands it knows about, and prompts you 
+     to type one. 
+     See also: help(1), starter(1), locate(1), and glossary(1) for commands 
+     that might be used with \Susage\S.

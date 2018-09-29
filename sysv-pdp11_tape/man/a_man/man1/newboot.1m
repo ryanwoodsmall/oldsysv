@@ -1,0 +1,63 @@
+.TH NEWBOOT 1M "3B20S only"
+.SH NAME
+newboot \- load \s-1VTOC\s+1, prom patch, or lboot
+.SH SYNOPSIS
+.B /etc/newboot
+boot-special [
+.B \-v
+vtoc ] [
+.B \-u
+prompat ] [
+.B \-l
+lboot ]
+.SH DESCRIPTION
+.I Newboot
+replaces the entries specified by its options on the given
+.I boot-special
+section of a disk.
+.I Newboot
+verifies that each given file will fit in the specified entry,
+and calls
+.IR dd (1)
+to move it in.
+.PP
+.I Lboot
+is a file containing the boot program that is loaded by
+the \s-13B20S\s+1 firmware and executed to boot the \s-1UNIX\s+1 System.
+.PP
+.I Prompat
+is a file containing patches to the system microcode that are read in
+by the 3B20S firmware when the machine is booted.
+.PP
+.I Vtoc
+is a file containing a volume table of contents used by the 3B20S firmware
+to find the prom patch and lboot locations on disk and
+is used by \fIlboot\fP to find the
+\fBroot\fP and backup \fBroot\fP file systems.
+.SH SEE ALSO
+dd(1),
+mkboot(1M),
+3B20boot(8).
+.SH DIAGNOSTICS
+.PD 0
+.TP "\w'\s-1FILE\s+1 too large (\s-1BLKS\s+1 blocks max.)\ \ \ 'u"
+\s-1FILE\s+1 too large (\s-1BLKS\s+1 blocks max.)
+\s-1FILE\s+1 is too big for the specified entry.
+.TP
+unknown option \fI\s-1X\s+1\fP
+Option \fI\s-1X\s+1\fP not recognized.
+.TP
+can't open file \s-1FILE\s+1
+\s-1FILE\s+1 not found.
+.PD
+.SH WARNINGS
+Installing a bad
+.IR vtoc ,
+.IR prompat ,
+or
+.I lboot
+may make the affected disk pack unbootable.
+Be sure you have a good backup disk before
+.I newboot
+is run.
+.\"	@(#)newboot.1m	5.2 of 5/18/82

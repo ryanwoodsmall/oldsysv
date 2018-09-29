@@ -1,0 +1,91 @@
+#ident "@(#)pkg.lp:lp/INSTALL	1.8"
+#
+# Single Floppy INSTALL Script
+#
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/lp.name`
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1985 AT&T"
+echo "All Rights Reserved"
+
+#
+# Check that the necessary packages have already been installed.
+#
+
+#  Need banner command for interface programs (usrenv package)
+
+if
+	test ! -s /usr/options/usrenv.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the User Environment Utilities to be installed first."
+	exit
+fi
+
+#
+# How much space is needed by this floppy?
+#
+
+USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+
+#
+# How much space is available in the necessary filesystems?
+#
+
+USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+#
+# Now see if the package fits!
+# Inform the user and exit immediately, if not.
+#
+
+if
+	[ "$USRspace" -lt "$USRneeds" ]
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $USRspace blocks available"
+	echo "on the /usr file system --"
+	echo "$USRneeds blocks are needed."
+	exit
+elif
+	[ "$ROOTspace" -lt "$ROOTneeds" ]  
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $ROOTspace blocks available"
+	echo "on the / (root) file system --"
+	echo "$ROOTneeds blocks are needed."
+	exit
+fi
+
+#
+# Shut down any existing lp system.
+#
+
+sh -c /usr/lib/lpshut 2>/dev/null >/dev/null
+
+cd ${INSPATH}
+echo "The following files are being installed:"
+find . -print | cpio -pduvm /
+
+#
+# Invoke setup file
+#
+
+/install/install/setup
+
+#
+# Give user closing message
+#
+
+echo "Installation of the ${PKGNAME} is complete."
+exit

@@ -1,0 +1,155 @@
+2 0 0 #ident
+12 
+15 
+705 3 5 65
+              BREAKPOINT DEBUGGING
+
+
+After entering "sdb" you can set breakpoints at certain lines 
+in your source program.  Then you start your program with an "sdb"
+command.  Execution of your program will continue until it
+is about to execute a line at which you have set a breakpoint.
+
+Your program will stop executing at this point, and you can 
+can use "sdb" commands to display the values of variables and the
+trace of function calls.  If your program is working correctly
+at this point, you can continue execution from the point at
+which it stopped.
+706 
+520 arrow
+520 redraw
+520 code1
+9 23 0 
+8 0 0 *8p
+15 
+1 1
+8 1 0 div2(i) {
+15 
+8 2 0 *
+18 
+15 
+8 18 7 The current line is line 8 of the source code.
+8 19 7 The command b will set a breakpoint at the current line. 
+2 0 11
+3 <
+34 alt
+700 r6 d8 r20 a1
+35 alt
+15 
+520 arrow
+2 0 11
+701 r7 d8 r20 a1
+520 clearbot
+520 instruct
+3 Use the command b to set a breakpoint at the current line.
+15 
+254 b
+253 %0%28b%0
+520 ansloopstr
+8 2001 0 div2:10 b
+15 
+8 2002 0 *
+15 
+18 
+520 clearbot
+705 19 7 63
+"sdb" echos the procedure name and the line number.  Notice that
+the breakpoint is set at the nearest line containing executable
+code for which "sdb" has line number information.
+706 
+2 21 65
+34 alt
+700 r9 u11 l9 a1
+35 alt
+15 
+520 arrow
+2 21 65
+701 r9 u11 l9 a1
+520 horline
+520 clearbot
+8 18 7 You can set a breakpoint at non-current lines by putting
+8 19 7 the line number before the command b
+520 instruct
+3 Set a breakpoint at line 4.
+253 %04b%0
+254 4b
+8 2000 0 *
+18 
+520 ansloopstr
+8 2001 0 main:4 b
+15 
+8 2002 0 *
+18 
+15 
+520 clearbot
+520 arrow
+520 clearbot
+8 19 7 The command B lists all breakpoints.
+15 
+520 instruct
+3 List all the breakpoints.
+8 2000 0 *
+18 
+254 B
+253 %0B%0
+520 ansloopstr
+8 2001 0 main:4 
+15 
+8 2002 0 div2:10
+15 
+8 2003 0 *
+15 
+520 clearbot
+520 arrow
+520 clearbot
+15 
+520 clearleft
+520 clearbot
+2 18 7
+19 
+705 3000 3000 63
+The command d will delete break points. For example, entering 4d
+will delete the breakpoint set at line 4.
+706 
+520 instruct
+3 Delete the breakpoint at line 4.
+254 4d
+253 %04d%0
+8 0 0 *
+18 
+15 
+520 ansloopstr
+8 2001 0 *
+15 
+18 
+520 clearbot
+520 instruct
+3 Delete the breakpoint at line 10.
+253 %010d%0
+254 10d
+520 ansloopstr
+8 2001 0 *
+15 
+18 
+520 clearbot
+520 instruct
+3 List all the breakpoints.
+253 %0B%0
+254 B
+520 ansloopstr
+8 2001 0 No breakpoints set
+8 2002 0 *
+15 
+520 clearbot
+520 arrow
+2 0 0
+12 
+8 3 15 SUMMARY OF BREAKPOINT COMMANDS
+705 6 6 43
+       b .... Set breakpoint at current line
+      Nb .... Set breakpoint at line N 
+       B .... List all breakpoints
+      Nd .... Delete breakpoint at line N
+       D .... Delete all breakpoints
+
+706 

@@ -1,0 +1,84 @@
+520 clearall #ident
+705 3 7 61
+          MOVING THROUGH A SOURCE FILE
+
+
+The "sdb" program provides commands that display selected 
+portions of the source files and that change the current line 
+in the source file.  These commands are similar to commands 
+used by the "ed" text editor.  
+706 
+520 arrow
+520 redraw
+520 code1
+8 0 0 * 
+18 
+8 19 7 For example, we can move to a line by number. 
+15 
+254 2p
+520 entercmd
+3 2: char **argv; { 
+15 
+8 2 0 * 
+15 
+18 
+520 arrow
+520 clearbot
+520 instruct
+3 Try it. Move to line 10 of testdiv2.c 
+15 
+253 %010%0%2p%0
+254 10p
+520 ansloopstr
+8 2001 0 10:   j = k>>1;
+15 
+18 
+8 2001 0 *
+18 
+15 
+8 21 3 That's the tenth line in the current source file. 
+15 
+520 arrow
+520 clearbot1
+15 
+705 19 7 53
+We can also move to a line in the current source file 
+using pattern matching.
+706 
+15 
+254 /^div2
+520 entercmd
+3 8: div2(k) {
+15 
+8 2002 0 *
+15 
+18 
+520 arrow
+520 clearbot
+520 instruct
+3 Move to line 11 by searching for 
+3 return
+15 
+254 /return
+253 %0/return%2/
+520 ansloopstr
+8 2001 0 11:   return(j);
+15 
+18 
+8 2001 0 *
+15 
+18 
+520 clearbot
+520 arrow
+2 0 0
+12 
+8 3 15 SUMMARY OF MOVING THROUGH FILE COMMANDS
+705 6 6 65
+       p .... Print the current line
+      Np .... Make N the current line and print it
+       w .... Print a window of 10 lines around the current line
+      ^D .... Scroll ten lines, and advance the current line by 10
+/PATTERN .... Search forward the next line with PATTERN
+?PATTERN .... Search backward for the next line with PATTERN
+706 
+15 

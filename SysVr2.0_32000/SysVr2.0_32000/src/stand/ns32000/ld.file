@@ -1,0 +1,11 @@
+_start = 0x0020;
+MEMORY {
+	valid : org = 0x70000, len = 0x40000000
+}
+SECTIONS {
+	.text	: { }
+	GROUP	ALIGN(0x200) : {
+		.data : { }
+		.bss : { }
+	}
+}

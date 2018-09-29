@@ -1,0 +1,24 @@
+
+\Slogin\S
+
+Syntax Summary:  login login_name [var_name=string ...]
+
+         where:  login_name  is a login name.
+
+                 var_name  is an environment variable name.
+
+                 string  is a sequence of characters delimited by white
+                         space and/or double quotes.
+
+Description:
+     The system invokes \Slogin\S when you establish a connection with a
+     computer that runs UNIX systems.  \Slogin\S requests your login name and
+     your password to identify you as a user of the system.  \Slogin\S then
+     sets up the characteristics of your terminal and identifies your user ID,
+     group ID, and current working directory.  If you have more than one login
+     name, and you want to login under another login name, you can use
+     \Slogin\S to log in again.  To replace the initial login you type "exec
+     \Slogin\S".  \Slogin\S can take your login name and environment variable
+     assignments as arguments. When you use it this way, \Slogin\S assigns or
+     reassigns the values of your environment variables.  See the manual pages
+     for \Slogin(1)\S for details on the environment variables.

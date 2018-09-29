@@ -1,0 +1,91 @@
+.TH X25HLNK 3C
+.SH NAME
+x25hlnk, x25dlnk \- halt or detach a \s-1BX\s+1.25 link
+.SH SYNOPSIS
+.nf
+.B #include <x25lib.h>
+.PP
+.B int x25hlnk (linkid, flags)
+.B int linkid;
+.B unsigned flags;
+.PP
+.B int x25dlnk (linkid, flags)
+.B int linkid;
+.B unsigned flags;
+.SH DESCRIPTION
+.I X25hlnk\^
+is used to halt a link; more precisely, to stop
+the level 2 protocol in the associated device
+and to stop the level 3 protocol in the \s-1UNIX\s+1 System driver
+for the link specified by
+.IR linkid .
+If a backup device has been attached and started, the level 2
+protocol on the backup will also be stopped.
+.PP
+.I X25dlnk
+is used to detach a
+.SM BX\*S.25
+logical link specified by
+.IR linkid .
+This removes the logical connections which were
+made by
+.IR x25alnk .
+.PP
+.I Linkid\^
+is the identifier for the link data structure
+which is used in the operating system.
+This identifier was set up by the
+.I x25alnk
+subroutine call.
+.PP
+.I Flags\^
+specifies the options for the halt or detach call.
+.PP
+The permissible
+.I flags\^
+bit settings for halt is:
+.RS
+.TP \w'\s-1LNKBACK\s+1\ \ 'u
+.SM LNKBACK
+halt only the level 2 protocol
+on the backup device. The level 3
+protocol must not be running on
+this backup device.
+.RE
+.PP
+The permissible
+.I flags\^
+bit settings for detach is:
+.RS
+.TP \w'\s-1LNKBACK\s+1\ \ 'u
+.SM LNKBACK
+detach a backup rather than a primary device.
+.RE
+.SH SEE ALSO
+ioctl(2),
+open(2),
+stat(2),
+perror(3C),
+x25alnk(3C),
+x25clnk(3C).
+.br
+x25pvc(1M), nc(7), vpm(7), x25(7) in the
+.IR "\s-1UNIX\s+1 System Administrator's Manual" .
+.br
+.IR "Operations Systems Network Protocol Specification: BX.25 Issue 2" ,
+Bell Laboratories.
+.SH DIAGNOSTICS
+.PD 0
+.TP \w'\s-1ELNKDNC\s+1\ \ 'u
+.SM ELNKNCO
+network control device \fIopen\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKNCI
+network control device \fIioctl\fP failed; check \fIerrno\fP.
+.TP
+.SM ELNKDS
+\fIstat\fP of physical device failed; check \fIerrno\fP.
+.TP
+.SM ELNKDNC
+file associated with device name not a character special device.
+.\"	@(#)x25hlnk.3c	5.2 of 5/18/82

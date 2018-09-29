@@ -1,0 +1,235 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/store	2.7"
+#menu# store files and directories of files onto removable media
+#help# 
+#help#	Store copies files from the built-in disk to removable media and allows
+#help#	you to optionally verify that they worked and to optionally remove them
+#help#	when done.  Typically, these would be files that you want to archive or
+#help#	restrict access to.  You can store single files and directories of
+#help#	files.  Use the "restore" command to list the files stored on the media
+#help#	and to put stored files back on the built-in disk.
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+ncpiocmd=ncpio
+ncpioargs=
+
+ddrive=`selectdevice -c $$ /dev/rSA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+verbose=-V
+chkflags="-f -qq -k$$"
+
+trap 'exit 0' 1 2  15
+
+umask 022
+trap '	trap "" 1 2
+	rm -f /tmp/$$store*' 0
+
+unset morehelp moreitems morenumbers
+
+while true
+do
+	case `checklist ${chkflags} -e -H'
+	Option 1 selects one file to be copied to removable media.
+	Option 2 selects the specified directory and all files and directories
+		below it.'"${morehelp}"'
+	You MUST use full path names when naming files and directories to be
+	stored.  After the copies have been made, you will be given the option
+	of REMOVING them all from the built-in disk.' \
+	"
+	1. Select a single file for storing.
+	2. Select all files under a directory for storing.${moreitems}
+Enter a number [?, q]:" 1 2 ${morenumbers}` in
+	1 )	# single file
+		sfile=`checkre ${chkflags} -e \
+			'Enter full path name of file to be stored [q]:
+	' \
+	'.' ' ' \
+	'^[^ ;	][^ ;	]*$' 'Blanks or tabs not permitted in the path name.' \
+	'^/' 'A full path name must begin with "/".' \
+	'[^/]$' 'No trailing "/" may be in the path name.' \
+	'/[^/]\{1,14\}$' 'No more than 14 characters in a path name.'`
+
+		if [ ! -f ${sfile} ]
+		then
+			echo "	Cannot find a file '${sfile}'."
+			if [ -d ${sfile} ]
+			then
+				echo "	That is a directory."
+			fi
+			continue
+		fi
+		echo ${sfile} >>/tmp/$$store1
+		;;
+	2 )	# all files in a directory
+		sfile=`checkre ${chkflags} -e \
+			'Enter full path name of directory to be stored [q]:
+	' \
+	'.' ' ' \
+	'^[^ ;	][^ ;	]*$' 'Blanks or tabs not permitted in the path name.' \
+	'^/' 'A full path name must begin with "/".' \
+	'[^/]$' 'No trailing "/" may be in the path name.' \
+	'/[^/]\{1,14\}$' 'No more than 14 characters in a file name.'`
+
+		if [ ! -d ${sfile} ]
+		then
+			echo "	Cannot find a directory '${sfile}'."
+			if [ -f ${sfile} ]
+			then
+				echo "	That is a file."
+			fi
+			continue
+		fi
+		find ${sfile} -print  |  sort >>/tmp/$$store1
+		;;
+	3 )
+		echo \\n `wc -l </tmp/$$store1` files selected so far.\\n
+		cat /tmp/$$store1
+		;;
+	4 )
+		echo \\n `wc -l </tmp/$$store1` files selected.\\n
+		break
+	esac
+	if [ -z "${morenumbers}" ]
+	then
+		morenumbers='3 4'
+		moreitems='
+	3. List files selected so far.
+	4. Store selected files.'
+		morehelp='
+	Option 3 shows the list of files you have been selecting.
+	Option 4 performs the actual copying of the files to the media.'
+	fi
+done
+
+if  checkyn ${chkflags} -H'
+	If you answer "yes", the name of each file will be printed as it
+	is being copied to the medium.  This could be useful should you need
+	to find a particular file later.
+	If you answer "no", then only a dot, ".", will be printed for each file
+	copied.
+	The "sysadm restore" procedure also lists the files from the medium.' \
+	'Print each file name as it is being stored?'
+then
+	verbose=-v
+fi
+
+msg=`date +"
+Before inserting the next part into the ${ndrive}, mark it:
+
+	Files stored on:
+	%a. %D, %r
+		part %%d
+ "`
+
+trap '	trap "" 1 2
+	rm -f /tmp/$$store*
+	echo You may now remove the medium.' 0
+
+while true
+do
+	# tell user to label medium
+	echo "${msg}"  |  sed '	s/the next /the first /
+				s/%d/1/'
+	# tell user to insert medium, then read internal disk label
+	l=`disklabel -n "${ndrive}" $$ ${ddrive}`
+
+	# assign disk label to fsname variable
+	eval `labelfsname "${l}"`
+
+	# alert user if medium is a file system since we will write it
+	if [ -n "${fsname}"  -a  -d "/${fsname}" ]
+	then
+		if  checkyn ${chkflags} "
+This is file system '${fsname}', labeled '${label}'.
+Do you wish to overwrite it?"
+		then
+			break
+		fi
+		echo '	Get another.'
+	else
+		break
+	fi
+done
+
+msg="Remove medium.
+${msg}
+Insert the next medium into the ${ndrive}.
+Press <RETURN> when ready. [q] "
+
+# now write the files out to the floppy
+if  ${ncpiocmd} ${ncpioargs} -oac -M"${msg}" ${verbose} -O${ddrive} \
+	</tmp/$$store1 
+then
+	echo 'Store complete.'
+else
+	echo "	There was some problem while trying to store the files.
+	See your Owner/Operator manual for help."
+	exit 1
+fi
+
+# after copying files, verify successful copy
+if  checkyn ${chkflags} -H'
+	If you answer "yes", all the files just stored will be checked
+	to confirm that they were successfully copied.
+	This means that you will have to re-insert all parts starting with
+	"part 1".' \
+	-f 'Do you want to verify that your file(s) were stored properly?'
+then
+	echo 'PLEASE NOTE:
+To verify that the store worked properly, you must re-insert
+all parts that were just written to, starting with "part 1".
+'
+	while true
+	do
+		# tell user to insert part
+		l=`disklabel $$ ${ddrive}`
+
+		# read disk to ensure that it is a cpio file
+		if  dd if=${ddrive} of=/tmp/$$store count=2 2>/dev/null
+		then
+			if  file /tmp/$$store  |
+				grep 'ASCII cpio archive' >/dev/null
+			then
+				break
+			else
+				echo '	This is not a "store" medium or it is 
+	not the first "store" part in a series.  Try again.'
+			fi
+		else
+			echo '	Unable to read.  Reinsert and try again.'
+		fi
+	done
+
+	# generate table of contents and
+	# compare original list of files with table of contents
+	if  ${ncpiocmd} ${ncpioargs} -ict -I${ddrive} >/tmp/$$store2  &&
+	    diff -b /tmp/$$store1 /tmp/$$store2 
+	then
+		echo 'Verification complete.'
+	else
+		echo '	Store did not work.  Could not verify files.
+	The medium may be bad or there is some other problem.
+	Get another and try again.'
+		exit 1
+	fi
+fi
+if  checkyn ${chkflags} -H'
+	If you answer "yes", the files you specified above will be
+	REMOVED from the built-in disk.  Your ONLY copy of these files will
+	be the copy that has just been stored.' \
+	-f 'Should the stored files be removed from the built-in disk?'
+then
+	sort -r </tmp/$$store1  |  xargs rm -rf
+	echo 'Removal complete.'
+fi

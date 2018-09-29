@@ -1,0 +1,68 @@
+0
+This line specifies whether user input for the current field is optional
+or required.  ASSIST users will not need to supply input for the current
+field if "optional" is specified here.  ASSIST user will need to provide
+at least one value for the current field if "required" is specified here.
+Use ^G or f1 to toggle the optional/required state.
+1
+This line specifies whether ASSIST users will be allowed to enter more 
+than one value for the current field, or will be prohibited from entering
+more than one value for the current field.  Use ^G or f1 to toggle the
+allowed/prohibited state.
+2
+This line specifies whether characters that are special to the shell
+will be expanded for the current field.  By default, when the ASSIST
+user input contains characters that are special to the shell (i.e.,
+$, *, ?, [...], and `), ASSIST will automatically expand the user
+input.  (Unlike "echo", ASSIST does not interpret escape conventions
+such as \b.)  You can enable/disable the special character expansion
+with this line.  Use ^G or f1 to toggle the enable/disable state.
+
+NOTE: This line will be automatically be set to "disabled" for mappings
+      in which user input ("A") never occurs on the command line. An
+      example is the "yes/no" type mapping, in which "y" is mapped onto
+      "-p", for example.
+3
+This line shows you a summary of the correspondence between user input 
+for the current field, and what will appear on the command line.  This is
+called mapping.  "A" denotes the user input.  Type ^G or f1 here to view
+a more complete description of the mapping, or to change the mapping.
+4
+This line tells you how many lines of an item help message have been
+written for the current field.  The item help message will be presented
+to the user when ^Y or f6 is entered while the cursor is resting on the
+current field.  You may write or edit the item help message by typing
+^G or f1 here.  You will then be placed in the editor.
+5
+This line tells you how many validations (or checks) will be performed
+on the user input entered for the current field.  You will move to the
+Validation screen by entering ^G or f1 here.  On the Validation screen
+you will see exactly what validations have been selected, and you may
+add, delete, or edit the validations for the current field.
+6
+This line tells you how many fields have been specified as 
+incompatible with the current field.  Specify fields as 
+incompatible if the options or arguments that they represent 
+when used in conjunction with one another will cause the 
+command not to execute (e.g., the command will issue an 
+error message) or not to execute in a reasonable way 
+(e.g., the command will silently ignore one of the options).  
+Type ^G or f1 to specify or modify the fields that are 
+incompatible with the current field.
+7
+This line tells you how many other fields on the command form are 
+required by the current field (MUST be used in conjunction with the 
+current field.  For example, the "-d" option of the "cut" command 
+will only work if the user also specifies the "-f" option.  Type ^G 
+or f1 to specify or modify the fields that are required by the 
+current field.
+8
+This line tells you how many other fields on the command form are part
+of a group of fields from which the user must select "at least one" to
+execute the command.  For example, the "cut" command requires either
+the "-f" or "-c" options.  Type ^G or f1 to specify or modify which
+fields are part of the "at least one" group.
+
+NOTE: You will need to specify fields as part of the "at least one"
+      group and as "incompatible" with the current field if the
+      specification you need is "at least one, and one and only one."

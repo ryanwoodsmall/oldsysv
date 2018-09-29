@@ -1,0 +1,330 @@
+.TH LINT 1 
+.SH NAME
+lint \- a C program checker
+.SH SYNOPSIS
+.B lint
+[ option ] ... file ...
+.SH DESCRIPTION
+.I Lint\^
+attempts to detect features of the C program files that are
+likely to be bugs, non-portable, or wasteful.
+It also checks type usage more strictly
+than the compilers.
+Among the things that are currently detected are
+unreachable statements,
+loops not entered at the top,
+automatic variables declared and not used,
+and logical expressions whose value is constant.
+Moreover, the usage of functions is checked to find
+functions that return values in some places and not in others,
+functions called with varying numbers or types of arguments,
+and functions whose values are not used
+or whose values are used but none returned.
+.PP
+Arguments whose names end with
+.B .c
+are taken to be C source files.
+Arguments whose names end with
+.B .ln
+are taken to be the result of an earlier invocation of
+.I lint\^
+with either the
+.BR \-c  " or the " \-o " option used."
+The
+.B .ln
+files are analogous to
+.B .o
+(object) files that are produced by the
+.IR cc (1)
+command when given a
+.B .c
+file as input.
+Files with other suffixes are warned about and ignored.
+.PP
+.I Lint\^
+will take all the
+.BR .c ","  .ln ,
+and
+.BI llib-l x .ln
+(specified by
+.BI \-l x\fR)
+files and process them in their command line order.
+By default,
+.I lint\^
+appends the standard C lint library
+.RB ( llib-lc.ln )
+to the end of the list of files.
+However, if the
+.B \-p
+option is used, the portable C lint library
+.RB ( llib-port.ln )
+is appended instead.
+When the
+.B \-c
+option is not used,
+the second pass of
+.I lint\^
+checks this list of files for mutual compatibility.
+When the
+.B \-c
+option is used, the
+.B .ln
+and the
+.BI llib-l x .ln
+files are ignored.
+.PP
+Any number of
+.I lint\^
+options may be used, in any order, intermixed with file-name arguments.
+The following options are used to suppress certain kinds of complaints:
+.TP
+.B \-a
+Suppress complaints about assignments of long values to variables that are not
+long.
+.TP
+.B \-b
+Suppress complaints about
+.B break
+statements that cannot be reached.
+(Programs produced by 
+.I lex\^
+or
+.I yacc\^
+will often result in many such complaints).
+.TP
+.B \-h
+Do not apply heuristic tests that attempt to intuit bugs, improve
+style, and reduce waste.
+.TP
+.B \-u
+Suppress complaints about functions and external
+variables used and not defined, or defined and not used.
+(This option is suitable for running
+.I lint\^
+on a subset of files of a larger program).
+.TP
+.B \-v
+Suppress complaints about unused arguments in functions.
+.TP
+.B \-x
+Do not report variables referred to by external declarations but never used.
+.PP
+The following arguments alter
+.IR lint 's
+behavior:
+.TP
+.BI \-l x\^
+Include additional lint library
+.BI llib-l x .ln .
+For example, you can include a lint version of the Math Library
+.B llib-lm.ln
+by inserting
+.B \-lm
+on the command line.  This argument does not suppress the default use of
+.BR llib-lc.ln .
+These lint libraries must be in the assumed directory.
+This option can be used to reference local lint libraries and is
+useful in the development of multi-file projects.
+.TP
+.B \-n
+Do not check compatibility against either the standard or the portable
+lint library.
+.TP
+.B \-p
+Attempt to check portability to other dialects
+(\s-1IBM\s0 and \s-1GCOS\s0) of C.
+Along with stricter checking,
+this option causes all non-external names to be truncated
+to eight characters and all external names
+to be truncated to six characters and one case.
+.TP
+.B \-c
+Cause
+.I lint\^
+to produce a
+.B .ln
+file for every
+.B .c
+file on the command line.
+These
+.B .ln
+files are the product of
+.IR lint 's
+first pass only, and are not checked for inter-function compatibility.
+.TP
+.BR \-o " lib"
+Cause
+.I lint\^
+to create a lint library with the name
+.BI llib-l lib .ln\fR.
+The
+.B \-c
+option nullifies any use of the
+.B \-o
+option.
+The lint library produced is the input that is given to
+.IR lint 's
+second pass.  The
+.B \-o
+option simply causes this file to be saved in the named lint library.
+To produce a
+.BI llib-l lib .ln
+without extraneous messages, use of the
+.B \-x
+option is suggested.  The
+.B \-v
+option is useful if the source file(s) for the lint library
+are just external interfaces (for example, the way the file
+.B llib-lc
+is written).  These option settings are also available through the
+use of ``lint comments'' (see below).
+.PP
+The
+.BR \-D ,
+.BR \-U ,
+and
+.B \-I
+options of
+.IR cpp (1)
+and the
+.B \-g
+and
+.B \-O
+options of
+.IR cc (1)
+are also recognized as separate arguments.
+The
+.BR \-g " and " \-O
+options are ignored, but, by recognizing these options,
+.IR lint 's
+behavior is closer to that of the
+.IR cc (1)
+command.
+Other options are warned about and ignored.
+The pre-processor symbol ``lint'' is defined to allow certain questionable
+code to be altered or removed for
+.IR lint .
+Therefore, the symbol ``lint'' should be thought of as a reserved word
+for all code that is planned to be checked by
+.IR lint .
+.PP
+Certain conventional comments in the C source
+will change the behavior of
+.IR lint :
+.RS
+.TP
+/\(**\s-1NOTREACHED\s0\(**/
+at appropriate points
+stops comments about unreachable code.
+(This comment is typically placed just after calls to functions like
+.IR exit (2)).
+.TP
+.RI /\(**\s-1VARARGS\s+1 n \(**/
+suppresses
+the usual checking for variable numbers of arguments
+in the following function declaration.
+The data types of the first
+.I n\^
+arguments are checked;
+a missing
+.I n\^
+is taken to be 0.
+.TP
+/\(**\s-1ARGSUSED\s0\(**/
+turns on the
+.B \-v
+option for the next function.
+.TP
+/\(**\s-1LINTLIBRARY\s0\(**/
+at the beginning of a file shuts off complaints about unused functions
+and function arguments in this file.  This is equivalent to using the
+.BR \-v " and " \-x
+options.
+.RE
+.PP
+.I Lint\^
+produces its first output on a per-source-file basis.
+Complaints regarding included files are collected and printed
+after all source files have been processed.
+Finally, if the
+.B \-c
+option is not used,
+information gathered from all input files is collected and checked for
+consistency.
+At this point,
+if it is not clear whether a complaint stems from a given source file or from
+one of its included files,
+the source file name will be printed followed by a question mark.
+.PP
+The behavior of the
+.B \-c
+and the
+.B \-o
+options allows for incremental use of
+.I lint\^
+on a set of C source files.
+Generally, one invokes
+.I lint\^
+once for each source file with the
+.B \-c
+option.
+Each of these invocations produces a
+.B .ln
+file which corresponds to the
+.B .c
+file, and prints all messages that are about just that source file.
+After all the source files have been separately run through
+.IR lint ,
+it is invoked once more (without the
+.B \-c
+option), listing all the
+.B .ln
+files with the needed
+.BI \-l x
+options.  This will print all the inter-file inconsistencies.
+This scheme works well with
+.IR make (1);
+it allows
+.I make\^
+to be used to
+.I lint\^
+only the source files that have been modified since
+the last time the set of source files were
+.IR lint ed.
+.SH FILES
+.PD 0
+.TP "\w'/usr/lib/llib-port.ln  'u"
+/usr/lib
+the directory where the lint libraries specified by the
+.BI \-l x
+option must exist
+.TP
+/usr/lib/lint[12]
+first and second passes
+.TP
+/usr/lib/llib-lc.ln
+declarations for C Library functions 
+(binary format; source is in
+.BR /usr/lib/llib-lc )
+.TP
+/usr/lib/llib-port.ln
+declarations for portable functions 
+(binary format; source is in
+.BR /usr/lib/llib-port )
+.TP
+/usr/lib/llib-lm.ln
+declarations for Math Library functions 
+(binary format; source is in
+.BR /usr/lib/llib-lm )
+.TP
+/usr/tmp/\(**lint\(**
+temporaries
+.PD
+.SH SEE ALSO
+cc(1), cpp(1), make(1).
+.SH BUGS
+.IR exit (2),
+.IR longjmp (3C),
+and other functions that do not return
+are not understood; this causes various lies.
+.\"	@(#)lint.1	6.2 of 9/2/83

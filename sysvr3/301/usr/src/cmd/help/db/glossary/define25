@@ -1,0 +1,25 @@
+
+\S file \S
+
+Files are storage areas.  The type of information stored in a file
+depends on the type of file that it is.  The list command, ls(1), 
+with an  "l" "option"\S*\S,  i.e., "ls -l", identifies
+the types of files using  these characters:
+
+	b block special  
+	c character special  
+	d directory  
+	p named pipe 
+	- ordinary  
+
+Most of your files are ordinary files and directories.  Ordinary
+files store text, data, programs, and other coded information.  
+
+Directories store files and other directories. "Block"\S*\S and
+character special files are used by the system to control input and
+output devices.  Ordinary users will rarely, if ever, have to use
+these two types of files.   Named "pipes"\S*\S are files containing
+programs that take the output of one command and use it as the input
+for another command.
+
+\S*\S defined in the \Sglossary\S

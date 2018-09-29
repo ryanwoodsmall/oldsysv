@@ -1,0 +1,16 @@
+
+\S angle brackets:  arrow \S
+
+  1.  Angle brackets (< >), mark variable names in the UNIX system help
+    facility.  These are variable names from the syntax summaries that 
+    are used in the description of the command.  Variable names represent 
+    the option arguments and operands in the syntax summary.  
+    When you type a command line, you don't type
+    the variable name, you substitute a value for the variable name.
+    Angle brackets inform you that what you are reading is a variable
+    that you substitute a value for.
+
+  2.  A left arrow, <, is used on a command line to redirect standard input
+    from a file to a command.  A right arrow, >, redirects the standard
+    output or standard error output from a command to a file.
+    (see:  redirection)

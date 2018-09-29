@@ -1,0 +1,27 @@
+.TH ABT 1M "3B20S only"
+.SH NAME
+abt \- abort on-line diagnostics
+.SH SYNOPSIS
+.B /dgn/bin/abt
+slot
+.SH DESCRIPTION
+\fIAbt\fP is a diagnostic command
+which terminates the diagnostic
+request
+indicated by the \fIslot\fP.
+\fISlot\fP is a number
+from 0 to 9 reported by
+the Maintenance Input Request Administrator
+(\s-1MIRA\s+1) whenever a \fIdgn\fP(1M) or \fIrst\fP(1M)
+command is invoked.
+.SH "SEE ALSO"
+dgn(1M),
+dstart(1M),
+rst(1M).
+.br
+\fI3B DMERT Output Messages\fP,
+OM-4C000-01.
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)abt.1m	5.2 of 5/18/82

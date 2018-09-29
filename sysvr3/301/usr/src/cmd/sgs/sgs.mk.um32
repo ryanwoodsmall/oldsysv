@@ -1,0 +1,40 @@
+#ident	"@(#)sgs:sgs.mk.um32	1.3"
+#	3b15/3b5/3b2 Cross-SGS Global Makefile
+#	PATHEDIT MUST BE RUN BEFORE THIS MAKEFILE IS USED!
+#
+#
+
+BINDIR=
+SGS=
+
+all:	install libs
+libs:
+	cd ../../lib; $(BINDIR)/$(SGS)env make -f lib.mk install
+	cd xenv/m32; \
+		$(BINDIR)/$(SGS)env make libshrink; \
+		$(BINDIR)/$(SGS)env make libinstall; \
+		$(BINDIR)/$(SGS)env make libshrink;
+
+install:  sgs
+	cd xenv/m32; make install
+
+first:
+	cd xenv/m32; make first
+
+sgs:	
+	cd xenv/m32; $(MAKE) all
+
+uninstall:
+	cd xenv/m32; make uninstall
+
+save:
+	cd xenv/m32; make save
+
+shrink:	clobber
+	if [ -f "$(BINDIR)/$(SGS)env" ] ; \
+	then \
+		cd ../../lib; $(BINDIR)/$(SGS)env make -f lib.mk clobber ; \
+	fi
+
+clobber:
+	cd xenv/m32; make shrink

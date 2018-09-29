@@ -1,0 +1,23 @@
+#  macref table of contents formatter
+start	toc = ""
+
+read	line = syspit		/f(done)
+
+	line *name* "	" = ""	/f(read)
+	line *ref* name "-m" *num* "#"	/f(read)
+	ttt = ref name
+	toc ttt		/f(read1)
+	ttt toc		/s(read)
+read1	num *ttt* " " = ttt		/s(read1)
+	toc = ref name
+	name = ref name "........"
+	name *name/"9"*
+	num = "...." num "	"
+	num ** *num/"4"* "	"
+read3	syspot = name ".." num	/(read)
+
+done	"" toc			/f(end)
+	syspot = ""
+	syspot = "No Macros Defined."
+
+end	bye bye "@(#)macrtoc.sno	1.2"

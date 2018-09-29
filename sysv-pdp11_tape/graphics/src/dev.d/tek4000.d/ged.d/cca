@@ -1,0 +1,10 @@
+# @(#)cca	1.2
+for i
+do prog=`echo $i | sed "s/\.c//"`
+   cc -c ${prog}.c
+   prog=`echo $prog | sed "s/\-.* / /"`	#remove options
+   ar r ged.a ${prog}.o
+   rm ${prog}.o
+   chmod 644 ged.a
+   echo "${prog} done"
+done

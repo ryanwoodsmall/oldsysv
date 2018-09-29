@@ -1,0 +1,7 @@
+#ident	"@(#)sadmin:admin/menu/machinemgmt/DESC	1.2"
+#menu# machine management menu
+
+#help# 
+#help#	Machine Management functions are tools used to operate the
+#help#	machine, e.g., turn it off, reboot, or go to the firmware monitor.
+#head# 			MACHINE MANAGEMENT

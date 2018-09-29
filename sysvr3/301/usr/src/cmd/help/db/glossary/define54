@@ -1,0 +1,13 @@
+
+\S shell: shell level:  shell command level \S
+
+The shell is a program that handles all communication between you and a
+UNIX system. The shell interprets command lines, causes the appropriate
+programs to be executed, and provides the "environment"\S*\S at your
+terminal. As part of the environment, the shell provides a prompt when it
+is waiting for input from you.  When you execute UNIX system commands in
+response to prompts from the shell, you are at shell level or at shell
+command level.
+(see also:  shell language, shell program, shell variable, and UNIX.)
+
+\S*\S defined in the \Sglossary\S

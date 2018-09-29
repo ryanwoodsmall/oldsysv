@@ -1,0 +1,38 @@
+/dev/null
+1422 200
+d--755 0 3
+install d--775 0 3
+	INSTALL		---555 2 2	./install/sgs/INSTALL.sgs
+	Rlist		---775 2 2	./install/sgs/Rlist.sgs
+	UNINSTALL	---555 2 2	./install/sgs/UNINSTALL.sgs
+	ORDER		---555 2 2	./install/sgs/ORDER3
+$		
+new	d--775 0 3
+	lib	d--775 0 3
+		optim	---775 2 2	../lib/optim
+		nmawk	---664 2 2	../lib/nmawk
+		libPW.a	---664 2 2	../lib/libPW.a
+	$
+	usr	d--775 0 3
+		options	d--775 0 3
+			sgs.name	---555	2 2	./install/sgs/sgs.name
+		$
+		lib	d--775 0 3
+			libmalloc.a	---664	2 2	../usr/lib/libmalloc.a
+			llib-lmalloc.l	---664	2 2	../usr/lib/llib-lmalloc.l
+			libp	d--775 0 3
+				libc.a	---664	2 2	../usr/lib/libp/libc.a
+				libm.a	---664	2 2	../usr/lib/libp/libm.a
+				libmalloc.a	---664	2 2	../usr/lib/libp/libmalloc.a
+			$
+		$
+		bin	d--775 2 2
+			m4	---775	2 2	../usr/bin/m4
+			tsort	---775	2 2	../usr/bin/tsort
+		$
+	$
+$
+$
+$
+$
+#ident	"@(#)pkg.sgs:proto3.sgs	1.11"

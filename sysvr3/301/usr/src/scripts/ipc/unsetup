@@ -1,0 +1,9 @@
+#ident	"@(#)pkg.ipc:ipc/unsetup	1.2"
+#
+# Deinstall IPC "drivers"
+#
+DRVPATH=/etc/master.d
+/etc/drvinstall -u -m $DRVPATH/msg -v 1.0
+/etc/drvinstall -u -m $DRVPATH/sem -v 1.0
+/etc/drvinstall -u -m $DRVPATH/shm -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/ipc -v 1.0

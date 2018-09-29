@@ -1,0 +1,15 @@
+
+   The UNDELETE command is a Wastebasket command which allows  you  to
+   "undelete"  an  object that is in the Wastebasket.  The object will
+   be returned to the folder in the Filecabinet that it was in when it
+   was deleted.
+
+   To UNDELETE a Wastebasket object use one of the following  options.
+   If an object is not specified the current object is assumed.
+
+      - Command Menu - Select UNDELETE + RETURN
+
+      - Typed Command - Type undelete [object_name] + RETURN
+
+   The object will be removed from the Wastebasket and reappear in the
+   Filecabinet folder from which it was deleted.

@@ -1,0 +1,21 @@
+#	@(#)libl.rc	1.1
+cc -O -c lib/*.c
+rm -f libl.a
+ar rv libl.a *.o
+rm -f *.o
+
+cp libl.a /usr/lib
+chown bin /usr/lib/libl.a
+chgrp bin /usr/lib/libl.a
+chmod 644 /usr/lib/libl.a
+rm -f libl.a
+
+cp lib/ncform /usr/lib/lex/ncform
+chown bin /usr/lib/lex/ncform
+chgrp bin /usr/lib/lex/ncform
+chmod 644 /usr/lib/lex/ncform
+
+cp lib/nrform /usr/lib/lex/nrform
+chown bin /usr/lib/lex/nrform
+chgrp bin /usr/lib/lex/nrform
+chmod 644 /usr/lib/lex/nrform

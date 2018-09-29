@@ -1,0 +1,65 @@
+*#ident	"@(#)kern-port:master.d/stubs	10.14"
+*
+*  STUBS
+*      Used to define all functions referenced in the kernel
+*	but not required by the system (emphasis on required)
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ox
+						prfintr(){}
+						msgsys(){nosys}
+						semsys(){nosys}
+						semexit(){}
+						shmsys(){nosys}
+						shmexec(){}
+						shmexit(){}
+						shmfork(){}
+						shmslp(){true}
+						shmtext(){}
+						shmseg(){false}
+						xtin(){}
+						xtout(){}
+						xtvtproc(){}
+						errlayer(){}
+						sxtin(){}
+						sxtout(){}
+						debuginit(){}
+						mau_fault(){}
+						mau_setup(){}
+						mau_save(){}
+						mau_restore(){}
+						mau_pfault(){}
+						mtcrchk(){}
+						advfs(){nopkg}
+						unadvfs(){nopkg}
+						rfstart(){nopkg}
+						rfstop(){nopkg}
+						rfsys(){nopkg}
+						rlink(){nopkg}
+						rmount(){nopkg}
+						rumount(){nopkg}
+						dustat(){noreach}
+						racct(){noreach}
+						clrcookie(){}
+						cpcookie(){noreach}
+						del_sndd(){noreach}
+						eqcookie(){noreach}
+						rcopyin(){noreach}
+						rcopyout(){noreach}
+						rdebug(){nopkg}
+						remfileop(){noreach}
+						remote_call(){noreach}
+						riget(){noreach}
+						rnamei1(){noreach}
+						rnamei2(){noreach}
+						rnamei3(){noreach}
+						rnamei4(){noreach}
+						rlbumount(){noreach}
+						remio(){noreach}
+						unremio(){noreach}
+						rfubyte(){noreach}
+						rfuword(){noreach}
+						rsubyte(){noreach}
+						rsuword(){noreach}
+						rem_date(){}
+						duustat(){nopkg}

@@ -1,0 +1,89 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/printers/delete_p	1.4"
+## IDOC:   SCREEN 2.30: DELETE PRINTER
+#menu# Delete a printer
+
+##+++ (help _H75)
+#help#        You use the "delete" command to remove a  printer  from  the
+#help#        print  service.  No more print requests will be accepted for
+#help#        it,  no  more  files  will  be  printed  on  it,   and   the
+#help#        configuration  information  will  be destroyed.  However, if
+#help#        there are print requests currently queued for  the  printer,
+#help#        you cannot remove it; you should use the "lpmove" command to
+#help#        move  these  requests  to  another  printer before trying to
+#help#        delete the printer they are queued for.
+##--- (help _H75)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+DEF_x=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.30.1)
+chk_name \
+	"Enter the name of the printer:${DEF_x:+ (default: ${DEF_x})}" \
+	"${DEF_x}" \
+	"\
+        You are expected to enter the name of the printer  you  want
+        to delete.  If you don't know the name, enter \"q\" and select
+        the \"status\" command from the \"printers\" menu, to get a list
+        of  known  printers.   You  CANNOT  delete  a  printer  that
+        currently has print requests queued.  These will have to  be
+        moved to another printer, or allowed to finish printing.  If
+        this is the case, enter a \"q\", go  back  to  the  \"requests\"
+        menu  under  the  main  \"lpmgmt\" menu, and select the \"move\"
+        command to move the requests.  If you'd  rather  just  wait,
+        use  the  \"reject\"  command in the \"printers\" menu to reject
+        further print requests for this printer.  \
+"
+OPT_x=${RESP}
+##--- (2.30.1)
+
+
+##+++ (2.30.2)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        Enter a \"n\" (for no) if you made  a  mistake  and  gave  the
+        wrong  printer  name.   Otherwise, enter a \"y\" (for yes) and
+        the  printer  you  named  will  be  deleted  and   all   its
+        configuration information DESTROYED.  \
+" \
+	"Are you sure?${DEF:+ (default: ${DEF})}"
+then
+	repeat=no
+	if /usr/lib/lpadmin -x ${OPT_x}
+	then
+		echo "Printer ${OPT_x} deleted."
+		if [ "${DEF_x}" = "${OPT_x}" ]
+		then
+			rm -f ${TMPDIR:-/tmp}/PRT.`basename \`tty\``
+		fi
+		break
+	fi
+else
+	break
+fi
+##--- (2.30.2)
+done

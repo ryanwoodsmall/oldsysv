@@ -1,0 +1,46 @@
+.TH DIRCMP 1
+.SH NAME
+dircmp \- directory comparison
+.SH SYNOPSIS
+.B dircmp
+[
+.B \-d
+] [
+.B \-s
+] [
+.BI \-w "n"
+]
+dir1 dir2
+.SH DESCRIPTION
+.I Dircmp\^
+examines
+.I dir1\^
+and
+.I dir2\^
+and generates various tabulated information
+about the contents of the directories. Listings
+of files that are unique to each directory are generated
+for all the options.
+If no option is entered,
+a list is output indicating whether the
+filenames common to both directories
+have the same contents.
+.TP
+.B \-d
+Compare the contents of files with the same name in
+both directories and output a list telling what must
+be changed in the two files to bring them into agreement.
+The list format is described in
+.IR diff (1).
+.TP
+.B \-s
+Suppress messages about identical files.
+.TP
+\fB\-w\fP\^\fIn\fP
+Change the width of the output line to
+.I n
+characters.
+The default width is 72.
+.SH SEE ALSO
+cmp(1), diff(1).
+.\"	@(#)dircmp.1	6.2 of 9/2/83

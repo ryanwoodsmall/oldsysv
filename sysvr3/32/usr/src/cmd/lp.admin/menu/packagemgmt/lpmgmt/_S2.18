@@ -1,0 +1,135 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/_S2.18	1.3"
+## IDOC:   SCREEN 2.18: SPECIFY PAGE SIZE AND PRINT PITCH
+
+##+++ (functions)
+chk_scaled_decimal_number () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!scaled-decimal-number!}" \
+		'^[0-9]\{1,\}\.[0-9]*[ic]\{0,1\}$' -o \
+		'^[0-9]*\.[0-9]\{1,\}[ic]\{0,1\}$' -o \
+		'^[0-9]\{1,\}[ic]\{0,1\}$' \
+			'You must give a decimal number, optionally followed by \
+				an "i" or "c" to scale it to inches or centimeters.' \
+	`
+}
+##--- (functions)
+
+
+while true
+do
+
+##+++ (2.18.1)
+chk_scaled_decimal_number \
+	"Page length:${DEF_length:+ (default: ${DEF_length})}" \
+	"${DEF_length}" \
+	"\
+        You are expected to enter a number, possibly followed  by  a
+        \"i\"  or  \"c\", that specifies the length of the page on which
+        to print.  A trailing \"i\" would scale the number to  inches,
+        a  trailing  \"c\"  would scale it to centimeters; leaving out
+        either letter means the value is the number of lines.   Just
+        press  return  if  the length doesn't matter or if you don't
+        want to change the default shown.  \
+"
+OPT_length=${RESP}
+
+	if [ ${OPT_length} != 0 ]
+	then
+		break
+	else
+		echo \
+"	You must supply a positive scaled decimal number."
+	fi
+done
+##--- (2.18.1)
+
+while true
+do
+
+##+++ (2.18.2)
+chk_scaled_decimal_number \
+	"Page width:${DEF_width:+ (default: ${DEF_width})}" \
+	"${DEF_width}" \
+	"\
+        You are expected to enter a number, possibly followed  by  a
+        \"i\" or \"c\", that specifies the width of the page on which to
+        print.  A trailing \"i\" would scale the number to  inches,  a
+        trailing  \"c\"  would  scale  it  to centimeters; leaving out
+        either letter means the value  is  the  number  of  columns.
+        Just  press  return  if  the  width doesn't matter or if you
+        don't want to change the default shown.  \
+"
+OPT_width=${RESP}
+
+	if [ ${OPT_width} != 0 ]
+	then
+		break
+	else
+		echo \
+"	You must supply a positive scaled decimal number."
+	fi
+done
+
+##--- (2.18.2)
+
+
+while true
+do
+
+##+++ (2.18.3)
+chk_scaled_decimal_number \
+	"Lines per inch:${DEF_lpi:+ (default: ${DEF_lpi})}" \
+	"${DEF_lpi}" \
+	"\
+        You are expected to enter a number, possibly followed  by  a
+        \"i\"  or \"c\", that specifies the line spacing (line pitch) to
+        be used to print your files.  A trailing \"i\" would scale the
+        number  to  lines per inch, a trailing \"c\" would scale it to
+        lines per centimeter; leaving out either letter also  scales
+        it to lines per inch.  Just press return if the line spacing
+        doesn't matter or if you don't want to  change  the  default
+        shown.  \
+"
+OPT_lpi=${RESP}
+
+	if [ ${OPT_lpi} != 0 ]
+	then
+		break
+	else
+		echo \
+"	You must supply a positive scaled decimal number."
+	fi
+done
+
+##--- (2.18.3)
+
+while true
+do
+
+##+++ (2.18.4)
+chk_scaled_decimal_number \
+	"Characters per inch:${DEF_cpi:+ (default: ${DEF_cpi})}" \
+	"${DEF_cpi}" \
+	"\
+        You are expected to enter a number, possibly followed  by  a
+        \"i\"  or  \"c\",  that  specifies the column spacing (character
+        pitch) to be used to print your files.  A trailing \"i\" would
+        scale  the  number to columns per inch, a trailing \"c\" would
+        scale it to  columns  per  centimeter;  leaving  out  either
+        letter  also  scales  it  to  columns  per inch.  Just press
+        return if the column spacing doesn't matter or if you  don't
+        want to change the default shown.  \
+"
+OPT_cpi=${RESP}
+
+	if [ ${OPT_cpi} != 0 ]
+	then
+		break
+	else
+		echo \
+"	You must supply a positive scaled decimal number."
+	fi
+done
+
+##--- (2.18.4)

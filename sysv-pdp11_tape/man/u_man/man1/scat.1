@@ -1,0 +1,61 @@
+.TH SCAT 1
+.SH NAME
+scat \- concatenate and print files on synchronous printer
+.SH SYNOPSIS
+.B scat
+[
+.B \-u
+]
+[
+.B \-s
+]
+file .\|.\|.
+.SH DESCRIPTION
+.I Scat\^
+reads each
+.I file\^
+in sequence
+and writes it on the standard output,
+which is assumed to be a synchronous printer device.
+Thus:
+.PP
+.RS
+scat file > /dev/sp0
+.RE
+.PP
+prints the file, and:
+.PP
+.RS
+cat file1 file2 > /dev/sp0
+.RE
+.PP
+concatenates
+.I file1\^
+and
+.I file2\^
+and places the result on the printer.
+.PP
+If no input file is given,
+or if the argument
+.B \-
+is encountered,
+.I scat\^
+reads from the standard
+input file.
+Output is buffered in 512-byte blocks unless the
+.B \-u
+option is specified.
+The
+.B \-s
+option makes
+.I scat\^
+silent about non-existent files.
+.SH SEE ALSO
+cp(1), pr(1), stty(1).
+.SH WARNINGS
+.I Scat\^
+uses synchronous printers in line mode with the wrap around option enabled.
+This means that the maximum line length is 79 characters;
+longer lines will be wrapped back to the beginning of the next line each
+time the end of a printer line is reached.
+.\"	@(#)scat.1	5.2 of 5/18/82

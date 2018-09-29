@@ -1,0 +1,29 @@
+#ident	"@(#)pkg.help:help/UNINSTALL	1.8"
+#
+# UNINSTALL the Help Facility
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/help.name`
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -fr $i
+done
+echo "The ${PKGNAME} has been removed."
+
+# If SCCS is on the machine, reinstall the old help command
+
+if [ -s /usr/options/sccs.name ]
+then
+	cp /usr/lib/help/lib/help /usr/bin/help
+fi

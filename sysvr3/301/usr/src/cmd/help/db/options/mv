@@ -1,0 +1,7 @@
+
+\Smv\S:  Options
+
+     -f   moves the file without asking questions even if you do not have write
+          permission for the directory the file is moving from and the 
+          directory it is moving to.  Does not print an error message if the 
+          command fails.

@@ -1,0 +1,196 @@
+500 redraw
+2 0 0 #ident
+12 
+2 0 40
+34 alt
+700 d17
+2 16 0
+700 r80
+35 alt
+8 23 47 [
+330 
+8 1000 1001 for WALKTHRU COMMANDS]
+510 
+500 horline
+2 16 0
+34 alt
+700 r80
+35 alt
+510 
+500 arrow
+8 23 47 [
+330 
+8 1000 1001 for WALKTHRU COMMANDS]
+2 23 3
+30 
+3 -->
+31 
+256 13 32
+8 23 7 Strike the RETURN key to continue 
+25 
+15 
+20 
+200 1
+245 10000
+32 
+20 
+250 
+2 23 0
+11 
+15 
+510 
+500 clearbot
+2 17 0
+12 
+8 23 47 [
+330 
+8 1000 1001 for WALKTHRU COMMANDS]
+15 
+510 
+500 clearbot1
+2 18 0
+12 
+15 
+510 
+500 code1
+2 0 41
+19 
+705 0 41 33
+$ pr -n -t testdiv2.c
+1 main(argc, argv)
+2 char **argv; {
+3   int i;
+4   i = div2(atoi(argv[1]));
+5   printf("%s/2 = %d\n",argv[1]);
+6 }
+7 int k;
+8 div2(k) {
+9   int j;
+10   j = k>>1;
+11   return(j);
+12 }
+706 
+510 
+500 code2
+2 0 41
+19 
+705 0 41 33
+$ pr -n -t testdiv2.c
+1 main(argc, argv)
+2 char **argv; {
+3   int i;
+4   i = div2(atoi(argv[1]));
+5   printf("%s/2 = %d\n",argv[1]);
+6 }
+$ pr -n -t div2.c
+1 int k;
+2 div2(k) {
+3   int j;
+4   j = k>>1;
+5   return(j);
+6 }
+706 
+510 
+500 clearleft
+2 0 0
+253 @$#@
+18 
+210 16 
+245 1
+7 32 39
+2 2001 0
+18 
+250 
+15 
+510 
+500 ansloopstr
+2 2000 2000
+25 
+15 
+21 37
+210 1
+245 3
+32 
+2 22 0
+11 
+15 
+30 
+8 22 4  The command is  
+255 
+31 
+8 1000 1001 (You entered 
+320 
+8 1000 1001 )
+15 
+252 8
+8 23 4  Try entering the command again.
+15 
+8 2000 0 *                                       
+2 2000 1
+18 
+25 
+15 
+21 37
+247 
+9 22 4 
+9 23 4 There seems to be a problem. Let me type the answer.
+12 
+15 
+1 2
+2 2000 1
+255 
+15 
+1 1
+18 
+2 2001 0
+15 
+1 1
+250 
+2 22 0
+12 
+15 
+510 
+500 entercmd
+1 2
+2 2000 1
+255 
+15 
+1 2
+2 2001 0
+15 
+1 2
+510 
+500 instruct
+30 
+8 21 3 -->
+31 
+2 1000 1001
+15 
+510 
+500 clearall
+2 0 0
+12 
+15 
+510 
+500 code3
+2 0 41
+19 
+705 0 41 32
+pr -n -t testrepeat.c
+1   char **argv; int i;
+2   main(argc,argv){
+3     repeat(3);
+4   }
+5   repeat(i) {
+6     char *p, mybuf[512];
+7     int j,k=0; p = argv[1];
+8     while (*p !=  '\n') {
+9       for(j = 0;j < i;j++,k++){
+10        mybuf[k] = *p;
+11      }
+12    p++;
+13    }
+14    printf("%s", mybuf);
+15  }
+706 
+510 

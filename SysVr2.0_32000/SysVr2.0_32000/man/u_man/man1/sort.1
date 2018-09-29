@@ -1,0 +1,340 @@
+.TH SORT 1
+.SH NAME
+sort \- sort and/or merge files
+.SH SYNOPSIS
+.B sort
+.RB [ \-cmu ]
+.RB [ \-o output]
+.RB [ \-y kmem]
+.RB [ \-z recsz]
+.RB [ \-dfiMnr ]
+.RB [ \-bt x]
+.RB [ + pos1
+.RB [ \- pos2]]
+[files]
+.SH DESCRIPTION
+.I Sort
+sorts
+lines of all the named files together
+and writes the result on
+the standard output.
+The standard input is read if
+.B \-
+is used as a file name
+or no input files are named.
+.PP
+Comparisons are based on one or more sort keys extracted
+from each line of input.
+By default, there is one sort key, the entire input line,
+and ordering is lexicographic by bytes in machine
+collating sequence.
+.PP
+The following options alter the default behavior:
+.TP 5
+.B \-c
+Check that the input file is sorted according to the ordering rules;
+give no output unless the file is out of sort.
+.TP
+.B \-m
+Merge only, the input files are already sorted.
+.TP
+.B \-u
+Unique: suppress all but one in each
+set of lines having equal keys.
+.TP
+.BI \-o output
+The argument given is the name of an output file
+to use instead of the standard output.
+This file may be the same as one of the inputs.
+There may be optional blanks between
+.B \-o
+and
+.IR output.
+.TP
+.BI \-y kmem
+The amount of main memory used by the sort
+has a large impact on its performance.
+Sorting a small file in a large amount
+of memory is a waste.
+If this option is omitted,
+.I sort
+begins using a system default memory size,
+and continues to use more space as needed.
+If this option is presented with a value,
+.IR kmem ,
+.I sort
+will start using that number of kilobytes of memory,
+unless the administrative minimum or maximum is violated,
+in which case the corresponding extremum will be used.
+Thus,
+.BR \-y 0
+is guaranteed to start with minimum memory.
+By convention,
+.B \-y
+(with no argument) starts with maximum memory.
+.TP
+.BI \-z recsz
+The size of the longest line read is recorded
+in the sort phase so buffers can be allocated
+during the merge phase.
+If the sort phase is omitted via the
+.B \-c
+or
+.B \-m
+options, a popular system default size will be used.
+Lines longer than the buffer size will cause
+.I sort
+to terminate abnormally.
+Supplying the actual number of bytes in the longest line
+to be merged (or some larger value)
+will prevent abnormal termination.
+.PP
+The following options override the default ordering rules.
+.TP 5
+.B \-d
+``Dictionary'' order: only letters, digits and blanks (spaces and tabs)
+are significant in comparisons.
+.TP
+.B \-f
+Fold lower case
+letters into upper case.
+.TP
+.B \-i
+Ignore characters outside the
+.SM ASCII
+range 040-0176
+in non-numeric comparisons.
+.TP
+.B \-M
+Compare as months.
+The first three non-blank characters
+of the field are folded to upper case
+and compared so that ``\s-1JAN\s+1'' < ``\s-1FEB\s+1'' < .\|.\|. < ``\s-1DEC\s+1''.
+Invalid fields compare low to ``\s-1JAN\s+1''.
+The
+.B \-M
+option implies the
+.BR \-b
+option (see below).
+.TP
+.B \-n
+An initial numeric string,
+consisting of optional blanks, optional minus sign,
+and zero or more digits with optional decimal point,
+is sorted by arithmetic value.
+The
+.B \-n
+option implies the
+.B \-b
+option (see below).
+Note that the
+.B \-b
+option is only effective when restricted sort key
+specifications are in effect.
+.TP
+.B \-r
+Reverse the sense of comparisons.
+.PP
+When ordering options appear before restricted
+sort key specifications, the requested ordering rules are
+applied globally to all sort keys.
+When attached to a specific sort key (described below),
+the specified ordering options override all global ordering options
+for that key.
+.PP
+The notation
+.BI + pos1
+.BI \- pos2
+restricts a sort key to one beginning at
+.I pos1
+and ending at
+.IR pos2 .
+The characters at positions
+.I pos1
+and
+.I pos2
+are included in the sort key (provided that
+.I pos2
+does not precede
+.IR pos1 ).
+A missing
+.BI \- pos2
+means the end of the line.
+.PP
+Specifying
+.I pos1
+and
+.I pos2
+involves the notion of a field,
+a minimal sequence of characters followed
+by a field separator or a new-line.
+By default, the first blank (space or tab) of a sequence of
+blanks acts as the field separator.
+All blanks in a sequence of blanks are considered to be
+part of the next field; for example,
+all blanks at the beginning of a line are considered to be part of
+the first field.
+The treatment of field separators can be altered using the options:
+.TP 5
+.BI \-t x
+Use
+.I x
+as the field separator character;
+.I x
+is not considered to be part of a field
+(although it may be included in a sort key).
+Each occurrence of
+.I x
+is significant
+(e.g.,
+.I xx
+delimits an empty field).
+.TP
+.B \-b
+Ignore leading blanks when determining the starting and ending
+positions of a restricted sort key.
+If the
+.B \-b
+option is specified before the first
+.BI + pos1
+argument, it will be applied to all
+.BI + pos1
+arguments.
+Otherwise, the
+.B b
+flag may be attached independently to each
+.BI + pos1
+or
+.BI \- pos2
+argument (see below).
+.PP
+.I Pos1
+and
+.I pos2
+each have the form
+.IB m . n
+optionally followed by one or more of the flags
+.BR bdfinr .
+A starting position specified by
+.BI + m . n
+is interpreted to mean the
+.IR n +1st
+character in the
+.IR m  +1st
+field.
+A missing
+.BI . n
+means
+.BR . 0,
+indicating the first character of the
+.IR m +1st
+field.
+If the
+.B b
+flag is in effect
+.I n
+is counted from the first non-blank in the
+.IR m +1st
+field;
+.BI + m . \fR0 b
+refers to the first non-blank character in the
+.IR m +1st
+field.
+.PP
+A last position specified by
+.BI \- m . n
+is interpreted to mean the
+.IR n th
+character (including separators) after the last character of the
+.I m th
+field.
+A missing
+.BI . n
+means
+.BR . 0,
+indicating the last character of the
+.IR m th
+field.
+If the
+.B b
+flag is in effect
+.I n
+is counted from the last leading blank in the
+.IR m +1st
+field;
+.BI \- m . \fR1 b
+refers to the first non-blank in the
+.IR m +1st
+field.
+.PP
+When there are multiple sort keys, later keys
+are compared only after all earlier keys
+compare equal.
+Lines that otherwise compare equal are ordered
+with all bytes significant.
+.PP
+.SH EXAMPLES
+Sort the contents of
+.I infile
+with the second field as the sort key:
+.IP
+sort +1 \-2 infile
+.PP
+Sort, in reverse order, the contents of
+.I infile1
+and
+.IR infile2 ,
+placing the output in
+.I outfile
+and using the first character of the second field 
+as the sort key:
+.IP
+sort \-r \-o outfile +1.0 \-1.2 infile1 infile2
+.PP
+Sort, in reverse order, the contents of
+.I infile1
+and
+.I infile2
+using the first non-blank character of the second field 
+as the sort key:
+.IP
+sort \-r +1.0b \-1.1b infile1 infile2
+.PP
+Print the password file
+.RI [ passwd (4)]
+sorted by the numeric user
+.SM ID
+(the third colon-separated field):
+.IP
+sort \-t: +2n \-3 /etc/passwd
+.PP
+Print the lines of the already sorted file
+.IR infile ,
+suppressing all but the first occurrence of lines
+having the same third field
+(the options
+.B \-um
+with just one input file make the choice of a unique
+representative from a set of equal lines predictable):
+.IP
+sort \-um +2 \-3 infile
+.SH FILES
+/usr/tmp/stm???
+.SH SEE ALSO
+comm(1),
+join(1),
+uniq(1).
+.SH DIAGNOSTICS
+Comments and exits with non-zero status for various trouble
+conditions
+(e.g., when input lines are too long),
+and for disorder discovered under the
+.B \-c
+option.
+.SP
+When the last line of an input file is missing a
+.B new-line
+character,
+.I sort
+appends one, prints a warning message, and continues.
+.\"	@(#)sort.1	6.3 of 9/2/83

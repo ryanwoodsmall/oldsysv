@@ -1,0 +1,15 @@
+
+\Snice\S:  Examples
+
+        nice informat.f
+
+    Executes the file "informat.f" with a priority that is 10 lower than 
+    normal.
+
+    ----------------------------------------------------------------------
+
+        nice -19 mm book.1 >book.1mm &
+
+    Assigns the lowest possible priority to the command to format "book.1".
+    The command runs in the background so you are free to do other work.  The
+    formatted file is stored in "book.1mm".

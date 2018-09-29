@@ -1,0 +1,33 @@
+.TH SIN 3F
+.SH NAME
+sin, dsin, csin \- \s-1FORTRAN\s+1 sine intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.B "complex cx1, cx2"
+.P
+.B "r2 = sin(r1)"
+.P
+.B "dp2 = dsin(dp1)"
+.B "dp2 = sin(dp1)"
+.P
+.B "cx2 = csin(cx1)"
+.B "cx2 = sin(cx1)"
+.SH DESCRIPTION
+.I Sin\^
+returns the real sine of its real argument.
+.I Dsin\^
+returns the double-precision sine of its double-precision argument.
+.I Csin\^
+returns the complex sine of its complex argument.
+The generic
+.I sin\^
+function becomes
+.I dsin\^
+or
+.I csin\^
+as required by argument type.
+.SH SEE ALSO
+trig(3M).
+.\"	%W% of %G%

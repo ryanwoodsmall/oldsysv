@@ -1,0 +1,18 @@
+
+\S erase character \S
+
+An erase character deletes the  character immediately before it on
+the current command line.  The erase character is usually the 
+"pound sign(#)"\S*\S.  Typing several erase characters deletes the
+same number of characters, beginning with the most recently typed 
+character and working backwards.  For example,  the result of typing
+
+	cp temp1 temp2#####temp4
+is 
+	cp temp1 temp4 
+
+because the five pound signs (#) deleted the five characters that preceded
+them. The erase character can be changed by using the  set teletype command,
+stty(1).  BACKSPACE is often used as the erase character on video terminals.  
+
+\S*\S defined in the \Sglossary\S

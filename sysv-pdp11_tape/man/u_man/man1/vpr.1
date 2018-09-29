@@ -1,0 +1,92 @@
+.TH VPR 1 "DEC only"
+.SH NAME
+vpr \- Versatec printer spooler
+.SH SYNOPSIS
+.B vpr
+[ options ] [ files ]
+.SH DESCRIPTION
+.I Vpr\^
+causes the named
+.I files\^
+to be queued for printing
+on a Versatec printer.
+If no names appear, the standard input is assumed;
+thus
+.I vpr\^
+may be used as a filter.
+.PP
+The following options may be given (each as a separate argument
+and in any order)
+before any file name arguments:
+.PP
+.PD 0
+.TP 7
+.B \-c
+Make a copy of the file to be sent before returning to the user.
+.TP 7
+.B \-r
+Remove the file after sending it.
+.TP 7
+.B \-m
+When printing is complete, report that fact by
+.IR mail (1).
+.TP 7
+.B \-n
+Do not report the completion of printing by
+.IR mail (1).
+This is the default option.
+.TP 7
+.BI \-f file
+Use
+.I file
+as a dummy file name to report back in the mail.
+(This is useful for distinguishing multiple runs, especially when
+.I vpr\^
+is being used as a filter).
+.TP 7
+.BR \-p " [ \fB\-e\fP \fIraster\fP ]"
+Use the plot filter
+.I vplot\^
+to output files produced by
+.IR graph (1G).
+The
+.B \-e
+option will cause
+a previously scan converted file
+.I raster\^
+to be sent to the Versatec.
+.PD
+.SH EXAMPLES
+Two common uses are:
+.RS
+.PP
+pr [ options ] file \|\(bv vpr
+.RE
+.PP
+and
+.PP
+.RS
+graph [ options ] file \|\(bv vpr \-p
+.RE
+.PP
+.SH FILES
+.PD 0
+.TP 20
+/etc/passwd
+user's identification and accounting data
+.TP
+/usr/spool/vpd/\(**
+spool area
+.TP
+/usr/lib/vpd
+line printer daemon
+.TP
+/usr/lib/vpd.pr
+print filter
+.TP
+/usr/lib/vplot
+plot filter
+.PD
+.SH SEE ALSO
+dpr(1C), lpr(1), tplot(1G).
+.\"	@(#)vpr.1	5.2 of 5/18/82

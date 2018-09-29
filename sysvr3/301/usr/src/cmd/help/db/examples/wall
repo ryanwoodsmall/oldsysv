@@ -1,0 +1,14 @@
+
+\S wall \S:  Examples
+
+    wall
+    The system will be coming down in 5 minutes.
+    Please log off.
+    Thank you.
+    control-d
+
+    After you type \S wall \S and a carriage return, everything that follows is
+    saved to be sent to current system users.  Unless you are super user, users
+    who have turned off the write access for their terminals will not receive
+    the message.  The message is sent after you depress the control key and
+    strike the letter d simultaneously.  This is called control-d.

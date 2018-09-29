@@ -1,0 +1,251 @@
+520 clearall
+705 0 0 72
+             REDIRECTING STANDARD OUTPUT TO A FILE
+
+       In this part of the UNIX System walkthru, you will learn
+how to redirect standard output to a file.  Redirection greatly
+increases the power of the UNIX System, but you should be familiar
+with the concepts on standard input and output before taking this
+part of the UNIX System walkthru.
+
+
+	As with the rest of the UNIX System walkthru, the top left portion
+of your screen will simulate a UNIX System session.  You will be entering
+commands there, and the output of the commands will also appear there.  
+The top right side of the screen will be used to present diagrams to 
+help explain concepts.  You will see explanatory text on the bottom 
+half of your screen, and on occasion, you will see the instruction 
+to type a command.  
+706 
+520 arrow
+520 clearall
+2 13 0
+34 alt
+700 r79
+2 0 33
+700 d13
+35 alt
+2 15 0
+19 
+2 0 0
+18 
+30 
+8 14 25 REDIRECTING OUTPUT
+31 
+705 3000 3001 77
+     Remember that many commands produce their output on your terminal.  For 
+example, the "spell" command prints a list of incorrectly spelled words found 
+in a file.  Try running the "spell" command on the file "message."
+706 
+520 instruct
+3 type "spell message"
+253 %0spell%1message%0
+254 spell message
+8 0 0 $
+2 0 2
+18 
+520 shansloop
+8 1 0 differnt
+8 2 0 atention
+8 3 0 $
+520 spellcrt
+520 clearbot
+705 3000 3001 73
+That's the output from the spell command.  Apparently, you have two words 
+misspelled in the file "message."
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+If you found spelling errors in a file, you would probably want to correct the 
+errors.  To do this, you would have to remember what the errors are.  It would 
+be much more convenient if the "spell" command could be coaxed into placing 
+its output in a file.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Using the special character ">" (greater than sign), you can do just this.  By 
+typing "spell message > msg.errors" you can cause the "spell" command to place 
+the misspelled words of the file "message" in a file called "msg.errors."
+706 
+520 instruct
+3 try typing "spell message > msg.errors"
+253 %0spell%1message%0>%0msg.errors%0
+254 spell message > msg.errors
+2 3 2
+18 
+520 shansloop
+8 4 0 $
+520 spellfile
+520 clearbot
+705 3000 3001 69
+Note that the "spell" command did not print anything on your terminal
+this time.  Instead, it placed its output in the file "msg.errors."
+Why don't you verify this, by looking at the contents of "msg.errors."
+706 
+520 instruct
+3 type "cat msg.errors"
+253 %0cat%1msg.errors%0
+254 spell msg.errors
+2 4 2
+18 
+520 shansloop
+8 5 0 differnt
+8 6 0 atention
+8 7 0 $
+520 clearbot
+705 3000 3001 78
+The output redirection sign (">") can be used for any command that normally 
+places its output on standard output.  Try redirecting the output of the "date"
+command (which prints out the current date and time) to the same file we used 
+before:  msg.errors.
+706 
+520 instruct
+3 type "date > msg.errors"
+253 %0date%0>%0msg.errors%0
+254 date > msg.errors
+2 7 2
+18 
+520 shansloop
+310 /bin/date > /tmp/twalk.$LOGNAME
+8 8 0 $
+520 datefile
+520 clearbot
+705 3000 3001 71
+Now take a look at the contents of "msg.errors" using the "cat" command.
+706 
+520 instruct
+3 type "cat msg.errors"
+253 %0cat%1msg.errors%0
+254 cat msg.errors
+2 8 2
+18 
+520 shansloop
+2 9 0
+100 1 /tmp/twalk.$LOGNAME
+2 0 33
+34 alt
+700 d13
+35 alt
+8 10 0 $
+520 clearbot
+705 3000 3001 73
+That's the output of the "date" command.  However, note that the previous 
+contents of the file are gone.  Remember that "msg.errors" had held the 
+spelling errors found by the "spell" command.  This demonstrates a very 
+important point:  When you use the ">" to redirect something to a file, 
+the previous contents of the file will be destroyed!
+706 
+520 arrow
+520 clearbot
+520 clearleft
+520 clearbot
+705 3000 3001 77
+There may be times when you want to redirect some output to a file, but
+you do not want to destroy whatever is already in the file.  For example, 
+you might want to place a date inside of a file, along with a list of spelling
+errors.  The UNIX system does provide a way to do this.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 70
+If you use ">>" (two greater than signs), instead of a single ">",
+this indicates that you want to redirect output to a file, but you
+want the output appended to the end of the file, without destroying
+anything that might already be in the file.  Let's consider an example.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 62
+First, run the "spell" command on the "message" file again, and
+redirect output to "dated.errors."  Use a single ">".
+706 
+520 instruct
+3 type "spell message > dated.errors"
+253 %0spell%1message%0>%0dated.errors%0
+254 spell message > dated.errors
+8 0 0 $
+2 0 2
+18 
+520 shansloop
+8 1 0 $
+520 spellfile2
+520 clearbot
+705 3000 3001 67
+That's the output from the spell command, as you have already seen.
+Now we will append the current time and date to this file.  Redirect
+the output of the "date" command to the "dated.errors" file, but
+do not destroy the current contents of the file.
+706 
+520 instruct
+3 append output from the "date" command to "dated.errors"
+253 %0date%0>>%0dated.errors%0
+254 date >> dated.errors
+2 1 2
+18 
+520 shansloop
+310 /bin/date > /tmp/twalk.$LOGNAME
+8 2 0 $
+520 appendfile
+520 clearbot
+705 3000 3001 73
+Now take a look at the contents of "dated.errors" using the "cat" command.
+706 
+520 instruct
+3 type "cat dated.errors"
+253 %0cat%1dated.errors%0
+254 cat dated.errors
+2 2 2
+18 
+520 shansloop
+8 3 0 differnt
+8 4 0 atention
+2 5 0
+100 1 /tmp/twalk.$LOGNAME
+2 0 33
+34 alt
+700 d13
+2 1 35
+700 r8 d4 l8 u4 r1
+35 alt
+520 appendfile
+8 2 36 "spell"
+8 6 0 $
+520 clearbot
+705 3000 3001 77
+Note that the output from both the "date" and "spell" commands are present in 
+the file.  This is the difference between ">" and ">>".  A single ">" will 
+destroy the contents of the file, but a ">>" will append to the contents.
+706 
+520 arrow
+520 clearbot
+520 cleartop
+705 3000 3001 55
+Let's look at a picture to summarize output redirection.
+706 
+520 stdout
+520 arrow
+520 clearbot
+520 redirout
+520 arrow
+520 clearall
+705 0 0 69
+               SUMMARY OF OUTPUT REDIRECTION
+
+     You now have an understanding of the term "standard output" 
+and how to redirect standard output to a file.  In later sections 
+of this walkthru, you will learn how to send the output of a command
+directly to another command without creating an intermediate file.
+Remember that the command for which you are redirecting output must
+normally place its output on standard output.
+                         SUMMARY
+
+   COMMAND > FILENAME  ... Erase the old contents of FILENAME and
+                             save the output of COMMAND in FILENAME
+
+   COMMAND >> FILENAME ... Append the output of COMMAND to the current
+                             contents of FILENAME
+706 
+520 arrow
+520 clearall

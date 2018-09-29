@@ -1,0 +1,5 @@
+@(#)README	1.1
+The files in this directory comprise the stand alone
+VAX configuration verification program.
+They should be placed in directory /usr/src/cmd/vcf.
+vcf.8 is the asscoiated man page.

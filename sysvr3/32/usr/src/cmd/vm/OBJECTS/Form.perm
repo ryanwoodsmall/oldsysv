@@ -1,0 +1,107 @@
+form="Security on New Objects for $LOGNAME"
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.h535.perm Permissions
+done=`setmod -u $F1 $F2 $F3 $F4 $F5 $F6 $F7 $F8 $F9`
+
+name=Owner Read Permissions
+nrow=1
+ncol=1
+rows=1
+columns=3
+frow=1
+fcol=32
+rmenu={ yes no }
+menuonly=
+value=const `getmod -u 400`
+
+name=Owner Write Permissions
+nrow=2
+ncol=1
+rows=1
+columns=3
+frow=2
+fcol=32
+rmenu={ yes no }
+menuonly=
+value=const `getmod -u 200`
+
+name=Owner Run/Search Permissions
+nrow=3
+ncol=1
+rows=1
+columns=3
+frow=3
+fcol=32
+rmenu={ yes no }
+menuonly=
+value=const `getmod -u 100`
+
+name=Group Read Permissions
+rmenu={ yes no }
+menuonly=
+nrow=5
+ncol=1
+rows=1
+columns=3
+frow=5
+fcol=32
+value=const `getmod -u 040`
+
+name=Group Write Permissions
+rmenu={ yes no }
+menuonly=
+nrow=6
+ncol=1
+rows=1
+columns=3
+frow=6
+fcol=32
+value=const `getmod -u 020`
+
+name=Group Run/Search Permissions
+rmenu={ yes no }
+menuonly=
+nrow=7
+ncol=1
+rows=1
+columns=3
+frow=7
+fcol=32
+value=const `getmod -u 010`
+
+name=All Read Permissions
+rmenu={ yes no }
+menuonly=
+nrow=9
+ncol=1
+rows=1
+columns=3
+frow=9
+fcol=32
+value=const `getmod -u 004`
+
+name=All Write Permissions
+rmenu={ yes no }
+menuonly=
+nrow=10
+ncol=1
+rows=1
+columns=3
+frow=10
+fcol=32
+value=const `getmod -u 002`
+
+name=All Run/Search Permissions
+rmenu={ yes no }
+menuonly=
+nrow=11
+ncol=1
+rows=1
+columns=3
+frow=11
+fcol=32
+value=const `getmod -u 001`
+
+name=RESET
+button=8
+action=reset

@@ -1,0 +1,7 @@
+#ident	"@(#)sadmin3b2:admin/menu/diskmgmt/harddisk/DESC	1.2"
+#menu# hard disk management menu
+#help#
+#help#	This menu contains the add-on hard disk support commands.  These
+#help#	are useful when a hard disk is to be added to or removed from
+#help#	the system.
+#head#			HARD DISK MANAGEMENT

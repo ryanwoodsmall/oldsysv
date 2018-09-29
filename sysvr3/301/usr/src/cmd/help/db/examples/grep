@@ -1,0 +1,25 @@
+
+\S grep \S:  Examples
+
+       grep root /etc/passwd
+
+    Prints the line in the file "/etc/passwd" that contains the login name
+    "root".
+
+    ----------------------------------------------------------------------
+
+       who | grep "xzy"
+
+    Prints the name, terminal number, and time that the user with login name
+    "xyz" logged in if "xyz" is logged in.  If "xyz" is not logged in, this
+    command line prints nothing.
+
+
+
+    ----------------------------------------------------------------------
+
+       grep rsh /etc/passwd|cut -d: -f5
+
+    Searches the "/etc/passwd" file for users who run a restricted shell,
+    rsh(1).  Then cut(1) prints the fifth field of every line that \S grep \S
+    identifies.  The fifth field contains the users name.

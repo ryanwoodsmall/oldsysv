@@ -1,0 +1,170 @@
+#ident	"@(#)sadmin:admin/makefsys	2.12"
+#	Create a new file system on a removable medium.
+#help# 
+#help#	Makefsys creates a new file system on a removable medium which can
+#help#	then store data which you do not wish to keep on the built-in disks.
+#help#	When "mounted", the file system has all the properties of a
+#help#	file kept on the built-in disks.
+
+#!	chmod +x ${file}
+
+set -e
+
+#	With gap == 1 the blocks/cylinder has no effect in the file system.
+#	Since most formatting routines lay the sectors out in an optimal
+#	way, gap == 1 is a reasonable assumption.
+gap=1		# rotational gap size
+blockcyl=32	# blocks/cylinder
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+usage () {
+	echo >&2 "Usage:  `basename $0` [ -p pattern ]"
+	exit 1
+}
+
+patterns=
+case $# in
+0 )
+	;;
+2 )
+	if [ $1 = -p ]
+	then
+		patterns=$2
+		shift 2
+	else
+		usage
+	fi
+	;;
+* )
+	usage
+esac
+
+dir=${0}.d
+if [ -z "${patterns}"  -a  -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+l=`disklabel -n "${ndrive}" $$ ${ddrive}`
+eval `labelfsname "${l}"`
+
+if [ -n "${label}"  -o  -n "${fsname}" ]
+then
+	echo "This medium already has a label and/or file system name.
+	${label:+label = ${label}		}${fsname:+file system name = ${fsname}}"
+	checkyn ${flags} -f \
+	'
+	WARNING:  If you answer "yes", all data on this medium will be LOST!
+	BE SURE THIS IS WHAT YOU WANT TO DO!!
+Do you want to erase this file system and build another?'  ||  {
+		echo 'This medium will not be erased.  Remove the medium.'
+		exit 0
+	}
+fi
+
+label=`checkre ${flags} ${label:+-D${label}} -H'
+	The medium label identifies this particular medium.
+	Usually it is the initials or name of the owner and a number,
+	for example "liz001".
+	The label may be no more than 6 characters long.' -fe \
+	"Enter the label to be put on the medium ${label:+(default: ${label})} [?, q]" \
+	'^.\{1,6\}$' 'Must be at least one and no more than 6 characters.' \
+	'^[!-~]*$' 'Must be printing characters only only.'`
+
+fsname=`checkre ${flags} ${fsname:+-D${fsname}} -H'
+	The file system name is the name of the directory where you want the
+	file system mounted.  It determines the first name in the full path
+	names of the files it contains.  Thus if you specify "ray" as the
+	file system name, the file system will be mounted on directory "/ray"
+	and all file names will begin with "/ray/".' -fe \
+	"Enter the file system name ${fsname:+(default: ${fsname})} [?, q]" \
+	'^/\{0,1\}.\{1,6\}$' 'Must be at least one and no more than 6 characters.' \
+	'^/\{0,1\}[a-zA-Z0-9]*$' 'Must be letters and numbers only.'`
+
+fsname=`expr ${fsname} : '/*\(.*\)'`
+
+blocks=`spclsize -b ${ddrive}`
+#	Funny calculation of inodes gives nice multiple-of-10 values.
+inodes=`expr ${blocks} / 70 \* 10`
+halfblocks=`expr ${blocks} / 2`
+while true
+do
+	i=`checkre ${flags} -fe -D "${inodes}" \
+		"Enter the maximum number of files and directories on this medium
+	(default ${inodes}) [q]:" \
+		'^[0-9]\{1,\}$' 'You must enter a number or just press RETURN.' \
+		-R '^00*$' 'The number must be greater than zero.'`
+	if [ ${i} -lt ${halfblocks} ]
+	then
+		break
+	fi
+	echo "The number of files and directories must be less than ${halfblocks}."
+done
+#	So  df -t  reports what was requested.
+inodes=`expr ${i} + 8`
+
+echo "Building '${fsname}' file system on '${label}'."
+sleep 2
+
+trap 'exit 1' 1 2 15
+trap '	trap "" 1 2
+	cat -s /tmp/$$makefsys;  rm -f /tmp/$$makefsys;  exit 1' 0
+
+# The echo writes over the beginning of the first block, which mkfs(1M) does not.
+# This helps make the medium not recognizable as other than a file system.
+echo '                                                            ' >${ddrive}
+/etc/mkfs ${ddrive} ${blocks}:${inodes} ${gap} ${blockcyl} >/tmp/$$makefsys 2>&1  ||
+	exit 1
+/etc/labelit ${ddrive} ${fsname} ${label} >>/tmp/$$makefsys 2>&1  ||  exit 1
+sync
+rm /tmp/$$makefsys
+
+set -e
+
+if [ ! -d /${fsname} ]
+then
+	mkdir /${fsname}
+fi
+chmod 777 /${fsname}
+/etc/mount ${ddrive} /${fsname}  ||  {
+	admerr $0 mount of ${ddrive} on /${fsname} failed.
+	exit 1
+}
+
+trap "	trap '' 1 2
+	cd /;  diskumount -n '${ndrive}' ${ddrive} /${fsname}" 0
+
+echo "Initializing '${fsname}' file system."
+cd /${fsname}
+umask 000
+mkdir lost+found
+cd lost+found
+set +e
+#	Populate the lost+found directory to grow it to a usable size.
+i=`expr ${inodes} / 40 + 1`
+while [ ${i} -gt 0 ]
+do
+	tee ${i}1 ${i}2 ${i}3 ${i}4 ${i}5 ${i}6 ${i}7 ${i}8 ${i}9 ${i}0 </dev/null
+	i=`expr ${i} - 1;  exit 0`	# exit 0 should not be needed, but is.
+done
+rm -fr .
+
+if checkyn ${flags} -f -H '
+	If you leave the file system mounted, then you can use it right now.
+	Otherwise, this procedure will unmount it.' \
+	"Do you want to leave '/${fsname}' mounted?"
+then
+	sync
+	trap 0
+	echo 'Mounted.  DO NOT REMOVE THE MEDIUM UNTIL IT IS UNMOUNTED!'
+fi

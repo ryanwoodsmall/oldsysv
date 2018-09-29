@@ -1,0 +1,49 @@
+! # @(#)spl.ed	6.3
+1i
+.set	IPL,18
+.
+g/calls	$0,_splhi/s//mfpr	$IPL,r0\
+	cmpl	r0,$0x17\
+	.word	0x0318	# bgeq \
+	mtpr	$0x17,$IPL/
+g/movl	r0,/-s/calls	$0,_spl7/SPL7/
+g/SPL7/+s/movl	r0,\(.*\)/mfpr	$IPL,\1\
+	mtpr	$0x17,$IPL/
+g/r0,/-s/calls	$0,_spl7/mfpr	$IPL,r0\
+	mtpr	$0x17,$IPL/
+g/calls	$0,_spl7/s//mtpr	$0x17,$IPL/
+g/movl	r0,/-s/calls	$0,_spl6/SPL6/
+g/SPL6/+s/movl	r0,\(.*\)/mfpr	$IPL,\1\
+	mtpr	$0x16,$IPL/
+g/r0,/-s/calls	$0,_spl6/mfpr	$IPL,r0\
+	mtpr	$0x16,$IPL/
+g/calls	$0,_spl6/s//mtpr	$0x16,$IPL/
+g/movl	r0,/-s/calls	$0,_spl5/SPL5/
+g/SPL5/+s/movl	r0,\(.*\)/mfpr	$IPL,\1\
+	mtpr	$0x15,$IPL/
+g/r0,/-s/calls	$0,_spl5/mfpr	$IPL,r0\
+	mtpr	$0x15,$IPL/
+g/calls	$0,_spl5/s//mtpr	$0x15,$IPL/
+g/movl	r0,/-s/calls	$0,_spl4/SPL4/
+g/SPL4/+s/movl	r0,\(.*\)/mfpr	$IPL,\1\
+	mtpr	$0x14,$IPL/
+g/r0,/-s/calls	$0,_spl4/mfpr	$IPL,r0\
+	mtpr	$0x14,$IPL/
+g/calls	$0,_spl4/s//mtpr	$0x14,$IPL/
+g/movl	r0,/-s/calls	$0,_spl0/SPL0/
+g/SPL0/+s/movl	r0,\(.*\)/mfpr	$IPL,\1\
+	mtpr	$0x00,$IPL/
+g/r0,/-s/calls	$0,_spl0/mfpr	$IPL,r0\
+	mtpr	$0x00,$IPL/
+g/calls	$0,_spl0/s//mtpr	$0x00,$IPL/
+g/pushl/+s/calls	$1,_splx/SPLX/
+g/SPLX/-s/pushl/mtpr/
+g/SPLX/-s/$/,$IPL/
+g/calls	$1,_splx/s//mtpr	(sp)+,$IPL\
+	SPLX/
+g/r0,/-s/SPLX/SPLXr0/
+g/SPLXr0/-s/^/	mfpr	$IPL,r0\
+/
+g/SPL[X4567].*/d
+w
+q

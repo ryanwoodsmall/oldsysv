@@ -1,0 +1,63 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/service/default	1.3"
+## IDOC:   SCREEN 2.57: SET DEFAULT DESTINATION
+#menu# Set default print destination
+
+##+++ (help _H147)
+#help#        You use the "default" command in the "service" menu when you
+#help#        want to assign the default destination.  This is the printer
+#help#        or class of printers that all print requests will be sent if
+#help#        they  are  not  explicitly  sent to a different destination.
+#help#        You do not need to define a default destination, but  it  is
+#help#        usually a good idea because it makes it easier on the people
+#help#        using the print service
+##--- (help _H147)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"Enter the name of the printer or printer class to use
+as the default destination for print requests."
+##--- (line 2)
+
+DEF=`cat ${TMPDIR:-/tmp}/PRT.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.57.3)
+chk_name \
+	"${DEF:+(default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        You are expected to enter the name of the printer  or  class
+        of  printers  that you want as the default destination.  The
+        printer or class must already exist.  \
+"
+OPT=${RESP}
+##--- (2.57.3)
+
+	/usr/lib/lpadmin -d ${OPT} && break
+	echo "
+Please try again:"
+done

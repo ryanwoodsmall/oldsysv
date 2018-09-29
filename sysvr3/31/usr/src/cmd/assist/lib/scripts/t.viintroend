@@ -1,0 +1,41 @@
+2 0 0 #ident	"@(#)script.files:t.viintroend	1.1"
+12 
+30 
+8 3 25 A FINAL WORD
+31 
+705 6 8 62
+This ends the ASSIST introduction to "vi" walkthru.  Try using
+"vi" on your own.  Remember to use the ASSIST quick reference
+page for "vi" to remind yourself of the commands you have
+tried.
+
+If you forget how to do something, you can repeat the part
+of the ASSIST "vi" walkthru that covers that subject.
+
+When you feel comfortable with the commands that you have
+tried in this walkthru, you should try other "vi" commands.
+
+There are many sources of information about "vi."  In addition
+to the ASSIST walkthru, you can learn about "vi"'s command
+line options from the ASSIST command form for "vi," and you can
+read about "vi" in the UNIX System V Editing Guide.
+706 
+15 
+2 23 3
+30 
+3 -->
+31 
+8 1000 1001 Strike the RETURN key to end this walkthru. 
+25 
+15 
+20 
+256 13 32
+200 1
+245 10000
+32 
+20 
+250 
+2 0 0
+12 
+15 
+1000 

@@ -1,0 +1,21 @@
+
+\Sfile\S:  Description
+
+Syntax Summary:
+      file [-c] [-f list_file] [-m type_file] file_name ...
+
+         where:  list_file, file_name, and type_file  are simple file names.
+
+Description:
+     \Sfile\S reports the file type of files that you list as arguments.  Use
+     it to find out if files are directories, ordinary files, character special
+     files, block special files, or named pipes.  If a file is filled with 
+     ASCII characters, \Sfile\S will try to guess the computer language it is 
+     written in.  If the file is executable, it will print the name of the 
+     machine that the file was created for.  \Sfile\S will also tell you if a 
+     file is a cpio(1) or ar(1) archive.  Instead of listing files on the 
+     command line, you can use the "f" option with a <list_file> that contains
+     file names for \Sfile\S to check. 
+
+     See the glossary(1) for a list of file types.  See also:  ls(1) for a 
+     command with a function similar to \Sfile\S.

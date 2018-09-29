@@ -1,0 +1,12 @@
+
+\S inode: i-number:  inode number \S
+
+Inode stands for information node.  An inode stores the administrative
+information for a file.  This is information on how long the file is, where
+it is stored on the disk, the time when the file was last written (write
+time), read or executed (usage time), and changed (change time).  The
+system organizes files according to their inode numbers or i-numbers which
+are integers that identify the inodes.  Files that are linked have the same
+i-number. The ls(1) command has options that print the i-numbers, and
+write, usage and change times for your files.
+

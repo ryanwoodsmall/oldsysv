@@ -1,0 +1,38 @@
+.TH GD 7  "DEC only"
+.SH NAME
+gd \- general driver for moving-head disks
+.SH DESCRIPTION
+.PP
+.I Gd
+provides a general interface to the
+.SM RM\*S05,
+.SM RM\*S80,
+.SM RP\*S04,
+.SM RP\*S04,
+.SM RP\*S05,
+.SM RP\*S06,
+and
+.SM RP\*07
+moving head disks.
+In addition to the capability of mixing these mediums on the
+same controller, the driver will handle up to four controllers.
+.PP
+The driver reads the disk hardware drive-type register to determine
+access partitioning and other drive dependent attributes.
+Thus, the manual entries describing the above disk drives should be
+used for information regarding that particular drive.
+.PP
+The configuration name of
+.I disk
+should be specified when generating a system with
+.IR config (1M).
+.SH FILES
+/dev/rp\(**, /dev/rrp\(**
+.SH SEE ALSO
+config(1M),
+master(4),
+hm(7),
+hp(7),
+rm80(7),
+rp(7).
+.\"	@(#)gd.7	5.2 of 5/18/82

@@ -1,0 +1,62 @@
+/dev/null
+1422 100
+d--775 0 3
+install	d--775 0 3
+	INSTALL 	---755 2 2	./install/nsu/INSTALL
+	UNINSTALL	---555 2 2	./install/nsu/UNINSTALL
+	setup		---755 2 2	./install/nsu/setup
+	unsetup		---755 2 2	./install/nsu/unsetup
+	Rlist		---775 2 2	./install/nsu/Rlist.nsu
+$
+new	d--775 0 3
+	boot	d--775 0 3
+		log.o		---500 0 0	../usr/src/uts/3b2/io/log.o
+		clone.o		---500 0 0	../usr/src/uts/3b2/io/clone.o
+		timod.o		---500 0 0	../usr/src/uts/3b2/io/timod.o
+		tirdwr.o	---500 0 0	../usr/src/uts/3b2/io/tirdwr.o
+	$
+	etc	d--775 0 3
+		master.d	d--775 0 3
+			clone	---444 0 0	../usr/src/uts/3b2/master.d/clone
+			log	---444  0 0	../usr/src/uts/3b2/master.d/log
+			timod	---444  0 0	../usr/src/uts/3b2/master.d/timod
+			tirdwr	---444  0 0	../usr/src/uts/3b2/master.d/tirdwr
+		$
+	$
+	usr	d--775 0 3
+		adm	d--755 4 4
+			streams	d--775 4 4
+			$
+		$
+		bin	d--775 2 2
+			nlsadmin	---755 0 4	../usr/bin/nlsadmin
+			strace		---100 0 3	../usr/bin/strace
+			strerr		---100 0 3	../usr/bin/strerr
+			strclean	---100 0 3	../usr/bin/strclean
+		$
+		include	d--775 2 2
+			sys	d--775 0 0
+				lihdr.h		---444 0 0	../usr/include/sys/lihdr.h
+				tiuser.h	---444 0 0	../usr/include/sys/tiuser.h
+				tihdr.h		---444 0 0	../usr/include/sys/tihdr.h
+				strlog.h	---444 0 0	../usr/include/sys/strlog.h
+				log.h		---444 0 0 	../usr/include/sys/log.h
+			$
+			listen.h	---444 2 2	../usr/src/cmd/listen/listen.h
+			tiuser.h	---444 2 2	../usr/include/tiuser.h
+		$
+		lib	d--775 0 3
+			libnsl_s.a	---444 0 2	../usr/lib/libnsl_s.a
+			libnls.a	---444 0 2	../usr/lib/libnls.a
+		$
+		net	d--775 0 3
+			nls	d--775 37 4
+				listen	---750 0 4	../usr/net/nls/listen
+			$
+		$
+		options	d--775 0 3
+			nsu.name	---444 2 2	./install/nsu/nsu.name
+		$
+	$
+$
+$

@@ -1,0 +1,17 @@
+#	@(#)liby.rc	1.4
+#	Make a new Yacc library
+
+SFLAGS=
+if u3b
+then
+	SFLAGS=-r
+fi
+
+cc -O -c *.c
+ar qv liby.a *.o
+strip $SFLAGS liby.a
+rm *.o
+cp liby.a /usr/lib/liby.a
+chown bin /usr/lib/liby.a
+chmod 644 /usr/lib/liby.a
+rm -f liby.a

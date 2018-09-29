@@ -1,0 +1,45 @@
+.TH PSEL 1M "3B20S only"
+.SH NAME
+psel, rels \- send priority select/release to a disk
+.SH SYNOPSIS
+.B /etc/psel
+unit
+.PP
+.B /etc/rels
+unit
+.SH DESCRIPTION
+.I Psel\^
+sends a priority select to a disk and
+.I rels\^
+sends a priority release to a disk.
+.I Unit\^
+specifies the unit number of the disk drive to be used.
+.SH WARNINGS
+Note that these commands work only with \s-1DFC\s+1 Generic 2 (or later) Firmware
+and only with dual-ported disks.
+The
+.I psel\^
+command is dangerous.
+These commands are intended to allow temporary remote recovery
+of a dual-ported disk when an unusual form of crash
+has left the disk reserved by the dead system.
+The priority select immediately overrides the reserve of the other system.
+Using this command when the other system is actively using the disk
+will cut that system off in the middle of use.
+If a write is in progress, an error could even be induced on the disk.
+Use
+.I psel\^
+only after making sure the other system has crashed and that
+attempts to bring the disk in service time out.
+Once
+.I psel\^
+is used on a disk,
+that system must issue a
+.I rels\^
+to that disk to make the disk accessible to the other system.
+A priority select from one system does
+not override a previous priority select by the other system.
+If a system crashes leaving the disk priority selected,
+switches in the drive must be thrown to disable the port
+to allow access by the other system.
+.\"%W%

@@ -1,0 +1,4 @@
+#!/bin/sh
+#ident	"@(#)uucp:remote.unknown	2.3"
+FOREIGN=/usr/spool/uucp/.Admin/Foreign
+echo "`date`: call from system $1" >> $FOREIGN

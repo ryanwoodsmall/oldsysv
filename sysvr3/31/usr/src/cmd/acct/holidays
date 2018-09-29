@@ -1,0 +1,17 @@
+* #ident"@(#)acct:holidays	1.9"
+* Prime/Nonprime Table for UNIX Accounting System
+*
+* Curr	Prime	Non-Prime
+* Year	Start	Start
+*
+  1986	0830	1700
+*
+* Day of	Calendar	Company
+* Year		Date		Holiday
+*
+  146		May 26		Memorial Day
+  185		Jul 4		Indep. Day
+  244		Sep 1		Labor Day
+  331		Nov 27		Thanksgiving Day
+  332		Nov 28		day after Thanksgiving
+  359		Dec 25		Christmas

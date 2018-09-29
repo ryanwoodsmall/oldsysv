@@ -1,0 +1,8 @@
+
+\Stty\S: Options
+
+     -l   prints terminal line number for your terminal and reports if your
+          terminal is connected to a synchronous line.
+
+     -s   returns an exit code and does not print the terminals path name.
+

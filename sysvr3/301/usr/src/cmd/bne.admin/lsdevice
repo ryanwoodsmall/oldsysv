@@ -1,0 +1,49 @@
+#ident	"@(#)bne.admin:lsdevice	2.2"
+#	This shell is used to list device entries from /usr/lib/uucp/Devices
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -r $DEVICES ]; then :
+else
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+syslist=`grep '^[^# 	]' $DEVICES  2>/dev/null | cut -d' ' -f2  |  sort -u  |
+			grep '^[a-z0-9]' 2>/dev/null`
+if [ -z "${syslist}" ]; then
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+while $FIRST || chkyn ${flags} -f '
+Do you want to see another device entry?' || break
+do
+FIRST=false
+	echo "
+This is the current list of devices available
+to the '$PACKAGE:'"
+	echo "${syslist}"  |  pr -t -w80 -6
+	devicename=`chkyn ${flags} -fec '
+Enter device name you want to see in detail [q]:' \
+		${syslist}`
+	echo "Found the following entry:"
+	grep "^[^# 	].*[ 	]${devicename}[ 	]" $DEVICES 2>/dev/null \
+	  |  while read a
+		do /bin/sh _deviceprint $a
+	     done
+done

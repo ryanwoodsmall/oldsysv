@@ -1,0 +1,5 @@
+#ident	@(#)adm:adm	1.2
+#
+# The adm crontab file should contain startup of performance collection if
+# the profiling and performance feature has been installed.
+#

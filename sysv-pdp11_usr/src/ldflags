@@ -1,0 +1,13 @@
+cpio -i
+dcopy -i
+du -i
+dump -i
+echo -n
+fgrep -i
+find -i
+fsck -i
+nm -i
+pack -f
+restor -i
+units -i -f
+volcopy -i

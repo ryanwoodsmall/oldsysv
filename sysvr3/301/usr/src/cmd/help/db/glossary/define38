@@ -1,0 +1,15 @@
+
+\S machine hardware name: machine ID \S
+
+The machine hardware name or machine ID refers to the manufacturer and
+model of the computer.  This information is important for identifying
+machine-dependent facilities and limitations.  For example,
+
+        DEC PDP-11/70
+        DEC VAX-11/780
+
+are machine hardware names.  The UNIX name command, uname(1), with an "m"
+"option"\S*\S, i.e., "uname -m", prints the name of the machine that you
+are working on.
+
+\S*\S defined in the \Sglossary\S

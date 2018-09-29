@@ -1,0 +1,110 @@
+.TH GETC 3S
+.SH NAME
+getc, getchar, fgetc, getw \- get character or word from a stream
+.SH SYNOPSIS
+.B #include <stdio.h>
+.PP
+.B int getc (stream)
+.br
+.SM
+.B FILE\*S \(**stream;
+.PP
+.B int getchar (\|)
+.PP
+.B int fgetc (stream)
+.br
+.SM
+.B FILE\*S \(**stream;
+.PP
+.B int getw (stream)
+.br
+.SM
+.B FILE\*S \(**stream;
+.SH DESCRIPTION
+.I Getc\^
+returns the next character (i.e., byte) from the named input
+.IR stream ,
+as an integer.
+It also moves the file pointer, if defined,
+ahead one character
+in
+.IR stream.
+.I Getchar
+is defined as
+.IR getc(stdin) .
+.IR Getc " and " getchar
+are macros.
+.PP
+.I Fgetc\^
+behaves like
+.IR getc ,
+but is a function rather than a macro.
+.I Fgetc\^
+runs more slowly than
+.IR getc ,
+but it takes less space per invocation and its name can
+be passed as an argument to a function.
+.PP
+.I Getw\^
+returns the next
+word (i.e., integer) from the named input
+.IR stream.
+.I Getw\^
+increments the associated file pointer, if defined,
+to point to the next word.
+The size of a word is the size of an integer and varies from machine
+to machine.
+.I Getw\^
+assumes no special alignment in the file.
+.SH SEE ALSO
+fclose(3S),
+ferror(3S),
+fopen(3S),
+fread(3S),
+gets(3S),
+putc(3S),
+scanf(3S).
+.SH DIAGNOSTICS
+These functions return the constant
+.SM
+.B EOF
+at end-of-file or upon an error.
+Because
+.SM
+.B EOF
+is a valid integer,
+.IR ferror (3S)
+should be used to detect
+.I getw\^
+errors.
+.SH WARNING
+If the integer value returned by
+.IR getc ", " getchar ", or " fgetc
+is stored into a character variable and then compared against
+the integer constant
+.SM
+.BR EOF ,
+the comparison may never succeed,
+because sign-extension of a character
+on widening to integer is machine-dependent.
+.bp
+.SH BUGS
+Because it is implemented as a macro,
+.I getc\^
+treats incorrectly a
+.I stream\^
+argument with side effects.
+In particular,
+.B getc(\(**f\(pl\(pl)
+does not work sensibly.
+.I Fgetc\^
+should be used instead.
+.br
+Because of possible differences in word length and byte ordering,
+files written using
+.I putw\^
+are machine-dependent,
+and may not be read using
+.I getw\^
+on a different processor.
+.\"	%W% of %G%

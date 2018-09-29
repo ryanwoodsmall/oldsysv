@@ -1,0 +1,148 @@
+.\"%W%
+.TH PCL 7 "DEC only"
+.SH NAME
+pcl \- parallel communications link interface
+.SH DESCRIPTION
+.I Pcl\^
+provides the interface for up to two Digital Equipment Corporation
+\s-1PCL-11B\s+1 network buses.
+Each bus can be used to interconnect
+up to 16 \s-1CPU\s+1's, providing relatively fast communication
+without individual point-to-point connections.
+.PP
+The interface permits simultaneous bi-directional communication
+between any machines on a single bus.
+Additionally,
+each such path is further subdivided into
+8 independent channels.
+A single control interface is provided
+to reduce the line monitoring overhead for a daemon process.
+.PP
+The minor device number for a \s-1PCL\s+1 channel is constructed as follows:
+.TP "\w'the low order 3 bits  'u"
+the low order 3 bits
+specify a channel number.
+.TP
+the next 4 bits
+specify one of 16 machines.
+(This number must be one less than the
+.SM PCL
+Time Division Multiplexed
+bus number set in the hardware.)
+.TP
+the next bit
+specifies one of 2 \s-1PCL\s+1's.
+.P
+Note that if the remote end issues a close
+(or an open after a crash),
+the channel must be closed and re-opened to reset its state.
+Such a condition can be detected by the error
+.SM EBADF
+returned by a
+.IR read ,
+.I write
+or
+.IR ioctl .
+.P
+There is a per-channel control interface supported via
+.IR ioctl (2)
+calls:
+.P
+.RS 5
+\fB#include <sys/pcl.h>\fR
+.sp
+ioctl(fildes, command, arg)
+.br
+struct ctrlmsg { char * addr; int count; } arg;
+.RE
+.P
+The commands using this form are:
+.RS 5
+.TP
+\s-1CTRL\s+1
+Send a
+.I control
+message.
+Get the message specified in
+.I arg
+and send it to the control port for this channel at the remote end.
+.TP
+\s-1GET\s+1
+Extract details from the
+.I pcl
+structure for this channel.
+Of particular interest is the value of
+.I pcl_flag
+which will give an indication of the status of the channel.
+Either the whole, or a part, of the
+.I pcl
+structure may be read out.
+.TP
+\s-1GDEBUG\s+1
+Extract details from the
+.I pcldb
+circular buffer containing debug info.
+The value returned by the call is an index to the next empty slot.
+.RE
+.P
+Additional
+.IR ioctl (2)
+calls have the form:
+.P
+.RS 5
+ioctl(fildes, command, arg)
+.br
+int arg;
+.RE
+.P
+The commands using this form are:
+.RS 5
+.TP
+\s-1WAIT\s+1
+Wait for a remote open or close.
+If a remote close is detected, this call returns
+.SM EBADF.
+Note that if the remote channel is already open, this call returns
+immediately.
+.TP
+\s-1FLAG\s+1
+Change the values of the
+.I pcl_flag
+bits
+.SM P_RETRY
+(allow retries on errors)
+and
+.SM P_NOCTRL
+(force error return from any subsequent
+.I ioctl
+calls)
+to those in
+.I arg.
+.TP
+\s-1SIG\s+1
+Send the signal specified in
+.I arg
+to the remote end.
+.TP
+\s-1RSTR\s+1
+Turn on the
+.I pcl_flag
+bit
+.SM P_RSTR
+which prevents use of the
+.SM CTRL
+call above.
+.RE
+.SH FILES
+.PD 0
+.TP "\w'/dev/pcl/*[0-7]  'u"
+/dev/pcl/*[0-7]
+normal machine and subchannel interface.
+.TP
+/dev/pcl/ctrl
+control interface.
+.PD
+.SH SEE ALSO
+net(1C),
+pcldaemon(1C),
+ioctl(2).

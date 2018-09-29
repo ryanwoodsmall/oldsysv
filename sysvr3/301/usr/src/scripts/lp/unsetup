@@ -1,0 +1,54 @@
+#ident "@(#)pkg.lp:lp/unsetup	1.4"
+#
+#  unsetup
+#
+#	This procedure will modify /etc/inittab
+#	to free up the "tty's" used
+#	by the lp system as a hardwired printer port(s)
+#	and remove /etc/rc.d/lp which starts the scheduler
+#	when the system is booted.
+#
+
+#
+# Shut down the scheduler
+#
+
+sh -c /usr/lib/lpshut 2>/dev/null >/dev/null
+
+#
+# Modify entry in /etc/inittab
+#
+
+for device in `lpstat -v | cut -d: -f2`
+do
+	num=`basename $device`
+	if
+		[ "$num" = contty ]
+	then
+		num=ct
+	else
+		num=`expr "$num" : ".*\([0-9][0-9]*\)"`
+	fi
+	if
+		[ "$num" != "" ]
+	then
+		ed - /etc/inittab <<-!End
+			H
+			g/^$num:/s/ *#.*//
+			w
+			q
+		!End
+	fi
+done
+
+#
+# Tell /etc/init to look at /etc/inittab again.
+#
+
+/etc/init q
+
+#
+# Remove lp entry from /etc/rc.d
+#
+
+rm -f /etc/rc.d/lp

@@ -1,0 +1,22 @@
+
+\Stouch\S:  Description
+
+Syntax Summary:  touch [-c] [-am [mmddhhmm[yy]] file_name ...]
+
+         where:   mmddhhmm  represents a 8 digit number with the first
+                            two digits specifying month, second two
+                            specifying day, third two specifying hour,
+                            and the last two specifying minutes.
+
+                  yy  represents the last two digits of the year.
+
+                  file_name  is the name of a file.
+
+Description:
+     \Stouch\S changes the access and modification times of files.  If you
+     type \Stouch\S followed by <file_name>, \Stouch\S sets the access and
+     modification times for this file to the current time.  If <file_name>
+     doesn't exist, \Stouch\S creates it.  \Stouch\S with the "a" or "m"
+     options and <mmddhhmm> and <yy> arguments following it changes the access
+     or modification times for the file to that time.  See the example screen
+     for common uses for \Stouch\S.

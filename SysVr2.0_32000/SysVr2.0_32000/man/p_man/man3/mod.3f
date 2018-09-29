@@ -1,0 +1,29 @@
+.TH MOD 3F
+.SH NAME
+mod, amod, dmod \- \s-1FORTRAN\s+1 remaindering intrinsic functions
+.SH SYNOPSIS
+.nf
+.B "integer i, j, k"
+.B "real r1, r2, r3"
+.B "double precision dp1, dp2, dp3"
+.P
+.B "k = mod(i, j)"
+.P
+.B "r3 = amod(r1, r2)"
+.B "r3 = mod(r1, r2)"
+.P
+.B "dp3 = dmod(dp1, dp2)"
+.B "dp3 = mod(dp1, dp2)"
+.SH DESCRIPTION
+.I Mod\^
+returns the integer remainder of its first argument
+divided by its second argument.
+.I Amod\^
+and
+.I dmod\^
+return, respectively, the real and double-precision whole number remainder
+of the integer division of their two arguments.
+The generic version
+.I mod\^
+will return the data type of its arguments.
+.\"	%W% of %G%

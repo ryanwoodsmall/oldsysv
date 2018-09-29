@@ -1,0 +1,47 @@
+.TH NICE 2 
+.SH NAME
+nice \- change priority of a process
+.SH SYNOPSIS
+.B int nice (incr)
+.br
+.B int incr;
+.SH DESCRIPTION
+.I Nice\^
+adds the value of 
+.I incr\^
+to the nice value of the calling process.
+A process's
+.I nice value\^
+is a positive number for which a more positive value
+results in lower
+.SM CPU
+priority.
+.PP
+A maximum nice value of 39 and a minimum nice value of 0
+are imposed by the system.
+Requests for values above or below these limits result in the nice value
+being set to the corresponding limit.
+.PP
+.TP 15
+.TP
+.SM
+\%[EPERM]
+.I Nice\^
+will fail and not change the nice value if
+.I incr\^
+is negative or greater than 40 and the effective user
+.SM ID
+of the calling process is not super-user.
+.SH RETURN VALUE
+Upon successful completion,
+.I nice\^
+returns the new nice value minus 20.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH SEE ALSO
+exec(2).
+.br
+nice(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	@(#)nice.2	6.2 of 9/6/83

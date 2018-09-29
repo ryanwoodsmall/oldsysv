@@ -1,0 +1,8 @@
+
+\Sstty\S:  Options
+
+     -a   reports the values of all of the terminal characteristics.
+
+     -g   reports the current terminal characteristics in a form \Sstty\S can
+          use as an argument.
+

@@ -1,0 +1,55 @@
+.TH DCUTEST 1M
+.SH NAME
+dcutest \- disk formatter and test program
+.SH DESCRIPTION
+\f2Dcutest\fR is a comprehensive stand-alone disk formatter
+and test program.  This program must be used to format new disks
+and to write headers on each drive in the system.  Numerous commands
+are also available to perform a variety of functional tests
+on the drives.
+.P
+The first thing \f2dcutest\fR does is attempt to identify the
+disk drives connected to the system, and configure itself
+accordingly.  If this is successful, each disk type, along with
+its parameters, will be displayed.  If this fails, the program
+will indicate on which drives the failure occurred.  \fBDcutest\fR
+will also indicate which drives have missing headers.
+.P
+The formatting commands available are:
+.P
+.DS 1
+   ua                     Initiate the auto identification and configuration
+                          sequence for the currently selected disk unit.
+
+   uc c<n1>t<n2>s<n3>     Set the header parameters for the currently
+                          selected disk unit.
+
+                            n1 - number of cylinders
+                            n2 - number of tracks/cylinder
+                            n3 - number of sectors/track
+
+   xh                     Install a header on the currently selected
+                          disk unit.
+
+   x<l><u>                Format the currently selected disk unit from
+                          cylinder <l> to cylinder <u>.
+
+   xr<n>                  Set the maximum number of formatting retries
+                          to <n>.
+
+   xi<n>                  Set the interleave formatting value.
+
+   xp<z><nz>              Set the PLOZ and PLONZ formatting values for the
+                          currently selected disk unit.
+.P
+For more information on \f2dcutest\fR, and on other commands and
+functions available, consult the \f2NS16000 SYS16 System Manual\fR.
+.SH FILES
+/stand/dcutest
+/usr/include/sys/disk.h
+.SH "SEE ALSO"
+\f2NS16000 SYS16 System Manual\fR, chapter 4, section 4.4.1, which
+describes the \f2dcutest\fR program in detail.
+.SH DIAGNOSTICS
+Self-explanatory.
+.\"	@(#)dcutest.1m	5.2 of 10/15/84

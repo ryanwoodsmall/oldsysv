@@ -1,0 +1,264 @@
+'\" To get a copy of TOOLKIT, type:  mm TOOLKIT
+.P
+This directory contains shell procedures designed to carry out
+various verification and regeneration tasks on the UNIX System User's
+Manual
+and the UNIX System Administrator's Manual.
+The outputs of all procedures are left in files in directory
+.I /usr/man/tmp
+or any other specified temporary directory;
+tocrc (see below) also leaves output in
+.I /usr/man/u_man/man0
+for the UNIX System User's Manual
+and
+.I /usr/man/a_man/man0
+for the UNIX System Administrator's Manual.
+By default, these procedures operate on all
+sections of the designated manual.
+The options `-s' and `-f' are available
+to restrict the list of sections
+and/or files to be used.
+For example:
+.DS I
+ckspell -s 1 2 3 -f a\*
+.DE
+will check spelling in all files whose names begin with `a' in
+Sections 1-3.
+Two additional options, `-m' and `-t', can be used
+to change the shell procedures' idea of where the manual and its
+`tmp' directory reside.
+For example:
+.DS I
+list -m /usr/man/a_man -t /usr/man/altmp
+.DE
+may be used to list (see below) the sections of the UNIX System Administrator's Manual.
+The default values for the `-m' and `-t' options are 
+.I /usr/man/u_man
+and
+.IR /usr/man/tmp ,
+respectively.
+These options are also useful when a new
+manual is being built in a secluded place.
+.P
+Note that most of the shell procedures produce results-files,
+one for each section of the manual.
+In particular, the shell
+procedures prefaced with `ck', which perform different types of
+verification, produce a unique sorted list for each section, as
+opposed to a file-by-file list.
+This means that one must search
+all the files in a section (using `grep', most likely) for
+occurrences of a particular string.
+.P
+Occasionally, some of these procedures will produce lines of
+spurious output.
+This happens when, for instance, some text
+looks like a cross-reference or a file name, e.g., `array(3)' or
+`nroff/troff'.
+.P
+The following describes these procedures:
+.VL 10
+.LI ckcrefs
+Locates all cross-references to other manual entries and
+checks to see whether the referenced pages exist.
+Produces
+files
+.I badcref?
+containing all bad cross-references in
+each section.
+Also produces files
+.IR lower.suf? ,
+containing
+occurrences of lower-case section suffixes, i.e., 1c, 1m, 3c,
+which should be changed to upper-case (1C, 1M, 3C, etc.).
+.LI ckfrefs
+Locates all references in the FILES portion of manual entries
+and checks to see whether the referenced files exist in the
+running system.
+Produces files
+.I badfref?
+containing
+references to non-existent files.
+Note that file references
+under headings other than FILES are not checked.
+Temporary
+files will, of course, not be found.
+.LI cknames
+Performs various checks on the `.TH' line and the NAME
+section of entries.
+Note that the files produced by this
+procedure contain the file names of entries that fail the
+corresponding check:
+Checks to see that the entry contains a `.SH NAME'
+section, producing files
+.IR no.NAME? .
+Checks the NAME section of the entry to insure that it is
+exactly one line long (multi-line NAMEs will severely
+confuse `tocrc'), producing files
+.IR not.one.line? .
+Checks to see that the entry contains a `.TH' line,
+producing files
+.IR no.TH? .
+Checks that the entry name and section given on the TH
+line match the file name of that entry.
+For example, a
+file containing `.TH GURP 1M' should be called `gurp.1m'.
+Produces files
+.IR file.match? .
+Checks that the first name appearing on the NAME line is
+the same as the entry name on the TH line (`ckso' below
+assumes that this is always true).
+Produces files
+name.order?.
+.LI ckso
+This procedure performs two types of verification of nroff
+`.so' pointers in /usr/man/[au]_man/man?.
+It first locates files
+that contain only a `.so' reference to a real entry, and
+checks to see whether that file (entry) exists.
+Bad
+references are written to the files
+.IR badso? .
+Secondly,
+`ckso' verifies the reverse; it locates each real entry,
+looks at the NAME portion to see whether more than one name
+appears there, and checks whether a file with a `.so'
+reference exists for all such names other than the first.
+Missing `.so' entries are written to the files
+.IR needso? .
+.LI ckspell
+Utilizes spell to check for spelling errors in manual
+entries.
+Produces file sp.errs containing a section-by-
+section list of errors.
+Uses file /usr/man/tools/sp.ignore
+to eliminate strings that appear often in the manual and are
+normally flagged as errors by `spell'.
+.LI cleanup
+Cleans up the litter of temporary files that had no diagnostic
+output contained within them.
+More exactly,
+any file in the specified temporary directory (i.e., /usr/man/tmp)
+that has 2 or fewer lines of data is taken to be nohup.out-type file
+or a file just containing a `date' line and a new-line.
+Do not run cleanup, unless you are sure that all other checking procedures
+have finished; the results of removing an interim tmp-file will taint
+the accuracy of the diagnostics.
+.LI folio.mk
+Uses the files produced by pgcnt (see below) and creates a folio list
+(printer's instructions) in the selected temporary directory.
+The
+.I pages?
+files are left untouched, and a file
+.I M.folio
+is created that can be run off using `mm -t'.
+Twelve (12) pitch is recommended.
+.LI list
+Produces file list containing a `long' listing with block
+counts (`ls -ls') for each section of the manual.
+.LI mcmp
+Compares two versions of the manual and reports what files
+are unique to each and whether or not the common files have
+changed.
+If the `-d' option is given, diff-style listings
+are generated for each common file instead.
+The `-o' option
+is used to specify the name of the second manual directory;
+/usr/nman is the default.
+Produces files
+.I cmp?
+or
+diff?.
+.LI mgrep
+Searches entire manual for the patterns specified as
+arguments (i.e., `mgrep "typewriter"').
+Produces file
+.IR greps ,
+containing section-by-section list for each pattern.
+.LI mklinks
+Creates files containing appropriate `.so' links to major
+entries where necessary.
+These links point to their own
+directory; don't run this procedure anywhere else than in
+/usr/man.
+Should resolve all errors noted in
+.I needso?
+(see `ckso' above).
+.LI mroff
+Utilizes the man command to troff and typeset manual entries.
+The `-p' (yes, `-p'!) option is used to produce entries in a
+8.5x11 inch format, as opposed to the default 6x9.
+Produces
+files
+.I mlog?
+containing logs of the files that were
+processed.
+Mroff ignores files that contain only a `.so'
+line.
+.LI pgcnt
+Produces files
+.I pages?
+containing page counts for each
+entry.
+Also produces
+.I totalpgs
+containing totals for each
+section and a grand total.
+The `-p' option should be used to
+count pages in the large format (see `mroff' above).
+Uses
+the C program pages (compiled from pages.c).
+.LI prnames
+Produces files
+.I names?
+containing the NAME portion of each
+entry.
+.LI prsynops
+Produces files
+.I synops?
+containing the SYNOPSIS portion of
+each entry.
+A question mark (?) means that the entry has no
+SYNOPSIS portion.
+.LI purge
+Lists all the file names in the selected manual that do not
+appear to be valid manual entry names.
+Likely candidates are ed.hup, nohup.out, core(?).
+The only valid name to date that doesn't fit the naming algorithm is
+a.out.4 whose existence is reckoned with.
+With the `-c' option, purge will clean out all the listed names.
+.LI rm.so
+Removes all files that are `.so' links of another entry.
+This is useful when doing a major overhaul on the manuals and you
+want `mklinks' to do all the dirty work.
+.LI runcks
+Runs a standard regression of the above tests against the manual.
+Tests that are not required should be commented out of the procedure.
+It is designed to keep a log of its history; hence, its output
+should be directed to a file, usually in the same temporary directory
+that the check procedures are using.
+.LI tocrc
+Regenerates input for Table of Contents and Permuted Index.
+Use `tocrc all' to regenerate both from scratch, `tocrc t' to
+regenerate both from existing input files
+.I tocx?
+in
+/usr/man/tmp, or `tocrc ?' to create, in /usr/man/tmp,
+the corresponding input file
+.IR tocx? .
+The `-p' option
+should be used when preparing the table of contents and/or
+index in the large (8.5x11 inch) format (this option, if
+present, must be the first argument to `tocrc'); the small (6x9 inch)
+format is the default.
+See
+description in /usr/man/READ.ME of the files in
+/usr/man/[ua]_man/man0.
+Uses files break and ignore in
+/usr/man/tools.
+.LE
+.P
+The file .param is described in /usr/man/READ.ME.
+The files
+M.folio and M.tabs are self-explanatory.
+.\"	@(#)TOOLKIT	5.2 of 5/19/82

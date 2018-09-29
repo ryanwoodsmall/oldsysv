@@ -1,0 +1,115 @@
+.TH TRACE 7
+.SH NAME
+trace \- event-tracing driver
+.SH DESCRIPTION
+.I Trace\^
+is a special
+file that allows event records generated within the
+.SM UNIX
+system kernel to be passed
+to a user program so that the
+activity of a driver or other system routines can be monitored for
+debugging purposes.
+.PP
+An event record is generated from within a kernel driver or system routine by
+invoking the
+.I trsave
+function:
+.PP
+.RS
+trsave (dev, chno, buf, cnt)
+.br
+char	dev, chno, \(**buf, cnt;
+.RE
+.PP
+.I Dev\^
+is a minor device number of the trace driver;
+.I chno\^
+is an integer between 0 and 15 inclusive that identifies
+the data stream (channel) to which the record belongs;
+.I buf\^
+is a buffer containing the data
+for an event; and
+.I cnt\^
+is the number
+of bytes in
+.IR buf .
+Calls to
+.I trsave\^
+will result in data being placed on a queue,
+provided that some user program has opened the trace minor device
+.I dev\^
+and has enabled channel
+.IR chno .
+Event records consisting of a time stamp (4 bytes),
+the channel number (1 byte), the count (1 byte),
+and the event data
+.RI ( cnt
+bytes) are stored on a
+queue until
+a system-defined maximum (\c
+.SM TRQMAX\*S)
+is reached;
+an event record is discarded if there is not sufficient room
+on the queue for the entire record.
+The
+queue is emptied by a user program reading the
+trace driver.
+Each
+.IR read
+returns an integral number of event
+records; the read count must, therefore, be at
+least equal to
+.I cnt
+plus six.
+.PP
+The
+.I trace\^
+driver supports
+.IR open,
+.IR close(2),
+.IR ioctl(2),
+and
+.IR read(2),
+system calls.
+The
+.I ioctl
+system call is invoked as follows:
+.PP
+.RS
+#include \|<sys/vpm\f3.\fPh>
+.br
+int fildes, cmd,  arg;
+.br
+ioctl (fildes, cmd, arg);
+.RE
+.PP
+The values for the
+.I cmd
+argument are:
+.HP 7
+\s-1VPMSETC\s+1\-Enable trace channels.
+This command enables each channel indicated
+by a 1 in the bit mask found in
+.IR arg .
+The low-order bit (bit 0) corresponds to channel zero,
+the next bit (bit 1) corresponds to channel 1, etc.
+.HP 7
+\s-1VPMGETC\s+1\-Get enabled channels.
+This command returns in
+.I arg
+a bit mask containing a 1 for each channel that is currently enabled.
+.HP 7
+\s-1VPMCLRC\s+1\-Disable channels.
+This command disables the channels indicated
+by a 1 in the bit mask found in
+.IR arg .
+.PP
+.SH SEE ALSO
+vpmsave(1M),
+close(2),
+ioctl(2),
+open(2),
+read(2),
+vpm(7).
+.\"	@(#)trace.7	6.2 of 9/6/83

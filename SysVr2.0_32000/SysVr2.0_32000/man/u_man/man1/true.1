@@ -1,0 +1,33 @@
+.TH TRUE 1 
+.SH NAME
+true, false \- provide truth values
+.SH SYNOPSIS
+.B true
+.PP
+.B false
+.SH DESCRIPTION
+.I True\^
+does nothing, successfully.
+.I False\^
+does nothing, unsuccessfully.
+They are typically used in input to
+.IR  sh (1)
+such as:
+.PP
+.RS
+while true
+.br
+do
+.RS
+.I command
+.RE
+done
+.RE
+.SH SEE ALSO
+sh(1).
+.SH DIAGNOSTICS
+.I True\^
+has exit status zero,
+.I false\^
+nonzero.
+.\"	@(#)true.1	6.2 of 9/2/83

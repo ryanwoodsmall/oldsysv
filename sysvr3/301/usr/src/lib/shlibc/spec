@@ -1,0 +1,362 @@
+#ident 	"@(#)shlibc:spec	1.3"
+##
+## Libc_s specification file
+##
+#address .text 0x80040000
+#address .data 0x800e0000
+#target /shlib/libc_s
+#branch
+__doprnt 1
+_bufsync 2
+_cerror	3
+_cleanup 4
+_dtop	5
+_faddd	6
+_fadds	7
+_fcmpd	8
+_fcmps	9
+_fcmptd	10
+_fcmpts	11
+_fdivd	12
+_fdivs	13
+_fdtos	14
+_filbuf	15
+_findbuf 16
+_findiop 17
+_flsbuf	18
+_fltod	19
+_fltos	20
+_fmuld	21
+_fmuls	22
+_fnegd	23
+_fnegs	24
+_fpstart 25
+_fstod	26
+_fsubd	27
+_fsubs	28
+_ftdtol	29
+_ftdtou	30
+_ftstol	31
+_ftstou	32
+_futod	33
+_futos	34
+_getflthw 35
+_getfltsw 36
+_ltostr	37
+_ptod	38
+_wrtchk	39
+_xflsbuf 40
+abs	41
+access	42
+atof	43
+atoi	44
+atol	45
+brk	46
+calloc	47
+cfree	48
+chdir	49
+chmod	50
+close	51
+creat	52
+ecvt	53
+fclose	54
+fcntl	55
+fcvt	56
+fflush	57
+fgetc	58
+fgets	59
+fopen	60
+fpgetmask 61
+fpgetround 62
+fpgetsticky 63
+fprintf	64
+fpsetmask 65
+fpsetround 66
+fpsetsticky 67
+fputc	68
+fputs	69
+fread	70
+free	71
+freopen	72
+frexp	73
+fseek	74
+fstat	75
+fwrite	76
+gcvt	77
+getchar	78
+getenv	79
+getopt	80
+getpid	81
+gets	82
+getw	83
+ioctl	84
+isatty	85
+isnand	86
+kill	87
+ldexp	88
+lseek	89
+malloc	90
+memccpy	91
+memchr	92
+memcmp	93
+memcpy	94
+memset	95
+mktemp	96
+open	97
+printf	98
+putchar	99
+puts	100
+putw	101
+read	102
+realloc	103
+sbrk	104
+setbuf	105
+sighold	106
+sigignore 107
+signal	108
+sigpause 109
+sigrelse 110
+sigset	111
+sprintf	112
+stat	113
+strcat	114
+strchr	115
+strcmp	116
+strcpy	117
+strlen	118
+strncat	119
+strncmp	120
+strncpy	121
+strrchr	122
+time	123
+tolower	124
+toupper	125
+ungetc	126
+unlink	127
+utime	128
+write	129-150
+#objects
+##
+##
+##
+##	 Imported symbols definition files
+##
+port/gen/ctype_def.o
+port/gen/mall_def.o
+port/stdio/stdio_def.o
+m32/gen/gen_def.o
+m32/fp/fp_def.o
+##	 Read/Write Global data
+port/gen/opt_data.o
+m32/gen/m32_data.o
+m32/fp/fp_data.o
+
+##	 REST of *.o
+
+##	Some frequently used functions, called randomly
+
+m32/gen/abs.o
+port/gen/tolower.o
+port/stdio/ungetc.o
+m32/gen/strcmp.o
+
+##	malloc family
+
+port/gen/calloc.o
+port/gen/malloc.o
+
+##	infrequently used, page glue
+
+port/gen/strncat.o
+
+##	frequently used, randomly called
+
+port/gen/memccpy.o
+m32/gen/memcpy.o
+port/gen/memset.o
+port/gen/strcat.o
+m32/gen/strcpy.o
+m32/gen/strlen.o
+
+##	stdio group
+
+port/stdio/filbuf.o
+port/stdio/fread.o
+
+##	stdio group
+
+port/stdio/fgetc.o
+port/stdio/fgets.o
+port/stdio/gets.o
+port/stdio/getchar.o
+port/stdio/getw.o
+
+##	stdio group
+
+port/stdio/fputs.o
+port/stdio/putw.o
+port/stdio/fputc.o
+port/stdio/putchar.o
+
+##	infrequently called, page glue
+
+port/gen/toupper.o
+
+##	stdio group
+
+port/stdio/fwrite.o
+port/stdio/flsbuf.o
+port/stdio/fseek.o
+
+##	infrequently called, page glue
+
+port/gen/strncpy.o
+
+##	stdio group
+
+port/gen/isatty.o
+port/stdio/fopen.o
+port/stdio/findiop.o
+
+##	stdio group (remainder)
+
+port/stdio/puts.o
+
+##	printf family
+
+m32/print/fprintf.o
+m32/print/printf.o
+m32/print/sprintf.o
+
+##	floating point stuff, called from _dtop, _ptod and ecvt
+##		fills out page
+
+m32/gen/biglitpow.o
+m32/gen/frexp.o
+m32/gen/ltostr.o
+
+##	page glue
+
+port/gen/memcmp.o
+
+##	printf internals
+
+m32/print/doprnt.o
+
+##	process startup functions
+
+port/gen/mktemp.o
+port/gen/getenv.o
+port/gen/getopt.o
+port/stdio/setbuf.o
+m32/sys/signal.o
+m32/fp/getflts1.o
+m32/fp/getflth0.o
+
+##	printf internals, floating pt
+
+m32/gen/dtop.o
+m32/gen/ecvt.o
+port/gen/gcvt.o
+
+##	misc. stuff, infrequently, randomly called
+##		glue to cross page boundary
+
+port/gen/atol.o
+port/gen/atoi.o
+port/gen/memchr.o
+port/gen/strchr.o
+port/gen/strncmp.o
+port/gen/strrchr.o
+
+##	system calls
+
+m32/crt/cerror.o
+m32/sys/close.o
+m32/sys/access.o
+m32/sys/chdir.o
+m32/sys/chmod.o
+m32/sys/creat.o
+m32/sys/fcntl.o
+m32/sys/fstat.o
+m32/sys/getpid.o
+m32/sys/ioctl.o
+m32/sys/kill.o
+m32/sys/lseek.o
+m32/sys/open.o
+m32/sys/read.o
+m32/sys/sbrk.o
+m32/sys/stat.o
+m32/sys/time.o
+m32/sys/unlink.o
+m32/sys/utime.o
+m32/sys/write.o
+
+##	double fp
+
+m32/fp/dround.o
+m32/fp/dspecial.o
+m32/fp/fdtos.o
+m32/fp/fltod.o
+m32/fp/ftdtol.o
+m32/fp/ftdtou.o
+m32/fp/faddd.o
+m32/fp/fcmpd.o
+m32/fp/fdivd.o
+m32/fp/fmuld.o
+m32/fp/fnegd.o
+
+##	fp util
+
+m32/fp/fpgetmask.o
+m32/fp/fpgetsticky.o
+m32/fp/isnand.o
+m32/fp/fpgetrnd.o
+
+##	single fp
+
+m32/fp/sround.o
+m32/fp/sspecial.o
+m32/fp/fltos.o
+m32/fp/fstod.o
+m32/fp/ftstol.o
+m32/fp/ftstou.o
+m32/fp/fadds.o
+m32/fp/fcmps.o
+m32/fp/fdivs.o
+m32/fp/fmuls.o
+m32/fp/fnegs.o
+
+##	fp masks, misc
+
+m32/gen/atof.o
+m32/gen/ldexp.o
+m32/gen/ptod.o
+m32/fp/fpsetmask.o
+m32/fp/fpsetrnd.o
+m32/fp/fpsetsticky.o
+m32/fp/fpstart1.o
+
+#init ctype_def.o
+_libc__ctype		_ctype
+
+#init fp_def.o
+_libc__getflthw		_getflthw
+
+#init gen_def.o
+_libc__cleanup		_cleanup
+_libc_end		end
+_libc_environ		environ
+
+#init mall_def.o
+_libc_malloc		malloc
+_libc_free		free
+_libc_realloc		realloc
+	
+#init stdio_def.o
+_libc__sibuf		_sibuf
+_libc__sobuf		_sobuf
+_libc__smbuf		_smbuf
+_libc__iob		_iob
+_libc__lastbuf		_lastbuf
+_libc__bufendtab	_bufendtab

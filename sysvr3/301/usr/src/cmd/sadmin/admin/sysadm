@@ -1,0 +1,90 @@
+#ident	"@(#)sadmin:admin/sysadm	2.7"
+#	run menus program against system configuration menus
+#help#
+#help#	This procedure allows users to perform selected administrative
+#help#	functions directed by a series of questions.  There is a menu
+#help#	interface which presents selections and an "express" mode for
+#help#	performing individual operations.
+
+#!	chmod +x ${file}
+
+set -f
+MENUTOP=`pwd`
+export MENUTOP
+case $1 in
+'' )
+	exec mkmenus -m `basename $0` menu 2>&1
+	;;
+*[!/a-zA-Z0-9_]*  |  DESC  |  */DESC )
+	echo >&2 "Usage:  `basename $0` [ subcommand [ arguments ... ] ]
+'$1' is not a valid subcommand or submenu name."
+	exit 1
+esac
+
+if [ ! -d menu ]
+then
+	admerr $0 Missing menu directory.
+	exit 1
+fi
+
+#	*.d directories under menu are magic.  Files there are not subcommands.
+subcommand=`find menu -print  |  grep -v '\.d/'  |  grep "/$1\$"`
+
+runsubcmd() {
+	d=`dirname ${subcommand}`
+	menu=`basename ${d}`
+	sed -n '1i\
+
+		/^#head#/{
+			i\
+'"Running subcommand '`basename $1`' from menu '${menu}',
+		"'	s/^#head#[ 	]*//p
+			a\
+
+			q
+		}' ${d}/DESC 2>/dev/null
+	shift
+	exec /bin/sh ${subcommand:?} $* 2>&1
+}
+
+if [ -f "${subcommand}"  -a  -r "${subcommand}" ]
+then
+	runsubcmd "$@"
+fi
+
+if [ -d "${subcommand}" ]
+then
+	exec mkmenus -m `basename ${subcommand}` ${subcommand} 2>&1
+fi
+
+if [ `echo "${subcommand}"  |  wc -l` -gt 1 ]
+then
+	list=`echo "${subcommand}"  |  sed 's;menu/;;'  |  sort  |
+		pr -tn`
+	
+	trap 'exit 0' 1 2 15
+	subcommand=`checklist -q q -k $$ -fep -H "
+Selecting a particular subcommand or submenu will run that one.
+In the future, you can run it directly by using the full name shown." \
+	"More than one subcommand or submenu name matches '$1'.
+${list}
+Select one: [?, q]" ${list}`
+	case "${subcommand}" in
+	[1-9] | [1-9][0-9] )
+		subcommand=menu/`echo "${list}"  |
+			sed -n "${subcommand}s/[0-9 	]*//p"`
+		;;
+	* )
+		subcommand=menu/${subcommand}
+	esac
+	runsubcmd "$@"
+fi
+
+if [ -z "${subcommand}" ]
+then
+	echo >&2 "`basename $0`:  Cannot find subcommand \"$1\"."
+	exit 1
+fi
+
+admerr $0 "Failure in $0 looking for '${subcommand}'"
+exit 1

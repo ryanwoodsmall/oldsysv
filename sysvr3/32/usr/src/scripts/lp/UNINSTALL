@@ -1,0 +1,26 @@
+#ident	"@(#)pkg.nlp:lp/UNINSTALL	1.2"
+#
+# UNINSTALL the Line Printer Spooling Utilities
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/lp.name`
+
+#
+# Clean up some details.
+#
+/install/install/uninstall
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -fr $i
+done
+echo "The ${PKGNAME} have been removed."

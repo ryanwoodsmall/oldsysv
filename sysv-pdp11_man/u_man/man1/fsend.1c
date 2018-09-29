@@ -1,0 +1,225 @@
+.TH FSEND 1C "DEC only"
+.SH NAME
+fsend \- send files to the \s-1HONEYWELL\s+1 6000
+.SH SYNOPSIS
+.B fsend
+[ options ] [ files ]
+.SH DESCRIPTION
+.I Fsend\^
+arranges to have
+one or more
+.SM UNIX
+System files sent to
+.SM HONEYWELL
+\s-1GCOS\s+1.
+.SM GCOS
+identification must appear in
+the
+.SM UNIX
+System password file (see
+.IR passwd (4)),
+or be supplied by the
+.B \-i
+option.
+If no names appear, the standard input is sent; thus
+.I fsend\^
+may be used as a filter.
+.PP
+Normally, the catalog on the
+.SM HONEYWELL
+file system
+in which the new file will appear is the same as the
+.SM UNIX
+System login name of the person who issues the command.
+If, however, a user has a different name in the
+third field of the
+.SM GCOS
+``ident card image''
+(which image is extracted from the
+.SM UNIX
+System
+password file; see
+.IR passwd (4)),
+this name is taken as the
+.SM GCOS
+catalog name.
+Whatever
+.SM GCOS
+catalog is finally
+used, the user must have arranged that the user
+.SM ID
+``network''
+has create permission on that catalog,
+or read and write permission on the individual files.
+The latter is more painful
+but preferred if access to other files in the catalog
+is to be fully controlled.
+This can be accomplished with the
+.SM GCOS
+commands:
+.PP
+.RS
+filsys \|mc \|<user \s-1ID\s+1>,c/network/,m/\|<user \s-1ID\s+1>/
+.RE
+or
+.RS
+filsys \|cf \|<file>,w/network/,b/<initial-size>,unlimited/
+.RE
+.PP
+The name of the
+.SM GCOS
+file is ordinarily the same
+as the name of the
+.SM UNIX
+System file.
+When the standard input is sent,
+the
+.SM GCOS
+file is normally taken to be
+.BR pipe.end .
+.PP
+The following options, each as a separate argument,
+may appear in any order
+but must precede all file name arguments.
+.PP
+.PD 0
+.TP 7
+.B \-a
+Send succeeding files as
+.SM ASCII
+(default).
+If the last character of the file is not a new-line,
+one is added.
+All other characters are preserved.
+.TP 7
+.B \-b
+Send succeeding files as binary.
+Each
+.SM UNIX
+System byte is right justified
+in a
+.SM GCOS
+byte and the bytes packed into 120-byte logical records
+(30
+.SM GCOS
+words).
+The last record is padded out with \s-1NUL\s+1s.
+.TP 7
+.B \-c
+Make copies of the files to be sent before returning to the user.
+.TP 7
+.B \-r
+Remove the files after sending them.
+.TP 7
+.BI \-f file
+Use
+.I file
+as the
+.SM GCOS
+file name for the file being sent.
+.TP 7
+.BI \-i job,bin
+Supply the
+.SM GCOS
+``ident card'' image as the parameter
+.BI \-i job,bin
+where
+.I job
+is the
+.SM GCOS
+job number and
+.I bin
+the
+.SM GCOS
+bin number
+or any comment to the
+.SM GCOS
+operators.
+.TP 7
+.B \-m
+When transmission is complete, report by
+.IR mail (1)
+the so-called
+.I snumb\^
+of the receiving
+.SM GCOS
+job.
+The mail is sent by the
+.SM UNIX
+System daemon;
+there is no guarantee that the
+.SM GCOS
+job ran successfully.
+This is the default option.
+.TP 7
+.B \-n
+Do not report the completion of transmission by
+.IR mail (1).
+.TP 7
+.B \-o
+Print the on-line
+.SM GCOS
+accounting output.
+.TP 7
+.B \-t
+Toss out the on-line
+.SM GCOS
+accounting output.
+This is the default option.
+.TP 7
+.BI \-s n\^
+Submit job to
+.SM GCOS
+with service grade
+.I n\^
+.RI ( n "=1, 2, 3, 4)."
+Default is
+.BR \-s1 .
+.TP 7
+.BI \-u userid
+Use
+.I userid
+as the
+.SM GCOS
+catalog name for all files.
+.TP 7
+.B \-x
+Send succeeding files to be archived by the
+.SM GCOS
+archive command.
+.PD
+.SH EXAMPLE
+The command:
+.RS
+.PP
+fsend \|\-t \|\-u\|unixsup \|\-b \|\-f\|gfile \|ufile
+.RE
+.PP
+will send the binary
+.SM UNIX
+System file
+.B ufile
+to become the
+.SM GCOS
+file
+.BR unixsup/gfile ,
+and will not produce any on-line
+.SM GCOS
+accounting output.
+.SH FILES
+.PD 0
+.TP 20
+/etc/passwd
+user's identification and
+.SM GCOS
+ident card.
+.TP
+/usr/lib/dpd
+sending daemon.
+.TP
+/usr/spool/dpd/\(**
+spool area.
+.PD
+.SH SEE ALSO
+dpd(1C), dpr(1C), fget(1C), gcat(1C), mail(1).
+.\"	@(#)fsend.1c	5.2 of 5/18/82

@@ -1,0 +1,44 @@
+.TH TIC 1M
+.SH NAME
+tic \- terminfo compiler
+.SH SYNOPSIS
+.B tic
+[
+.BR \-v [\fIn\fR]
+]
+file ...
+.SH DESCRIPTION
+.PP
+.I Tic
+translates terminfo files from the source format into the compiled format.
+The results are placed in the directory \fB/usr/lib/terminfo\fP.
+.PP
+The
+.B \-v
+(verbose)
+option causes
+.I tic
+to output trace information showing its progress.
+If the optional integer is appended, the level of
+verbosity can be increased.
+.PP
+.I Tic
+compiles all terminfo descriptions in the given files.
+When a \fBuse=\fP field is discovered,
+.I tic
+searches first the current file, then the master file,
+which is ``./terminfo.src''.
+.PP
+If the environment variable TERMINFO is set, the results are placed
+there instead of \fB/usr/lib/terminfo\fP.
+.PP
+Some limitations: total compiled entries cannot exceed 4096 bytes.
+The name field cannot exceed 128 bytes.
+.SH FILES
+/usr/lib/terminfo/*/*	compiled terminal capability data base
+.SH "SEE ALSO"
+curses(3X), terminfo(4).
+.SH BUGS
+Instead of searching \f3./terminfo.src\fR, it should check for an existing
+compiled entry.
+.\"	@(#)tic.1m	6.3 of 9/2/83

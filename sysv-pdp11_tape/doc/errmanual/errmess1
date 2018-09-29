@@ -1,0 +1,1400 @@
+.\"	@(#)errmess1	5.2 of 5/14/82
+.NM "\fIstring\fP on bad dev \fI#\fP(8)  \*(Do"
+.Ds
+A problem has been detected with a file system on a block type device
+whose major device number exceeds the number of block device drivers
+generated in the system.
+The \fIstring\fP may be one of the following:
+\fBbad block\fP, \fBbad count\fP, \fBbad free count\fP, \fBno space\fP, or \fBout of inodes\fP.
+The \fI#\fP represents the minor device number.
+.Ac
+The main concern is that the major device number exceeds the number of
+block device drivers generated in the system.
+Probable causes for this include both software and hardware problems.
+Check any new device drivers which have not been completely debugged
+or any UNIX System device driver which has been modified without authorization.
+Also, check that the configuration information in the system description
+file is correct.
+If none of the above apply, suspect bad hardware and contact your support
+organization.
+The corrective action for the file system problem can be found in the
+action section for message:
+.DS
+	\fIstring\fP on \fIdevice type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]
+.DE
+where \fIstring\fP is one of the following:
+\fBbad block\fP, \fBbad count\fP, \fBbad free count\fP, \fBno space\fP,
+or \fBout of inodes\fP.
+.Rf
+os/prf.c
+.LE
+.NM "\fIstring\fP on CDT, minor \fI#\fP[octal]  \*(Co"
+.Ds
+A problem has been detected with the file system residing on the TU58 tape
+cartridge.
+The \fIstring\fP may be one of the following:
+\fBbad block\fP, \fBbad count\fP, \fBbad free count\fP, \fBno space\fP, or \fBout of inodes\fP.
+.Ac
+Refer to the action section for messages:
+.DS
+	\fIstring\fP on \fIdevice type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]
+.DE
+where \fIstring\fP is one of the following:
+\fBbad block\fP, \fBbad count\fP, \fBbad free count\fP, \fBno space\fP, or \fBout of inodes\fP.
+.Rf
+io/cdt.c
+.LE
+.NM "\fItype\fP drive \fI#\fP on controller \fI#\fP not available  \*(Do"
+.Ds
+The designated drive is no longer accessible.
+The \fItype\fP may be one of the following: \fBRP04/5/6\fP, \fBRM05\fP, \fBRM80\fP, \fBRP07\fP, \fBML11\fP, and
+\fBDISK\fP.
+.Ac
+Check that the drive number specified is the number of a powered up,
+online disk drive.
+If a dual ported drive is involved, be sure that it is currently
+residing on your system.
+If none of the above apply, contact your support organization.
+.Rf
+io/gd.c
+.LE
+.NM "\fIunit num\fP in dgn \*(Bo"
+.Ds
+A device has been 
+placed in diagnostic state to allow special operations to take place.
+The special operations include on-line diagnostics
+and formatting/verifying disk packs.
+\fIUnit\fP is the type of device and \fInum\fP is the
+unit-number of the device.
+\fIUnit\fP may be one of the following:
+\fBdfc\fP, \fBmhd\fP.
+.Ac
+For information only.
+.Rf
+io/dfcmaint.c
+.LE
+.NM "\fIunit num\fP in svc \*(Bo"
+.Ds
+A device has been restored to operational service.
+\fIUnit\fP is the type of device and \fInum\fP is the
+unit-number of the device.
+\fIUnit\fP may be one of the following:
+\fBacu\fP, \fBdfc\fP, \fBmhd\fP, \fBiop\fP, \fBtn4\fP, \fBtn74\fP, \fBtn75\fP, \fBtn82\fP, \fBtn83\fP, \fBtn85\fP, \fBun52\fP, \fBun53\fP.
+.Ac
+For information only.
+.Rf
+io/acu.c, io/dfcmaint.c, io/iopmaint.c, io/tn4.c, io/tn74.c, io/tn75.c,
+io/tn82.c, io/tn83.c, io/tn85.c, io/un52.c, io/un53.c
+.LE
+.NM "\fIunit num\fP oos \*(Bo"
+.Ds
+A device has been removed from operational service.
+\fIUnit\fP is the type of device and \fInum\fP is the unit-number
+of the device.
+\fIUnit\fP may be on the following:
+\fBacu\fP, \fBdfc\fP, \fBmhd\fP, \fBiop\fP, \fBtn4\fP, \fBtn74\fP, \fBtn75\fP, \fBtn82\fP, \fBtn83\fP, \fBtn85\fP, \fBun52\fP, \fBun53\fP.
+.Ac
+For information only.
+.Rf
+io/acu.c, io/dfcmaint.c, io/iop.c, io/iopmaint.c, io/tn4.c, io/tn74.c,
+io/tn75.c, io/tn82.c, io/tn83.c, io/tn85.c, io/un52.c, io/un53.c
+.LE
+.NM "\fIunit num\fP removed from configuration  \*(Bo"
+.Ds
+A device has been removed from the system configuration.
+\fIUnit\fP is the type of device and may be one of the following:
+\fBchannel\fP, \fBiop\fP, and \fBdfc\fP.
+\fINum\fP is the unit-number of the device.
+.Ac
+This message occurs for one of two reasons:
+.DS
+1)  The system has been booted with the minimal configuration
+    option set. All channels except 10 and 11 are removed from
+    the configuration, along with subordinate IOPs and DFCs.
+
+2)  A channel could not be initialized. It and subordinate IOPs
+    and DFCs are removed. In this case the message \fBchannel #
+    init failed\fP will proceed the removal. As this indicates
+    hardware problems, contact your support organization.
+.DE
+.Rf
+ml/intrmsg.c
+.LE
+.NM "3270: Bad RTNRBUF  \*(So"
+.Ds
+A problem was detected in a returned receive buffer.
+.Ac
+This message indicates a software problem with the 3270 script.
+Contact your support organization.
+.Rf
+io/em.c
+.LE
+.NM "3270: Bad RTNXBUF  \*(So"
+.Ds
+A problem was detected in a returned transmit buffer.
+.Ac
+This message indicates a software problem with the 3270 script.
+Contact your support organization.
+.Rf
+io/em.c
+.LE
+.NM "3270: Bad tty (RBUF [UNLK])  \*(So"
+.Ds
+An invalid terminal id was found in a receive buffer.
+If \fBUNLK\fP appears, the bit to unlock the keyboard was set in the receive
+buffer.
+.Ac
+A buffer received back from the IBM processor references an invalid terminal.
+This is probably a software problem with the 3270 script.
+Contact your support organization.
+.Rf
+io/em.c
+.LE
+.NM "3270: Bad tty (XBUF [UNLK])  \*(So"
+.Ds
+An invalid terminal id was found in a transmit buffer.
+If \fBUNLK\fP appears, the bit to unlock the keyboard was set in the transmit
+buffer.
+.Ac
+This message indicates a software problem with the 3270 script.
+Contact your support organization.
+.Rf
+io/em.c
+.LE
+.NM "3270: Can't allocate rcv buffers  \*(Bo"
+.Ds
+The memory that has been successfully allocated for 3270 receive
+buffers is unable to be split into individual buffers.
+.Ac
+Contact your support organization.
+.Rf
+io/em.c
+.LE
+.NM "3270: Can't get buffer descriptor  \*(Bo"
+.Ds
+An insufficient amount of 3270 emulation buffer headers are generated
+in the running system.
+.Ac
+Increase the number of 3270 buffer headers (EMBHDR)
+currently allocated in your system description file and
+generate a new system. 
+Reboot the new system.
+For additional information on 3270 emulation system parameters,
+see the \*(Sb section in the
+\*(Ag.
+.Rf
+io/em.c
+.LE
+.NM "3270: Can't queue rcv bufs  \*(Bo"
+.Ds
+An insufficient amount of receive buffers are available to place on
+the queue of free receive buffers for the controller being started.
+.Ac
+Increase the size of the emulation receive buffer space (EMRBSZ)
+and/or decrease the value of the emulation receive buffer size (EMRCVSZ)
+in your system description file and generate a new system.
+Reboot the new system.
+For additional information on 3270 emulation system parameters,
+see the \*(Sb section in the
+\*(Ag.
+.Rf
+io/emc.c
+.LE
+.NM "3270: dev \fIcontroller-num\fP Lost buffer for \fIterminal-num\fP  \*(So"
+.Ds
+A block was received for a terminal that was not open.
+The offending controller and terminal numbers are given.
+The block was thrown away.
+.Ac
+This message indicates that a terminal has been prematurely
+closed.
+Check with the users of 3270 emulation.
+.Rf
+io/em.c
+.LE
+.NM "3270: Kseg failed  \*(Bo"
+.Ds
+3270 emulation could not obtain memory for its data structures
+during its initialization and therefore, is currently unusable.
+.Ac
+This message indicates that there is not enough memory available
+in the machine to satisfy 3270 emulation buffer needs.
+If you wait, enough memory may be freed.
+If ample memory is not freed, you may want to consider modifying the buffer sizes specified
+or in some other way decrease the size of the offending system.
+If this is a recurring problem, you might consider adding memory
+to the machine.
+For additional information on 3270 emulation system parameters,
+see the \*(Sb section of the
+\*(Ag.
+.Rf
+io/em.c
+.LE
+.NM "acu \fIunit-num\fP: stray interrupt \*(Bo"
+.Ds
+An unexpected interrupt was received from the designated automatic
+call unit (acu).
+.Ac
+This message indicates a hardware problem with the acu.
+Contact your support organization.
+.Rf
+io/acu.c
+.LE
+.NM "bad block on \fIdevice-type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP] \*(Do"
+.Ds
+A block number not in the valid range of available free blocks on a
+file system has been detected.
+\fIDevice-type\fP may be one of the following:
+\fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP, \fBRP07\fP, \fBRP03\fP, \fBRK05\fP, \fBRL01/2\fP, \fBRF11\fP, \fBRS03/4\fP, 
+\fBTU16\fP, \fBTU78\fP, \fBTM11\fP, and \fBML11\fP.
+Note that the drive names TE16, TU45, and TU77 are aliases of TU16.
+A controller (ctl) number will only appear if more than one controller is
+generated in your system and you are using the general disk (gd) driver.
+A slice number will only appear if \fIdevice-type\fP is \fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP,
+\fBRP07\fP, \fBRP03\fP, and \fBML11\fP.
+.Ac
+Determine the offending drive and corresponding file system from
+the controller (ctl) \fI#\fP, drive \fI#\fP, and slice \fI#\fP
+given in the message.
+Unmount the file system.
+If it is the root file system, you need to go to single user.
+Check the file system using \fIfsck\fP(1M) command.
+See the \fIfsck\fP(1M) manual page in the \*(Am.
+If the offending file system is beyond repair, restore it from
+backup disk or tape.
+.Rf
+io/gd.c,
+io/hp.c,
+io/rp.c,
+io/rk.c,
+io/rl.c,
+io/rf.c,
+io/hs.c,
+io/ht.c,
+io/hu.c,
+io/gt.c,
+io/tm.c,
+os/alloc.c
+.LE
+.NM "bad block on dev \fImaj/min\fP  \*(Bo"
+.Ds
+A block number not in the valid range of free blocks for the file
+system mounted on device \fImaj/min\fP has been detected.
+.Ac
+Determine the offending file system by comparing the major/minor
+drive numbers in the message to the major/minor drive numbers for
+all mounted file systems.
+Unmount the file system.
+If it is the root file system, you need to go to single user.
+Check the file system using \fIfsck\fP(1M) command.
+See the \fIfsck\fP(1M) manual page in the \*(Am.
+If the offending file system is beyond repair, restore it from
+backup disk or tape.
+.Rf
+os/alloc.c, os/prf.c
+.LE
+.NM "bad block on dev \fI#\fP(8), type unknown  \*(Do"
+.Ds
+The general disk (gd) driver has detected a block number not in the valid range
+of available free blocks in a file system.
+The type of the disk drive on which the offending file system resides is
+unknown to the gd driver.
+\fI#\fP represents the minor device number.
+.Ac
+The main concern is that the gd driver does not recognize
+the drive type.
+Check that the offending disk drive is of a type supported
+by the gd driver.
+The drive types supported are RP04/5/6, RM05,
+RM80, RP07, and ML11.
+If the drive is is of a type listed above,
+suspect hardware problems with the disk drive and/or controller
+and contact your support organization.
+Refer to the message:
+.DS
+	bad block on \fIdevice-type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]
+.DE
+for the corrective action for the file system problem.
+.Rf
+io/gd.c, os/alloc.c
+.LE
+.NM "bad count on \fIdevice-type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]  \*(Do"
+.Ds
+The super-block parameters for free blocks and inodes have become corrupted
+for this file system.
+\fIDevice-type\fP may be one of the following:
+\fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP, \fBRP07\fP, \fBRP03\fP, \fBRK05\fP, \fBRL01/2\fP, \fBRF11\fP, \fBRS03/4\fP,
+\fBTU16\fP, \fBTU78\fP, \fBTM11\fP, and \fBML11\fP.
+Note that the drive names TE16, TU45, and TU77 are aliases of TU16.
+A controller (ctl) number will only appear if more than one controller is
+generated in your system and you are using the general disk (gd) driver.
+The slice number will only appear if \fIdevice-type\fP is \fBRM05\fP, \fBRP07\fP, \fBRP04/5/6\fP,
+\fBRP07\fP, \fBRP03\fP, and \fBML11\fP.
+.Ac
+Determine the offending drive and corresponding file system from
+the controller (ctl) \fI#\fP, drive \fI#\fP, and slice \fI#\fP
+given in the message.
+Unmount the file system.
+If it is the root file system, you need to go to single user.
+Check the file system using \fIfsck\fP(1M) command.
+See the \fIfsck\fP(1M) manual page in the \*(Am.
+If the offending file system is beyond repair, restore it from
+backup disk or tape.
+.Rf
+io/gd.c,
+io/hp.c,
+io/rp.c,
+io/rk.c,
+io/rl.c,
+io/rf.c,
+io/hs.c,
+io/ht.c,
+io/hu.c,
+io/gt.c,
+io/tm.c,
+os/alloc.c
+.LE
+.NM "bad count on dev \fImaj/min\fP  \*(Bo"
+.Ds
+The super-block parameters for free blocks and inodes have become
+corrupted for the file system on device \fImaj/min\fP.
+.Ac
+Determine the offending file system by comparing the major/minor
+drive numbers in the message to the major/minor drive numbers for
+all mounted file systems.
+Unmount the file system.
+If it is the root file system, you need to go to single user.
+Check the file system using \fIfsck\fP(1M) command.
+See the \fIfsck\fP(1M) manual page in the \*(Am.
+If the offending file system is beyond repair, restore it from
+backup disk or tape.
+.Rf
+os/alloc.c, os/prf.c
+.LE
+.NM "bad count on dev \fI#\fP(8), type unknown \*(Do"
+.Ds
+The general disk (gd) driver has detected that the super-block parameters
+for free blocks and inodes have become corrupted for this file system.
+The type of the disk drive on which the offending file system resides
+is unknown to the gd driver.
+The \fI#\fP represents the minor device number.
+.Ac
+The main concern is that the gd driver does not recognize
+the drive type.
+Check that the offending disk drive is of a type supported
+by the gd driver.
+The drive types supported are RP04/5/6, RM05,
+RM80, RP07, and ML11.
+If the drive is of a type listed above,
+suspect hardware problems with the disk drive and/or controller
+and contact your support organization.
+Refer to the message:
+.DS
+	bad count on \fIdevice-type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]
+.DE
+for the corrective action for the file system problem.
+.Rf
+io/gd.c, os/alloc.c
+.LE
+.NM "Bad free count on \fIdevice-type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]  \*(Do"
+.Ds
+A corrupted free list block has been detected while attempting to
+allocate a new block for a file.
+\fIDevice-type\fP may be one of the following:
+\fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP, \fBRP07\fP, \fBRP03\fP, \fBRK05\fP, \fBRL01/2\fP, \fBRF11\fP, \fBRS03/4\fP,
+\fBTU16\fP, \fBTU78\fP, \fBTM11\fP, and \fBML11\fP.
+Note that the drive names TE16, TU45, and TU77 are aliases of TU16.
+A controller (ctl) number will only appear if more than one controller is
+generated in your system and you are using the general disk (gd) driver.
+A slice number will only appear if \fIdevice-type\fP is \fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP,
+\fBRP07\fP, \fBRP03\fP, or \fBML11\fP.
+.Ac
+Determine the offending drive and corresponding file system from
+the controller (ctl) \fI#\fP, drive \fI#\fP, and slice \fI#\fP
+given in the message.
+Unmount the file system.
+If it is the root file system, you need to go to single user.
+Check the file system using \fIfsck\fP(1M) command.
+See the \fIfsck\fP(1M) manual page in the \*(Am.
+If the offending file system is beyond repair, restore it from
+backup disk or tape.
+.Rf
+io/gd.c,
+io/hp.c,
+io/rp.c,
+io/rk.c,
+io/rl.c,
+io/rf.c,
+io/hs.c,
+io/ht.c,
+io/hu.c,
+io/gt.c,
+io/tm.c,
+os/alloc.c
+.LE
+.NM "Bad free count on dev \fImaj/min\fP  \*(Bo"
+.Ds
+A corrupted free list block has been detected while attempting to allocate
+a new block from the file system mounted on device \fImaj/min\fP.
+.Ac
+Determine the offending file system by comparing the major/minor
+drive numbers in the message to the major/minor drive numbers for
+all mounted file systems.
+Unmount the file system.
+If it is the root file system, you need to go to single user.
+Check the file system using \fIfsck\fP(1M) command.
+See the \fIfsck\fP(1M) manual page in the \*(Am.
+If the offending file system is beyond repair, restore it from
+backup disk or tape.
+.Rf
+os/alloc.c, os/prf.c
+.LE
+.NM "Bad free count on dev \fI#\fP(8), type unknown  \*(Do"
+.Ds
+The general disk (gd) driver has detected a corrupted free list block while
+attempting to allocate a new block for a file.
+The type of the disk drive on which the offending file system resides
+is unknown to the gd driver.
+The \fI#\fP represents the minor device number.
+.Ac
+The main concern is that the gd driver does not recognize
+the drive type.
+Check that the offending disk drive is of a type supported
+by the gd driver.
+The drive types supported are RP04/5/6, RM05,
+RM80, RP07, and ML11.
+If the drive is of a type listed above,
+suspect hardware problems with the disk drive and/or controller
+and contact your support organization.
+Refer to the message:
+.DS
+	Bad free count on \fIdevice-type\fP drive \fI#\fP [, ctl \fI#\fP,] [slice \fI#\fP]
+.DE
+for the corrective action for the file system problem.
+.Rf
+io/gd.c, os/alloc.c
+.LE
+.NM "Bad kmc \fI#\fP load  \*(Vo"
+.Ds
+An attempt to pass arguments to the program running in the
+designated KMC11B has failed.
+.Ac
+This message indicates either software or hardware problems.
+Check any new device drivers which have not been completely
+debugged or any UNIX System device driver which has been modified
+without authorization.
+If the above does not apply, suspect hardware problems with
+the KMC11B and contact your support organization.
+.Rf
+io/kmc.c
+.LE
+.NM "Bad PCL count \*(Do"
+.Ds
+The PCL initialization routine found less than one or more than two
+(the maximum allowable) PCL control devices.
+There must be exactly one entry in the system configuration file for
+each PCL control device.
+For more information, see the \fIpcl\fP(7) manual page in the 
+\*(Am.
+.Ac
+This message indicates a problem with the PCL entries in the
+system description file.
+Check that there is at least one PCL entry, but not more than two,
+in this file and that each entry contains the correct information.
+.Rf
+pwb/pcl.c
+.LE
+.NM "bad memory from - \fIcontroller\fP:\fIarray\fP:\fIpage\fP to - \fIcontroller\fP:\fIarray\fP:\fIpage\fP  \*(Bo"
+.Ds
+During boot, the system found an unusable section of memory.
+The ``bad'' pages are not put on the system's memory free list.
+.Ac
+Contact your support organization so that the offending
+memory board(s) can be replaced.
+.Rf
+ml/mmgt.c
+.LE
+.NM "cache bypassed \*(Bo"
+.Ds
+The system was booted with the \fBINH-CACHE EAI\fP option set.
+The hardware memory cache is disabled.
+.Ac
+For information only.
+For instructions on how to re-enable the cache or for further information,
+see the \fB3B20S CONSOLE OPERATIONS\fP section in the
+\*(Og.
+.Rf
+os/machdep.c
+.LE
+.NM "call of function at location 0 \*(Bo"
+.Ds
+The system detected an internal function call using a null pointer.
+.Ac
+This message may be generated by new device drivers which have not
+been completely debugged or by unauthorized changes to the existing
+UNIX System device drivers.
+Check any new drivers or any driver which has been recently modified.
+If not the above, suspect bad hardware and contact your support organization.
+.Rf
+ml/intrmsg.c
+.LE
+.NM "Can't allocate message buffer"
+.Ds
+At system initialization time, it was found that too much memory
+was being allocated for messages.
+Messages are currently unusable.
+.Ac
+Check the MSGSEG and MSGSSZ entries in the system description file.
+MSGSEG is the number of segments to allocate and MSGSSZ is the size
+each segment should be.
+The product of these two numbers, therefore, is the amount of memory
+to allocate for messages.
+When this amount exceeds the amount of memory currently
+available in the machine,
+the above message will appear during system
+booting.
+The system size must be reduced by either modifying the above
+entries or by other means.
+Then a new system must be generated and booted.
+If the above solutions are not acceptable, more memory must
+be added to the machine.
+For further information on message parameters, see
+the section \f2CONFIGURATION PLANNING\fP in \*(Sb (DEC)
+or in the \*(Sb section of the \*(Ag (3B20S).
+.Rf
+os/msg.c (PDP-11 & VAX-11), io/msg.c (3B20S)
+.LE
+.NM "cannot allocate tn85 buffers \*(Bo"
+.Ds
+During the tn85 initialization procedure, memory could not be obtained
+for the buffers that are used to send data to the tn85.
+This error occurs during system startup only.
+.Ac
+This message indicates that the tn85s are unusable due to insufficient
+memory.
+Any attempt to open \fB/dev/lp\fP* will fail with ENOMEM set.
+Either a smaller system must be generated and booted or more memory
+must be added to the machine.
+.Rf
+io/tn85.c
+.LE
+.NM "CDT: >16 soft errors \*(Co"
+.Ds
+More than 16 soft errors have been detected on the TU58 tape cartridge system.
+For more information on the TU58 cartridge tape system,
+see pp. 92-107 in the \fIPeripherals Handbook\fP,
+Digital Equipment Corporation, 1981-82.
+.Ac
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: bad packet flag \fI#\fP. \*(Co"
+.Ds
+A bad flag byte was detected in a packet of data for a TU58 tape drive.
+For more information on TU58 data packets, see pp. 92-107 in the
+\fIPeripherals Handbook\fP, Digital Equipment Corporation, 1981-82.
+.Ac
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: hard err blk \fI#\fP(10) \*(Co"
+.Ds
+A hard error was detected in the specified block on a TU58 tape drive.
+.Ac
+This message indicates a hardware problem with the tape drive.
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT init failed \*(Co"
+.Ds
+The TU58 could not be initialized.
+For more information on the TU58, see pp. 92-107 in the
+\fIPeripherals Handbook\fP, Digital Equipment Corporation, 1981-82.
+.Ac
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: MOTOR FAILURE \*(Co"
+.Ds
+A hardware failure has been detected in the TU58.
+For more information on the TU58 cartridge tape system,
+see pp. 92-107 in the \fIPeripherals Handbook\fP,
+Digital Equipment Corporation, 1981-82.
+.Ac
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: no tape. \*(Co"
+.Ds
+Absence of a tape cartridge in the TU58 tape drive has been detected.
+.Ac
+If this is true, insert a tape cartridge and try again.
+If this is not the case or if re-inserting a tape does not alleviate the
+problem, suspect hardware problems with the tape drive
+and contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: serial receive timeout. \*(Co"
+.Ds
+The processor could not receive data from the TU58 in the allotted amount
+of time.
+.Ac
+This message indicates a hardware problem with the tape drive.
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: serial transmit timeout. \*(Co"
+.Ds
+The processor could not transmit data to the TU58 within the allotted
+amount of time.
+.Ac
+This message indicates a hardware problem with the tape drive.
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: unexpected receive data \*(Co"
+.Ds
+The TU58 has received unexpected data.
+.Ac
+Contact your support organization.
+.Rf
+io/cdt.c
+.LE
+.NM "CDT: Write Locked. \*(Co"
+.Ds
+An attempt was made to write on a TU58 tape cartridge when file
+protect was set.
+.Ac
+Check that the tab on the tape cartridge is set in the outer position
+to allow you to write on it.
+When the tab is in the inner position, you cannot write on the cartridge.
+.Rf
+io/cdt.c
+.LE
+.NM "channel \fI#\fP device \fI#\fP pio error, status \fI#\fP  \*(So"
+.Ds
+A programmed I/O (PIO) operation to the specified device
+and channel has failed.
+The status number is the contents of the Dual Serial Channel (DSCH)
+status register.
+This number is printed in hexadecimal.
+Bits, from right to left, have the following meaning:
+.TS
+l l
+c l.
+\fIBit(s)\fP	\fIDescription\fP
+0-2	High bits of low return code
+3-5	High bits of high return code
+6	Channel busy flip-flop
+7	I/O inhibit override flip-flop
+8	Sequencer error
+9	Illegal 3 out of 6 device address
+10	Command error
+11	Channel error
+12	Maintenance flip-flop
+.TE
+.P
+All bits are active "1".
+.P
+In the above table, the first six bits(0-5) are the status
+register bits.
+Below, along with the hexadecimal equivalents of these bits,
+are descriptions of the four most important statuses.
+.TS
+c l.
+0x9	All seems well
+0xA	Device reported error
+0x11	Illegal command
+0x12	Illegal start code
+.TE
+.Ac
+Contact your support organization.
+.Rf
+ml/intrmsg.c
+.LE
+.NM "channel \fI#\fP device \fI#\fP pio timeout  \*(So"
+.Ds
+A programmed I/O (PIO) operation to the specified device and
+channel has timed out.
+.Ac
+This message may indicate a software or hardware problem.
+It can be generated by new device drivers which have not been
+completely debugged or by standard UNIX System device drivers
+which have been modified without authorization.
+Check any such drivers.
+If neither of the above apply, contact your
+support organization since this error can also be caused by
+a device that is powered off or a channel cable
+that is improperly connected.
+.Rf
+io/intrmsg.c
+.LE
+.NM "channel \fI#\fP init failed  \*(Bo"
+.Ds
+The designated channel could not be initialized during system
+initialization.
+If the offending channel is 10 or 11, this error will cause the
+processor to panic.
+If so, the message \fBpanic: channel init\fP will appear following this
+message.
+.Ac
+Check that the configuration information in the system description
+file is correct.
+If errors are found, correct them, and generate and boot a new system.
+If the configuration information is correct,
+suspect hardware problems in the I/O subsystem and
+contact your support organization.
+.Rf
+ml/io.c
+.LE
+.NM "channel error: channel \fI#\fP status \fI#\fP  \*(So"
+.Ds
+The designated channel has set its error lead.
+.P
+If the channel number is 10 or 15, the status number
+is the contents of the Direct Memory Access Controller (DMAC)
+status register.
+This number is printed in hexadecimal.
+Bits, from right to left, have the following meaning:
+.TS
+l l l
+c l c.
+\fIBit(s)\fP	\fIDescription\fP	\fIActive State\fP
+0	My Store Error A (fatal memory error)	0
+1	My Store Error B (unequipped memory)	0
+2	My Store Error C (memory parity)	0
+3-4	Not Used
+5	DIO Data Parity Error	0
+6	DMAC Data Parity Error	0
+7	DMA RAM Parity Error	1
+8	ROM Sequencer Check	0
+9	DIO Ready Error	0
+10	DIO ASW Error	1
+11	DIO Acknowledge Error	1
+12	CCIO Data Parity Error	0
+13	CCIO Command Error	0
+14	ROM Sequencer Parity Error	0
+15	Force Error Flip-Flop	1
+16-19	Not Used
+20	DMA Fatal Error Summary	0
+21	Maintenance Mode	0
+22	CCIO Interface Busy	0
+.TE
+If the channel number is 11 through 14 or 16 through 19,
+the status number is the contents of the Dual Serial Channel (DSCH)
+status register.
+This number is printed in hexadecimal.
+Bits, from right to left, have the following meaning:
+.TS
+l l l
+c l c.
+\fIBit(s)\fP	\fIDescription\fP
+0-2	High bits of low return code
+3-5	High bits of high return code
+6	Channel busy flip-flop
+7	I/O inhibit override flip-flop
+8	Sequencer error
+9	Illegal 3 out of 6 device address
+10	Command error
+11	Channel error
+12	Maintenance flip-flop
+.TE
+.P
+All bits are active "1".
+.P
+In the above table, the first six bits(0-5) are the status
+register bits.
+Below, along with the hexadecimal equivalents of these bits,
+are descriptions of the four most important statuses.
+.TS
+c l.
+0x9	All seems well
+0xA	Device reported error
+0x11	Illegal command
+0x12	Illegal start code
+.TE
+.Ac
+This message indicates hardware problems in the I/O subsystem.
+Contact your support organization.
+.Rf
+io/intrmsg.c
+.LE
+.NM "CMI Mem Write Timeout, cnt = \fI#\fP, pc = \fI#\fP, psl = \fI#\fP  \*(Vo"
+.Ds
+A Common Memory Interconnect (CMI) fault has occurred.
+The ``cnt'' is the number of times this error has occurred since the last
+reboot,
+``pc'' is the contents of the program counter, and
+``psl'' is the contents of the program status longword.
+.Ac
+This message indicates a hardware problem.
+Contact your support organization.
+.Rf
+os/macherr.c
+.LE
+.NM "CRD\fI#\fP: er \fI#\fP, ma \fI#\fP  \*(Xo"
+.Ds
+A memory read error has occurred through the Synchronous
+Backplane Interconnect (SBI).
+A Correctable Read Data (CRD) error indicates that one bit
+was wrong and was corrected.
+The first number given is the number of times this error has occurred since
+the last reboot.
+The ``er'' is the contents of the Synchronous Backplane Interconnect (SBI) error register
+and ``ma'' is the contents of memory configuration register C.
+When this error appears on the console, a more detailed version
+is put into the error log, \fB/usr/adm/errfile\fP.
+For more details, see pp. 311-324
+in the \fIVAX Hardware Handbook\fP, Digital Equipment Corporation, 1980-81.
+.Ac
+A CRD message is for information only since it was corrected, but
+to eliminate the chance of further problems it should be brought to
+the attention of the support organization.
+.Rf
+os/macherr.c
+.LE
+.NM "CRD\fI#\fP: mem csr0 = \fI#\fP  \*(Co"
+.Ds
+A Correctable Read Data (CRD) error has occurred.
+The first number given is the number of times this error has occurred since
+the last reboot.
+The ``mem csr0'' is the contents of control and status register 0.
+When this message appears on the console, a more detailed version
+is put in the error log, \fB/usr/adm/errfile\fP.
+For more details, see pp. 149-155 in the \fIVAX Hardware Handbook\fP,
+Digital Equipment Corporation, 1980-81.
+.Ac
+A CRD message is for information only since it was corrected, but
+to eliminate the chance of further problems it should be brought to
+the attention of the support organization.
+.Rf
+os/macherr.c
+.LE
+.NM "csifree: Can't free block \*(Bo"
+.Ds
+A common synchronous interface  protocol driver has attempted to return a block of memory that it
+believes was freed, while in reality some of the block is still
+in use.
+.Ac
+This message indicates a software problem with the protocol driver.
+Contact your support organization.
+.Rf
+io/csi.c
+.LE
+.NM "DANGER: mfree map overflow \fI#\fP, lost \fI#\fP items at \fI#\fP"
+.Ds
+One of the tables, mapped through the system's \fImalloc\fP mechanism,
+has overflowed.
+The first number indicates the address of the table.
+By searching for this address in the system namelist, the name of
+the offending table can be discovered.
+The second number is the number of items lost, while the last number
+is the starting address of the above items.
+.Ac
+Increase the number of entries currently allocated for the offending
+table in your system description file
+and generate a new system.
+Boot the new system.
+.Rf
+os/malloc.c
+.LE
+.NM "DANGER: out of swap space, needed \fI#\fP blocks"
+.Ds
+Insufficient space was found on the swap device when attempting
+to swap out a given process or copy of a pure text image.
+The number of blocks requested is given.
+Preceding this will be the message:
+\fBWARNING: swap space running out, needed \fI#\fB blocks\fR.
+After this warning an attempt is made to clean up the swap area.
+If this action is unsuccessful, the DANGER message will appear.
+The system may hang, crash, or it may recover and resume normal
+operation if and when swap space becomes available.
+.Ac
+If the system hangs or crashes, reboot.
+This error may be caused by an operating system and/or user program
+that has not been completely debugged.
+Check any such programs.
+It can also be caused by an excessive user load on the system.
+If this is the case, increase the amount of swap space specified
+in your system description file and generate a new system.
+Boot the new system.
+.Rf
+os/text.c
+.LE
+.NM "Device error on \fIdevice-type\fP drive \fI#\fP, [ctl \fI#\fP,] [slice \fI#\fP]  \*(Do"
+.Ds
+This message indicates that a hardware error has occurred on a block type
+device.
+\fIDevice-type\fP may be one of the following:
+\fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP, \fBRP07\fP, \fBRP03\fP, \fBRK05\fP, \fBRL01/2\fP, \fBRF11\fP, \fBRS03/4\fP,
+\fBTU16\fP, \fBTU78\fP, and \fBML11\fP.
+Note that the drive names TE16, TU45, and TU77 are aliases of TU16.
+A controller (ctl) number will only appear if more than one controller is
+generated in your system and you are using the general disk (gd) driver.
+A slice number will only appear if \fIdevice-type\fP is \fBRM05\fP, \fBRM80\fP, \fBRP04/5/6\fP,
+\fBRP07\fP, \fBRP03\fP, and \fBML11\fP.
+This message is followed by:
+.DS I
+bn = \fI#\fP er = \fI#\fP,\fI#\fP
+.DE
+This is the block number in error, followed by the contents of 
+two of the devices registers.
+Registers given for specific devices are:
+.TS
+lI cI cI
+l l l.
+DEVICE	ERROR REG	CONTROL REG
+RL01/2	RLCS	RLDA
+RF11	RFCS	RFDAE
+RK05	RKER	RKDS
+RM05	RMER1	RMDS
+RM80	RMER1	RMDS
+RP03	RPER	RPDS
+RP04/5/6 (PDP-11/hp.c)	RPER1	RPCS2
+RP04/5/6 (VAX-11/hp.c)	RPER1	MBA Status Reg
+RP04/5/6 (DEC/gd.c)	RPER1	RPDS
+RP07	RPER1	RPDS
+RS03/4	RSCS2	n/a
+TU16 (PDP-11/ht.c)	MTER	MTCS2
+TU16 (VAX-11/ht.c & gt.c)	MTER	MBA Status Reg
+TU78	TUDTE	MBA Status Reg
+.TE
+For more details on the above registers except for RK05 and RS03/4, see
+Chapter 7 in the \fIPeripherals Handbook\fP,
+Digital Equipment Corporation, 1981-82.
+For RK05 and RS03/4 register information, see the 1978-79 edition
+of the \fIPDP11 Peripherals Handbook\fP, Digital Equipment Corporation.
+For more details on the MBA Status register, see pp. 399-402 in the
+\fIVAX Hardware Handbook\fP, Digital Equipment Corporation, 1980-81.
+.Ac
+Contact your support organization.
+.Rf
+io/gd.c, io/hp.c, io/hs.c, io/rf.c, io/rk.c, io/rl.c, io/rp.c,
+io/ht.c, io/hu.c, io/gt.c. os/prf.c
+.LE
+.NM "Device error on dev \fI#\fP(8), type unknown  \*(Do"
+.Ds
+This message indicates that a hardware error has occurred on a
+disk drive whose type is unknown to the general disk (gd) driver.
+The \fI#\fP represents the minor device number.
+.Ac
+The main concern is that the gd driver does not recognize
+the drive type.
+Check that the offending disk drive is of a type supported
+by the gd driver.
+The drive types supported are RP04/5/6, RM05,
+RM80, RP07, and ML11.
+If the drive is of a type listed above,
+suspect hardware problems with the disk drive and/or controller
+and contact your support organization.
+Refer to the message:
+.DS
+	Device error on \fIdevice-type\fP drive \fI#\fP, [ctl \fI#\fP,] [slice \fI#\fP]
+.DE
+for information on the device error.
+.Rf
+io/gd.c,
+os/prf.c
+.LE
+.NM "dfc \fIunit-num\fP: (GIDPIO) \fIstring\fP \*(Bo"
+.Ds
+The attempt to determine the Generic of the DFC firmware failed.
+This is the first step when attempting to bring a dfc into service.
+However, the \fIdfcvers\fP(1M) command allows just this set of operations
+to be attempted.
+.P
+The values of \fIstring\fP (in the order the operations occur) are:
+.DS I
+wtdma failed
+reset failed
+BIC_IFEN failed
+dbs error
+failed: ccw=\fI#\fP, mhdst=\fI#\fP
+.DE
+.Ac
+Check that the controller is powered up.
+If so, there is a hardware problem with the dfc
+or channel
+and your support organization should be contacted.
+.Rf
+io/dfc.c, io/dfcmaint.c
+.LE
+.NM "dfc \fIunit-num\fP: can't send read stat command \*(Bo"
+.Ds
+During the processing of an interrupt from the designated dfc,
+the command to obtain the job status words failed.
+.Ac
+This message indicates a hardware failure in the I/O subsystem.
+Contact your support organization.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: channel/dfc sanity failure \*(Bo" "\fI string\fP \*(So"
+.Ds
+A problem was detected in the interface with the specified DFC.
+When these problems occur, the cause of the problem could be
+software, DMA hardware, channel hardware, other devices on the channel,
+or DFC/MHD hardware.
+The value of \fIstring\fP may provide some additional clues.
+Other messages that immediately precede this message may help.
+The recovery algorithm for file system data is automatically initiated.
+The recovery algorithm insures that no data is lost because
+of transient failures.
+.P
+The meaning of \fIstring\fP is described below.
+.P
+.TS
+l lw(4i).
+\fIString\fP	\fIMeaning\fP
+IOE error	T{
+An I/O error occurred and recovery was initiated.
+T}
+ITPD error	T{
+The DFC was active for longer than three seconds without triggering an interrupt.
+T}
+sleep/active error	T{
+The DFC has been asleep for at least eight seconds while work is pending.
+T}
+.TE
+.Ac
+If the recovery mechanism completes and normal operation continues,
+a transient error has occurred.
+If the recovery mechanism hangs or thrashes,
+a more persistent problem has occurred.
+If this occurs frequently or repetitively,
+contact your support organization.
+.Rf
+io/dfc.c, io/dfc1.c
+.LE
+.NM "dfc \fIunit-num\fP: controller restarted \*(Bo"
+.Ds
+After a failure, the designated dfc has become operational.
+The failure was indicated by a previous message
+indicating a channel/dfc sanity failure
+or a dfc/mhd interface failure.
+This message marks completion of the first stage of the recovery
+algorithm.
+The recovery algorithm insures no loss of file system data
+when transient errors occur.
+.Ac
+For information only.
+.Rf
+io/dfc.c, io/dfc1.c
+.LE
+.NM "dfc \fIunit-num\fP: disk power fail \*(Bo"
+.Ds
+A power failure was detected by one of the moving head disks associated
+with the designated dfc.
+.Ac
+If a power failure did not actually occur,
+either someone powered down the disk drive or
+there is a problem with the disk drive or disk file controller.
+If the drive was powered down, just power it back up.
+In the second case, contact your support organization.
+If there was a power failure, the controller and all its associated
+disk drives will be restarted when the power is restored.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: init failed \*(Bo"
+.Ds
+The designated dfc could not be initialized and brought into service.
+.Ac
+Check that the controller is powered up.
+If so, there is a hardware problem with the dfc
+and your support organization should be contacted.
+.Rf
+io/dfcmaint.c
+.LE
+.NM "dfc \fIunit-num\fP: init failed(\fIstring\fP) \*(Bo"
+.Ds
+The designated dfc could not be initialized and brought into service.
+This message occurs after the generic of the DFC firmware
+has been sucessfully determined.
+.P
+The values of \fIstring\fP (in the order the operations occur) are:
+.DS I
+wtdma
+reset
+IFEN
+SYSGEN
+.DE
+.Ac
+Check that the controller is powered up.
+If so, there is a hardware problem with the dfc
+or channel
+and your support organization should be contacted.
+.Rf
+io/dfcmaint.c
+.LE
+.NM "dfc \fIunit-num\fP: io error \*(Bo"
+.Ds
+During the processing of an interrupt from the designated dfc,
+an unrecoverable programmed I/O error has occurred.
+The system may or may not continue to run.
+In some cases, the file system data recovery algorithm is started.
+.Ac
+This message indicates a hardware problem within the I/O subsystem.
+Contact your support organization.
+.Rf
+io/dfc.c, io/dfc1.c
+.LE
+.NM "dfc \fIunit-num\fP kseg failed \*(Bo"
+.Ds
+The designated dfc could not obtain memory for its data structures
+during its initialization.
+This error occurs during system startup only.
+.Ac
+This message indicates that the designated dfc is currently unusable
+due to insufficient memory.
+Either a smaller system must be generated and booted or more memory
+must be added to the machine.
+.Rf
+io/dfcmaint.c
+.LE
+.NM "dfc \fIunit-num\fP: read of FIFO 1 failed \*(Bo"
+.Ds
+During the processing of an interrupt from the designated dfc,
+the first job status control word from the bus interface
+controller (bic) FIFO could not be obtained.
+.Ac
+This message indicates a hardware problem with the dfc.
+Contact your support organization.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: read of FIFO 2 failed \*(Bo"
+.Ds
+During the processing of an interrupt from the designated dfc,
+the second job status control word from the bus interface
+controller (bic) FIFO could not be obtained.
+.Ac
+This message indicates a hardware problem with the dfc.
+Contact your support organization.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: reset of bic interrupt failed \*(Bo"
+.Ds
+The 3B20S processor could not reset the bus interface controller (bic)
+bit after processing an interrupt.
+.Ac
+This message indicates a hardware problem with the dfc.
+Contact your support organization.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: returned illegal command or parameters \*(Bo"
+.Ds
+An illegal command or a command with incorrect parameters was indicated
+by the dfc.
+.Ac
+This message indicates hardware and/or software problems.
+Check whether the dfc driver software has been modified without
+authorization.
+If not, suspect hardware problems with the dfc and
+contact your support organization.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: stray interrupt \*(Bo"
+.Ds
+An unexpected interrupt was received from the designated dfc.
+.Ac
+This message indicates a hardware problem with the dfc.
+Contact your support organization.
+.Rf
+io/dfc.c
+.LE
+.NM "dfc \fIunit-num\fP: version return \fI#\fP \*(Bo"
+.Ds
+This is the version data returned by a Generic ID PIO
+that was requested by the \fIdfcvers\fP(1M) command.
+.Ac
+For information only.
+.Rf
+io/dfcmaint.c
+.LE
+.NM "dfc \fIunit-num\fP/mhd \fIunit-num\fP: disk interface failure \*(Bo" "CC word = \fI#\fP" "MHD status = \fI#\fP"
+.Ds
+A failure was detected on the specified moving head disks associated
+with the designated dfc.
+The recovery algorithm for file system data is automatically initiated.
+The recovery algorithm insures that no data is lost because
+of transient failures.
+.P
+The \fBCC word\fP and \fBMHD status\fP fields
+show the raw failure report from the DFC.
+These are included to aid hardware maintenance personnel
+when a hardware failure has occurred.
+.Ac
+If the recovery mechanism completes and normal operation continues,
+a transient error has occurred.
+If the recovery mechanism hangs or thrashes,
+a more persistent problem has occurred.
+One cause is a power failure.
+If a power failure did not actually occur,
+either someone powered down the disk drive or
+there is a problem with the disk drive or disk file controller.
+If the drive was powered down, just power it back up.
+In the second case, contact your support organization.
+If there was a power failure, the controller and all its associated
+disk drives will be restarted when the power is restored.
+.Rf
+io/dfc.c, io/dfc1.c
+.LE
+.NM "dfc dump seg not initialized (enomem)  \*(Bo"
+.Ds
+The data space for the dump routine could not be obtained
+during system initialization.
+.Ac
+Either a smaller system must be generated and booted or
+more memory must be added to the machine.
+.Rf
+io/dump.c
+.LE
+.NM "dfcstrategy: disk I/O byte count too big \*(Bo" "cnt=\fI#\fP, bp \fI#\fP, dev=\fI#\fP"
+.Ds
+This is a software error.
+Some program is attempting a large raw I/O operation.
+.Ac
+Locate the offending program and modify it.
+.Rf
+io/dfc.c
+.LE
+.NM "dma error channel \fI#\fP, dma status \fI#\fP, error \fI#\fP  \*(So"
+.Ds
+A direct memory access (DMA) error has occurred.
+This message can only occur on the 3B20S Model 2.
+The offending channel is given.
+The DMA controller status bits, from right to left, have the
+following meaning:
+.TS
+l l l
+c l c.
+\fIBit(s)\fP	\fIDescription\fP	\fIActive State\fP
+0	My Store Error A (fatal memory error)	0
+1	My Store Error B (unequipped memory)	0
+2	My Store Error C (memory parity)	0
+3	ROM Sequencer Check	
+4	CCIO command error	1
+5	ROM parity error	0
+6	DMA parity error	0
+7	CCIO parity error	0
+8	CCIO interface busy	1
+9	Channel 0 busy	0
+10	Channel 1 busy	0
+11	DIO data parity error	1
+12-13	RAM address register bits 0-1	
+14	DMA parity error	0
+15	CCIO parity error	0
+16-21	RAM address register bits 2-7	
+22	DMA parity error	0
+23	CCIO parity error	0
+24-25	Channel opcode bits 0-1	
+26	DIO All Seems Well failure	0
+27	DIO Ready failure	0
+28	DIO Rec error	0
+29	DIO Xmt error	0
+30	DMA parity error	0
+31	CCIO parity error	0
+.TE
+The error code is interpreted as follows:
+.TS
+l l
+c l.
+\fIValue\fP	\fIDescription\fP
+1	Illegal DMAC command received or DMAC error
+2	Illegal device service request
+3	Segment boundary error
+4	Page access error
+5	DIO error
+.TE
+The RAM address register (bits 12-13 & 16-21) is inverted, i.e. all ones indicate address 0.
+The DIO error bits (26-29) are only meaningful if the error code is 5.
+The Channel opcode bits are defined as follows:
+.TS
+l l
+c l.
+\fIBit Pattern\fP	\fIOperation\fP
+00	DMA read from memory
+01	Programmed I/O
+10	DMA write from memory
+11	DMA setup
+.TE
+.Ac
+This message may indicate a software or a hardware problem.
+It can be generated by new device drivers which have not been completely
+debugged or by standard UNIX device drivers which have been modified
+without authorization.
+Check any such drivers.
+If neither of the above apply, contact your support organization.
+.Rf
+ml/intrmsg.c
+.LE
+.NM "dma error channel \fI#\fP, status reg \fI#\fP  \*(So"
+.Ds
+A non-fatal direct memory access (DMA) error has occurred.
+The offending channel is given.
+The status register number is the contents of the Direct Memory
+Access Channel (DMCH) status register.
+This number is printed in hexadecimal.
+Bits, from right to left, have the following meaning:
+.TS
+lI lI lI
+c l c.
+Bit(s)	Description	Active State
+0-5	Last Addressed Device
+6	Error Summary Bit	1
+7	Channel Access Error	1
+8-9	Last Command Issued	1
+10	DIO Acknowledge Error	0
+11	DIO Ready Error	1
+12	DIO All Seems Well Error	0
+13	Channel Request Error	1
+14	DIO Data Parity Error	1
+15	Busy Indicator	0
+.TE
+In the above table the first six bits (0-5) represent the
+last addressed device.
+The last addressed device is a 3 out of 6 code.
+It is interpreted as follows:
+.TS
+l l
+c c.
+\fIBits 0-5\fP	\fIDevice # on the Channel\fP
+0x07	0
+0x0B	1
+0x0D	2
+0x0E	3
+0x15	4
+0x16	5
+0x19	6
+0x1A	7
+0x25	8
+0x26	9
+0x29	10
+0x2A	11
+0x31	12
+0x32	13
+0x34	14
+0x38	15
+.TE
+.Ac
+This message may indicate a software or a hardware problem.
+It can be generated by new device drivers which have not been completely
+debugged or by standard UNIX System device drivers which have been modified
+without authorization.
+Check any such drivers.
+If neither of the above apply, contact your support organization.
+.Rf
+ml/intrmsg.c
+.LE

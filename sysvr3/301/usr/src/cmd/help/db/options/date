@@ -1,0 +1,39 @@
+
+\Sdate\S:  Options
+
+     + format   Changes the format of the output for the date command using the
+                field descriptors in the list <format>.  If you want to include
+                literal strings in the format, you must surround the "+" and
+                format specification with quotes.  The following is a list of
+                field descriptors you can use to specify the format.
+
+                %m    month of the year
+             
+                %d   day of the month
+             
+                %y   last two digits of the year
+             
+                %j   day of the year
+             
+                %w   day of the week in integer form, 0=Sunday
+
+                %a   abbreviated weekday
+             
+                %h   abbreviated month
+             
+                %D   date as month/date/year
+             
+                %H   hour in military time 00 to 23
+             
+                %M   minutes
+             
+                %S   seconds
+             
+                %T   time as hours:minutes:seconds
+             
+                %r   AM/PM notation
+            
+ 
+                %n   insert a new line
+             
+                %t   insert a tab

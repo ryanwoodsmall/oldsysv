@@ -1,0 +1,102 @@
+#ident	"@(#)pkg.nsu:INSTALL	1.4"
+#
+#	Installation script for AT&T NSU Package for AT&T 3B2 Computer.
+#
+
+#
+# Set up variables here
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/nsu.name`
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1984 AT&T"
+echo "All Rights Reserved"
+
+#
+# Verify that the system has at least 2 Mb of mainstore
+#
+
+MEG=`expr "\`/etc/prtconf\`" : ".*Memory size: \([0-9]*\).*"`
+if 
+	test "$MEG" = ""
+then
+	MEG=1
+fi
+if 
+	test $MEG -lt 2
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "At least 2 Megabytes of memory must be available."
+	exit
+fi
+
+#
+# Verify that there is space for the ${PKGNAME}.
+# NOTE: Since a mkboot is done in thhe setup script, enough space
+#	must be available for an extra copy of /boot/KERNEL.
+#	Also, another 100 blocks are added to account for differences
+#	in block sizes.
+#
+
+	USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+	ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+	ROOTextra=`expr "\`ls -s /boot/KERNEL\`" : " *\([0-9]*\).*"`
+	ROOTneeds=`expr ${ROOTneeds} + ${ROOTextra}`
+	ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+	ROOTneeds=`expr ${ROOTneeds} + 100`
+	USRneeds=`expr ${USRneeds} + 100`
+
+#
+# How much space is available in the necessary filesystems?
+#
+
+	USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+	ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+#
+# Now see if the package fits!
+#
+
+	if [ "${USRspace}" -lt "${USRneeds}" ]
+  	then
+		echo "**ERROR** ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are $USRspace blocks available"
+		echo "on the /usr file system --"
+		echo "$USRneeds blocks are needed."
+		exit
+	elif [ "${ROOTspace}" -lt "${ROOTneeds}" ]  
+	then
+		echo "**ERROR** ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are $ROOTspace blocks available"
+		echo "on the / (root) file system --"
+		echo "$ROOTneeds blocks are needed."
+		exit
+	fi
+
+#
+# cpio in the required NSU files
+#
+
+cd ${INSPATH}
+echo "The following files are being installed:"
+
+find . -print | cpio -pvdum /
+
+#
+# Invoke Setup script
+#
+
+/install/install/setup
+
+#
+# Closing message installation complete
+#
+
+echo "Installation of ${PKGNAME} is completed.\n"
+echo 'Execute "shutdown -i6 -g0 -y" and'
+echo 'wait for the "Console Login:" prompt.'
+exit

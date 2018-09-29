@@ -1,0 +1,167 @@
+#ident	"@(#)pkg.graph:graph/INSTALL	1.8"
+#
+# Multiple Floppy INSTALL Script
+#
+#
+# Save mount point of floppy (INSPATH), package name (PKGNAME) and
+# information for the mount & umount commands (mntdev & mntname).
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/graph.name`
+LAST=3
+if
+	test -b "$1"
+then
+	mntdev=$1
+elif
+	test -b /dev/diskette
+then
+	mntdev=/dev/diskette
+elif
+	test -b /dev/install
+then
+	mntdev=/dev/install
+else
+	echo "**ERROR**   Can't find mount device"
+	exit
+fi
+mntname=${2:-/install}
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1984 AT&T"
+echo "All Rights Reserved"
+
+#
+# Check that the necessary packages have already been installed.
+#
+
+eflag=0
+if
+	test ! -s /usr/options/dfm.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the Directory and File Management Utilities to be installed first."
+	eflag=1
+fi
+if
+	test ! -s /usr/options/usrenv.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the User Environment Utilities to be installed first."
+	eflag=1
+fi
+if
+	test ! -s /usr/options/term.name
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "It requires the Terminal Filters Utilities to be installed first."
+	eflag=1
+fi
+
+if
+	[ $eflag -eq 1 ]
+then
+	exit
+fi
+
+	#
+	# Is enough space available to install the package?
+	#
+
+	SPACEneeded=4000
+
+	#
+	# How much space is available in the necessary filesystem?
+	#
+
+	USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+	if
+		[ "$USRspace" -lt "$SPACEneeded" ]
+	then
+		echo "**ERROR**   ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are $USRspace blocks available"
+		echo "on the /usr file system --"
+		echo "$SPACEneeded blocks are needed."
+		exit
+	fi
+
+
+#
+# Begin loop for multiple floppies
+#
+
+expect=1
+while
+	[ $expect -le $LAST ]
+do
+	if
+		[ $expect -gt 1 ]
+	then
+		cd /
+		/etc/umount $mntdev 2>/dev/null
+		echo "Remove floppy and insert floppy number $expect"
+		echo "Type <return> when ready:  \c"
+		read answer
+		/etc/mount $mntdev $mntname -r 2>/dev/null
+	fi
+
+	#
+	# Check to make sure this is the correct floppy of the set.
+	#
+
+	answer=""
+	while
+		[ `cat /install/install/ORDER` != $expect -a "$answer" != y ]
+	do
+		echo "**WARNING**   Floppy out of sequence"
+		echo "Expecting floppy diskette number $expect"
+		while
+			[ "$answer" != y -a "$answer" != n ]
+		do
+			echo "Type 'y' to continue or \c"
+			echo "'n' to try another floppy:  \c"
+			read answer
+		done
+		case $answer in
+			n)	cd /
+				/etc/umount $mntdev 2>/dev/null
+				echo "Remove floppy and insert correct floppy"
+				echo "Type <return> when ready:  \c"
+				read answer
+
+				#
+				# Reset answer to ""
+				# check to make sure that this
+				# is now the correct floppy
+				#
+
+				answer=""
+				/etc/mount $mntdev $mntname -r 2>/dev/null
+				;;
+
+			y)	expect=`cat /install/install/ORDER`
+				;;
+		esac
+	done
+
+	cd ${INSPATH}
+	echo "The following files are being installed:"
+	find . -print | cpio -pduvm /
+
+	#
+	# Increment number for next expected floppy.
+	#
+
+	echo "Floppy diskette number $expect is complete"
+	expect=`expr $expect + 1`
+done
+
+#
+# Give user closing message
+#
+
+echo "Installation of the ${PKGNAME} is complete."
+exit

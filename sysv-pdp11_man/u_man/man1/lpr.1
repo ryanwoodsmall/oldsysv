@@ -1,0 +1,59 @@
+.TH LPR 1 Obsolescent
+.SH NAME
+lpr \- line printer spooler
+.SH SYNOPSIS
+.B lpr
+[ option ... ] [ name ... ]
+.SH DESCRIPTION
+.I Lpr\^
+causes the named files to be queued for printing
+on a line printer.
+If no names appear, the standard input is assumed;
+thus
+.I lpr\^
+may be used as a filter.
+.PP
+The following \fIoptions\fP may be given (each as a separate argument
+and in any order)
+before any file name arguments:
+.PP
+.PD 0
+.TP 7
+.B \-c
+Makes a copy of the file to be sent before returning to the user.
+.TP 7
+.B \-r
+Removes the file after sending it.
+.TP 7
+.B \-m
+When printing is complete, reports that fact by
+.IR mail (1).
+.TP 7
+.B \-n
+Does not report the completion of printing by
+.IR mail (1).
+This is the default option.
+.TP 7
+.BI \-f file
+Use
+.I file
+as a dummy file name to report back in the mail.
+(This is useful for distinguishing multiple runs, especially when
+.I lpr\^
+is being used as a filter).
+.PD
+.SH FILES
+.PD 0
+.TP 20
+/etc/passwd
+user's identification and accounting data.
+.TP
+/usr/lib/lpd
+line printer daemon.
+.TP
+/usr/spool/lpd/\(**
+spool area.
+.PD
+.SH SEE ALSO
+dpd(1C), dpr(1C), lp(1).
+.\"	@(#)lpr.1	5.2 of 5/18/82

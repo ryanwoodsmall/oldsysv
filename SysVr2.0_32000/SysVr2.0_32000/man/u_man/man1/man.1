@@ -1,0 +1,146 @@
+.TH MAN 1
+.SH NAME
+man \- print entries in this manual
+.SH SYNOPSIS
+.B man
+[ options ] [ section ] titles
+.SH DESCRIPTION
+.I Man\^
+locates and prints the entry of this manual named
+.I title\^
+in the specified
+.IR section .
+(For historical reasons, the word ``page''
+is often used as a synonym for ``entry'' in this context.)\ 
+The
+.I title\^
+is entered in lower case.
+The
+.I section\^
+number may not have
+a letter suffix.
+If no
+.I section\^
+is specified, the whole manual is searched for
+.I title\^
+and all occurrences of it are printed.
+.I Options\^
+and their meanings are:
+.PP
+.PD 0
+.TP 11
+.BI \-T term\^
+Print the entry as appropriate for
+terminal type
+.IR term .
+For a list of recognized values of
+.IR term ,
+type
+.BR "help term2" .
+The default value of
+.I term\^
+is
+.BR 450 .
+.TP
+.B \-w
+Print on the standard output only the
+.I "path names\^"
+of the entries,
+relative to
+.BR /usr/catman ,
+or to the current directory for
+.B \-d
+option.
+.TP
+.B \-d
+Search the current directory rather than
+.BR /usr/catman ;
+requires the full file name (e.g.,
+.BR cu.1c ,
+rather than just
+.BR cu ).
+.TP
+.B \-c
+Causes
+.I man\^
+to invoke
+.IR col (1);
+note that
+.IR col (1)
+is invoked automatically by
+.I man\^
+unless
+.I term\^
+is one of
+.BR 300 ,
+.BR 300s ,
+.BR 450 ,
+.BR 37 ,
+.BR 4000a ,
+.BR 382 ,
+.BR 4014 ,
+.BR tek ,
+.BR 1620 ,
+and
+.BR X .
+.PD
+.PP
+.I Man\^
+examines the environment variable
+.SM
+.B $TERM
+[see
+.IR environ (5)]
+and attempts to select options
+that adapt the output to the terminal being used.
+The
+.BI \-T term\^
+option overrides the value of
+.SM
+.BR $TERM\*S ;
+in particular, one should use
+.B \-Tlp
+when sending the output of
+.I man\^
+to a line printer.
+.PP
+.I Section\^
+may be changed before each
+.IR title .
+.PP
+As an example:
+.IP
+man \|man
+.PP
+would reproduce on the terminal this entry,
+as well as any other entries named
+.I man\^
+that may exist in other sections of the manual.
+.PP
+.SH FILES
+.PD 0
+.TP \w'/usr/catman/?_man/man[1-8]/\(**\ \ \ \ 'u
+/usr/catman/?_man/man[1-8]/\(**
+Preformatted manual entries
+.PD
+.SH SEE ALSO
+term(5) in the \f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH CAVEAT
+The
+.I man\^
+command prints manual entries that were formatted by
+.I nroff\^
+when the UNIX system was installed.
+Entries are originally formatted with terminal type
+.BR 37 ,
+and are printed using the correct terminal filters
+as derived from the
+.BI \-T term\^
+and
+.SM
+.B $TERM
+settings.
+Typesetting or other non-standard printing of manual entries
+requires installation of
+the UNIX system Documenter's Workbench.
+

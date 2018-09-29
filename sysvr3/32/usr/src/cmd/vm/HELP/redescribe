@@ -1,0 +1,19 @@
+
+   The REDESCRIBE command is used to redefine an object's description.
+   The  object  description  provided  by  the  system is the standard
+   object type, e.g., standard file.  You  can  replace  the  standard
+   description with a description of your own.
+
+     1.  To REDESCRIBE an object use one of the following options.  If
+         an  object  name  is  not  specified  the  current  object is
+         assumed.
+
+            - Command Menu - Select REDESCRIBE + RETURN
+
+            - Typed Command - Type redescribe [object_name] + RETURN
+
+     2.  The following message appears:
+
+           Enter the new description:
+
+         Type in the new description for the object.

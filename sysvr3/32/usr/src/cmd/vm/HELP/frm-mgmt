@@ -1,0 +1,57 @@
+
+   The  FRM-MGMT command allows you to move and reshape frames.   It
+   also  supports  a  "list"  operation which lists for you all open
+   frames on the screen.  In the command syntax, "operation"  refers
+   to the "move", "reshape" or "list" functions provided by
+   the FRM-MGMT command.
+
+     1.  To use the FRM-MGMT command, choose one of  the  following:
+
+            - Function Key - Press FRM-MGMT
+
+            - Command menu - Select FRM-MGMT + RETURN
+
+            - COMMAND LINE - Type frm-mgmt [operation]
+                               [frame_# ] + RETURN
+
+         If  you have  not specified a  frame number,  the currently
+         active  frame is assumed to  be the frame you would like to
+         perform the operation on.
+
+     2.  If an "operation" is  not specified  a  pop-up  menu  frame
+         will  appear  listing  the FRM-MGMT operations.  You select
+         the frame operation you  want  to  perform  by  moving  the
+         cursor to the item and pressing RETURN. Pressing the CANCEL
+         Function Key cancels the FRM_MGMT command.
+
+         The operations are defined as:
+
+            - LIST -- lists  all  the  suspended  applications   and  
+	      currently  open frames  in a pop-up  menu.  From  this 
+	      menu you can select a frame, suspended application  or 
+	      file by moving the cursor to the desired selection and 
+	      pressing RETURN. 
+
+            - MOVE --  allows  you  to   move  a  frame  to  another
+              location  in  the  screen  Work Area. To move a frame,
+              use your keyboard arrow keys.  Frame corner indicators
+              will appear on the screen  showing you  where you  are
+              moving  the  frame. Press  ENTER  when  the indicators
+              have  reached the desired position, and the frame will
+              automatically  be  moved.  
+
+            - RESHAPE -- allows you to change the  size  of  a  menu
+              or text frame.  You  cannot  reshape form  frames. You
+              indicate the size you would like the frame by using
+              the arrow keys (or alternate keystrokes). Corner
+              indicators will appear on the screen to show you the
+              size of the changed frame.
+              First,  use  the  arrow  keys  to  position the 
+              upper-left  corner of  the frame and press  ENTER.
+              Then  use  the  arrow keys to position the lower-right
+              corner of the  frame and press ENTER.  The  frame will
+              be automatically resized to your specifications.
+
+         The frame remains in the new position or  size  until  you
+         CLOSE  it.   When  you  reopen  the frame again it will be
+         sized and placed by FACE.

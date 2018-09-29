@@ -1,0 +1,66 @@
+/*	Copyright (c) 1984 AT&T	*/
+/*	  All Rights Reserved  	*/
+
+/*	THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T	*/
+/*	The copyright notice above does not evidence any   	*/
+/*	actual or intended publication of such source code.	*/
+
+
+/*
+ * Copyright  (c) 1985 AT&T
+ *	All Rights Reserved
+ */
+#ident	"@(#)vm.qued:src/qued/arrows.c	1.1"
+
+#include <stdio.h>
+#include "wish.h"
+#include "ctl.h"
+#include "winp.h"
+#include "fmacs.h"
+#include "vtdefs.h"
+
+/*
+ * SETARROWS is used to set/clear scroll indicators for both
+ * single-line and multi-line scrollable fields
+ */
+setarrows()
+{
+ 	register unsigned line;
+	register int ch, savecol;
+
+	line = 0;
+	if (!(Flags & I_SCROLL))
+		vt_ctl(VT_UNDEFINED, CTSETARROWS, 0);
+	else if (Cfld->rows == 1) {
+		vt_ctl(VT_UNDEFINED, CTSETARROWS, 0);
+		savecol = Cfld->curcol;
+		if (Buffoffset > 0)
+			line |= VT_UPARROW;
+		if ((Buffoffset + Cfld->cols + 1) < Bufflast)
+			line |= VT_DNARROW;
+		if (line & VT_UPARROW) {
+			if (line & VT_DNARROW)
+				ch = '=';
+			else
+				ch = '<';
+		}
+		else if (line & VT_DNARROW) {
+			if (line & VT_UPARROW)
+				ch = '=';
+			else
+				ch = '>';
+		}
+		else
+			ch = ' ';
+		fgo(0, Lastcol + 1);
+		fputchar(ch);
+		fgo(0, savecol);
+	}
+	else {
+		if (Buffoffset > 0)
+			line |= VT_UPARROW;
+		if ((Valptr != NULL) || ((Buffoffset + FIELDBYTES) < Bufflast)) 
+			line |= VT_DNARROW;
+		vt_ctl(VT_UNDEFINED, CTSETARROWS, line);
+	}
+}

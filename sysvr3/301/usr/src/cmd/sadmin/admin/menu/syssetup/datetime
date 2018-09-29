@@ -1,0 +1,281 @@
+#ident	"@(#)sadmin:admin/menu/syssetup/datetime	2.4"
+#menu# set the date, time, time zone and daylight savings time
+#help# 
+#help#	Datetime tells the computer the date, time, time zone and whether
+#help#	you observe Daylight Savings Time (DST).  It is normally run once
+#help#	when the machine is first set up.  If you observe DST, the
+#help#	computer will automatically start to observe it in the spring and
+#help#	return to Standard Time in the fall.
+#help#	Any logins and processes running when the time zone changes, and
+#help#	all their child processes, will continue to see the old time zone.
+#help#	The cron will be restarted with the new time and time zone if it was
+#help#	already running.
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2 15
+
+timechanged=
+
+if [ -r /etc/TIMEZONE ]
+then
+	. /etc/TIMEZONE
+fi
+
+echo '
+Current time and time zone is: '`date | sed '	s/^...........//
+						s/:[0-9][0-9] / /
+						s/.....$//'`
+
+if checkyn ${flags} -H'
+	This procedure allows you to have all times reported in your local
+	time zone and allows you to say whether or not to observe Daylight
+	Savings Time.  If you observe DST, the computer will automatically
+	start to observe it in the spring and return to Standard Time in the
+	fall.
+	Any logins and processes running when the time zone changes, and
+	all their child processes, will continue to see the old time zone.
+	The cron will be restarted with the new time and time zone if it was
+	already running.' \
+	-f 'Change the time zone?'
+then
+	echo '
+	Available time zones are...
+	1.  Greenwich (GMT)
+	2.  Atlantic  (AST & ADT)
+	3.  Eastern   (EST & EDT)
+	4.  Central   (CST & CDT)
+	5.  Mountain  (MST & MDT)
+	6.  Pacific   (PST & PDT)
+	7.  Yukon     (YST & YDT)
+	8.  Alaska    (AST & ADT)
+	9.  Bering    (BST & BDT)
+	10. Hawaii    (HST)'
+
+	# check for valid response
+	zonenum=`checklist ${flags} -ef 'Enter zone number:' 1 2 3 4 5 6 7 8 9 10`
+
+	case "${zonenum}" in
+	'1')	tz="GMT0"	;;
+	'2')	tz="AST4"	;;
+	'3')	tz="EST5"	;;
+	'4')	tz="CST6"	;;
+	'5')	tz="MST7"	;;
+	'6')	tz="PST8"	;;
+	'7')	tz="YST8"	;;
+	'8')	tz="AST10"	;;
+	'9')	tz="BST11"	;;
+	'10')	tz="HST10"	;;
+	esac
+
+	dst=
+	case "${tz}" in
+	GMT0 | HST10 )
+		;;
+	* )
+		echo
+		if checkyn ${flags} -H'
+	If you observe DST, the computer will automatically start to observe it
+	in the spring and return to Standard Time in the fall.' \
+		-f 'Does your time zone use Daylight Savings Time during the year?'
+		then
+			dst=`expr "${tz}" : '\(.\)'`DT
+		fi
+	esac
+
+	TZ=${tz}${dst}
+
+	echo "# established `date`
+	TZ=${TZ}
+	export TZ" >/etc/TIMEZONE  ||
+	{
+		admerr `basename $0` 'Time zone has not been changed.  Cannot write /etc/TIMEZONE.'
+		exit 1
+	}
+	export TZ
+	echo 'Time zone now changed.
+Note:  Any logins and processes running when the time zone changes, and
+all their child processes, will continue to see the old time zone.
+The cron will be restarted at the end of this procedure.'
+	timechanged=yes
+fi
+
+eval `date +'day=%a. dmon=%m dday=%d dyr=%y dhr=%H dmin=%M'`
+echo "Current date and time:  ${day} ${dmon}/${dday}/${dyr} ${dhr}:${dmin}"
+if checkyn ${flags} -H'
+	This procedure allows you to set the date and time that the computer
+	reports.
+	The cron will be restarted with the new time and time zone if it was
+	already running.' \
+	-f 'Change the date and time?'
+then
+	while true
+	do
+		while	echo "Month	default ${dmon}	(1-12): \c"
+		do
+			read month
+			case "${month}" in
+			'' )
+				month=${dmon}
+				break
+				;;
+			q )
+				exit 0
+				;;
+			[0-9] | [0-9][0-9] )
+				if [ "${month}" -ge 1  -a  "${month}" -le 12 ]
+				then
+					break
+				fi
+				;;
+			[Jj][Aa][Nn]* )	month=1
+					break;;
+			[Ff][Ee][Bb]* )	month=2
+					break;;
+			[Mm][Aa][Rr]* )	month=3
+					break;;
+			[Aa][Pp][Rr]* )	month=4
+					break;;
+			[Mm][Aa][Yy]* )	month=5
+					break;;
+			[Jj][Uu][Nn]* )	month=6
+					break;;
+			[Jj][Uu][Ll]* )	month=7
+					break;;
+			[Aa][Uu][Gg]* )	month=8
+					break;;
+			[Ss][Ee][Pp]* )	month=9
+					break;;
+			[Oo][Cc][Tt]* )	month=10
+					break;;
+			[Nn][Ee][Vv]* )	month=11
+					break;;
+			[Dd][Ee][Cc]* )	month=12
+					break;;
+			esac
+			echo '	Invalid month:  use 1 through 12'
+		done
+		while	echo "Day	default ${dday}	(1-31): \c"
+		do
+			read day
+			case ${day} in
+			'' )
+				day=${dday}
+				break
+				;;
+			q )
+				exit 0
+				;;
+			[0-9] | [0-9][0-9] )
+				if [ "${day}" -ge 1  -a  "${day}" -le 31 ]
+				then
+					break
+				fi
+			esac
+			echo '	Invalid day:  use 1 through 31'
+		done
+		while	echo "Year	default ${dyr}	(70-99):\c"
+		do
+			read year
+			case ${year} in
+			'' )
+				year=${dyr}
+				break
+				;;
+			q )
+				exit 0
+				;;
+			[0-9][0-9] )
+				if [ "${year}" -ge 70  -a  "${year}" -le 99 ]
+				then
+					break
+				fi
+			esac
+			echo '	Invalid year:  use 70 through 99'
+		done
+		while	echo "Hour	default ${dhr}	(0-23): \c"
+		do
+			read hour
+			case ${hour} in
+			'' )
+				hour=${dhr}
+				break
+				;;
+			q )
+				exit 0
+				;;
+			[0-9] | [0-2][0-9] )
+				if [ "${hour}" -ge 0  -a  "${hour}" -le 23 ]
+				then
+					break
+				fi
+				;;
+			[0-9][aApP][mM] | 0[0-9][aApP][mM] | 1[0-1][aApP][mM] )
+				case ${hour} in
+				*[aA][mM] )
+					hour=`expr "${hour}" : '\([0-9]*\)'`
+					;;
+				* )
+					hour=`expr "${hour}" : '\([0-9]*\)' + 12`
+				esac
+				break
+				;;
+			noon )
+				hour=12
+				break
+				;;
+			midnight )
+				hour=0
+				break
+			esac
+			echo '	Invalid hour:  use 0 through 23'
+		done
+		while	echo "Minute	default ${dmin}	(0-59): \c"
+		do
+			read minute
+			case ${minute} in
+			'' )
+				minute=${dmin}
+				break
+				;;
+			q )
+				exit 0
+				;;
+			[0-9] | [0-9][0-9] )
+				if [ "${minute}" -ge 0  -a  "${minute}" -le 59 ]
+				then
+					break
+				fi
+			esac
+			echo '	Invalid minute:  use 0 through 59'
+		done
+		eval `echo "month=${month} day=${day} 
+			hour=${hour} minute=${minute} year=${year} "  |
+			sed '	s/=\([0-9]\) /=0\1 /g
+				s/=00*\([0-9][0-9]\) /=\1 /g'`
+		if  checkyn ${flags} -f "Date and time will be set to:  ${month}/${day}/${year} ${hour}:${minute}.  OK?"
+		then
+			date ${month}${day}${hour}${minute}${year}  || {
+				admerr `basename $0` 'Unable to set date.'
+				exit 1
+			}
+			echo 'The date and time are now changed.'
+			timechanged=yes
+			break
+		fi
+		echo 'The date and time have not changed.'
+		checkyn ${flags} -f 'Try again?'  ||  break
+	done
+fi
+if [ ${timechanged} ]
+then
+	pid=`ps -e  |  sed -n '/ cron$/s/^ *\([0-9]\{1,\}\) .*/\1/p'`
+	if [ "${pid}" ]  &&  kill ${pid}
+	then
+		sleep 2
+		/etc/cron  ||  {
+			admerr $0 'Cannot restart cron.'
+			exit 1
+		}
+		echo 'The cron has been restarted to pick up the new time and/or time zone.'
+	fi
+fi

@@ -1,0 +1,48 @@
+.TH ERRDEAD 1M
+.SH NAME
+errdead \- extract error records from dump
+.SH SYNOPSIS
+.BR /etc/errdead " dumpfile [ namelist ]"
+.SH DESCRIPTION
+When hardware errors are detected by the system,
+an error record that contains information pertinent
+to the error is generated.
+If the error-logging daemon
+.IR errdemon (1M)
+is not active or if the system
+crashes before the record can be placed in the
+error file,
+the error information is held by the system in a local buffer.
+.I Errdead\^
+examines a system dump (or memory),
+extracts such error records,
+and passes them to
+.IR errpt (1M)
+for analysis.
+.PP
+The
+.I dumpfile\^
+specifies the file (or memory) that
+is to be examined.
+The system namelist is specified by
+.IR namelist ;
+if not given,
+.B /unix
+is used.
+.SH FILES
+.ta \w'/usr/tmp/errXXXXXX   'u
+/unix	system namelist
+.br
+/usr/bin/errpt	analysis program
+.br
+/usr/tmp/err\s-1XXXXXX\s0	temporary file
+.SH DIAGNOSTICS
+Diagnostics may come from either
+.I errdead\^
+or
+.IR errpt .
+In either case, they
+are intended to be self-explanatory.
+.SH "SEE ALSO"
+errdemon(1M), errpt(1M).
+.\"	@(#)errdead.1m	6.2 of 9/2/83

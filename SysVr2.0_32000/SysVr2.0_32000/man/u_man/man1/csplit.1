@@ -1,0 +1,218 @@
+.TH CSPLIT 1
+.bd S B 3
+.SH NAME
+csplit \- context split
+.SH SYNOPSIS
+.B csplit
+.RB [ \-s ]
+.RB [ \-k ]
+.RB [ \-f \ prefix ]
+file arg1 [\s+3.\|.\|.\s0 argn]
+.SH DESCRIPTION
+.I Csplit\^
+reads
+.I file\^
+and separates it into n+1 sections,
+defined by the arguments
+.IR arg1 "\s+3.\|.\|.\s0"
+.IR argn .
+By default the sections are placed in
+xx00 \s+3.\|.\|.\s0
+.RI xx n\^
+.RI ( n\^
+may not be greater than 99).
+These sections get the following pieces of
+.IR file :
+.RS 6
+.TP 6
+00:
+From the start of
+.I file\^
+up to (but not including) the line referenced by
+.IR arg1 .
+.PD 0
+.TP 6
+01:
+From the line referenced by
+.I arg1\^
+up to the line referenced by
+.IR arg2 .
+.RS 6
+.B "."
+.br
+.B "."
+.br
+.B "."
+.RE
+.TP 6
+n+1:
+From the line referenced by
+.I argn\^
+to the end of
+.IR file .
+.PD
+.RE
+.PP
+If the
+.I file
+argument is a
+.B \-
+then standard input is used.
+.PP
+The options to
+.I csplit\^
+are:
+.RS 6
+.TP "\w'\-t\ prefix\ \ 'u"
+.B \-s
+.I Csplit\^
+normally prints the character counts for each file created.
+If the 
+.B \-s
+option is present,
+.I csplit\^
+suppresses the printing of all character counts.
+.TP
+.B \-k
+.I Csplit\^
+normally removes created files if an error occurs.
+If the
+.B \-k
+option is present,
+.I csplit\^
+leaves previously created files intact.
+.TP
+.BI \-f \ prefix
+If the
+.B \-f
+option is used, the created files are named
+.IB prefix 00
+\&\s+3.\|.\|.\s0\&
+.IR prefixn .
+The default is \fBxx00\fP \s+3.\|.\|.\s0
+.BI xx n\fR.\fP
+.RE
+.PP
+The arguments
+.RI ( arg1 " \s+3.\|.\|.\s-3"
+.IR argn )
+to
+.I csplit\^
+can be a combination of the following:
+.RS 6
+.TP 8
+.RI / rexp /
+A file is to be created for the section from the current line
+up to (but not including) the line containing the regular expression
+.IR rexp .
+The current line becomes the line containing
+.IR rexp .
+This argument may be followed by an optional
+.BR + " or"
+.B \-
+some number of lines
+(e.g., \fB/Page/\-5\fP).
+.TP 8
+.RI % rexp %
+This argument is the same as
+.RI / rexp /,
+except that no file is created for the section.
+.TP 8
+.I lnno\^
+A file is to be created from the current line up to (but not including)
+.IR lnno .
+The current line becomes
+.IR lnno .
+.TP 8
+.RI { num }
+Repeat argument.
+This argument may follow any of the above arguments.
+If it follows a
+.I rexp\^
+type argument, that argument is applied
+.I num\^
+more times.
+If it follows
+.IR lnno ,
+the file will be split every
+.I lnno\^
+lines
+.RI ( num\^
+times)
+from that point.
+.RE
+.PP
+Enclose all
+.I rexp\^
+type arguments that contain blanks or other characters meaningful to
+the Shell in the appropriate quotes.
+Regular expressions may not contain embedded new-lines.
+.I Csplit\^
+does not affect the original file;
+it is the users responsibility to remove it.
+.bp
+.SH EXAMPLES
+.RS 5n
+.nf
+	csplit \-f cobol file\ \ \(fm/procedure division/\(fm\ \ /par5./\ \ /par16./
+.fi
+.RE
+.sp
+This example creates four files, \fBcobol00\fP \s+3.\|.\|.\s0 \fBcobol03\fP.
+After editing the ``split'' files, they can be recombined as follows:
+.sp
+.RS 10n
+.nf
+	cat cobol0[0\-3] > file
+.fi
+.RE
+.sp
+Note that this example overwrites the original file.
+.sp
+.RS 5n
+.nf
+	csplit \-k file\ \ 100\ \ {99}
+.fi
+.RE
+.sp
+This example would split the file at every 100 lines, up to
+10,000 lines.
+The
+.B \-k
+option causes the created files to be retained if there
+are less than 10,000 lines; however, an error message would
+still be printed.
+.sp
+.RS 5n
+.nf
+csplit \-k prog.c\ \ \(fm%main(%\(fm\ \ \(fm/^}/+1\(fm\ \ {20}
+.fi
+.RE
+.sp
+Assuming that
+.B prog.c
+follows the normal
+.B C
+coding convention of
+ending routines with a
+.B }
+at the beginning of the line,
+this example will create a file containing each separate
+.B C
+routine (up to 21) in
+.BR prog.c .
+.SH SEE ALSO
+ed(1), sh(1).
+.br
+regexp(5) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH DIAGNOSTICS
+Self explanatory except for:
+.RS 5n
+.nf
+	arg \- out of range
+.fi
+.RE
+which means that the given argument did not reference a line
+between the current position and the end of the file.
+.\"	@(#)csplit.1	6.2 of 9/2/83

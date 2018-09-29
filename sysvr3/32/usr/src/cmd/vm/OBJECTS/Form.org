@@ -1,0 +1,53 @@
+form="Organize `pathconv -t -v $ARG1`"
+
+help=OPEN TEXT OBJECTS/Text.mfhelp organize "Organize"
+done=`regex -v "$F1" 
+		'^name only$' '0' 
+		'^long form$' '8' 
+		'^name and marks$' '2000' 
+		'.*' '4' | set -f$ARG1/.pref DISPMODE; 
+	regex -v "$F2" 
+		'^most recent first$' '2' 
+		'^least recent first$' '1002' 
+		'^alphabetical by description$' '800' 
+		'.*' '1' | set -f$ARG1/.pref SORTMODE; 
+	touch $ARG1; 
+	shell test -w $ARG1 || message "You don't have permission to organize that folder"`
+
+name=Folder Display Type: 
+nrow=1
+ncol=2
+rows=1
+columns=21
+frow=1
+fcol=24
+rmenu={ "name and description" "name only" "long form" }
+valid=`regex -v "$F1" 
+		'^name and description$' true 
+		'^name only$' true 
+		'^long form$' true 
+		'^name and marks$' true`
+value=const `regex -v "${($ARG1/.pref)DISPMODE:-$DISPLAYMODE}" 
+		'^0$' 'name only' 
+		'^8$' 'long form' 
+		'^2000$' 'name and marks' 
+		'.*' 'name and description'`
+
+name=Folder Display Order: 
+nrow=3
+ncol=1
+rows=1
+columns=27
+frow=3
+fcol=24
+rmenu={ "alphabetical" "alphabetical by description" "most recent first" "least recent first" }
+menuonly=true
+value=const `regex -v "${($ARG1/.pref)SORTMODE:-$SORTMODE}" 
+		'^2$'  'most recent first' 
+		'^1002$' 'least recent first' 
+		'^800$'  'alphabetical by description' 
+		'.*'  'alphabetical'`
+
+name=RESET
+button=8
+action=reset

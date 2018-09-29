@@ -1,0 +1,26 @@
+
+\Scrontab\S: Description
+
+Syntax Summary:  crontab [file_name]
+                 crontab -l
+                 crontab -r
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Scrontab\S stands for "chronological table." Use \Scrontab\S to set up
+     commands to be executed automatically on a regular basis. \Scrontab\S
+     takes a file that contains commands and times to execute those commands,
+     and puts it in a directory called /usr/lib/cron.  \Scrontab\S can also
+     take this information from standard input.  The command and time
+     information becomes your chronological table, and the commands will be
+     executed at the specified times.  Each time you want to change your
+     chronological table, you must include all the commands you want in it
+     because \Scrontab\S does not save any of the old commands.  You can also
+     use \Scrontab\S to list and remove the commands in your chronological
+     table.  You can not use \Scrontab\S unless your login name is in the file
+     /usr/lib/cron/cron.allow. If your system does not have a "cron.allow"
+     file, your login name must not appear in the /usr/lib/cron/cron.deny.
+     See the manual page for \Scrontab\S for details on specifying time. See
+     also:  at(1) and cal(1) for commands with functions similar to \Scrontab\S.
+

@@ -1,0 +1,17 @@
+
+   The RUN command allows you to run  or  execute  computer  programs.
+   Examples  of executable computer programs that you may have in your
+   Filecabinet are "Executable Files", or "Standard  Files" that  have
+   their RUN security permission set to "yes".
+
+   To RUN a computer program use one of the following methods.  If  an
+   object  name  is  not specified the currently highlighted object is
+   assumed to be the object you would like to RUN.
+
+      - Command menu - Select RUN + RETURN
+
+      - COMMAND LINE - Type run [object_name] + RETURN
+
+   Your screen will be cleared  so  that  the computer program can use
+   the  screen to display its results.  When the program has completed
+   you will be prompted to press RETURN  to continue FACE.

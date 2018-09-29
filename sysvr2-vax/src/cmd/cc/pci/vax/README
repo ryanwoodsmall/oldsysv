@@ -1,0 +1,15 @@
+/*	@(#)README	1.4	*/
+7 Oct 82
+These comments no longer apply, as the optim.c has been merged back
+into the real common parts:
+
+82/01/25:	Packaging for UNIX 5.0 release.
+
+NOTE: This release of pci/vax requires its own copy of optim.c.  This was done
+to postpone the decision of whether or not to include the change in the
+official machine independent pci source (2.1).
+
+The only conditional compilation of interest is the preprocessor name LOGFILE.
+If this name is defined, code is defined to log the statistics generated on
+peephole improvements on that file.  By default, it is not defined.  Its value
+must include the C string delimiters (") at both ends.

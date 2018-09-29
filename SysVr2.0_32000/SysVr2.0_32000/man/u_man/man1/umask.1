@@ -1,0 +1,56 @@
+.TH UMASK 1
+.SH NAME
+umask \- set file-creation mode mask
+.SH SYNOPSIS
+.B umask
+[ ooo ]
+.SH DESCRIPTION
+The user file-creation mode mask is set to
+.IR ooo .
+The three octal digits refer to
+read/write/execute permissions for
+.IR owner ,
+.IR group ,
+and
+.IR others ,
+respectively
+[see
+.IR chmod (2)
+and
+.IR umask (2)].
+The value of each specified digit is subtracted from the corresponding
+``digit'' specified by the system for the creation of a file
+[see
+.IR creat (2)].
+For example,
+.B "umask 022"
+removes
+.I group\^
+and
+.I others\^
+write permission
+(files normally created
+with mode
+.B 777
+become mode
+.BR 755 ;
+files created with mode
+.B 666
+become mode
+.BR 644 ).
+.PP
+If
+.I ooo\^
+is omitted, the current value of the mask is printed.
+.PP
+.I Umask\^
+is recognized and executed
+by the shell.
+.SH SEE ALSO
+chmod(1), sh(1).
+.br
+chmod(2),
+creat(2),
+umask(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)umask.1	6.2 of 9/2/83

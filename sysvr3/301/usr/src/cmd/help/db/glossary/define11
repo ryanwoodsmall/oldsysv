@@ -1,0 +1,36 @@
+
+\S access permissions:  permissions:  mode:  owner:  group:  other:\S
+   \Sread:  write:  execute \S
+
+As the user of a UNIX system, you can decide who can read, write, and
+execute the files and directories that you own.  You are usually the owner
+of files and directories that you have created in your login directory and
+in the "subdirectories"\S*\S in your login directory.  You may also own
+files in other peoples' directories.  You control the use of your files and
+directories by specifying the access permissions, also called the mode, for
+each. You can  specify different access permissions for yourself, your
+"group"\S*\S, and the other users of the system.  Permission to read
+allows the user to read the contents of the file. Write permission allows
+the user to change the file and execute permission enables the user to
+execute the program within the file.
+
+	     ls	-l
+
+prints the access permissions for each file and directory in the current
+directory.  The sample listing below shows the mode of the file (preceded
+by a -), the number of "links"\S*\S, the "login"\S*\S name of the
+owner, the "group ID"\S*\S, the size in characters, the date and time the
+file was last modified, and the "file name"\S*\S.
+
+	     -rwxrwl--x	 1 sandy  12345	 128  Oct  9  9:32  lock
+
+If this were a listing for a directory, the hyphen (-) would be replaced by
+the letter d.  The owner of the file "lock" can read, write and execute the
+file, the group can read and write it, and record-locking is in effect for
+this file. Other users can only execute the file.  Since record locking is in
+effect, the read and write permissions for the group and the execute
+permission for all others is meaningless.  Only the owner can use this
+file.  You can change the mode of your files and directories by using the
+change mode command, chmod(1).
+
+\S*\S defined in the \Sglossary\S

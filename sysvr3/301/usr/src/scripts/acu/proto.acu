@@ -1,0 +1,48 @@
+/dev/null
+1422 200
+d--755 0 3
+install d--775 0 3
+	INSTALL		---555 2 2	./install/acu/INSTALL.acu
+	UNINSTALL	---555 2 2	./install/acu/UNINSTALL.acu
+	Rlist		---775 2 2	./install/acu/Rlist.acu
+$
+new	d--775 0 3
+	bin	d--775 2 2
+		mkshlib	---775	2 2	../bin/mkshlib
+	$
+	usr	d--775 0 3
+		options	d--775 0 3
+			acu.name	---555	2 2	./install/acu/acu.name
+		$
+		bin	d--775 2 2
+			cb	---775	2 2	../usr/bin/cb
+			cflow	---755	2 2	../usr/bin/cflow
+			ctc	---755	2 2	../usr/bin/ctc
+			ctcr	---755	2 2	../usr/bin/ctcr
+			ctrace	---755	2 2	../usr/bin/ctrace
+			cxref	---775	2 2	../usr/bin/cxref
+			lint	---775	2 2	../usr/bin/lint
+			regcmp	---775	2 2	../usr/bin/regcmp
+		$
+		lib	d--775 0 3
+			dag	---755	2 2	../usr/lib/dag
+			flip	---755	2 2	../usr/lib/flip
+			lint1	---775	2 2	../usr/lib/lint1
+			lint2	---775	2 2	../usr/lib/lint2
+			llib-lc	---664	2 2	../usr/lib/llib-lc
+			llib-lc.ln	---664	2 2	../usr/lib/llib-lc.ln
+			llib-lm	---664	2 2	../usr/lib/llib-lm
+			llib-lm.ln	---664	2 2	../usr/lib/llib-lm.ln
+			llib-port	---664	2 2	../usr/lib/llib-port
+			llib-port.ln	---664	2 2	../usr/lib/llib-port.ln
+			lpfx	---755	2 2	../usr/lib/lpfx
+			nmf	---755	2 2	../usr/lib/nmf
+			xcpp	---775	2 2	../usr/lib/xcpp
+			xpass	---775	2 2	../usr/lib/xpass
+			ctrace	d--775 0 3
+				runtime.c	---664 2 2	../usr/lib/ctrace/runtime.c
+			$
+		$
+	$
+$
+$

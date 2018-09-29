@@ -1,0 +1,24 @@
+
+\Ssdiff\S:  Description
+
+Syntax Summary:
+      sdiff [-l] [-s] [-o output_file] [-w width] file_name1 file_name2
+
+         where:  file_names and output_files  are names of files.
+
+                 width  is an integer.
+
+Description:
+     \Ssdiff\S stands for "side-by-side" difference. \Ssdiff\S shows the
+     differences in the contents of two files. Use \Ssdiff\S to list the
+     lines of the two files in columns next to each other.  Between the columns
+     are symbols that show how the lines differ.  "<" means the line is only in
+     <file_name1>.  ">" means that the line is only in <file_name2>.  "|"
+     indicates that the lines are different.  If the lines are identical, the
+     space between the columns is empty.  Using the options for \Ssdiff\S you
+     can change the width of the output lines, or create a third file that is
+     composed of portions of <file_name1> and <file_name2>.  You can also
+     suppress identical lines or have \Ssdiff\S print them only in the left
+     column.  See also:  bdiff(1), cmp(1), comm(1), and diff(1), diff3(1), and
+     dircmp(1) for commands with functions similar to \Ssdiff\S.
+

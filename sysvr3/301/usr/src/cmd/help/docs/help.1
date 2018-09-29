@@ -1,0 +1,165 @@
+'\" t
+.TH HELP 1
+.SH NAME
+help \- UNIX System \fIhelp\fP Facility
+.SH SYNOPSIS
+.B "  help"
+.PP
+[
+.B help
+]
+.B starter
+.PP
+[
+.B help
+]
+.B usage
+[
+.B \-d
+]
+[
+.B \-e
+]
+[
+.B \-o
+]
+[
+.I command_name
+]
+.PP
+[
+.B help
+]
+.B locate
+[
+.I keyword1
+[
+.I keyword2
+] ... ]
+.PP
+[
+.B help
+]
+.B glossary
+[
+.I term
+]
+.PP
+.B "  help"
+.B arg1
+[
+.I arg2 ...
+]
+.SH DESCRIPTION
+The UNIX System \fIhelp\fP Facility provides on-line assistance for
+UNIX system users.
+.PP
+Without arguments,
+.I help
+prints a menu of available on-line assistance commands with a
+short description of their functions.
+The commands and their descriptions are:
+.sp 1
+.RS
+.TS
+l l
+l l.
+COMMAND	DESCRIPTION
+\fBstarter\fP	information about the UNIX system for the 
+	beginning user
+\fBusage\fP	UNIX system command usage information
+\fBlocate\fP	locate UNIX system commands using function-related 
+	keywords
+\fBglossary\fP	definitions of UNIX system technical terms
+.TE
+.RE
+.PP
+The user may choose one of the above commands by entering its
+corresponding letter (given in the menu), or may exit to
+the shell by typing
+.B q
+(for ``quit'').
+.PP
+With arguments,
+.I help
+directly invokes the named on-line assistance command, bypassing
+the
+initial
+.I help
+menu.
+The commands
+.IR starter ,
+.IR locate ,
+.IR usage ,
+and
+.IR glossary ,
+optionally preceded by the word \fIhelp\fP,
+may also be specified at shell level.
+When executing 
+.I glossary 
+from shell level some of the symbols listed in the glossary must be escaped
+to be understood by the facility.  For a list of symbols refer
+to the
+.IR glossary (1)
+manual page.
+.PP
+From any screen in the facility, a user may execute a command via the
+shell (\fBsh(1)\fP) by typing a \fB!\fP and the command to be executed.
+The screen will be redrawn if the command that was executed
+was entered at a first level prompt.
+If entered at any other prompt level, only the prompt will be redrawn.
+.PP
+By default, the \fIhelp\fP facility scrolls the data that is
+presented to the user.  If a user prefers to have
+the screen clear before printing the data (non-scrolling), 
+a variable must be defined in the user's \fB.profile\fP file called
+\fBSCROLL\fP.  The variable \fBSCROLL\fP must be set to \fBno\fP and exported
+for non-scrolling to occur.
+If the user later decides that scrolling is desired, the variable \fBSCROLL\fP
+must be set to \fByes\fP or deleted from the user's \fB.profile\fP file.
+.PP
+If the first argument to \fIhelp\fP is different from the four
+mentioned above, \fIhelp\fP
+assumes information is being requested in the form of the previous
+\fBhelp\fP command (often referred to as the SCCS \fBhelp\fP
+command, and now obsolete).
+The arguments may be either message numbers (which normally appear in
+parentheses following messages) or command names, of one of the 
+following types:
+.TP \w'type1\ \ 'u
+type1
+Begins with non-numerics, ends in numerics.  The non-numeric
+prefix is usually an abbreviation for the program or set of routines
+which produced the message (e.g., \fBge3\fP for message 3 from the \fIget\fP command).
+.TP
+type2
+Does not contain numerics (as a command, such as \fBget\fP)
+.TP
+type3
+Is all numeric (e.g., \fB212\fP)
+.PP
+Further information on the
+.IR starter ,
+.IR locate ,
+.IR usage ,
+and
+.IR glossary
+commands may be found on the
+.IR starter (1),
+.IR locate (1),
+.IR usage (1),
+and
+.IR glossary (1)
+manual pages, respectively.
+.SH SEE ALSO
+starter(1),
+locate(1),
+usage(1),
+glossary(1).
+.SH WARNINGS
+.PP
+If the \fBTERM\fP variable is not set in the user's \fB.profile\fP file,
+then \fBTERM\fP will default to the terminal value type \fB450\fP 
+( a hardcopy terminal ).  For a list of valid terminal types, refer to
+\fIterm(5)\fP in the UNIX Programmer's Manual.
+The \fIhelp\fP facility assumes that tabs are set on the user's terminal.

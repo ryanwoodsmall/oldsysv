@@ -1,0 +1,44 @@
+.OP
+.tl '''May 15, 1982'
+.rs
+.sp 3
+.ce
+UNIX Operating System Error Message Manual
+.ce
+Release 5.0
+.tr ~
+.sp 3
+.ce
+.ul
+PRINTING INSTRUCTIONS
+.sp 2
+Print entire manual two-sided; mock-ups of front and back
+cover (together with sizing information), as well as cover
+title and tabs copy are attached.
+.sp
+Total page count (including blank page) is 234.
+.nf
+.sp 2
+.ce
+.I "FOLIO LIST"
+.sp 2
+.ta 5 10 25 34
+		Title page			~~~~1*
+		Trademark page			~~~~2
+.FS *
+Pages 1 is
+.I not
+numbered.
+.I All
+other pages
+.I "that carry any text"
+are numbered.
+.FE
+.sp
+		Introduction			~~~~3-4 incl.
+.sp
+		Contents			~~~~1-5 incl.
+		     Blank page	~~~~6
+.sp
+		Body				~~~~1-224 incl.
+.\"	@(#)errman.folio	5.2 of 5/19/82

@@ -1,0 +1,41 @@
+
+\Schmod\S:  Description
+
+Syntax Summary:  chmod [mode ...] name ...
+
+         where:  mode  is a string of characters or integers.
+
+                 name  is the name of a file or directory.
+
+Description:
+     \Schmod\S is shorthand for "change mode."  Use \Schmod\S to change the
+     read, write and execute permissions for the owner, group and other users
+     of file and directory.  Only the owner or super user may change a file's
+     permissions.  You can change the access permissions for your files using 
+     strings composed of the following characters:  Who the permissions apply
+     to, "u" for user, "g" for group, "o" for other, or "a" for all users; 
+     Operators that specify how to change the permissions, "+" for add, "-" 
+     for remove, or "=" for set the specified permissions and remove all other
+     permissions; The permissions that you want to change, "r" for read 
+     permission, "w" for write permission, and "x" for execute permission.
+     The most common way to specify mode is to list who followed by the 
+     operator then the permissions.  If you don't specify who the permissions
+     apply to, "a" is the default.  If you use 0 after the operator, all 
+     permissions will be removed for the users.
+
+     The "l", "s" and "t" permissions enable you to lock your file, set the
+     userID or groupID for your file, or set the sticky bit for your file.
+     See the manual page for \Schmod\S for a complete explanation of these
+     permissions.  
+
+     You can also change permissions for files and directories using a string 
+     of integers called an octal code.  The octal code can be one to four 
+     digits long.  If you use four digits, the first digit sets the userID, 
+     groupID or sticky bit.  The second, third, and fourth digits set the 
+     user, group, and other users permissions, respectively.  The integer 
+     you use in each position dictates the permissions for the file.  See 
+     the options screen for details on the meaning of the integers.  If you 
+     use less than a four digit octal code, the right-most digit applies to 
+     other users, the second from the right applies to group and the third 
+     from the right applies to the user.
+

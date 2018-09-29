@@ -1,0 +1,425 @@
+.TH CTRACE 1
+.SH NAME
+ctrace \- C program debugger
+.SH SYNOPSIS
+\f3ctrace\fR [ options ] [ file ]
+.SH DESCRIPTION
+.ad b
+\f2Ctrace\fR allows you to follow the execution of a C program, statement by statement.
+The effect is similar to executing a shell procedure with the \f3-x\fR
+option.
+\f2Ctrace\fR reads the C program in \f2file\fR (or from standard
+input if you do not specify \f2file\fR), inserts statements to print
+the text of each executable statement and the values of all
+variables referenced or modified,
+and writes the modified program to the standard output.
+You must put the output of \f2ctrace\fR into a temporary file because
+the \f2cc\fR(1) command does not allow the use of a pipe.
+You then compile and execute this file.
+.P
+As each statement in the program executes it will be listed at the
+terminal, followed by the name and value of any variables referenced or
+modified in the statement, followed by any output from the statement.
+Loops in the trace output are detected and tracing is stopped until the
+loop is exited or a different sequence of statements within the loop is
+executed.
+A warning message is printed every 1000 times through the loop to
+help you detect infinite loops.
+The trace output goes to the standard output so you 
+can put it into a file for examination with an editor or the
+\f2bfs\fR(1) or \f2tail\fR(1) commands.
+.P
+The only
+.I options
+you will commonly use are:
+.P
+.PD 0
+.TP 14
+.BI \-f " functions\^"
+Trace only these
+.I functions.
+.TP
+.BI \-v " functions\^"
+Trace all but these
+.I functions.
+.PD
+.P
+You may want to add to the default formats for printing variables.
+Long and pointer variables are always printed as signed integers.
+Pointers to character arrays are also printed as strings if appropriate.
+Char, short, and int variables are also printed as signed integers and, if
+appropriate, as characters.
+Double variables are printed as floating point numbers in scientific notation.
+.ig
+String arguments to the
+.IR string (3C)
+functions and return values from
+.IR fgets (3S),
+.IR gets (3S),
+and
+.IR sprintf (3S)
+are printed as strings.
+..
+You can request that variables be printed in additional formats, if
+appropriate, with these \f2options\fR:
+.P
+.PD 0
+.TP 7
+.B \-o
+Octal
+.TP
+.B \-x
+Hexadecimal
+.TP
+.B \-u
+Unsigned
+.TP
+.B \-e
+Floating point
+.PD
+.P
+These \f2options\fR are used only in special circumstances:
+.P
+.PD 0
+.TP 7
+.BI \-l " n\^"
+Check
+.I n
+consecutively executed statements for looping trace output, instead of the
+default of 20.  Use 0 to get all the trace output from loops.
+.TP
+.B \-s
+Suppress redundant trace output from simple assignment statements and
+string copy function calls.
+This option can hide a bug caused by use of the = operator in place of the
+== operator.
+.TP
+.BI \-t " n\^"
+Trace
+.I n
+variables per statement instead of the default of 10
+(the maximum number is 20).
+The Diagnostics section explains when to use this option.
+.TP
+.B \-P
+Run the C preprocessor on the input before tracing it.
+You can also use the
+.BR -D ,
+.BR -I ,
+and
+.B -U
+.IR cc (1)
+preprocessor options.
+.PD
+.P
+These \f2options\fR are used to tailor the run-time trace package when the
+traced program will run in a non-UNIX system environment:
+.P
+.PD 0
+.TP 7
+.B \-b
+Use only basic functions in the trace code, that is, those in
+.IR ctype (3C),
+.IR printf (3S),
+and
+.IR string (3C).
+These are usually available even in cross-compilers for microprocessors.
+In particular, this option is needed when the traced program runs under an
+operating system that does not have
+.IR signal (2),
+.IR fflush (3S),
+.IR longjmp (3C),
+or
+.IR setjmp (3C).
+.TP
+.BI \-p " 's'\^"
+Change the trace print function from the default of 'printf('.
+For example, 'fprintf(stderr,' would send the trace to the standard error
+output.
+.TP
+.B -r f
+Use file
+.I f
+in place of the
+.I runtime.c
+trace function package.
+This lets you change the entire print function, instead of just the
+name and leading arguments (see the
+.B \-p
+option).
+.PD
+.SH EXAMPLE
+If the file \f2lc.c\fR contains this C program:
+.DS I
+ 1 #include <stdio.h>
+ 2 main()	/* count lines in input */
+ 3 {
+ 4 	int c, nl;
+ 5 
+ 6 	nl = 0;
+ 7 	while ((c = getchar()) != EOF)
+ 8 		if (c = '\\n')
+ 9 			++nl;
+10 	printf("%d\\n", nl);
+11 }
+.DE
+and you enter these commands and test data:
+.DS I
+cc lc.c
+a.out
+1
+(cntl-d),
+.DE
+the program will be compiled and executed.
+The output of the program will be the number \f32\fR, which is not
+correct because there is only one line in the test data.
+The error in this program is common, but subtle.
+If you invoke \f2ctrace\fR with these commands:
+.DS I
+ctrace lc.c >temp.c
+cc temp.c
+a.out
+.DE
+the output will be:
+.DS I
+ 2 main()
+ 6 	nl = 0;
+    	/* nl == 0 */  
+ 7 	while ((c = getchar()) != EOF)
+.DE
+The program is now waiting for input.
+If you enter the same test data as before, the output will be:
+.DS I
+   	/* c == 49 or '1' */
+ 8 		if (c = '\\n')
+    		/* c == 10 or '\\n' */  
+ 9 			++nl;
+   			/* nl == 1 */
+ 7 	while ((c = getchar()) != EOF)
+   	/* c == 10 or '\\n' */
+ 8 		if (c = '\\n')
+    		/* c == 10 or '\\n' */  
+ 9 			++nl;
+   			/* nl == 2 */
+ 7 	while ((c = getchar()) != EOF)
+.DE
+If you now enter an end of file character (cntl-d) the final output
+will be:
+.DS I
+   	/* c == -1 */
+10 	printf("%d\\n", nl);
+   	/* nl == 2 */2
+	\* return \*
+
+.DE
+.br
+Note that the program output printed at the end of the trace line
+for the \f3nl\fR variable.
+Also note the \f3return\fR comment added by \f2ctrace\fR at the end of the 
+trace output.
+This shows the implicit return at the terminating brace in the function.
+.P
+The trace output shows that variable \f3c\fR is assigned the value '1' in
+line 7, but in line 8 it has the value '\\n'.
+Once your attention is drawn to this \f3if\fR statement,
+you will probably realize that you used the assignment operator (=)
+in place of the equal operator (==).
+You can easily miss this error during code reading.
+.bp
+.SH EXECUTION-TIME TRACE CONTROL
+The default operation for
+.I ctrace
+is to trace the entire program file, unless you use the
+.B -f
+or
+.B -v
+options to trace specific functions.
+This does not give you statement by statement control of the tracing, nor
+does it let you turn the tracing off and on when executing the traced
+program.
+.P
+You can do both of these by adding
+.IR ctroff ()
+and
+.IR ctron ()
+function calls to your program to turn the tracing off and on,
+respectively, at execution time.
+Thus, you can code arbitrarily complex criteria for trace control with
+.I if
+statements, and you can even conditionally include this code because 
+.I ctrace
+defines the
+.B CTRACE 
+preprocessor variable.
+For example:
+.DS
+.br
+.sp
+#ifdef CTRACE
+.br
+	if (c == '!' && i > 1000)
+.br
+		ctron();
+.br
+#endif
+.br
+.sp
+.DE
+You can also call these functions from
+.IR sdb (1)
+if you compile with the
+.B -g
+option.
+For example, to trace all but lines 7 to 10 in the main function, enter:
+.DS
+.br
+.sp
+sdb a.out
+.br
+main:7b ctroff()
+.br
+main:11b ctron()
+.br
+r
+.br
+.sp
+.DE
+You can also turn the trace off and on by setting static variable tr_ct_ to
+0 and 1, respectively.
+This is useful if you are using a debugger that cannot call these
+functions directly, such as
+.IR adb (1).
+.SH DIAGNOSTICS
+This section contains diagnostic messages from both
+.I ctrace
+and
+.IR cc (1),
+since the traced code often gets some
+.I cc
+warning messages.
+You can get
+.I cc
+error messages in some rare cases, all of which can be avoided.
+.P
+.SS Ctrace Diagnostics
+.I "warning: some variables are not traced in this statement"
+.RS
+Only 10 variables are traced in a statement to prevent the C compiler
+"out of tree space; simplify expression" error.
+Use the \f3-t\fR option to increase this number.
+.RE
+.P
+.I "warning: statement too long to trace"
+.RS
+This statement is over 400 characters long.
+Make sure that you are using tabs to indent your code, not spaces.
+.RE
+.P
+.I "cannot handle preprocessor code, use -P option"
+.RS
+This is usually caused by #ifdef/#endif preprocessor statements in the
+middle of a C statement, or by a semicolon at the end of a #define
+preprocessor statement.
+.RE
+.P
+.I "'if ... else if' sequence too long"
+.RS
+Split the sequence by removing an \f3else\fR from the middle.
+.RE
+.P
+.I "possible syntax error, try -P option"
+.RS
+Use the
+.B -P
+option to preprocess the
+.I ctrace
+input, along with any appropriate
+.BR -D ,
+.BR -I ,
+and
+.B -U
+preprocessor options.
+If you still get the error message, check the Warnings section below.
+.RE
+.P
+.SS Cc Diagnostics
+.I "warning: floating point not implemented"
+.br
+.I "warning: illegal combination of pointer and integer"
+.br
+.I "warning: statement not reached"
+.br
+.I "warning: sizeof returns 0"
+.RS
+Ignore these messages.
+.RE
+.P
+.I "compiler takes size of function"
+.RS
+See the
+.I ctrace
+"possible syntax error" message above.
+.RE
+.P
+.I "yacc stack overflow"
+.RS
+See the
+.I ctrace
+"'if ... else if' sequence too long" message above.
+.RE
+.P
+.I "out of tree space; simplify expression"
+.RS
+Use the \f3-t\fR option to reduce the number of
+traced variables per statement from the default of 10.
+Ignore the "ctrace: too many variables to trace"
+warnings you will now get.
+.RE
+.P
+.I "redeclaration of signal"
+.RS
+Either correct this declaration of
+.IR signal (2),
+or remove it and #include <signal.h>.
+.RE
+.SH WARNINGS
+You will get a
+.I ctrace
+syntax error if you omit the semicolon at the end of the last element
+declaration in a structure or union, just before the right brace (}).
+This is optional in some C compilers.
+.P	
+Defining a function with the same name as a system function
+may cause a syntax error if the number of arguments is
+changed.  Just use a different name.
+.P
+\f2Ctrace\fR assumes that BADMAG is a preprocessor macro, and that
+EOF and NULL are #defined constants.
+Declaring any of these to be variables, e.g. "int EOF;", will cause a
+syntax error.
+.SH BUGS
+Ctrace does not know about the components of aggregates like structures,
+unions, and arrays.  It cannot choose a format to print all the
+components of an aggregate when an assignment is made to the entire
+aggregate.  Ctrace may choose to print the address of an aggregate
+or use the wrong format (e.g., %e for a structure with two integer
+members) when printing the value of an aggregate.
+.P
+Pointer values are always treated as pointers to character strings.
+.P
+The loop trace output elimination is done separately for each file of a
+multi-file program.  This can result in functions called from a
+loop still being traced, or the elimination of trace output from one
+function in a file until another in the same file is called.
+.SH FILES
+runtime.c		run-time trace package
+.SH SEE ALSO
+.fi
+signal(2),
+ctype(3C),
+fflush(3S),
+longjmp(3C),
+printf(3S),
+setjmp(3C),
+string(3C) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.

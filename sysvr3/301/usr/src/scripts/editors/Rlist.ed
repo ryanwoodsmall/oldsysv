@@ -1,0 +1,12 @@
+/etc/init.d/PRESERVE
+/etc/rc2.d/S02PRESERVE
+/usr/bin/ctags
+/usr/bin/edit
+/usr/bin/vedit
+/usr/bin/view
+/usr/bin/ex
+/usr/bin/vi
+/usr/lib/expreserve
+/usr/lib/exrecover
+/usr/lib/exstrings
+/usr/options/ed.name

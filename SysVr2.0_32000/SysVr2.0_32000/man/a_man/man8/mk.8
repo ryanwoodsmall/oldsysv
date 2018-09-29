@@ -1,0 +1,274 @@
+.TH MK 8
+.SH NAME
+mk \- how to remake the system and commands
+.SH DESCRIPTION
+.PP
+All source for the
+.SM UNIX
+system is in a source tree
+distributed in the directory
+.BR /usr/src .
+This includes source for the operating system,
+libraries, commands, miscellaneous files necessary to the
+running system, and procedures to create everything
+from this source.
+.PP
+The top level consists of the directories
+.BR cmd ,
+.BR lib ,
+.BR uts ,
+.BR head ,
+and
+.B stand
+as well as commands to remake each of these ``directories''.
+These commands are named
+.IR :mk ,
+which remakes everything, and
+.IB :mk dir
+where
+.B dir
+is the directory to be recreated.
+Each recreation command will make all or part of the piece,
+over which it has control.
+The command
+.I :mk\^
+will run each of these commands and thus recreate the
+whole system.
+.PP
+The
+.B lib
+directory contains
+libraries used when loading user programs.
+The largest and most important of these
+is the C library.
+All libraries are in sub-directories and are
+created by a makefile or runcom.
+A runcom is a Shell command procedure used specifically to
+remake a piece of the system.
+.I :mklib\^
+will rebuild the libraries that are given as arguments.
+The argument \fB\e\(**\fP will cause it to remake all libraries.
+.PP
+The
+.B head
+directory contains
+the header files,
+usually found
+in
+.B /usr/include
+on the running system.
+.I :mkhead\^
+will install those header files that are given as arguments.
+The argument \fB\e\(**\fP will cause it to install all header files.
+.PP
+The
+.B uts
+directory contains
+the source for the
+.SM UNIX
+operating system.
+.I :mkuts\^
+(no arguments)
+invokes a series of makefiles
+that will recreate the operating system.
+.PP
+The
+.B stand
+directory contains stand-alone commands and boot programs.
+.I :mkstand\^
+will rebuild and install these programs.
+.PP
+The
+.B cmd
+directory contains files and directories.
+.I :mkcmd\^
+transforms source into a command
+based upon
+its suffix
+.RB ( .l ", " .y ,
+.BR .c ", " .s ", " .sh ),
+or its makefile
+[see
+.IR make (1)]
+or runcom.
+A directory is assumed to have a makefile or a runcom
+that will take care of creating everything associated with
+that directory and its sub-directories.
+Makefiles and
+runcoms are named
+.IB command .mk
+and
+.IB command .rc
+respectively.
+.PP
+The command
+.I :mkcmd\^
+will recreate commands based upon a makefile
+or runcom
+if one of them exists; alternatively
+commands are recreated in a standard
+way based on the suffix of the source file.
+All commands requiring more than one file of source
+are grouped in sub-directories, and must have a makefile
+or a runcom.
+C programs
+.RB ( .c )
+are compiled
+by the C compiler and loaded stripped with shared text.
+Assembly language programs
+.RB ( .s )
+are assembled with
+.B /usr/include/sys.s
+which contains the system call definitions.
+Yacc programs
+.RB ( .y )
+and lex programs
+.RB ( .l )
+are processed by
+.IR yacc (1)
+and
+.IR lex (1)
+respectively, before
+C compilation.
+Shell programs
+.RB ( .sh )
+are copied to create the command.
+Each of these operations leaves a command in
+.B \&./cmd
+which is then
+installed by using
+.BR /etc/install .
+.PP
+The arguments to
+.I :mkcmd\^
+are either command names
+or subsystem names.
+The subsystems distributed with the
+.SM UNIX
+system
+are:
+.BR acct ,
+.BR graf ,
+.BR rje ,
+.BR sccs ,
+and
+.BR text .
+Prefacing the
+.I :mkcmd\^
+instruction with
+an assignment to the Shell variable
+.SM
+.B $ARGS
+will cause the indicated components of the subsystem to be rebuilt.
+.bp
+The entire
+.B sccs
+subsystem can be rebuilt by:
+.IP
+/usr/src/:mkcmd\ \ sccs
+.PP
+while the
+.I delta\^
+component of
+.B sccs
+can be rebuilt by:
+.IP
+\s-1ARGS\s+1="delta"\ \ /usr/src/:mkcmd\ \ sccs
+.PP
+The
+.I log\^
+command, which is a part of the
+.B stat
+package, which is itself a part of the
+.B graf
+package,
+can be rebuilt by:
+.IP
+\s-1ARGS\s+1="stat log"\ \ /usr/src/:mkcmd\ \ graf
+.PP
+The argument \fB\e\(**\fP will cause all commands and subsystems to be rebuilt.
+.PP
+Makefiles, both in
+.B \&./cmd
+and in sub-directories, have a standard
+format.
+In particular
+.I :mkcmd\^
+depends on there being entries for
+.I install\^
+and
+.IR clobber .
+.I Install\^
+should cause everything over which the makefile has
+jurisdiction to be made and installed by
+.BR /etc/install .
+.I Clobber\^
+should cause a complete cleanup of all unnecessary
+files resulting from the previous invocation.
+.PP
+Most of the runcoms in
+.B \&./cmd
+(as opposed to sub-directories)
+relate in particular to a need for separated instruction and
+data (I and D)
+space.
+.PP
+In the past, dependency on the C library routine
+.IR ctime (3C)
+was also
+important.
+.I Ctime\^
+had to be modified for all systems located outside
+of the eastern time zone, and all commands that referenced it had
+to be recompiled.
+.I Ctime\^
+has been rewritten to check the environment
+[see
+.IR environ (5)]
+for the time zone.
+This results in time zone conversions possible on a per-process basis.
+The file
+.B /etc/profile
+sets the initial environment for each user,
+and
+.B /etc/rc
+sets it for certain system daemons.
+These two programs are the only ones which must be modified outside
+of the eastern time zone.
+.PP
+An effort has been made to separate the creation of a command from source,
+and its installation on the running system.
+The command
+.B /etc/install
+is used by
+.I :mkcmd\^
+and most makefiles to install commands in the
+proper place on the running system.
+The use of install allows maximum flexibility in the administration of
+the system.
+Install makes very few assumptions about where a command is located,
+who owns it, and what modes are in effect.
+All assumptions may be overridden on invocation of the command,
+or more permanently by redefining a few variables
+in install.
+The object is to install a new version of a command in the same place,
+with the same attributes as the prior version.
+.PP
+In addition, the use of a separate command to perform installation
+allows for the creation of test systems in other than standard places,
+easy movement of commands to balance load, and independent maintenance
+of makefiles.
+The minimization of makefiles in most cases,
+and the site independence of the others should greatly reduce the
+necessary maintenance, and allow makefiles
+to be considered
+part of the standard source.
+.SH SEE ALSO
+install(1M),
+lex(1),
+make(1),
+yacc(1),
+ctime(3C),
+and
+environ(5).
+.\"	@(#)mk.8	6.2 of 9/6/83

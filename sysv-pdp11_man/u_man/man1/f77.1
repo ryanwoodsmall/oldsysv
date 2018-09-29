@@ -1,0 +1,281 @@
+.TH F77 1
+.SH NAME
+f77 \- Fortran 77 compiler
+.SH SYNOPSIS
+.B f77
+[ options ] files
+.SH DESCRIPTION
+.I F77\^
+is the
+.SM UNIX
+Fortran 77 compiler;
+it accepts several types of
+.I file\^
+arguments:
+.RS
+.PP
+Arguments whose names end with
+.B \&.f
+are taken to be
+Fortran 77 source programs;
+they are compiled and
+each object program is left in the current directory
+in a file
+whose name is that of the source, with
+.B \&.o
+substituted
+for
+.BR \&.f .
+.PP
+Arguments whose names end with
+.B \&.r
+or
+.B \&.e
+are taken to be
+.SM RATFOR
+or
+.SM EFL
+source programs, respectively; these are first transformed by the
+appropriate preprocessor, then compiled by
+.IR f77 ,
+producing
+.B \&.o
+files.
+.PP
+In the same way,
+arguments whose names end with
+.B \&.c
+or
+.B \&.s
+are taken to be
+C
+or assembly source programs
+and are compiled or assembled, producing
+.B \&.o
+files.
+.RE
+.PP
+The following
+.I options\^
+have the same meaning as in
+.IR cc (1)
+(see
+.IR ld (1)
+for link editor options):
+.PP
+.PD 0
+.TP 12
+.B \-c
+Suppress link editing and produce
+.B \&.o
+files for each source
+file.
+.TP
+.B \-p
+Prepare object files for profiling (see
+.IR prof (1)).
+.TP
+.B \-O
+Invoke an
+object-code optimizer.
+.TP
+.B \-S
+Compile the named programs and leave the
+assembler-language output in corresponding files whose names are suffixed
+with
+.BR \&.s .
+(No
+.B \&.o
+files are created.)
+.TP
+.BI \-o "output\^"
+Name the final output file
+.IR output ,
+instead of
+.BR a.out .
+.TP
+.B \-f
+In systems without floating-point hardware,
+use a version of
+.I f77\^
+that handles floating-point
+constants and
+links the object program with the floating-point interpreter.
+.TP
+.B \-g
+Generate additional information needed for the use of
+.IR sdb (1)
+(\s-1VAX\s+1\&-11/780 only).
+.PD
+.PP
+The following
+.I options\^
+are peculiar to
+.IR f77 :
+.PP
+.PD 0
+.TP 12
+.B \-onetrip
+Compile
+.SM DO
+loops that are performed at least once if reached.
+(Fortran 77
+.SM DO
+loops are not performed at all if the upper limit is smaller than the lower limit.)
+.TP
+.B \-1
+Same as
+.BR \-onetrip .
+.TP
+.B \-66
+Suppress extensions which enhance Fortran 66 compatibility.
+.TP
+.B \-C
+Generate code for run-time subscript range-checking.
+.TP
+.BR \-I [ 24s ] 
+Change the default size of integer variables (only valid on
+machines where the ``normal'' integer size is not equal to the
+size of a single precision real).
+.BR \-I2
+causes all integers to be 2-byte quantities,
+.BR \-I4
+(default)
+causes all integers to be 4-byte quantities, and
+.BR \-Is
+changes the default size of subscript expressions (only)
+from the size of an integer to 2 bytes.
+.TP
+.B \-U
+Do not "fold" cases.
+.I F77
+is normally a no-case language (i.e.
+.B a
+is equal to
+.BR A ).
+The
+.B \-U
+option
+causes
+.I f77
+to treat upper and lower cases to be separate.
+.TP
+.B \-u
+Make the default type of a variable
+.IR undefined ,
+rather than using the default Fortran rules.
+.TP
+.B \-w
+Suppress all warning messages.
+If the option is
+.BR \-w66 ,
+only Fortran 66 compatibility warnings are suppressed.
+.TP
+.B \-F
+Apply
+.SM EFL
+and
+.SM RATFOR
+preprocessor to relevant files, put the result in files
+whose names have their suffix changed to
+.BR \&.of .
+(No
+.B \&.o
+files are created.)
+.TP
+.B \-m
+Apply the M4 preprocessor to each
+.SM EFL
+or
+.SM RATFOR
+source file before transforming
+with the
+.IR ratfor (1)
+or
+.IR ef\&l (1)
+processors.
+.TP
+.B \-E
+The remaining characters in the argument are used as an
+.SM EFL
+flag argument whenever processing
+a
+.B \&.e
+file.
+.TP
+.B \-R
+The remaining characters in the argument are used as a
+.SM RATFOR
+flag argument whenever
+processing a
+.B \&.r
+file.
+.PD
+.PP
+Other arguments
+are taken
+to be either link-editor option arguments or
+.IR f77 -compilable
+object programs (typically produced by an earlier
+run),
+or libraries of
+.IR f77 -compilable
+routines.
+These programs, together with the results of any
+compilations specified, are linked (in the order
+given) to produce an executable program with the default name
+.B a.out .
+.SH FILES
+.PD 0
+.TP 20
+file.[fresc]
+input file
+.TP
+file.o
+object file
+.TP
+a.out
+linked output
+.TP
+\&./fort[\fIpid\fP].?
+temporary
+.TP
+/usr/lib/f77pass1
+compiler
+.TP
+/lib/c1
+pass 2
+.TP
+/lib/c2
+optional optimizer
+.TP
+/usr/lib/libF77.a
+intrinsic function library
+.TP
+/usr/lib/libI77.a
+Fortran I/O library
+.TP
+/lib/libc.a
+C library; see Section 3 of this Manual.
+.PD
+.SH SEE ALSO
+.I "A Portable Fortran 77 Compiler"
+by S. I. Feldman and P. J. Weinberger.
+.br
+asa(1),
+cc(1),
+ef\&l(1),
+fsplit(1),
+ld(1),
+m4(1),
+prof(1),
+ratfor(1),
+sdb(1).
+.SH DIAGNOSTICS
+The diagnostics produced by
+.I f77\^
+itself are intended to be
+self-explanatory.
+Occasional messages may be produced by the link editor
+.IR ld (1).
+.\"	@(#)f77.1	5.2 of 5/18/82

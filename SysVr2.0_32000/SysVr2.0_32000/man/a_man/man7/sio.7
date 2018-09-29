@@ -1,0 +1,18 @@
+.TH SIO 7
+.SH NAME
+sio - serial input/output asynchronous multiplexor
+.SH DESCRIPTION
+Each of up to 8 lines attached to an
+.SM sio
+communications multiplexer
+behaves as described in
+.IR termio (7).
+Input and output for each line may independently
+be set to run at any of 16 speeds;
+see
+.IR termio (7)
+for the encoding.
+.SH FILES
+/dev/tty\(**
+.SH "SEE ALSO"
+termio(7).

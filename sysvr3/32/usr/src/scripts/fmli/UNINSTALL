@@ -1,0 +1,26 @@
+#ident	"@(#)pkg.fmli:UNINSTALL	1.2"
+
+#
+# UNINSTALL the Form and Menu Language Interpreter
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+INSINS=/install/install
+PKGNAME=`cat ${INSINS}/fmli.name`
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+echo "The following files and directories are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -fr $i
+done
+echo
+echo "The ${PKGNAME} has been removed."
+echo

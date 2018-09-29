@@ -1,0 +1,6 @@
+#	@(#)uudemon.hr	1.2
+# 'perform every hour on the 56-minute mark'
+PATH=:/usr/lib/uucp:/bin:/usr/bin
+cd /usr/lib/uucp
+uucico -r1
+uulog

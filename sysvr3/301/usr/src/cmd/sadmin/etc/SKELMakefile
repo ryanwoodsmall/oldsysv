@@ -1,0 +1,50 @@
+#ident	"@(#)sadmin:etc/SKELMakefile	2.2"
+#	skeleton Makefile for etc
+
+ROOT = /
+
+DIR = $(ROOT)/etc
+
+CMDS = --EXECUTABLES--
+
+DIRS = --DIRECTORIES--
+
+PARTS = $(CMDS) --FILES--
+
+ALL:		$(PARTS)
+
+install:	$(PARTS) $(DIR) remove
+	umask 022;  ls $(PARTS)  |  cpio -pdum $(DIR)
+	cd $(DIR);  chmod go-w,u+w $(PARTS)
+	cd $(DIR);  chmod +x $(CMDS)
+
+$(DIR):
+	mkdir $(DIR);  chmod 755 $(DIR)
+
+remove:
+	cd $(DIR);  rm -f $(PARTS)
+	-cd $(DIR);  rmdir $(DIRS)
+
+partslist:
+	@echo Makefile SKELMakefile $(PARTS)  |  tr ' ' '\012'  |  sort
+	
+product:
+	@echo $(PARTS)  |  tr ' ' '\012'  |  sed "s;^;$(DIR)/;"
+
+productdir:
+	@echo $(DIR)
+	@echo $(DIRS)  |  tr ' ' '\012'  |  sed "s;^;$(DIR)/;"
+
+clean:
+
+clobber:
+
+srcaudit:
+	@(	find * -print;  \
+		ls -d $(DIRS) $(PARTS) SKELMakefile Makefile  \
+	)  |  sort  |  uniq -u  |  sed 's/$$/	unexpected/'
+
+newmakefile:	../tools/genmakefile SKELMakefile
+	cp Makefile OMakefile
+	../tools/genmakefile SKELMakefile *Makefile >Makefile
+	rm -f OMakefile

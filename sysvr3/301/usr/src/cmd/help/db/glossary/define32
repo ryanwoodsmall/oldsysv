@@ -1,0 +1,13 @@
+
+\S interrupt \S
+
+To interrupt a program means to stop its execution. You can
+interrupt programs you  started by hitting the delete or break key,
+or by using the kill(1) command.  You can also  interrupt your
+programs by typing a control-d (i.e., hitting the control key and
+the letter "d" simultaneously), by turning off the machine, or by
+hanging up the data phone,  but these can also cause you to be
+logged off of the system. See the "manual page"\S*\S for kill(1)
+for a more detailed discussion of interrupt.
+
+\S*\S defined in the \Sglossary\S

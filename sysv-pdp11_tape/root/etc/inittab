@@ -1,0 +1,8 @@
+is:s:initdefault:
+bl::bootwait:/etc/bcheckrc </dev/console >/dev/console 2>&1 #bootlog
+bc::bootwait:/etc/brc 1>/dev/console 2>&1 #bootrun command
+sl:0123456:wait:/etc/linksys 1>/dev/console 2>&1
+rc:012345:wait:/etc/rc 1>/dev/console 2>&1 #run com
+pf::powerfail:/etc/powerfail 1>/dev/console 2>&1 #power fail routines
+s6:6:wait:(uname; echo single user with gettys running ;) > /dev/console 2>&1
+co::respawn:/etc/getty console console

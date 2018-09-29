@@ -1,0 +1,26 @@
+
+\S cat \S:  Examples
+
+       cat textfile
+
+    Prints the contents of the file "textfile" in the current working directory
+    to standard output.
+
+    ----------------------------------------------------------------------
+
+       cat /etc/passwd /etc/group >> groupfile
+
+    Adds the contents of the files "/etc/passwd" and "/etc/group" to the end of
+    the file "groupfile."
+
+
+
+
+    ----------------------------------------------------------------------
+
+       cat -vt chapter1 chapter2 > hidden.char
+
+    Prints the contents of "chapter1" and "chapter2" in the file "hidden.char".
+    Characters that are normally non-printing characters, show up as "^G", and
+    tab characters print as "^I".
+

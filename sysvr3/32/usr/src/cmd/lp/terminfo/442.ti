@@ -1,0 +1,32 @@
+#ident	"@(#)nlp:terminfo/442.ti	1.4"
+#01-05-88
+
+442|att442|AT&T 442; Data Products line printer, 
+
+	bufsz#2048,
+	cols#132,
+	lines#66,
+	orc#1,
+	orhi#10,
+	orl#1,
+	orvi#6,
+	cps#440,
+
+	cr=^M,
+	cuf1=\s,
+	ff=^L,
+
+444|att444|AT&T 444; Dataproducts line printer, 
+
+	use=442,
+
+446|att446|AT&T 446; Dataproducts line printer, 
+
+	cps#1100,
+	use=442,
+
+447|att447|AT&T 447; Dataproducts line printer, 
+
+	bufsz#1024,
+	cps#1100,
+	use=442,

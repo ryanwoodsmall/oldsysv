@@ -1,0 +1,23 @@
+.TH SYNC 2 
+.SH NAME
+sync \- update super-block
+.SH SYNOPSIS
+.B void sync ( )
+.SH DESCRIPTION
+.I Sync\^
+causes all information in
+memory that should be on disk to be written out.
+This includes modified super blocks,
+modified i-nodes, and delayed block I/O.
+.PP
+It should be used by programs which examine a file system,
+for example
+.IR fsck ,
+.IR df ,
+etc.
+It is mandatory before a boot.
+.PP
+The writing, although scheduled, is not necessarily
+complete upon return from 
+.IR sync .
+.\"	@(#)sync.2	6.2 of 9/6/83

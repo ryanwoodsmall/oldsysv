@@ -1,0 +1,369 @@
+2 0 0 #ident
+12 
+30 
+8 2 30 vi DEMO
+31 
+705 5 7 68
+I'm going to tell you about vi in the bottom part of your screen, and
+I'll show you vi in the top part.  Of course, if you were really
+using vi, it would take up the whole screen.  
+
+Also, I'll do some  things more slowly than vi really does
+so that you can see them more clearly. 
+706 
+520 arrow
+2 0 0
+12 
+705 5 7 53
+I'll tell you what commands I'm using, but don't try 
+to remember or type them.  I'll teach you the commands
+later and give you a chance to practice them.
+706 
+520 arrow
+2 0 0
+12 
+3 $
+2 14 0
+34 alt
+700 r79
+35 alt
+8 16 7 First I'll invoke vi with the command vi followed by a
+8 1001 9 filename, which I'll call mary .
+520 arrow
+12 
+15 
+8 0 2 vi mary
+15 
+1 1
+2 1 0
+15 
+1 4
+520 redraw
+8 13 0 "mary" [New file]
+15 
+8 16 7 The ~ marks at the start of the lines show that there is 
+8 1001 9 nothing there.
+2 15 11
+34 alt
+700 u8 l7 a1
+35 alt
+15 
+520 arrow
+2 15 11
+701 u8 l7 a1
+2 14 0
+34 alt
+700 r79
+35 alt
+520 clear1
+8 16 7 First I'll enter a nursery rhyme.   I begin by using the
+8 1001 7 command i to start inserting text.
+15 
+520 arrow
+520 clear1
+8 13 60 INPUT MODE
+15 
+520 arrow
+520 clear1
+8 16 7 Now I'll type the nursery rhyme.
+520 arrow
+520 clear2
+2 0 0
+10 1
+15 
+253 Mary had a little lamb.
+220 1
+245 1
+6 500 1
+15 
+250 
+2 1 0
+10 1
+15 
+253 Its fleece winter coat was fluffy and was white as snow.
+220 1 
+245 1
+6 500 1
+15 
+250 
+2 2 0
+10 1
+15 
+11 
+15 
+253 And where that Mary went.
+220 1
+245 1
+6 500 1
+15 
+250 
+2 3 0
+10 1
+15 
+11 
+253 The lamb was sure to go.
+220 1
+245 1
+6 500 1
+15 
+250 
+15 
+520 arrow
+520 clear1
+8 16 7 Now I'll stop inputing text.  I exit the input mode by
+8 1001 9  striking the ESCAPE key.
+15 
+520 arrow
+520 clear1
+2 13 40
+11 
+15 
+520 arrow
+520 clear1
+8 16 7 I seem to have made a few mistakes.  I'll show you how I can 
+8 1001 7 fix them with vi.  First, I'll show you some cursor-moving 
+8 1001 7 commands; then I'll show you some commands to modify the text.
+520 arrow
+520 clear2
+8 17 7 I can move the cursor forward by characters using  
+8 1001 7 the SPACEBAR key.
+520 arrow
+520 clear1
+8 17 7 Watch the cursor move forward by characters.
+15 
+1 1
+2 0 0
+15 
+1 3
+18 
+256 8
+200 4 
+245 1
+2 0 2001
+18 
+15 
+1 1
+250 
+18 
+520 clear2
+8 17 7  And backwards by characters using the BACKSPACE key. 
+2 2000 2000
+15 
+1 4
+18 
+256 8
+200 4 
+245 1
+2 0 1999
+18 
+15 
+1 1
+250 
+9 17 7 I can move the cursor down by lines using the command j  
+2 0 0
+15 
+1 4
+18 
+256 8
+200 3 
+245 1
+2 2001 0
+18 
+15 
+1 1
+250 
+9 17 7 And up by lines using the command k 
+2 2000 2000
+15 
+1 4
+256 8
+200 3 
+245 1
+2 1999 0
+18 
+15 
+1 1
+250 
+9 17 7 I can move the cursor by words using the command w  
+2 0 0 
+15 
+1 4
+2 0 5 
+520 refwait
+2 0 9 
+520 refwait
+2 0 11 
+520 refwait
+2 0 18 
+520 refwait
+2 0 22 
+520 refwait
+2 1 0 
+520 refwait
+2 1 4 
+520 refwait
+2 1 11
+520 refwait
+9 17 7 I can delete characters using the command x  
+15 
+1 2
+2 1 11 
+520 refwait
+1 1
+256 8
+200 7 
+245 1
+10 1
+15 
+1 1
+250 
+520 arrow
+520 clear2
+8 17 7 I can delete words using the command dw  
+15 
+1 2
+2 1 11 
+15 
+1 2
+10 5
+520 refwait
+10 4
+520 refwait
+10 7
+520 refwait
+10 4
+520 refwait
+10 4
+18 
+520 refwait
+520 arrow
+520 clear2
+8 16 7 Whoops! I didn't want to delete the word "was"
+8 1001 9 Luckily, with vi I can undo the last text modification
+8 1001 9 using the command u 
+15 
+2 2000 2000
+15 
+1 6
+5 was
+6 32 1
+2 2000 2000
+15 
+1 2
+520 arrow
+520 clear2
+8 16 7 I can insert characters.
+8 17 7 First I'll move the cursor to the word "where"  
+15 
+1 2
+2 1 12
+15 
+1 2
+2 2 1000
+18 
+15 
+1 1
+256 8
+200 8 
+245 1
+2 2 1999
+18 
+15 
+1 1
+250 
+15 
+520 arrow
+520 clear2
+8 17 7 Now I'll use the command i to start inserting text.
+8 13 60 INPUT MODE
+15 
+520 arrow
+520 clear2
+8 17 7 Now I'll type the word "every"  
+15 
+1 2
+2 2 4
+15 
+1 1
+5 e
+15 
+5 v
+15 
+5 e
+15 
+5 r
+15 
+5 y
+15 
+1 1
+520 arrow
+520 clear2
+8 17 7 Now I'll strike the ESCAPE key to stop entering text.
+15 
+520 arrow
+2 13 60
+11 
+15 
+520 arrow
+520 clear1
+8 16 7 I've completed the nursery rhyme in vi, but it's not in a
+8 17 7 file.  I will now write my text into the file using the
+8 1001 7 command :wRETURN
+15 
+520 arrow
+520 clear2
+9 13 0 :w
+15 
+1 2
+9 13 0 "mary" 4 lines, 110 characters
+15 
+520 arrow
+520 clear1
+8 17 7 Now I will quit vi using the command :qRETURN 
+15 
+520 arrow
+520 clear2
+9 13 0 :q
+15 
+1 2
+400 0 13
+401 
+15 
+400 0 23
+9 13 0 $
+15 
+520 arrow
+520 clear1
+8 17 7 I'm out of vi.  Let's look at the file named mary . 
+15 
+520 arrow
+520 clear1
+2 0 0
+12 
+2 14 0
+34 alt
+700 r79
+35 alt
+8 0 0 $
+15 
+1 1
+8 0 2 cat mary
+15 
+1 1
+2 1 0
+15 
+1 1
+8 1 0 Mary had a little lamb.
+15 
+8 2 0 Its fleece was white as snow.
+15 
+8 3 0 And everywhere that Mary went.
+15 
+8 4 0 The lamb was sure to go.
+15 
+8 5 0 $
+15 
+1 1
+8 16 7 That ends my demonstration of what you will learn
+8 17 7 in this introduction to vi walkthru.
+15 

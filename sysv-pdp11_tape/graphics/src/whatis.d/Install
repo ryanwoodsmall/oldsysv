@@ -1,0 +1,28 @@
+# @(#)Install	1.2
+LIB=${LIB-/usr/lib/graf}
+
+for i
+do
+   NAME=`echo $i | sed "s/\.w//"`
+   ed - $NAME.w  <<! | nroff -mm -T37  >TEMP
+   a
+.br
+)
+.
+   1i
+.po 0
+.PH ""
+.pl 15i
+.na
+.
+   1,\$p
+!
+   ed - TEMP <<!
+   1,2d
+   1,/^)/-1 w ${LIB}/whatis/$NAME
+!
+
+   chmod 644 ${LIB}/whatis/$NAME
+   echo $NAME done
+done
+rm TEMP

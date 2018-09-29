@@ -1,0 +1,25 @@
+.TH DGN 7 "3B20S only"
+.SH NAME
+dgn \- on-line diagnostic interface
+.SH DESCRIPTION
+Files in the directory
+.B /dev/dgn
+provide the interface
+between on-line diagnostic commands
+and device drivers.
+The files in this directory are
+intended to be accessed only by diagnostic commands.
+.SH FILES
+/dev/dgn/\(**
+.SH SEE ALSO
+abt(1M),
+chmap(1M),
+dgn(1M),
+dstart(1M),
+rmv(1M),
+rst(1M),
+sta(1M).
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)dgn.7	5.2 of 5/18/82

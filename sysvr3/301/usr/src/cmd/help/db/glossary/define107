@@ -1,0 +1,18 @@
+
+\S simplex:  duplex:  half-duplex \S
+
+In order for you to communicate with the computer system, information must
+be passed back and forth between your terminal and the system.  Data
+transmission lines can pass information in one direction or both
+directions.  Simplex lines transmit information in one direction only.  You
+must have two simplex lines in order to have communication between your
+terminal and the system and back again.  Half-duplex lines can transmit
+information in both directions, but only in one direction at a time.  You
+only need one half-duplex line between your terminal and the system.  To
+transmit information in both directions simultaneously, you can have two
+half-duplex lines transmitting in opposite directions.  Full-duplex lines
+transmit information in two directions simultaneously.  You only need one
+full-duplex line to have simultaneous communication between your terminal
+and the computer system.  UNIX systems expect that data transmissions can
+occur in both directions at once.
+

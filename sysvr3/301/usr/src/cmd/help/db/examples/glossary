@@ -1,0 +1,25 @@
+
+\S glossary \S:  Examples
+
+       glossary
+
+    Prints a screen containing a list of all of the terms included in the
+    glossary and a menu from which specific term definitions may be requested.
+
+    ----------------------------------------------------------------------
+
+       glossary current working directory
+
+    Prints the definition of the term "current working directory" and a menu
+    from which other definitions can be requested.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       glossary \&
+
+    Prints the definition of the symbol "&" (ampersand) and a menu from which
+    other definitions may be requested.  Note that the special meaning of 
+    "&" to the shell must be escaped with a backslash (\).

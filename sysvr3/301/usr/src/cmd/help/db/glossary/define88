@@ -1,0 +1,12 @@
+
+\S library \S
+
+A library is an "archive file"\S*\S that contains "object"\S*\S code
+for programs that perform common tasks.  The programs are programs that are
+used frequently.  Some libraries contain object code for mathematical
+functions, and others contain code for input and output functions.  The
+library provides a common source for object code and saves space by
+providing one copy of a program instead of requiring every program that
+wants to incorporate the function of the program to have its own copy.
+
+\S*\S defined in the \Sglossary\S

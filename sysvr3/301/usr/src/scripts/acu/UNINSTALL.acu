@@ -1,0 +1,22 @@
+#ident	"@(#)pkg.acu:UNINSTALL.acu	1.1"
+#
+# UNINSTALL the Exended SGS Utilities
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/acu.name`
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -f $i
+done
+echo "The ${PKGNAME} has been removed."

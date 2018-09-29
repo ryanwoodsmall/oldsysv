@@ -1,0 +1,12 @@
+
+\Stty\S:  Description
+
+Syntax Summary:  tty [-l] [-s]
+
+Description:
+     \Stty\S tells you the terminal line number of the login port you are
+     currently using.  Systems vary slightly in what they name the terminal
+     lines.  For example, one terminal line number might be "08" and on another
+     system it would be "tty08".  For the former, the output of \Stty\S  
+     would be "/dev/tty/08", and for the latter it would be "/dev/tty08".
+

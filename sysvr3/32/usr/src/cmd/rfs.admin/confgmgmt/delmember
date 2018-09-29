@@ -1,0 +1,214 @@
+#ident	"@(#)rfs.admin:confgmgmt/delmember	1.12"
+#menu# delete member machines from your domain (primary only)
+
+#help# 
+#help# 	The subcommand "delmember" allows you to delete or remove machines
+#help#	that are members of a domain if you are the primary name server
+#help#	for that domain.  When a machine is deleted from your domain it
+#help#	may no longer share resources in your domain.  Primary and
+#help#	Secondary name servers may not be deleted.   To remove a secondary
+#help#	name server machine from your domain, you must first remove its
+#help#	"secondary" designation.  You can do this by stopping RFS and 
+#help#	then using the "setuprfs" subcommand from the RFS Resource 
+#help#	Management Menu.
+#help#	This subcommand may ONLY be accessed from PRIMARY machines.
+#help# 
+
+# set trap
+trap '/bin/rm -f /usr/tmp/rfmaster$$ /usr/tmp/mem$$ /usr/tmp/nodel$$ /usr/tmp/prim$$ /usr/tmp/sec$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+
+echo "\n\n		DELETE MEMBER MACHINES FROM YOUR DOMAIN"
+
+HEADING="
+The primary name server machine for a domain maintains the list of
+machines that are members of its domain. 
+
+This subcommand allows the primary name server to delete 
+machines from the list of domain members.  The deletion takes 
+effect immediately.  When a machine is deleted from a domain it may
+no longer access resources available in that domain."
+echo "$HEADING\n"
+
+# Define messages and questions/prompts
+QUEST1="
+Enter the node name of a member machine to be deleted from 
+domain $domname [?, q]:"
+
+HELP1="
+The member machine that you enter will be permanently removed from
+your domain.  If you enter a machine that is not in your domain,
+you will be warned and shown the list of the machines in the
+domain that may be deleted."
+
+YN_QUEST="
+Do you want to delete another member machine?"
+
+#initialization
+cflags="-k$$ -qq"
+
+# Determine if domain configurations have been set; if not, then print appropriate
+# error message
+if [ ! -s /usr/nserve/rfmaster ]
+then
+	echo "\nThe domain configuration must be set up before"
+	echo "member machines can be added or deleted. To set up the"
+	echo "domain configuration, use the \"setuprfs\" subcommand"
+	echo "under the RFS Management Menu.\n"
+	exit
+fi
+
+#get rid of comment lines
+/bin/grep -v "^\#" /usr/nserve/rfmaster |
+	/usr/bin/awk  "
+	#determine if an entry ends with a backslash
+		/\\\\$/ {
+			#put the entry into an array
+			x[0]=\$0
+			#print all characters of entry except the last
+			#one, which is a backslash, and no new line.
+			printf substr(x[0],0,length-1)
+		}
+
+	#determine if an entry does NOT end with a backslash
+		!/\\\\$/ {
+			#print all chars of the entry followed by a new line.
+			print \$0
+		}" |
+	# format to normal standards
+	/usr/bin/awk '{
+		for ( i = 1; i <= NF; i++) {
+			if ( i == NF )
+				printf "%s\n", $i
+			else
+				printf "%s ", $i
+		}
+	}' >/usr/tmp/rfmaster$$ 2>/dev/null
+
+# Determine if the domain have been set; if not then print appropriate error message
+domname=`/usr/bin/dname -d 2>/dev/null`
+if [ "$domname" = "" ]
+then
+	echo "\nThe domain name has not been set.  To set up the"
+	echo "domain configuration use the \"setuprfs\" subcommand"
+	echo "under the RFS Management Menu.\n"
+	exit
+fi
+
+# Check to see if this machine is the primary; if not then, print appropriate error
+# message.
+prim=
+prim=`/bin/grep "^$domname[ 	][ 	]*[Pp]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//" 2>/dev/null`
+
+if [ "$prim" != "`/bin/uname -n 2>/dev/null`" ]
+then
+	echo "\nOnly the primary name server machine for a domain"
+	echo "may delete machines from the domain.  The primary "
+	echo "name server for domain $domname is $prim. \n"
+	exit
+fi
+
+# Determine if members of the domain exist; if not, then print appropriate error message
+if [ ! -s /usr/nserve/auth.info/${domname}/passwd ]
+then
+	echo "\nNo members exist for domain $domname.\n"
+	exit
+fi
+
+#get secondary machines
+/bin/grep "^$domname[ 	][ 	]*[Ss]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//
+	s/$/:/" 2>/dev/null >/usr/tmp/sec$$
+
+#get machines that can not be deleted; i.e. primaries and secondary
+/bin/cp /usr/tmp/sec$$ /usr/tmp/nodel$$
+echo "$prim:" >>/usr/tmp/nodel$$
+
+# get deletable members of the domain
+/usr/bin/fgrep -v -f/usr/tmp/nodel$$ /usr/nserve/auth.info/$domname/passwd | /bin/sed "s/:.*//
+	s/^/	/" >/usr/tmp/mem$$ 2>/dev/null
+
+# Determine if there are members to be deleted; if not, then print appropriate
+# error message
+if [ ! -s /usr/tmp/mem$$ ]
+then
+	echo "\nNo deletable members exist for domain $domname."
+	echo "Primary and Secondary name servers may not be deleted.\n"
+	exit
+fi
+
+while /bin/true
+do
+	# get machine to be deleted
+	machname=`/usr/lbin/checkre $cflags -fe				\
+	-H "$HELP1"	\
+	"$QUEST1"						\
+	'^.\{1,8\}$' 'The machine name must be 1 to 8 printable characters.' \
+	'^[^ \.\\:]*$'  'The machine name must not contain a space, ":", "\", or ".".'`
+
+	# Determine if the machine is the primary; if so, then print the machines that
+	# can be deleted and ask the user to input another machine.
+	if [ "$machname" = "$prim" ]
+	then
+		echo "\n$machname is the primary name server machine for domain $domname."
+		echo "You can not delete the primary name server machine from your domain.\n"
+		echo "The following are deletable members of domain $domname:"
+		/usr/bin/pg -e -p"Enter <RETURN> to continue:" /usr/tmp/mem$$
+		continue
+	fi
+
+	# Determine if the machine is a secondary; if so, then print the machines that
+	# can be deleted and ask the user to input another machine.
+	/bin/grep "^$machname:\$" /usr/tmp/sec$$ >/dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		echo "\n$machname is a secondary name server machine for domain $domname."
+		echo "You can not delete secondary name server machines from your domain.\n"
+		echo "The following are deletable members of domain $domname:"
+		/usr/bin/pg -e -p"Enter <RETURN> to continue:" /usr/tmp/mem$$
+		continue
+	fi
+
+	# See if the machine can be deleted; if not, then print the machines that can
+	#be deleted and ask the user to input another machine
+	/bin/grep "^	$machname\$" /usr/tmp/mem$$ >/dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		echo "\n$machname is not a member of your domain.\n"
+		echo "The following are deletable members of domain $domname:"
+		/usr/bin/pg -e -p"Enter <RETURN> to continue:" /usr/tmp/mem$$
+		continue
+	fi
+
+	# Delete the member from the domain and report whether success or failure
+	if /usr/bin/rfadmin -r $domname.$machname
+	then
+		echo "\nMember $machname has been deleted from domain $domname.\n"
+	else
+		echo "\nMember $machname was NOT deleted from domain $domname.\n"
+	fi
+
+
+	# get deletable members of the domain
+	/usr/bin/fgrep -v -f/usr/tmp/nodel$$ /usr/nserve/auth.info/$domname/passwd | /bin/sed "s/:.*//
+		s/^/	/" >/usr/tmp/mem$$ 2>/dev/null
+
+	# Determine if there are members to be deleted; if not, then print appropriate
+	# error message
+	if [ ! -s /usr/tmp/mem$$ ]
+	then
+		echo "\nNo deletable members exist for domain $domname."
+		echo "Primary and Secondary name servers may not be deleted.\n"
+		exit
+	fi
+
+	# Ask the user whether to repeat the sequence
+	if /usr/lbin/checkyn $cflags -f "$YN_QUEST"
+	then
+		continue
+	else 
+		exit
+	fi
+done

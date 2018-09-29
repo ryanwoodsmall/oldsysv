@@ -1,0 +1,205 @@
+2 0 0 #ident
+12 
+705 3 8 51
+           INVOKING and QUITING VI and
+           SAVING YOUR EDITING CHANGES
+
+
+This section will show you how to save the editing
+changes you have made.  You do this with vi's
+write command.
+
+Next you will see how to quit vi.
+
+Then you will see how to invoke vi from the
+UNIX system command line.  Of course, you can always
+use the ASSIST command form for vi to invoke vi.
+706 
+520 arrow
+2 0 0
+12 
+520 redraw
+705 0 0 29
+Jack and Jill went up the hill
+to fetch a of water.
+Jack fell down
+and broke his crown,
+and Jill came tumbling after.
+706 
+520 instruct
+3 Insert the word "pail" 
+2 1 11
+18 
+15 
+256 105
+254 i to start inserting text
+253 pail 
+520 ansloop
+520 mode
+520 ansloopins
+256 27
+254 <ESCAPE> to stop inserting text.
+520 ansloop
+520 nomode
+520 clear1
+8 16 7 Now we need to save our results.  We will use vi's
+8 17 7 write command. 
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION:  The command  :w followed by a carriage return
+8 1001 21 will write your changes to the file "jack"
+520 instruct
+3 Enter the command :w<RETURN> 
+2 1 16
+18 
+253 w
+520 excmd
+1 1
+8 13 0 "jack" 5 lines, 84 characters
+2 1 15
+15 
+520 clear1
+520 arrow
+705 17 7 53
+The information on the bottom line tells you that
+the write has occured. The write was to the file named
+"jack"; "jack" has 5 lines and 84 characters.
+706 
+520 arrow
+520 clear1
+400 0 13
+8 16 7 DESCRIPTION: The command :q followed by a carriage return
+8 17 21 is the command to quit vi .
+520 instruct 
+3 Enter the command :q<RETURN>
+2 1 16
+18 
+15 
+253 q
+520 excmd
+401 
+15 
+9 13 0 $
+15 
+520 clear1
+400 0 23
+8 16 7 You are out of vi.
+520 arrow
+9 0 0 $
+2 1 0
+12 
+34 alt
+2 14 0
+700 r79
+35 alt
+8 16 7 Let's go back to vi.  The UNIX system command is
+8 17 7 vi filename .
+520 instruct
+3 Enter vi to edit the file named inventory
+253 %0vi%1inventory%0
+254 vi inventory
+2 0 2
+18 
+15 
+520 unixcmd
+2 2001 0
+15 
+1 2
+520 redraw
+705 0 0 17
+one partridge
+two turtle doves
+three German hens
+four calling birds
+five golden rings
+706 
+8 13 0 "inventory" 5 lines, 86 characters
+8 16 7 You are in now vi.  You can edit the file named "inventory"
+15 
+520 arrow
+520 clear1
+8 16 7 Let's change "German" to "French"
+520 instruct
+3 First, move the cursor one line at a time to the third line.
+2 0 0
+18 
+15 
+256 258 106 14 13
+254 j
+520 ansloop
+520 movedown
+520 ansloop
+520 movedown
+520 clear1
+520 instruct
+3 Move by words to the word "German"
+256 119
+254 w
+2 2000 2000
+520 ansloop
+2 2 6
+18 
+15 
+1 1
+520 instruct
+3 Delete the word "German"
+11 
+253 dw
+254 dw to delete the word
+2 2000 2000
+520 ansloopstr
+10 7
+15 
+520 instruct
+3 Insert the word "French"
+256 105
+254 i to start inserting text to the left of the cursor.
+2 2000 2000
+520 ansloop
+520 mode
+253 French 
+520 ansloopins
+256 27
+254 <ESCAPE> to stop inserting text.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+520 instruct
+3 Use the command :q<RETURN>
+2 2 13
+18 
+253 q
+520 excmd
+30 
+8 13 0 No write since last change (:quit! overrides)
+31 
+15 
+520 clear1
+8 16 7 vi protects you from accidentally quitting without saving
+8 17 7 your changes.  
+520 arrow
+520 clear1
+8 16 7 The command :q!<RETURN> allows you to quit vi without
+8 17 7 saving the changes you have made since your last write.
+520 instruct
+3 Quit vi without saving your changes.
+2 2 13
+18 
+253 q!
+520 excmd
+400 0 13
+401 
+8 13 0 $
+15 
+400 0 23
+2 0 0
+12 
+8 3 20 SUMMARY OF COMMANDS FOR INVOKING
+8 4 18 AND QUITING VI and FOR SAVING CHANGES
+8 7 14 vi filename .... invoke vi
+8 1002 15 :w<RETURN> .... save (write) changes
+8 1002 15 :q<RETURN> .... quit vi
+8 1001 14 :q!<RETURN> .... quit vi without saving the changes
+8 1001 35 made after the last write
+15 

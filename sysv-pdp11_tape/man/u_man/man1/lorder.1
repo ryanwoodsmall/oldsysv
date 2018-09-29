@@ -1,0 +1,61 @@
+.if t .ds ' \h@.05m@\s+4\v@.333m@\'\v@-.333m@\s-4\h@.05m@
+.if n .ds ' '
+.if t .ds ` \h@.05m@\s+4\v@.333m@\`\v@-.333m@\s-4\h@.05m@
+.if n .ds ` `
+.TH LORDER 1
+.SH NAME
+lorder \- find ordering relation for an object library
+.SH SYNOPSIS
+.B lorder
+file ...
+.SH DESCRIPTION
+The input
+is one or more object or library archive
+.I files\^
+(see
+.IR ar (1)).
+The standard output
+is a list of pairs of object file names,
+meaning that the first file of the pair refers to
+external identifiers defined in the second.
+The output may be processed by
+.IR tsort (1)
+to find an ordering of
+a library suitable for one-pass access by
+.IR ld (1).
+Note that the link editor (except on the
+.SM PDP -11)
+.IR ld (1)
+is capable of multiple passes over an archive in the portable archive format
+(see
+.IR ar (4))
+and does not require that
+.IR lorder (1)
+be used when building an archive.  The usage of 
+the
+.IR lorder (1)
+command may, however, allow for a slightly more efficient access of
+the archive during the link edit process.
+.PP
+The following example builds a new library
+from existing
+.B \&.o
+files.
+.PP
+.RS
+ar \|cr \|library \|\*`\|lorder \|\(**.o \|\(bv \|tsort\*`
+.RE
+.SH FILES
+\(**symref, \(**symdef	temporary files
+.SH "SEE ALSO"
+ar(1),
+ld(1),
+tsort(1), ar(4).
+.SH BUGS
+Object files whose names do not end with
+.BR .o ,
+even when
+contained in library archives, are overlooked.
+Their global symbols and references are attributed to
+some other file.
+.\"	@(#)lorder.1	5.2 of 5/18/82

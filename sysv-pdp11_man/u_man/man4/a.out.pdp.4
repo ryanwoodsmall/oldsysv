@@ -1,0 +1,302 @@
+.TH A.OUT 4 "PDP-11 only"
+.SH NAME
+a.out \- \s-1PDP\s+1\&-11 assembler and link editor output
+.SH DESCRIPTION
+.B A.out
+is the output file of the assembler
+.IR as (1)
+and the link editor
+.IR ld (1).
+Both programs will make
+.B a.out
+executable if there were no
+errors in assembling or linking and no unresolved external references.
+.PP
+This file has four sections:
+a header, the program text and data segments,
+relocation information, and a symbol table
+(in that order).
+The last two sections may be missing
+if the program was linked
+with the
+.B \-s
+option of
+.IR ld\^ (1)
+or if the symbol table and relocation bits were removed by
+.IR strip (1).
+Also note that if there were no unresolved external references after linking,
+the relocation information will be removed.
+.PP
+The sizes of each segment (contained in the header, discussed below)
+are in bytes and are even.
+The size of the header is not included in any of the other sizes.
+.PP
+When an
+.B a.out
+file is loaded into memory for execution, three logical segments are
+set up: the text segment, the data segment
+(initialized data followed by uninitialized, the latter actually being
+initialized to all 0's),
+and a stack.
+The text segment begins at location 0
+in the core image; the header is not loaded.
+If the magic number (the first field in the header) is 407 (octal), it
+indicates that the text segment is not to be write-protected or shared,
+so the data segment will be contiguous with the text segment.
+If the magic number is 410 (octal),
+the data segment begins at the first 0 mod 8K byte boundary
+following the text segment,
+and the text segment is not writable by the program;
+if other processes are executing the same
+.B a.out
+file, they will share a single text segment.
+If the magic number is 411 (octal)
+the text segment is again pure (write-protected and shared)
+and, moreover, the instruction and data spaces are separated;
+the text and data segment both begin at location 0.
+See the
+.I "\s-1PDP\s+1-11/70 Processor Handbook"
+for restrictions that apply to this
+situation.
+.PP
+The stack will occupy the highest possible locations
+in the core image: from 177776 (octal) on the
+.SM PDP\*S-11
+and growing downwards.
+The stack is automatically extended as required.
+The data segment is only extended as requested by
+the
+.IR brk (2)
+system call.
+.PP
+The start of the text segment in the
+.B a.out
+file is
+.IR hsize ;
+the start of the data segment is
+.if t \fIhsize\fR+S\s-3\dt\u\s+3\^
+.if n \fIhsize\fR+St
+(the size of the text),
+where
+.I hsize\^
+is 20 (octal) on the
+.SM PDP\*S-11.
+.PP
+The value of a word in the text or data portions that is not
+a reference to an undefined external symbol
+is exactly the value that will appear in memory
+when the file is executed.
+If a word in the text or data portion
+involves a reference to an undefined external symbol,
+as indicated by the relocation information (discussed below)
+for that word,
+then the value of the word as stored in the file
+is an offset from the associated external symbol.
+When the file is processed by the
+link editor and the external symbol becomes
+defined, the value of the symbol will
+be added to the word in the file.
+.br
+.ne 12v
+.SS Header\-\s-1PDP\s+1-11
+The format of the
+.B a.out
+header for the
+.SM PDP\*S-11
+is as follows:
+.PP
+.RS
+.ne 10
+.nf
+.ta .5i 1.2i 1.8i 2.5i
+struct	exec	{
+	short	a_magic;	/\(** magic number \(**/
+	unsigned	a_text;	/\(** size of text segment \(**/
+	unsigned	a_data;	/\(** size of data segment \(**/
+	unsigned	a_bss;	/\(** size of bss segment \(**/
+	unsigned	a_syms;	/\(** size of symbol table \(**/
+	unsigned	a_entry;	/\(** entry point of program \(**/
+	char		a_unused;
+	char		a_hitext;	/\(** hi bits for large text spaces \(**/
+	char		a_flag;	/\(** set if relocation info stripped \(**/
+	char		a_stamp;	/\(** version stamp \(**/
+};
+.fi
+.RE
+.br
+.ne 12v
+.SS Relocation\-\s-1PDP\s+1-11
+If relocation
+information is present, it amounts to two bytes per
+relocatable datum.
+There is no relocation information if the ``suppress relocation'' flag
+.RI ( a_flag )
+in the header is on.
+.PP
+The format of the relocation data is:
+.PP
+.RS
+.ne 5
+.nf
+.ta .5i 1i 2.2i 3.2i
+struct	r_info	{
+	int	r_symbolnum:11,
+		r_segment:3,
+		r_pcrel:1;
+};
+.fi
+.RE
+.PP
+The
+.I r_pcrel\^
+field indicates, if
+.IR on\^ ,
+that the
+reference is relative to the program counter (pc) register (e.g.,
+.BR "clr x" );
+if
+.IR off ,
+that
+the reference is to the actual symbol (e.g.,
+.BR "clr \(**$x" ).
+.PP
+The
+.I r_segment\^
+field indicates the segment referred
+to by the text or data word associated with the relocation
+word:
+.PP
+.RS
+.PD 0
+.TP 5
+00
+indicates the reference is absolute;
+.TP
+02
+indicates the reference is to the text segment;
+.TP
+04
+indicates the reference is to initialized data;
+.TP
+06
+indicates the reference is to bss (uninitialized data);
+.TP
+10
+indicates the reference is to an undefined external symbol.
+.PD
+.RE
+.PP
+The field
+.I r_symbolnum\^
+contains a symbol number in the case of external
+references, and is unused otherwise.
+The first symbol is numbered 0, the second 1, etc.
+.br
+.PP
+The start of the relocation information on the
+.SM PDP\*S-11
+is:
+.PP
+.RS
+.IR hsize + a_text\^ + a_data
+.RE
+.br
+.ne 12v
+.SS Symbol Table\-\s-1PDP\s+1-11
+The symbol table on the
+.SM PDP\*S-11
+consists of entries of the form:
+.PP
+.RS
+.ne 5
+.nf
+.ta .5i 1.2i 2.2i 3.2i
+struct	nlist	{
+	char	n_name[8];
+	int	n_type;
+	unsigned	n_value;
+};
+.RE
+.fi
+.PP
+The
+.I n_name\^
+field contains the
+.SM ASCII
+name of the symbol, null-padded.
+The
+.I n_type\^
+field indicates the type of the symbol;
+the following values are possible:
+.PP
+.ne 11
+.RS
+.PD 0
+.TP 5
+00
+undefined symbol
+.TP
+01
+absolute symbol
+.TP
+02
+text segment symbol
+.TP
+03
+data segment symbol
+.TP
+04
+bss segment symbol
+.TP
+37
+file name symbol (produced by
+.IR ld (1))
+.TP
+40
+undefined external symbol
+.TP
+41
+absolute external symbol
+.TP
+42
+text segment external symbol
+.TP
+43
+data segment external symbol
+.TP
+44
+bss segment external symbol
+.PD
+.RE
+.PP
+The start of the symbol table on the
+.SM PDP\*S-11
+is:
+.PP
+.RS
+.IR hsize +2( a_text\^ + a_data\^ )
+.RE
+.PP
+if relocation information is present, and
+.PP
+.RS
+.IR hsize + a_text\^ + a_data
+.RE
+if it is not.
+.br
+.PP
+If a symbol's type on the
+.SM PDP\*s-11
+is
+.I "undefined external"
+and the value field is non-zero,
+the symbol is interpreted by the link editor
+.IR ld\^ (1)
+as
+the name of a common region
+whose size is indicated by the value of the
+symbol.
+.SH SEE ALSO
+as(1), ld(1), nm(1), strip(1).
+'\" \%W\%
+.\"	@(#)a.out.pdp.4	5.2 of 5/18/82

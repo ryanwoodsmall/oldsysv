@@ -1,0 +1,187 @@
+#ident	"@(#)sadmin:shell/disklabel	2.13"
+#	Ask the user to insert a medium and verify it is present.
+#	Write the label to the standard output if it is present.
+
+#!	chmod +x ${file}
+
+usage="Usage:  $0 [ -y | -n'drivename' | -q'question' ] [ -w | -x ] \\
+		parent-pid filename
+-n'drivename'	Provide a name for the drive.
+-q'question'	Provide alternative question.
+-w		Check for writability.
+-x		No checks or reading of label; for before formatting.
+-y		Return the label without asking questions."
+unset getit ndrive question writechk nochecks mounted
+
+while [ $# -gt 0 ]
+do
+	case "$1" in
+	-n?* )
+		ndrive=`expr "$1" : '-n\(.*\)'`
+		;;
+	-q?* )
+		question=`expr "$1" : '-q\(.*\)'`
+		;;
+	-q )
+		question=$2
+		shift
+		;;
+	-n )
+		ndrive=$2
+		shift
+		;;
+	-w )
+		writechk=yes
+		;;
+	-x )
+		nochecks=yes
+		;;
+	-y )
+		getit=yes
+		;;
+	* )
+		break
+	esac
+	shift
+done
+
+if [ $# -ne 2 ]
+then
+	echo >&2 "${usage}"
+	exit 1
+fi
+
+pid=$1
+ddrive=$2
+: ${ndrive:=`drivename ${ddrive}`}
+: ${question:="Insert the medium in the ${ndrive}.  Press <RETURN> when ready. [q]"}
+
+case ${ddrive} in
+/dev/r* )
+	#  WARNING:  This depends on the common, but not universal, naming
+	#  convenetion that all character and block special devices are under
+	#  /dev and if /dev/THING is a block device then /dev/rTHING is the
+	#  corresponding character (aka "raw") device.  Note that THING may
+	#  have directories as part of the name.
+	#	if ddrive is raw, bddrive == block device for a raw device
+	bddrive=/dev/`expr ${ddrive} : '/dev/r\(.*\)'`
+	;;
+* )
+	#	otherwise they are the same.
+	bddrive=${ddrive}
+esac
+
+trap 'exit 1' 1 2
+trap "	trap '' 1 2
+	kill ${pid};  exit 0" 15
+flags="-q q -k $$"
+
+#	Determine, with some effort, whether the device is already mounted.
+#	Since the same major/minor number of a block device may have several
+#	names, we must use them to determine if the drive is mounted.
+#	See what the major/minor number of the requested block device is, then
+#	look for that among the mounted devices.
+majmin=`ls -l ${bddrive} 2>/dev/null  |
+	sed -n 's/.*\( [0-9]\{1,\}, *[0-9]\{1,\} \).*/\1/p'`
+#	It is possible there is no corresponding block device for a character
+#	device.
+if [ -n "${majmin}" ]
+then
+	mounted=`/etc/mount  |  cut -d' ' -f3  |  xargs ls -l 2>/dev/null  |
+		sed -n "/${majmin}/s/.* \\(.*\\)/\\1/p"`
+fi
+if [ -n "${mounted}" ]
+then
+	filesys=`/etc/mount  |
+		sed -n "\\; on ${mounted} ;s;^\\([^ ]*\\) .*;\\1;p"`
+	echo >&2 "The medium in the ${ndrive} is already mounted as the
+${filesys} file system.  This command cannot run with it mounted."
+	if [ ${getit} ]
+	then
+		kill ${pid}
+		exit 0
+	fi
+	if  checkyn ${flags} -H"
+	The ${ndrive} is already in use; it has a medium in it that
+	is mounted as a file system starting at the ${filesys} directory.
+	Before you can use the ${ndrive} for some other purpose, you
+	must unmount the medium now in use." \
+		-f "Do you want to unmount it?"
+	then
+		if  diskumount -n "${ndrive}" ${mounted} ${filesys}
+		then
+			:
+		else
+			echo >&2 "	This command cannot run because the ${filesys} file system is mounted.
+	Unmount it and try again."
+			kill ${pid}
+			exit 0
+		fi
+	else
+		echo >&2 "The medium in the ${ndrive} is still mounted on ${filesys}."
+		kill ${pid}
+		exit 0
+	fi
+fi
+
+failchk() {
+	if [ ${getit} ]
+	then
+		kill ${pid}
+		exit 0
+	fi
+}
+
+while true
+do
+	if [ -z "${getit}" ]
+	then
+		checklist ${flags} -f -D '' "${question}" '<RETURN>' ''
+	fi
+	if [ ${nochecks} ]
+	then
+		exit 0
+	fi
+	#	dd checks that the file is openable for reading.
+	if  dd count=1 if=${ddrive} of=/dev/null 2>/dev/null
+	then
+		:
+	else
+		echo >&2 '
+	The medium may not be properly inserted,
+	the drive door may not be closed, the medium may not be formatted,
+	the medium may be in upside-down, or there is some other problem.
+	Check it and try again.
+'
+		failchk
+		continue
+	fi
+	#	This writability check WRITES ON THE MEDIUM!!! if it can.
+	#	(Not pretty, but the only way to do it right now.)
+	if [ ${writechk} ]  
+	then
+		if  dd count=1 if=/etc/passwd of=${ddrive} 2>/dev/null
+		then
+			:
+		else
+			echo >&2 '
+	The medium is not writable.  It may be write-protected,
+	inherently unwritable, or there is some other problem.
+	Check it and try again.
+'
+			failchk
+			continue
+		fi
+	fi
+	break
+done
+if [ -x /etc/fsstat ]
+then
+	/etc/fsstat ${ddrive} >/dev/null 2>&1
+	if [ $? = 3 ]
+	then
+		exit 0
+	fi
+fi
+/etc/labelit ${ddrive} 2>/dev/null
+exit 0

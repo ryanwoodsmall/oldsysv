@@ -1,0 +1,13 @@
+
+\S line editor:  line-oriented editor:  screen editor:  screen-oriented\S
+\Seditor:  display-oriented editor \S
+
+Line-oriented editors or line editors are designed for use with printing
+terminals and have "editor commands"\S*\S that display or manipulate one
+or more lines at a time.  Screen- or display-oriented editors, sometimes
+called screen editors, are designed for use with visual display terminals.
+They display text one screen at a time, and provide commands that allow you
+to move around to any point on the screen, and then  add, change, or delete
+text.
+
+\S*\S defined in the \Sglossary\S

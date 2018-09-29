@@ -1,0 +1,23 @@
+.TH ATAN 3F
+.SH NAME
+atan, datan \- \s-1FORTRAN\s+1 arctangent intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = atan(r1)"
+.P
+.B "dp2 = datan(dp1)"
+.B "dp2 = atan(dp1)"
+.SH DESCRIPTION
+.I Atan\^
+returns the real arctangent of its real argument.
+.I Datan\^
+returns the double-precision arctangent of its double-precision argument.
+The generic form
+.I atan\^
+may be used with a double-precision argument returning a double-precision value.
+.SH SEE ALSO
+trig(3M).
+.\"	%W% of %G%

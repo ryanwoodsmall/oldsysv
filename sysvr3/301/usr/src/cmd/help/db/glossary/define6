@@ -1,0 +1,13 @@
+
+\S & :  ampersand:  background \S
+
+An ampersand following a command causes the command to be executed
+in the background.  When a program is executed in the background it
+is executed in a way that permits you to continue  working on the
+terminal while the command is executing.  The output of the command
+is returned to your terminal as soon as it has finished executing.
+Unless you redirect the output (see "redirection"\S*\S) to another
+terminal or a file, it will be interspersed with whatever else is on
+the screen at the time.
+
+\S*\S defined in the \Sglossary\S

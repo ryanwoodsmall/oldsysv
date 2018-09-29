@@ -1,0 +1,152 @@
+#ident	"@(#)rfs.admin:confgmgmt/addmember	1.11"
+#menu# add member machines to your domain (primary only)
+
+#help# 
+#help#	The subcommand "addmember" allows you to add machines as 
+#help#	members of a domain if you are the primary name server 
+#help#	for that domain.   When a machine has been added as a
+#help#	member of your domain it may share resources advertised
+#help#	in your domain.  This subcommand may ONLY be accessed 
+#help#	from PRIMARY machines.
+#help# 
+
+# Print Heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo "\n\n	     	ADD MEMBER MACHINES TO YOUR DOMAIN"
+
+HEADING="
+Every machine must be a member of a domain. The primary name server machine
+for a domain maintains the list of machines that are members of its domain.
+
+This subcommand allows the primary name server to add machines to the 
+list of domain members.  The addition takes effect immediately.  When
+a machine is added as a member of a domain it may share resources
+available in that domain."
+echo "$HEADING\n"
+
+#Define messages and questions/prompts
+QUEST1="
+Enter the node name of a machine to be added as a member of your
+domain [?, q]:"
+
+HELP1="
+The machine you enter will be added to your RFS domain.  When a machine
+has been added, that machine can start RFS and share resources in
+your domain.
+
+Machine name must be 1 to 8 printable characters.  Names must
+not contain a space, \":\", \"/\", or \".\".
+
+After entering the machine name you will be prompted for a password
+for the member machine.   The administrator of the added machine
+will need to know the password that you assign."
+
+QUEST2="
+Do you want to add another member machine?"
+
+#initialization
+cflags="-k$$ -qq"
+
+#set trap
+trap '/bin/rm -f /usr/tmp/rfmaster$$; trap 0; exit' 0 1 2 3 15
+
+# Determine if the domain's configuration has been established; if not, then print
+# appropriate error message
+if [ ! -s /usr/nserve/rfmaster ]
+then
+	echo "\nThe domain configuration must be set up before"
+	echo "member machines can be added.  To set up the"
+	echo "domain configuration, use the \"setuprfs\" subcommand"
+	echo "under the RFS Management Menu.\n"
+	exit
+fi
+
+#get rid of comment lines
+/bin/grep -v "^\#" /usr/nserve/rfmaster |
+	/usr/bin/awk  "
+	#determine if an entry ends with a backslash
+		/\\\\$/ {
+			#put the entry into an array
+			x[0]=\$0
+			#print all characters of entry except the last
+			#one, which is a backslash, and no new line.
+			printf substr(x[0],0,length-1)
+		}
+
+	#determine if an entry does NOT end with a backslash
+		!/\\\\$/ {
+			#print all chars of the entry followed by a new line.
+			print \$0
+		}" |
+	# format to normal standards
+	/usr/bin/awk '{
+		for ( i = 1; i <= NF; i++) {
+			if ( i == NF )
+				printf "%s\n", $i
+			else
+				printf "%s ", $i
+		}
+	}' >/usr/tmp/rfmaster$$ 2>/dev/null
+
+# Determine domain name of the system; if one doesn't exist, then print the appropriate
+# error message
+domname=`/usr/bin/dname -d 2>/dev/null`
+if [ "$domname" = "" ]
+then
+	echo "\nThe domain name has not been set.  To set up the"
+	echo "domain configuration use the \"setuprfs\" subcommand"
+	echo "under the RFS Management Menu.\n"
+	exit
+fi
+
+# Check to see if this machine is primary; If not, then print appropriate error message
+prim=`/bin/grep "^$domname[ 	][ 	]*[Pp]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//"`
+
+if [ "$prim" != "`/bin/uname -n 2>/dev/null`" ]
+then
+	echo "\nOnly the primary name server machine for a domain"
+	echo "may add machines to the domain.  The primary "
+	echo "name server assigned for domain $domname is $prim. \n"
+	exit
+fi
+
+while /bin/true
+do
+	# Get new member.  If the new member already exist in the system, then print
+	# appropriate warning message.  If the new member doesn't exist, then add
+	# it to the system.  In either case, report either success or failure of the
+	# addition to the domain
+	machname=`/usr/lbin/checkre $cflags -fe				\
+	-H "$HELP1" \
+	"$QUEST1"						\
+	'^.\{1,8\}$' 'The machine name must be 1 to 8 printable characters.' \
+	'^[^ \\\.:]*$'  'The machine name must not contain a space, ":", "\", or ".".'`
+
+	/bin/grep "^$machname:" /usr/nserve/auth.info/${domname}/passwd >/dev/null 2>&1
+	if [ $? -eq 0 ]
+	then
+		echo "\nA member with name ${machname} already exists in domain ${domname}.\n"
+	else 
+		echo "\nAs part of adding this machine to your domain you must assign it an "
+		echo "RFS password.  This password must be at least six characters in length"
+		echo "and contain at least one non-alphabetic character.  <CR> is a valid"
+		echo "password.\n"
+ 
+		/usr/bin/rfadmin -a $domname.$machname
+		if [ $? -eq 0 ]
+		then
+			echo "\nMachine $machname has been added as a member of domain $domname.\n"
+		else
+			echo "\nMachine $machname was NOT added as a member of domain $domname.\n"
+		fi
+	fi
+
+	# Ask the user whether to repeat the sequence
+	if /usr/lbin/checkyn $cflags -f "$QUEST2"
+	then
+		continue
+	else 
+		exit
+	fi
+done

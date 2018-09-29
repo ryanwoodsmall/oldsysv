@@ -1,0 +1,18 @@
+
+\S *: asterisk \S
+
+In the shell, an asterisk matches any "string"\S*\S of characters in
+a "file name"\S*\S on a command line. The command
+
+	        rm temp*
+
+removes all files from the current working directory that begin with
+the string "temp".  Files like "temp", "temp1", and "temp.save"
+would all be deleted.  An asterisk alone matches any file name in the
+current working directory except  those beginning with "dot (.)"\S*\S.
+For example,
+         	rm *
+
+removes all the files in your directory except for the dot (.)files.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,200 @@
+#ident	"@(#)rfs.admin:confgmgmt/idmapping	1.10"
+#menu# set up RFS user ID and group ID mappings
+
+#help# 
+#help#  Every machine in a domain defines how remote users will be
+#help#  allowed to access its local resources.  These permissions
+#help#  are defined by mapping the IDs of the remote users into 
+#help#  IDs on the local machine.
+#help#
+#help#  The subcommand "idmapping" allows you to control how users
+#help#  of remote machines access your machine's resources by 
+#help#  setting up user ID and group ID mappings.  The subcommand
+#help#  lets you see what the current mapping is and allows you
+#help#  to pick one of three pre-defined mappings.
+#help#
+#help#  If your mapping needs are not completely met by these
+#help#  options, see your System Administrator's Guide for 
+#help#  information about how to build on to the mapping files set
+#help#  up by this subcommand.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/idmap$$; trap 0; exit' 0 1 2 3 15
+
+# Print Heading
+echo "\n\nIf you are not sure how to answer any prompt, type \"?\" for HELP."
+echo "If you want to quit the subcommand at any time, type \"q\"."
+echo "\n\n          USER ID AND GROUP ID MAPPING"
+
+HEADING="
+Every machine in a domain defines how remote users will be allowed
+to access its local resources.  You define this access by setting
+up a mapping table of how remote user IDs and remote group IDs will
+be mapped to local user and group IDs.
+
+Since setting up mapping can be a complex procedure, this subcommand 
+allows you to choose from three pre-defined mappings.
+Selecting option a, b, or c will replace any current mapping that
+you may have previously set up.  To set up mappings not defined
+by this subcommand see your System Administrator's Guide."
+echo "$HEADING\n"
+
+# Define messages and questions/prompts
+INTRO="
+Security is an important aspect of every computer system.  RFS provides the 
+system administrator with a sophisticated method of mapping remote user and 
+group IDs into local user and group IDs to ensure the security of local 
+resources.  When a client machine sends a request to use a local resource, 
+it also sends the user and group IDs of the person making the request.  The 
+local machine then maps these remote IDs into local IDs using the mapping 
+tables set up by the local administrator.
+
+This subcommand allows you to choose from three pre-defined user and group 
+mapping configurations.  These are commonly used mappings that will provide 
+adequate to high levels of resource security.  If no mapping is specified by 
+you, the default mapping is in effect.  The default mapping maps every remote 
+user and group ID to a guest ID that has the permissions of an \"other\" user.
+When mapping is set up with this subcommand, ID mapping files are built.  The 
+System Administrator's Guide can show you how to edit these mapping files if 
+you wish to tailor your ID mapping files at a later time."
+
+
+DEF_MAPPING="
+Option \"a\": This is the default mapping for RFS.  It maps all remote user 
+and group IDs into a guest ID which is equal to the maximum user ID + 1.  This 
+means that all remote users will gain access to your local resources based on 
+\"other user\" permissions.  This option provides the highest level of security.
+
+Option \"b\": In Option \"b\", all remote user and group IDs are mapped to the 
+same ID number on the local machine.  This is called \"default transparent 
+mapping.\"  For example, remote user ID number 150 will be mapped to have the 
+same local permissions as the local user with ID number 150.  Specific ID 
+numbers may be excluded from this scheme.  Excluded IDs will be mapped to the 
+guest ID. This option excludes user IDs 0 through 99 and group IDs 0 through 10. 
+Option \"c\": This uses the same \"default transparent mapping\" used in Option
+\"b\", but option \"c\" excludes only the root ID (User ID 0, Group ID 0).
+
+Option \"d\": This shows the current ID mappings, no changes are made."
+
+Q1="
+Choose option desired for uid/gid mappings:
+  a) all remote IDs map to guest ID with \"other\" permissions.
+  b) remote IDs map directly to same local IDs except uids 0-99, gids 0-10.
+  c) remote IDs map directly to same local IDs except uid 0, gid 0 (root).
+  d) show current ID mapping.
+[a, b, c, d, ?, q]:"
+
+HELP_Q="
+Do you need a more detailed explanation of ID mapping?"
+
+#initialization
+cflag="-qq -k$$"
+UID=
+GID=
+
+if [ ! -d /usr/nserve/auth.info ]
+then
+        /bin/mkdir -p /usr/nserve/auth.info
+        /bin/chmod 755 /usr/nserve/auth.info
+        /bin/chgrp bin /usr/nserve/auth.info
+fi
+
+# ask the user whether or not they need detailed instruction on security.
+if /usr/lbin/checkyn $cflag -f "$HELP_Q"
+then
+        echo "$INTRO" | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+fi
+
+while /bin/true
+do
+        # Get option chosen by user
+        SELECTION=`/usr/lbin/checkre $cflag -fe \
+        -H "${DEF_MAPPING}" \
+        "$Q1" \
+        "^[abcd]$" 'Please enter a, b, c, or d.'`
+
+        #Handle each of the security cases separetly
+        case $SELECTION in
+        
+                a) echo "global" >/usr/nserve/auth.info/uid.rules
+                echo "global" >/usr/nserve/auth.info/gid.rules
+
+                /bin/chmod 644 /usr/nserve/auth.info/uid.rules
+                /bin/chgrp bin /usr/nserve/auth.info/gid.rules
+                /usr/bin/idload
+                break
+                ;;
+        
+                b) echo "global" >/usr/nserve/auth.info/uid.rules
+                echo "global" >/usr/nserve/auth.info/gid.rules
+
+                echo "default transparent" >>/usr/nserve/auth.info/uid.rules
+                echo "exclude 0-99" >>/usr/nserve/auth.info/uid.rules
+        
+                echo "default transparent" >>/usr/nserve/auth.info/gid.rules
+                echo "exclude 0-10" >>/usr/nserve/auth.info/gid.rules
+                /bin/chmod 644 /usr/nserve/auth.info/uid.rules
+                /bin/chgrp bin /usr/nserve/auth.info/gid.rules
+                /usr/bin/idload
+                break
+                ;;
+
+                c) echo "global" >/usr/nserve/auth.info/uid.rules
+                echo "global" >/usr/nserve/auth.info/gid.rules
+
+                echo "default transparent" >>/usr/nserve/auth.info/uid.rules
+                echo "exclude 0" >>/usr/nserve/auth.info/uid.rules
+        
+                echo "default transparent" >>/usr/nserve/auth.info/gid.rules
+                echo "exclude 0" >>/usr/nserve/auth.info/gid.rules
+                /bin/chmod 644 /usr/nserve/auth.info/uid.rules
+                /bin/chgrp bin /usr/nserve/auth.info/gid.rules
+                /usr/bin/idload
+                break
+                ;;
+
+                d) if [ ! -s /usr/nserve/auth.info/uid.rules ]
+                then
+                        echo "\nWARNING: UID mapping has not been set by administrator."
+                        echo "RFS will use default UID mappings.\n"
+                        UID=0
+                fi
+                if [ ! -s /usr/nserve/auth.info/gid.rules ]
+                then
+                        echo "\nWARNING: GID mapping has not been set by administrator."
+                        echo "RFS will use default GID mappings.\n"
+                        GID=0
+                fi
+
+                if [ "$UID" = "0"  -a "$GID" = "0"  ]
+                then
+                        continue
+                fi
+                echo ""
+                /usr/bin/idload -n 2>/usr/tmp/idmap$$
+                if [ "$?" != "0" ]
+                then
+                        /bin/grep 'uid.rules' /usr/tmp/idmap$$ >/dev/null 2>/dev/null 
+                        if [ "$?" = "0" -a  "$UID" != "0" ]
+                        then
+                                echo "WARNING: UID Mapping not set properly."
+                                echo "Replace mapping with one of the pre-defined options"
+                                echo "or consult your System Administrator's Guide.\n"
+                        fi
+
+                        /bin/grep 'gid.rules' /usr/tmp/idmap$$ >/dev/null 2>/dev/null 
+                        if [ "$?" = "0" -a "GID" != "0" ]
+                        then
+                                echo "WARNING: GID Mapping not set properly."
+                                echo "Replace mapping with one of the pre-defined options"
+                                echo "or consult your System Administrator's Guide.\n"
+                        fi
+                fi
+                continue
+                ;;
+        esac
+done
+
+
+echo "\nMapping option \"${SELECTION}\" has been successfully set up.\n"

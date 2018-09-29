@@ -1,0 +1,42 @@
+#ident	"@(#)xenv:m32/pathedit	1.27"
+#
+#	Master Pathedit for WE-32000 SGS
+#
+#
+
+chmod 0755 ../../optim/m32/makefile ../../inc/m32 ../../xenv/m32
+chmod 0755 ../../xenv/m32/pted.unx ../../xenv/m32/pted.native ../../xenv/m32/pted.nonx ../../xenv/m32/pted.shlink ../../xenv/m32/pted.integr
+cont="T"
+echo "Enter target machine name (3b15, 3b5, 3b2 or nonunix):  \c"
+while [ "$cont" = "T" ]
+do
+	mach=`line`
+	if [ "$mach" = "3b2"  -o "$mach" = "3b5" -o "$mach" = "3b15" ]
+	then
+		cont="F"
+	elif [ "$mach" = "nonunix" ]
+	then
+		exec pted.nonx
+
+	else
+		echo "Illegal target machine name. Enter 3b15, 3b5, 3b2 or nonunix: \c"
+	fi
+done
+
+echo "Are you building native SGS (y or n):	\c"
+x=`line`
+if [ "$x" = "y" ]
+then
+	exec pted.native $mach
+else
+	if [ -x pted.integr ]
+	then
+		pted.integr $mach
+		if [ 0 -ne $? ]
+		then
+			echo "header files not setup - cannot continue"
+			exit 1
+		fi
+	fi
+	exec pted.unx $mach
+fi

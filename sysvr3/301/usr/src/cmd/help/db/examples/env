@@ -1,0 +1,26 @@
+
+\Senv\S:  Examples
+
+        env
+
+    Lists the variables and their values that make up your environment.
+
+    ----------------------------------------------------------------------
+
+        env PS1=?
+
+    Lists your environmental variables and their values, and resets the primary
+    prompt to "?", temporarily.
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+        env PS1='RESTRICTED:' /bin/rsh
+
+    \Senv\S temporarily changes the value of the primary prompt to
+    "RESTRICTED:" then executes a restricted shell.  You can return to the
+    regular shell by hitting the control key and the letter "d" simultaneously.
+

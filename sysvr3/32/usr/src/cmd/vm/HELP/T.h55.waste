@@ -1,0 +1,23 @@
+
+   The Wastebasket contains folders and files you  have  deleted  from
+   your  Filecabinet. Files and folders placed in the Wastebasket will
+   be permanently removed from your system.
+
+   Objects in the Wastebasket may be moved or copied  back  into  your
+   Filecabinet  using  the  MOVE  or  COPY  command.  Use the UNDELETE
+   command if you would like to simply move  an  object  back  to  the
+   folder from which it was originally deleted.
+
+   By accessing the Office Preferences Form from the Preferences  Menu
+   you can do the following:
+
+      - Set an interval period (1-30 days) for automatic  deletion  of
+        each object in your Wastebasket.
+
+      - Select to be notified when you log in that objects  are  ready
+        to be deleted from your Wastebasket.
+
+   If you select to be notified, a  frame  will  appear  listing  the
+   Wastebasket object(s) scheduled for removal.  Press ENTER or RETURN
+   to  delete the Wastebasket object(s) listed in the frame, or CANCEL
+   to retain the listed object(s) in the Wastebasket.

@@ -1,0 +1,40 @@
+#ident	"@(#)forms.files:ar.val	1.1"
+if test -d $1
+then
+     echo $1 IS A DIRECTORY
+     exit
+elif test -f $1
+then
+     if test ! -r $1
+     then
+        echo "CANNOT READ $1 FILE"
+        exit
+     fi
+     grepout=`file $1 | grep "archive"`
+     if test -z "$grepout"
+     then
+        echo "$1 IS NOT AN ARCHIVE FILE"
+        exit
+     elif test ! -w $1
+     then
+        echo "DO NOT HAVE WRITE PERMISSION FOR $1"
+        exit
+     fi
+else
+     if test "`echo $1 | cut -c1`" = "/"
+     then
+        pathname=`echo $1 | sed -e 's/\/[^\/]*$//`
+     else
+        grepout=`echo $1 | grep "/" `
+        if test -n "$grepout"
+        then
+           pathname=`pwd`/`echo $1 | sed -e 's/\/[^\/]*$//`
+        else
+           pathname=`pwd`
+        fi
+     fi
+     if test ! -w $pathname
+        then echo "CANNOT WRITE IN $pathname DIRECTORY"
+        exit
+     fi
+fi

@@ -1,0 +1,18 @@
+
+\Suname\S:  Description
+
+Syntax Summary:  uname [-a] [-bdmnrsv] [-S system_name] [-N node_name]
+                       [-D domain_name]
+
+         where:  system_name is a system name.
+
+                 node_name is a node name.
+
+                 domain_name is a domain name.
+Description:
+     \Suname\S prints information about the UNIX system you are using.  With
+     the correct options, \Suname\S prints the system's name, system's 
+     nodename, the operating system release number, the operating system
+     version number and the machine hardware name.  If you are super user you
+     can set a domain name for your system, set the system name, set the node
+     name.

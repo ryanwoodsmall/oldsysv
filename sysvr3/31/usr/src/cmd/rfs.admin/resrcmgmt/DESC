@@ -1,0 +1,14 @@
+#ident	"@(#)rfs.admin:resrcmgmt/DESC	1.2"
+#menu# RFS resource management menu
+
+#head# 			RFS RESOURCE MANAGEMENT
+#help# 
+#help#	The submenus of the RFS Resource Management Menu provide
+#help# 	the facilities to manage the local resources you choose to 
+#help#	make available to other machines (advertising), and to 	
+#help#	make the connections to the remote resources you wish
+#help#	to use from other machines (mounting).
+#help#
+#help#	The submenus also contain subcommands that can give you valuable
+#help#	information on the status of local and remote resources.
+#help#

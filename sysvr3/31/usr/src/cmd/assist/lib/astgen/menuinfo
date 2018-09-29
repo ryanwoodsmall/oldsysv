@@ -1,0 +1,20 @@
+Type the layout as you want it to appear to the user.
+
+Use % to indicate the description end and the beginning of a selectable item. 
+Use # to indicate the end of a selectable and the beginning of a description.
+
+NOTE: If you want a %, &, or # character to appear in your text, then you
+      must take away the special meaning of the character by preceding
+      it with a backslash.
+
+      Avoid using the tab character in your layout file because it may
+      cause alignment errors.
+
+Here is an sample menu layout:
+
+                       MENU TITLE
+
+          %Batch, Background, and Execution Control
+
+          kill#..... Terminate a process
+

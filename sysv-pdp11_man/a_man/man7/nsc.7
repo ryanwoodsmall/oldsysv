@@ -1,0 +1,579 @@
+.\"@(#)nsc.7	5.2
+.TH NSC 7
+.SH NAME
+nsc \- \s-1NSC\s+1 adapter interface specification
+.SH DESCRIPTION
+The special files
+.B "nsc0, ..., nscn"
+refer to the control of a Network Systems Corporation (\s-1NSC\s+1)
+A-410 processor adapter.
+Each special file multiplexes
+across the transmission medium
+the full-duplex network
+operations of twenty (20) simultaneous opens.
+.PP
+Physical \s-1NSC\s+1 network transmissions occur in two parts
+and in the following order:  a 64-byte message block and an n-byte
+associated data block.
+The 64-byte message contains network
+control and routing information.
+The network message has
+the following structure:
+.RS 3
+.PP
+.PD 0
+struct nmsg
+.br
+{
+.RS 6
+.TP "\w'char nm_data[54];  'u"
+char nm_adata;
+/\(** associated data flag \(**/
+.TP
+char nm_trunk;
+/\(** trunk selection \(**/
+.TP
+char nm_acode;
+/\(** access code \(**/
+.TP
+char nm_vchan;
+/\(** virtual channel \(**/
+.TP
+short nm_tonad;
+/\(** "to" network address \(**/
+.TP
+short nm_frnad;
+/\(** "from" network address \(**/
+.TP
+char nm_fnc;
+/\(** protocol function \(**/
+.TP
+char nm_opcod;
+/\(** adapter operation code \(**/
+.TP
+char nm_data[54];
+/\(** control info \(**/
+.RE
+};
+.RE
+.PD
+.PP
+The associated data block transfers large, variable-length
+data blocks.
+The \s-1NSC\s+1 driver currently limits the associated data block size
+to 4096 bytes.
+.PP
+The driver issues the proper function code sequences to the A-410
+adapter.
+The available function codes are defined as follows:
+.PP
+.RS 3
+.PD 0
+.TP "\w'\s-1AWAITM\s+1   'u"
+\s-1ATM\s+1
+0005	/\(** Transmit Message \(**/
+.TP
+\s-1ATD\s+1
+0010	/\(** Transmit Data \(**/
+.TP
+\s-1ATLSTD\s+1
+0014	/\(** Transmit Last Data \(**/
+.TP
+\s-1ATLM\s+1
+0021	/\(** Transmit Local Message \(**/
+.TP
+\s-1AIM\s+1
+0045	/\(** Input Message \(**/
+.TP
+\s-1AID\s+1
+0050	/\(** Input Data	 \(**/
+.TP
+\s-1ASTAT\s+1
+0101	/\(** Status	 \(**/
+.TP
+\s-1AMDP\s+1\&0
+0140	/\(** Mark Down Port 0 \(**/
+.TP
+\s-1AMDP\s+1\&1
+0144	/\(** Mark Down Port 1 \(**/
+.TP
+\s-1AMDP\s+1\&2
+0150	/\(** Mark Down Port 2 \(**/
+.TP
+\s-1AMDP\s+1\&3
+0154	/\(** Mark Down Port 3 \(**/
+.TP
+\s-1AMDR\s+1\&0
+0160	/\(** Mark Down Port 0 & Reroute Msgs \(**/
+.TP
+\s-1AMDR\s+1\&1
+0164	/\(** Mark Down Port 1 & Reroute Msgs \(**/
+.TP
+\s-1AMDR\s+1\&2
+0170	/\(** Mark Down Port 2 & Reroute Msgs \(**/
+.TP
+\s-1AMDR\s+1\&3
+0174	/\(** Mark Down Port 3 & Reroute Msgs \(**/
+.TP
+\s-1ARST\s+1
+0241	/\(** Read Statistics \(**/
+.TP
+\s-1ARCST\s+1
+0245	/\(** Read & Clear Statistics \(**/
+.TP
+\s-1ASTST\s+1
+0300	/\(** Set Test	 \(**/
+.TP
+\s-1ASAL\s+1
+0305	/\(** Set Address & Length \(**/
+.TP
+\s-1AWA\s+1
+0310	/\(** Write Adapter \(**/
+.TP
+\s-1ARA\s+1
+0314	/\(** Read Adapter	 \(**/
+.TP
+\s-1ACA\s+1
+0340	/\(** Clear Adapter \(**/
+.TP
+\s-1AEOP\s+1
+0344	/\(** End Operation \(**/
+.TP
+\s-1ACLWM\s+1
+0346	/\(** Clear Wait For Message State \(**/
+.TP
+\s-1AWAITM\s+1
+0350	/\(** Wait Message	 \(**/
+.PD
+.RE
+.PP
+The driver always saves the network status bytes on failed
+or aborted transfer attempts.
+The user may retrieve the eight bytes of adapter status and perform the
+appropriate error recovery procedures.
+The eight adapter status
+bytes are defined by the following structure:
+.PP
+.PD 0
+struct adptrst
+.br
+{
+.RS 5
+.TP "\w'char st_spare[3];   'u"
+char st_afc;
+/\(** last function code \(**/
+.TP
+char st_gsw;
+/\(** general status word \(**/
+.TP
+char st_trkst;
+/\(** trunk status \(**/
+.TP
+char st_trkrsp;
+/\(** trunk response \(**/
+.TP
+char st_err;
+/\(** adapter error code \(**/
+.TP
+char st_internal;
+/\(** reserved for adapter use \(**/
+.TP
+char st_rtnrsp;
+/\(** remote returned response \(**/
+.TP
+char st_spare[3];
+.RE
+};
+.PD
+.PP
+After successful
+.IR open (2)
+completion
+and before reading and writing to the network,
+the user must establish a virtual channel.
+Both the local and the remote machines must agree
+on this virtual channel to properly transfer data.
+A virtual channel is defined to be a destination
+network address and a virtual channel number.
+The driver enforces mutually exclusive virtual
+channels to properly route incoming network
+transmissions.
+There are currently 256 virtual channel numbers
+(0-255) supported.
+If the user specifies
+a zero destination address in the virtual channel,
+that process will receive the incoming
+transmissions from all remote nodes on the
+specified virtual channel number.
+If, however, another process establishes a virtual
+connection with the same virtual channel number but with
+a specific (non-zero) destination address, the
+specific connection will preempt the non-specific (zero
+destination address) connection and receive all incoming
+message transmissions from the particular
+remote node.
+.PP
+The \s-1NSC\s+1 driver supports two modes of transfer:
+.I data
+and
+.I control.
+.I Data
+mode is the default mode.
+After virtual channel configuration,
+the user process performs simple reads and writes.
+The process does not need to know that it is transmitting
+across the \s-1NSC\s+1 bus.
+Placement of the data into the message,
+the associated data block, or both is completely transparent.
+The user may optionally specify, however, that the
+first n-bytes of the transfer buffer be always placed into
+the \s-1NSC\s+1 message (0 <= n <= 52).
+This may be particularly useful when transferring
+combinations of binary (i.e protocol headers) and
+character data (i.e.
+files) between heterogeneous
+machines (see the \s-1NSCIOASMB NSC\s+1
+.IR ioctl (2)
+command).
+Reads and writes in data mode return the total number of user
+bytes transferred.
+.PP
+In
+.I control
+mode, the user has direct access to the \s-1NSC\s+1 control information
+within the \s-1NSC\s+1 message.
+The user process specifies to the driver two
+pointers to static buffer areas,
+one for reads and one for writes.
+For write operations,
+the user builds a modified version
+of the \s-1NSC\s+1 message in the write static
+buffer area.
+When the
+.IR write (2)
+system call is made, the driver retrieves the data from this
+buffer to build the outgoing \s-1NSC\s+1 message.
+The structure
+for the write static buffer area is:
+.PP
+.PD 0
+.RS 3
+struct nsctrl {
+.PP
+.RS 5
+.TP "\w'char  cn_data[54];  'u"
+short cn_flags;
+/\(** associated data flag \(**/
+.TP
+short cn_tonad;
+/\(** destination address \(**/
+.TP
+char  cn_fnc;
+/\(** adapter function code \(**/
+.TP
+char  cn_opcode;
+/\(** adapter operation code \(**/
+.TP
+char  cn_data[54];
+/\(** unused data area \(**/
+.RE
+};
+.RE
+.PD
+.PP
+If the user sets the associated data flag in
+.B cn_flags
+(\s-1NSCADATA\s+1), the buffer pointer in the
+.IR write (2)
+call is sent in the associated data block.
+Otherwise, the driver transfers a message alone.
+.PP
+On
+.I control
+mode read operations, the driver places the entire 64-byte
+\s-1NSC\s+1 message into the read static buffer area.
+If the message has an associated data block,  the
+received data is placed into the buffer area
+specified in the
+.IR read (2)
+system call.
+.PP
+For both
+.I control
+mode reads and writes, the \s-1NSC\s+1 driver returns the number of bytes transferred
+in the associated data block.
+The driver returns a count
+of
+.B one
+(1)
+if a message alone was transmitted or received.
+.PP
+User processes configure parameters into the driver through
+.IR ioctl (2).
+The driver recognizes the following
+.I ioctl
+requests:
+.PP
+.TP "\w'\s-1NSCIOOFFLINE\s+1       'u"
+\s-1NSCIODATA\s+1
+(struct datam \(**) argp
+.RS 5
+\s-1NSCIODATA\s+1 places the virtual connection into
+.I data
+mode (the default mode for successful opens).
+The user specifies the number of data bytes always
+contained in the \s-1NSC\s+1 message on reads and writes.
+.I Argp
+is a pointer to the following structure:
+.br
+
+struct datam {
+.RS 5
+.br
+short i_mbytes;   /\(** bytes in msg on reads \(**/
+.br
+short o_mbytes;   /\(** bytes in msg on write \(**/
+.br
+.RE
+};
+.RE
+.TP
+\s-1NSCIOCTRL\s+1
+(struct ctrlm \(**) argp
+.RS 5
+\s-1NSCIOCTRL\s+1 places the virtual connection into
+.I control
+mode.
+.I Argp
+is a pointer to the following structure:
+.br
+
+struct ctrlm {
+.br
+.RS 5
+struct nmsg   \(**i_mptr;	/\(** read static area \(**/
+.br
+struct nsctrl \(**o_mptr;	/\(** write static area \(**/
+.br
+.RE
+};
+.RE
+.TP
+\s-1NSCIOVCHAN\s+1
+(struct nscvchan \(**) argp
+.RS 5
+\s-1NSCIOVCHAN\s+1 configures the virtual channel for the
+specified open.
+.I Argp
+is a pointer to the following structure:
+.br
+
+struct nscvchan {
+.br
+.RS 5
+short v_tonad;	/\(** destination network addr \(**/
+.br
+char  v_vchan;	/\(** virtual channel number \(**/
+.br
+char  v_tmsk;	/\(** trunk mask \(**/
+.br
+char  v_acode;	/\(** access code \(**/
+.br
+.RE
+};
+.br
+
+.I V_tonad
+and
+.I v_vchan
+configure the virtual channel for all
+subsequent reads and writes to the network.
+.I V_tmsk
+sets the trunk transfer mask for network transfers.
+For trunk transfers, each bit in the trunk mask
+is cleared in the trunk specification
+of the \s-1NSC\s+1 network message
+.I (nm_trunk).
+.I V_acode
+is the hardware access code place into the outgoing
+\s-1NSC\s+1 network message
+.I (nm_acode).
+.RE
+.TP
+\s-1NSCIOESTAT\s+1
+(struct adptrst \(**) argp
+.RS 5
+\s-1NSCIOESTAT\s+1 retrieves into the user buffer specified by
+.I argp
+the 8 bytes of adapter status from the last failed
+network operation.
+After the status bytes are
+retrieved, the buffer area in the driver is cleared.
+.RE
+.TP
+\s-1NSCIOGETP\s+1
+(struct nscgetty \(**) argp
+.RS 5
+\s-1NSCIOGETP\s+1 retrieves network connection
+parameters from the driver.
+.I Argp
+is a pointer to the following structure:
+.br
+
+struct nscgetty {
+.br
+.RS 5
+short g_flags;	/\(** connection flags \(**/
+.br
+char  g_openm;	/\(** file open mode \(**/
+.br
+char  g_vchan;	/\(** virtual channel number \(**/
+.br
+short g_taddr;	/\(** destination network addr \(**/
+.br
+char  g_acode;	/\(** access code \(**/
+.br
+char  g_tmsk;	/\(** trunk mask \(**/
+.br
+struct nscasmb g_asm;	/\(** assembly modes \(**/
+.br
+.RE
+};
+.RE
+.TP
+\s-1NSCIOASMB\s+1
+(struct nscasmb \(**) argp
+.RS 5
+\s-1NSCIOASMB\s+1 selects the assembly/disassembly modes
+for network message and associated data block
+transmission and reception.
+Assembly modes are not
+necessary unless data is transferred between
+heterogeneous processors.
+Assembly mode 0 causes
+the hardware to swap incoming and outgoing bytes.
+This one is used primarily when transferring character data.
+Assembly mode 1 causes no swapping.
+This one is used primarily
+when transferring binary data.
+Assembly mode 1 is defaulted for the \s-1NSC\s+1 message;
+assembly mode 0 is defaulted for the associated data block.
+.I Argp
+is a pointer to the following structure:
+.br
+
+struct nscasmb {
+.br
+.RS 5
+unsigned i_msg : 2;	/\(** input msg \(**/
+.br
+unsigned i_data : 2;	/\(** input data \(**/
+.br
+unsigned o_msg : 2;	/\(** output msg \(**/
+.br
+unsigned o_data : 2;	/\(** output data \(**/
+.br
+.RE
+};
+.RE
+.TP
+\s-1NSCIOADDR\s+1
+(short \(**) argp
+.RS 5
+\s-1NSCIOADDR\s+1 returns to the calling process the network
+address of the local node.
+The local address is
+generated from data retrieved from the adapter.
+.RE
+.TP
+\s-1NSCIOBYE\s+1
+(char \(**) 0
+.RS 5
+\s-1NSCIOBYE\s+1 disconnects the user process from the driver.
+This function performs the necessary cleanup
+to ensure proper driver operation.
+.RE
+.TP
+\s-1NSCIOFCODE\s+1
+(struct nscfcode \(**) argp
+.RS 5
+\s-1NSCIOFCODE\s+1 allows the user to issue any function to the
+adapter.
+The super-user is allowed to issue any function;
+others may issue only the status function (\s-1ASTAT\s+1).
+.I Argp
+is a pointer to the following structure:
+.br
+
+struct nscfcode {
+.br
+.RS 5
+char  \(**f_base;	/\(** buffer area \(**/
+.br
+short f_cnt;	/\(** no.
+of bytes to xfer \(**/
+.br
+short f_fcode;	/\(** func.
+code to issue \(**/
+.br
+.RE
+};
+.RE
+.TP
+\s-1NSCIOCANCEL\s+1
+(char \(**) 0
+.RS 5
+\s-1NSCIOCANCEL\s+1 is a super-user only function.
+This
+command cancels the currently active adapter operation
+and returns an error to the effected user process.
+This command is used to clear hung processes.
+.RE
+.TP
+\s-1NSCIOOFFLINE\s+1
+(char \(**) 0
+.RS 5
+\s-1NSCIOOFFLINE\s+1 is a super-user only function.
+This command
+inhibits via software all function code issuance.
+Opens
+will occur normally, but all reads and writes will block.
+There is one exception:
+the super-user (by an \s-1NSCIOFCODE\s+1 command) may issue
+any function.
+.RE
+.TP
+\s-1NSCIOONLINE\s+1
+(char \(**) 0
+.RS 5
+\s-1NSCIOONLINE\s+1 is a super-user only function.
+This command enables via software all function code issuance.
+This command is the converse of \s-1NSCIOOFFLINE\s+1.
+.RE
+.SH FILES
+/usr/src/cmd/nusend/nscdef.h
+.br
+/usr/include/sys/nsc.h
+.SH "SEE ALSO"
+nusend(1C),
+ioctl(2),
+read(2),
+write(2).
+.SH DIAGNOSTICS
+.IR Read (2)
+and
+.IR write (2)
+both return the number of bytes successfully transferred.
+A \-1 is returned on error.
+.SH BUGS
+An error return does not necessarily mean that the network
+is down.
+Whenever an error occurs, adapter status should be retrieved
+from the driver.
+Most failed operations should be retried
+several times before giving up.
+.PP
+In
+.I control
+mode, 1 is returned if a message alone is transmitted or received.
+.\"	@(#)nsc.7	5.2 of 5/18/82

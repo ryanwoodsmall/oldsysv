@@ -1,0 +1,18 @@
+* @(#)gdht	1.1
+disk	254	176700	5
+tu16	224	172440	5
+root	disk	00
+pipe	disk	00
+swap	disk	00	7000	2500
+dump	tu16	0
+buffers	20
+inodes	40
+files	40
+mounts	2
+coremap	50
+swapmap	50
+calls	20
+procs	25
+texts	15
+clists	20
+sabufs	3

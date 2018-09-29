@@ -1,0 +1,104 @@
+.TH LDCLOSE 3X
+.SH NAME
+ldclose, ldaclose \- close a common object file 
+.SH SYNOPSIS
+.ft B
+.nf
+.ta \w'\s-1LDFILE\s+1\ \ \ 'u
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <ldfcn.h>
+\}
+.el \{\
+.ft B
+#include "INCDIR\/filehdr.h"
+#include "INCDIR\/ldfcn.h"
+\}
+.PP
+.B int ldclose (ldptr)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.PP
+.B int ldaclose (ldptr)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.fi
+.ft R
+.DT
+.SH DESCRIPTION
+.IR Ldopen (3X)
+and
+.I ldclose
+are designed to provide uniform access to both simple object files and
+object files that are members of archive files.
+Thus an archive
+of common object files can be processed as if it were a series of
+simple common object files.
+.PP
+If
+.BI \s-1TYPE\s+1( ldptr )
+does not represent an archive file,
+.I ldclose
+will close the file and free the memory allocated to the
+.BR \s-1LDFILE\s+1 " structure"
+associated with
+.IR ldptr .
+If
+.BI \s-1TYPE\s+1( ldptr )
+is the magic number of an archive file,
+and if there are any more files in the archive,
+.I ldclose
+will reinitialize
+.BI \s-1OFFSET\s+1( ldptr )
+to the file address of the next archive member
+and return
+.BR \s-1FAILURE\s+1 .
+The
+.SM
+.B LDFILE
+structure is prepared for a subsequent
+.IR ldopen (3X).
+In all other cases,
+.I ldclose
+returns
+.BR \s-1SUCCESS\s+1 .
+.PP
+.I Ldaclose
+closes the file and frees the memory allocated to the
+.BR \s-1LDFILE\s+1 " structure"
+associated with 
+.I ldptr
+regardless of the value of 
+.BI \s-1TYPE\s+1 (ldptr).
+.I Ldaclose
+.RB "always returns " \s-1SUCCESS\s+1 .
+The function is often used in conjunction with 
+.IR ldaopen .
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+LIBDIR\/libld.a .
+\}
+.PP
+.if !'\*p'' \{\
+.IR Intro (4)
+describes
+.IR INCDIR " and " LIBDIR .
+\}
+.SH SEE ALSO
+.if !'\*p'' \{\
+fclose(3S),
+ldopen(3X),
+intro(4),
+ldfcn(4),
+paths.h(4).
+\}
+.if '\*p'' \{\
+fclose(3S),
+ldopen(3X),
+ldfcn(4).
+\}
+'\" \%W\%
+.\"	%W% of %G%

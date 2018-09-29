@@ -1,0 +1,66 @@
+#ident	"@(#)sadmin:tools/cmdsused	1.2"
+#	Find commands used in shell scripts.
+#	Unclean and surely inaccurate mechanism attempts to parse the
+#	script and extract the command names.
+
+#!	chmod +x ${file}
+
+trap "rm -f /tmp/$$cmdlist" 0
+
+(
+	ls /usr/bin
+	ls /bin
+	ls -ld /etc/*  |  sed -n '/^-[-r][-w]x/s/.* //p'
+) >/tmp/$$cmdlist
+
+cat $*  |
+	tr '`;' '[\012*]'  |
+	sed '
+		s/exec[ 	]//
+		s/^[ 	]*//
+		s/[ 	][ 	]*#.*//
+		/case[ 	]/,/[ 	]*esac/{
+			/)$/d
+		}
+		/^cd[ 	]/d
+		/^if[ 	]/d
+		/^for[ 	]/d
+		/^while[ 	]/d
+		/^case[ 	]/d
+		/^then[ 	]/d
+		/^do[ 	]/d
+		/^done[ 	]/d
+		/^fi[ 	]/d
+		/^esac[ 	]/d
+		/^set[ 	]/d
+		/^shift[ 	]/d
+		/^then$/d
+		/^do$/d
+		/^done$/d
+		/^fi$/d
+		/^esac$/d
+		/^set$/d
+		/^shift$/d
+		/^#/d
+		'  |
+	tr '|' '\012'  |
+	sed '
+		s/^[ 	]*//
+		s/[ 	][ 	]*#.*//
+		s/${[a-zA-Z0-9_:?+-]*}/ /g
+		s/^[ 	]*[a-zA-Z0-9_-]*=[^ 	]*//g
+		s/<<[^ 	]*//g
+		s/[><]\{1,2\}[ 	]*[^ 	]*//g
+		/^[!"'\''(){} 	]*$/d
+		s/^[ 	]*//
+		s;/bin/;;
+		s;/usr/bin/;;
+		/^xargs[ 	]/ {
+			s///
+			a\
+xargs
+		}
+		s/[ 	].*//
+	'  |
+	sort -u  |
+	fgrep -x -f /tmp/$$cmdlist

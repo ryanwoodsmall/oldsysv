@@ -1,0 +1,35 @@
+
+   An Installed Application is a software package,  (e.g.,  electronic
+   mail,   word   processor,   spreadsheet)   accessible  through  the
+   FACE's Services Menu.
+
+   To access an installed package you select "services" in the  Office
+   Frame,   bringing  up  a  menu  of  applications and  selecting the
+   application you would like to use. The installed  application  will
+   take over the entire screen.  When you exit an application you will
+   automatically be returned to FACE.
+
+   The  application itself  provides  you with a  means of storing and 
+   accessing   these  files  as  well  as  providing  other  necessary 
+   functions, (e.g.,  printing  files)  which  you  can  access  while 
+   working  in the  application.   Although,  any files  created while 
+   working  within an installed application  will be  stored, you will
+   not  be able  to open  or read  them  unless  they  are  FACE
+   Standard files.
+
+   While you are working in an installed application you will have the
+   ability  to  suspend the application and return to FACE.  The
+   capability  of  suspending  an  application  means  that  you   can
+   temporarily  leave  what  you  are doing without having to save the
+   file you are working on and exit the application.
+
+   You need to determine how you can access UNIX shell from the active
+   application  so that you can type the FACE command "suspend".
+   Check with your system administrator or in the  documentation  that
+   came  with  the  application  to find out how you access UNIX shell
+   from the application.
+
+   Suspended applications are also listed in the FRM-MGT  "list"  menu
+   with other  open frames.  You can resume a suspended application by
+   selecting the desired item from this "list"  menu.   You  can  also
+   resume the application by selecting it again from Services Menu.

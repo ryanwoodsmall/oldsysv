@@ -1,0 +1,100 @@
+.TH RATFOR 1
+.SH NAME
+ratfor \- rational \s-1FORTRAN\s+1 dialect
+.SH SYNOPSIS
+.B ratfor
+[ options ]
+[ files ]
+.SH DESCRIPTION
+.I Ratfor\^
+converts a rational dialect of \s-1FORTRAN\s+1 into ordinary irrational Fortran.
+.I Ratfor\^
+provides control flow constructs essentially identical to those in C:
+.RS
+.TP
+statement grouping:
+{ statement; statement; statement }
+.TP
+decision-making:
+.nf
+\f3if\fP (condition) statement [ \f3else\fP statement ]
+\f3switch\fP (integer value) {
+	\f3case\fP integer:	statement
+	...
+	[ \f3default\fP: ]	statement
+}
+.fi
+.TP
+loops:
+.br
+.nf
+\f3while\fP (condition) statement
+\f3for\fP (expression; condition; expression) statement
+\f3do\fP limits statement
+\f3repeat\fP statement [ \f3until\fP (condition) ]
+\f3break\fP
+\f3next\fP
+.fi
+.RE
+.PP
+and some syntactic sugar to make programs easier to read and write:
+.RS
+.TP
+free form input:
+multiple statements/line; automatic continuation
+.TP
+comments:
+.B #
+this is a comment.
+.TP
+translation of relationals:
+.BR > ,
+.BR >= ,
+etc., become
+.BR .\s-1GT\s+1. ,
+.BR .\s-1GE\s+1. ,
+etc.
+.TP
+return expression to caller from function:
+\f3return\fP (expression)
+.TP
+define:
+.br
+.B define
+.I name replacement\^
+.TP
+include:
+.br
+.B include
+.I file\^
+.RE
+.PP
+The option
+.B \-h
+causes quoted strings to be turned into
+.B 27H
+constructs.
+The
+.B \-C
+option copies comments to the output and
+attempts to format it neatly.
+Normally, continuation lines are marked with a
+.B &
+in column 1; the option
+.B \-6x
+makes the continuation character
+.B x
+and places it in column 6.
+.PP
+.I Ratfor\^
+is best used with
+.IR f77 (1).
+.SH SEE ALSO
+ef\&l(1),
+f77(1).
+.br
+.sp
+B. W. Kernighan and P. J. Plauger,
+.IR "Software Tools" ,
+Addison-Wesley, 1976.
+.\"	@(#)ratfor.1	5.2 of 5/18/82

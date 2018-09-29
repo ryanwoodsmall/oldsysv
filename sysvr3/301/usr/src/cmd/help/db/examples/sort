@@ -1,0 +1,26 @@
+
+\S sort \S:  Examples
+
+
+       sort data
+
+    Sorts the file "data" into ASCII collating sequence using the whole line 
+    for comparison, and prints it on the standard output.
+
+    ----------------------------------------------------------------------
+
+       sort -t":" +1 -2 +3 -4 /etc/passwd -o etc.out
+
+    Sorts the input file /etc/passwd using a colon as the field separator.
+    Sorts the file on the field beginning with a ":" and ending at the second
+    ":".  Then it sorts on the field beginning with the third ":" and ending
+    with the fourth ":".  Output is placed in the file <dataout>.
+ 
+    ----------------------------------------------------------------------
+
+       who | sort | tee /dev/tty | wc -l
+
+    who(1) creates a table of the users who are logged in.  \S sort \S orders
+    them in alphabetical order and tee(1) sends a copy to your terminal and one
+    copy to standard output which serves as input to wc(1).  wc(1) counts the
+    number of lines and prints the number of people logged on.

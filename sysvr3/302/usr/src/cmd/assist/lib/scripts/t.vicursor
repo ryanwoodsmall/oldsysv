@@ -1,0 +1,282 @@
+520 redraw #ident
+705 0 0 31
+Editing is simple with vi. 
+You just move the cursor to 
+where you want to make a change
+in the text.  Then you tell the
+computer how to make the change.
+706 
+15 
+8 16 7 DESCRIPTION: The 
+30 
+3 <SPACEBAR>
+31 
+8 1000 1001 moves the cursor forward one character.
+25 
+520 instruct
+8 1000 1002 Move the cursor forward to the s in "is"
+2 0 0
+18 
+256 32 108 261
+254 the <SPACEBAR> to move the cursor forward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+520 ansloop
+520 moveforward
+1 2
+520 clear1
+520 arrow
+520 clear1
+1 1
+8 16 7 DESCRIPTION: The 
+30 
+3 <BACKSPACE>
+31 
+8 1000 1001 key moves the cursor backward one character.
+520 instruct
+8 1000 1002 Move the cursor backward to the n in "Editing"
+520 refwait
+2 0 9
+18 
+256 8 104 260
+254 the <BACKSPACE> key to move the cursor backward.
+25 
+520 ansloop
+520 movebackward
+520 ansloop
+520 movebackward
+520 ansloop
+520 movebackward
+520 ansloop
+520 movebackward
+1 2
+520 clear1
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION: The letter 
+30 
+8 1000 1001 j 
+31 
+8 1000 1001 moves the cursor down one line.
+8 17 21 (Remember j for jump-down)
+520 instruct
+8 1000 1002 Move the cursor down 4 lines.
+2 0 5
+18 
+256 106 14 258 10
+254 j to move the cursor down.
+25 
+520 ansloop
+520 movedown
+520 ansloop
+520 movedown
+520 ansloop
+520 movedown
+520 ansloop
+520 movedown
+1 2
+520 clear1
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION: The letter 
+30 
+8 1000 1001 k 
+31 
+8 1000 1001 moves the cursor up one line.
+8 17 21 (Remember k for kick-up)
+520 instruct
+8 1000 1002 Move the cursor up 4 lines.
+2 4 5
+18 
+256 107 16 259
+254 k to move the cursor up one line.
+25 
+520 ansloop
+520 moveup
+520 ansloop
+520 moveup
+520 ansloop
+520 moveup
+520 ansloop
+520 moveup
+1 2
+520 clear1
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION: The letter 
+30 
+8 1000 1001 w 
+31 
+8 1000 1001 moves the cursor forward one word.
+8 17 21 (Remember w for word)
+520 instruct
+8 1000 1002 Move the cursor by words to the word "just"
+2 0 5
+18 
+256 119
+254 w to move the cursor forward to the next word..
+520 ansloop
+25 
+2 0 2003
+18 
+15 
+520 ansloop
+2 0 2003
+15 
+18 
+520 ansloop
+2 0 2007
+15 
+18 
+520 ansloop
+2 0 2005
+15 
+18 
+520 ansloop
+2 0 2002
+15 
+18 
+520 ansloop
+2 1 0
+15 
+18 
+520 ansloop
+2 1 2004
+15 
+18 
+25 
+1 2
+520 clear1
+8 16 7 Notice that vi treated punctuation as separate words.
+8 1001 7 For example, it stopped at the period when you moved the
+8 1001 7 cursor forward by words. 
+15 
+1 2
+520 arrow
+520 clear1
+8 16 7 DESCRIPTION: The letter 
+30 
+8 1000 1001 b 
+31 
+8 1000 1001 moves the cursor backward one word.
+8 17 21 (Remember b for backword)
+520 instruct
+8 1000 1002 Move the cursor backwards by words to the word "simple"
+2 1 4
+18 
+256 98
+254 b to move the cursor backward to the previous word.
+25 
+520 ansloop
+2 1 1996
+18 
+15 
+520 ansloop
+2 0 25
+15 
+18 
+520 ansloop
+2 0 1998
+15 
+18 
+520 ansloop
+2 0 1995
+15 
+18 
+520 ansloop
+2 0 1993
+15 
+18 
+1 2
+520 clear1
+8 16 7 Notice again that vi treated punctuation as separate words.
+8 1001 7 It stopped at the period when you moved the cursor backward
+8 1001 7 by words. 
+15 
+1 2
+520 arrow
+520 clear1
+8 16 7 You can multiply many vi commands. For example, the command
+8 17 7 4<SPACEBAR> will move the cursor forward four characters.
+520 instruct
+8 1000 1002 Try entering 4<SPACEBAR>
+15 
+2 0 0
+18 
+25 
+15 
+256 52
+254 the number 4
+520 ansloop
+2 2000 2000
+256 32 108 261
+254 the <SPACEBAR>
+520 ansloop
+2 2000 2004
+15 
+18 
+1 2
+520 clear1
+520 instruct
+8 1000 1002 Now move the cursor down 2 lines
+2 2000 2000
+25 
+15 
+256 50
+254 the number 2
+520 ansloop
+2 2000 2000
+256 106 14 258
+254 j
+520 ansloop
+2 2002 2000
+15 
+18 
+1 2
+520 clear1
+520 instruct
+8 1000 1002 Move the cursor forward 5 words
+2 2000 2000
+25 
+15 
+256 53
+254 the number 5
+520 ansloop
+2 2000 2000
+256 119
+254 w
+520 ansloop
+2 2000 2019
+15 
+18 
+1 2
+520 clear1
+520 arrow
+2 0 0
+12 
+30 
+8 3 20 SUMMARY OF CURSOR MOVING COMMANDS
+31 
+8 6 17 SPACEBAR .... forward one character
+8 1001 16 BACKSPACE .... backward one character
+8 1002 24 j .... jump-down one line
+8 1001 24 k .... kick-up one line
+8 1002 24 w .... word forward
+8 1001 24 b .... backward-word
+8 1002 23 6k .... move the cursor down 6 lines
+8 1001 23 4b .... move the cursor back 4 words
+15 

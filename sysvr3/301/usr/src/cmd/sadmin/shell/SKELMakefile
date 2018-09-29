@@ -1,0 +1,46 @@
+#ident	"@(#)sadmin:shell/SKELMakefile	1.5"
+#	skeleton Makefile for shell
+
+ROOT = /
+
+DIR = $(ROOT)/usr/lbin
+
+CMDS = --EXECUTABLES--
+
+PARTS = $(CMDS) --FILES--
+
+ALL:		$(PARTS)
+
+install:	$(PARTS) $(DIR) remove
+	umask 022;  ls $(PARTS)  |  cpio -pdum $(DIR)
+	cd $(DIR);  chmod go-w,u+w $(PARTS)
+	cd $(DIR);  chmod +x $(CMDS)
+
+$(DIR):
+	mkdir $(DIR);  chmod 755 $(DIR)
+
+remove:
+	cd $(DIR);  rm -f $(PARTS)
+
+partslist:
+	@echo Makefile SKELMakefile $(PARTS)  |  tr ' ' '\012'  |  sort
+	
+product:
+	@echo $(PARTS)  |  tr ' ' '\012'  |  sed "s;^;$(DIR)/;"
+
+productdir:
+	@echo $(DIR)
+
+clean:
+
+clobber:
+
+srcaudit:
+	@(	find * -print;  \
+		ls -d $(DIRECTORIES) $(PARTS) SKELMakefile Makefile  \
+	)  |  sort  |  uniq -u  |  sed 's/$$/	unexpected/'
+
+newmakefile:	../tools/genmakefile SKELMakefile
+	cp Makefile OMakefile
+	../tools/genmakefile SKELMakefile *Makefile >Makefile
+	rm -f OMakefile

@@ -1,0 +1,50 @@
+
+   The PRINT command allows you to send a file to the  printer.
+
+     1.  To PRINT an object execute the PRINT command.   If  an object
+         is not specified the current object is assumed.
+
+            - Command Menu - Select PRINT + RETURN
+
+            - Typed command - Type print [object_name] + RETURN
+
+         A Print menu will appear.
+
+     2.  To Change  Print  Options, select  Print Options on the Print
+         menu. A  Print Options  form will then be displayed. The form
+         presents your default  print  commands. You may change any of
+         the print commands  by editing the form.
+
+         The fields are as follows:
+
+            - Print  Command #1-3 - These  fields allow you to specify
+	    the print commands to use when printing a file. FACE
+	    assumes  lp as  the  default,  which  you  may  change  to
+	    another  print facility  or customized  print command. You
+            have to specify appropriate options depending on the print
+            facility  to   be  invoked.    Check  with   your   system
+	    administrator for the proper options.
+
+         The  print  commands  specified  in the Print Option form are 
+         saved, and are presented in subsequent Print menus.
+
+         The Function  Keys provided  with  this form are (in addition
+         to PREV-FRM, NEXT-FRM, HELP and CMD-MENU):
+
+            - CANCEL - cancels  the  job  and closes the form  without
+              saving any changes.
+      
+            - CHOICES - toggles  between  the  choices   available,  or
+              presents a pop-up frame of choices for the current field,
+              or if choices are not available, displays a definition of
+              the field  on the message line, or states that no choices
+              are available.
+      
+            - SAVE - saves all entries, for subsequent printings.
+
+            - RESET - resets  the current  field back  to the value  in
+              effect at the beginning of the current editing session.
+
+      3.  To print an object, from the Print menu:
+
+            - Select the desired print option + RETURN

@@ -1,0 +1,77 @@
+#ident	"@(#)bne.admin:delport	2.2"
+#	This shell is used to delete port entries from /etc/inittab
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -f "$INITTAB" -a \( ! -w "$INITTAB" -o ! -r "$INITTAB" \) ]; then
+	admerr $0 "Can't write and read '$INITTAB'\nCan't do delete operation!\n"
+	exit
+fi
+
+if [ -r $DEVICES ]; then :
+else
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+portlist=`grep '^[^#]' $DEVICES  2>/dev/null | cut -d' ' -f2  |  sort -u  |
+			grep '^[a-z0-9]' 2>/dev/null`
+
+
+
+if [ -z "$portlist" ]; then
+	echo "There are no entries in the '$DEVICES' file
+Use devicemgmt to add entries.\n"
+	exit
+fi
+
+
+while $FIRST || chkyn ${flags} -f "
+Do you want to delete another port?"
+do
+FIRST=false
+
+echo "\nThis is the current list of ports available to the $PACKAGE:"
+echo "${portlist}"  |  pr -t -w80 -6
+
+portname=`chkyn ${flags} -fec '
+Enter device name you want to delete [q]:' \
+	${portlist}`
+
+entry="`grep \"${portname}[ 	]\" $INITTAB`"
+
+
+if [ -z "$entry" ]; then
+echo "\nThere is no entry for ${portname} in $INITTAB."
+continue
+
+else
+echo "Found the following entry in $INITTAB:\n"
+/bin/sh _initprint ${entry}
+fi
+
+
+if  chkyn ${flags} -h'?' -H"
+If you answer y the port '${portname}'
+will no longer be available for incoming traffic." \
+	-f "Do you want to delete the entry '${portname}'?"
+then
+	/bin/sh _delinittab ${portname}
+else
+	continue
+fi
+
+done					# ***** END MAIN LOOP *****

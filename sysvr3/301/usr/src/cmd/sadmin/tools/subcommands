@@ -1,0 +1,42 @@
+#ident	"@(#)sadmin:tools/subcommands	2.2"
+#	produce list of commands available under sysadm command
+
+#!	chmod +x ${file}
+
+if [ $# -ne 1 ]
+then
+	echo >&2 "Usage:  $0 menu-directory"
+	exit 1
+fi
+
+cd $1
+for f in `find * -type f  -print  |  sort`
+{
+	if [ ${f} = DESC ]
+	then
+		continue
+	fi
+	F=`case ${f} in
+	*DESC )
+		dirname /${f}
+		;;
+	* )
+		echo /${f}
+	esac  |  sed '	s;[^/]*/;\\\\\\\\(bu ;g'`
+
+	#	sed and tr commands use the BELL character (^g)
+	sed -n "
+		/^#menu#[ 	]*/ {
+			s;^#menu#[ 	]*;.IP \"${F}\";"'
+			p
+		}
+		/^#help#/{
+			s/^#help#[ 	]*//
+			s/   */ /g
+			s/\. /./g
+			/^$/s///
+			p
+		}
+		' ${f}  |
+	   tr '	' ' \012'
+}

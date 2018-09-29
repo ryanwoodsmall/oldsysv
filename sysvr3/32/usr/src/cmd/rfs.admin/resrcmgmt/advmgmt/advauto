@@ -1,0 +1,289 @@
+#ident	"@(#)rfs.admin:resrcmgmt/advmgmt/advauto	1.14"
+#menu# add local resources to automatic advertise list
+
+#help#  
+#help#  You can share your local resources with other machines
+#help#  by offering (advertising) them.  You advertise directories
+#help#  which may contain files, subdirectories, devices, and / or
+#help#  named pipes.
+#help# 
+#help#  The subcommand "advauto" allows you to add local resources
+#help#  to the Automatic Advertise List to be advertised automatically
+#help#  each time RFS is started.  If RFS is running when this 
+#help#  subcommand is accessed, you may be able to immediately 
+#help#  advertise the resources.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/advnow$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo "\n\n        ADD RESOURCES TO THE AUTOMATIC ADVERTISE LIST\n"
+
+INTRO="
+You share your local resources with other machines by advertising
+them.  The machines that can use the resources you advertise are 
+called clients.
+
+This subcommand lets you add resources to the Automatic Advertise List
+to be advertised every time RFS is started.  You will be asked for all 
+the information needed.
+
+NOTE:  Adding resources to the Automatic Advertise List does NOT 
+make the resources immediately available to clients.  If RFS is
+running when you access this command you may be able to immediately
+advertise the resources.  The next time RFS is started the resources
+will be automatically advertised for you."
+
+#define messages and questions
+QUEST3="
+Enter the full pathname of the local directory to be added to 
+the automatic advertise list [?, q]:"
+
+QUEST4="
+Enter the resource identifier [?, q]:"
+
+QUEST5="
+Select 
+    r) if the resource is to be advertised as read-only.
+    w) if the resource is to be advertised as read-write.
+[r, w, ?, q (default w)]:"
+
+QUEST6="
+Enter a 0 to 32 character description of the resource
+        start|********************************|end
+      [?, q]:"
+
+QUEST7="
+Enter the name of a client machine [?, q]:"
+
+QUEST8="
+Enter the name of another client machine [?, q]:"
+
+
+DEF_PATH="
+Enter the full pathname of the directory you want to advertise 
+starting with \"/\".  All files and subdirectories below the 
+directory you specify will be included in the advertisement and 
+will be available to client machines."
+
+DEF_SYM_RES="
+The resource identifier is a short, descriptive, name by which 
+administrators of client machines will know and access your resource. 
+The resource identifier you choose must be unique in your domain.
+Resource identifiers must be 1 to 14 printable characters."
+
+DEF_PERM="
+If you advertise this resource as read-only, client machines may only
+mount it as read-only.  No users on the client machines may make any 
+changes to your resource.
+
+If you advertise this resource as read-write, client machines may choose 
+to mount the resource as read-write or as read-only.  When client machines
+mount the resource as read-write, the user and group ID mappings that you
+have defined will govern which remote users are able to make changes to it."
+
+DEF_CLIENTS="
+Unrestricted access means that all machines will be allowed to mount and
+access this resource that you are advertising.  To choose the option of
+allowing all machines to use the resource you enter <RETURN> to this 
+client machine prompt.
+
+If you only want a specific set of machines to be allowed to use your
+resource you set up a client list that contains the names of the machines
+that are allowed to use it.  To do this, enter one client machine name at
+each prompt.  When you are done putting machines in the list, you enter
+<RETURN> at the prompt to signal that your client list is complete.
+
+You may have different client lists for each resource you advertise."
+
+VQ="
+Is this information correct?"
+
+REDOQ="
+Do you want to add another resource to the 
+Automatic Advertise List?"
+
+ADVNOW="
+The resource has been added to the Automatic Advertise List.  It will 
+be advertised for you the next time RFS is started.  RFS is now running.
+You may choose to have this resource advertised immediately.
+
+Do you want to advertise the resource immediately?"
+
+# Print description of the program
+echo "$INTRO\n"
+
+#initialization
+cflags="-qq -k$$"
+ADV=
+
+while /bin/true
+do
+        # Get resource's full path-name
+        path=`/usr/lbin/checkre $cflags -fe                             \
+        -H"$DEF_PATH" \
+        "$QUEST3"                                               \
+        '^/.*$' 'You must specify a full pathname starting with /.'     \
+        '^[^ ]*$' 'The pathname must not contain a space.'`
+
+	#remove special function of "."
+	path2=`echo $path | /bin/sed 's/\./\\\./g'`
+
+        ADV=OK
+        if [ ! -d $path ]
+        then
+                ADV="NOT OK"
+                if [ -r $path ]
+                then
+                        echo "\nWARNING: $path is currently not a directory."
+                else
+                        echo "\nWARNING: $path currently does not exist."
+                fi
+        fi
+
+        # Get the symbolic name of the resource
+        res=`/usr/lbin/checkre $cflags -fe                              \
+        -H"$DEF_SYM_RES" \
+        "$QUEST4"                                               \
+        '^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+        '^[^ \.\/:]*$'  'The resource identifier must not contain a space, ":", "." or "/".'`
+
+        # Get permissions
+        rw=`/usr/lbin/checkre $cflags -fe       -D "w"                          \
+        -H"$DEF_PERM" \
+        "$QUEST5"                                               \
+        '^[rw]$' 'You must type r, w, or RETURN' `
+
+        if [ "$rw" = "w" ]
+        then
+                rw=
+                perm="read-write"
+        else
+                rw="-r"
+                perm="read-only"
+        fi
+
+        # Get description of the resource
+        desc=`/usr/lbin/checkre $cflags -fe                             \
+        -H'
+         This allows you to give a short description of the resource,
+         i.e., "laser printer 1", or "the /usr directory". 
+         Do not include double quotes in the description. '     \
+        "$QUEST6"                                               \
+        '^[^\"]*$'  'The description must not contain double quotes.'   \
+        '^.\{0,32\}$' 'The description must be 0 to 32 printable characters.'`
+
+        # Get the client resource list
+        echo "\nA remote machine that uses your resource is called a CLIENT MACHINE."
+	echo "You may allow unrestricted access to \"$res\", which means that ALL"
+	echo "machines may access it, or, you can allow only certain machines to access"
+	echo "\"$res\" by putting those machines on a CLIENT LIST.\n"
+	echo "To allow ALL machines to access \"$res\" enter <RETURN> at this "
+	echo "client machine prompt.  To limit access to a list of client "
+	echo "machines, enter one client machine name each time you are prompted.  "
+	echo "When you have no more machines to put on the client machine list, "
+	echo "enter <RETURN> at the prompt."
+
+
+        clist=
+        quest="$QUEST7"
+        while /bin/true
+        do
+                client=`/usr/lbin/checkre $cflags -fe  \
+                -H"$DEF_CLIENTS" \
+                "$quest"                                                \
+                '^[^\.\/ :]*$'  'The machine name must not contain a space, ":", ".", or "/".' \
+                '^.\{0,8\}$' 'The machine name must be 1 to 8 printable characters.'`
+
+                if [ "$client" = "" ]
+                then
+                        break
+                else
+                        clist="$client $clist"
+                        quest="$QUEST8"
+                fi
+        done
+
+        # Verify information.  If incorrect, then re-collect info.
+        echo "\nDirectory pathname: $path"
+        echo "Resource identifier: $res"
+        echo "Client access permissions: $perm"
+        echo "Description: $desc"
+        echo "Client list: \c"
+        if [ "$clist" = "" ]
+        then
+                echo "*UNRESTRICTED*"
+        else
+                echo $clist
+        fi
+
+        if /usr/lbin/checkyn $cflags -f "$VQ"
+        then
+                : OK!
+        else
+                echo "\n\"$res\" will not be added to the Automatic Advertise List."
+                continue
+        fi
+
+        # If the path-name or the symbolic name is already being used in /etc/rstab,
+        # ask the user as to whether or not to replace the info in /etc/rstab with the
+        # new information.  Else, add the info to /etc/rstab.  Respond as to what
+        # was decided.
+        t=`/usr/bin/egrep "[ 	]$res[ 	]|[ 	]$path2[ 	]*$|[ 	]$path2[ 	]+" /etc/rstab 2>/dev/null`
+        if [ "$t" = "" ]
+        then
+                echo "/usr/bin/adv $rw -d \"$desc\" $res $path $clist" >>/etc/rstab
+                echo "\nResource \"$res\" has been added to the Automatic Advertise List."
+        else
+                echo "\"$res\" or $path is already in the Automatic Advertise List."
+                echo "The following information is now in the Automatic Advertise List:\n"
+                echo "$t\n"
+                if /usr/lbin/checkyn $cflags -f "Do you want your new advertisement to replace the old information?"
+                then
+                        /usr/bin/egrep -v "[ 	]$res[ 	]|[ 	]$path2[ 	]*$|[ 	]$path2[ 	]+" /etc/rstab  >/usr/tmp/$$.rstab
+                        if [ 2 -gt $? ]
+                        then
+                                /bin/mv /usr/tmp/$$.rstab /etc/rstab
+                                echo "/usr/bin/adv $rw -d \"$desc\" $res $path $clist" >>/etc/rstab
+                                echo "\nPrevious advertise information has been replaced with your new entry."
+                        else
+                                echo "\nAdvertise information has NOT been changed. "
+                                continue
+                        fi
+                else
+                        echo "\nExisting advertise information in the automatic advertise list will not be changed."
+                fi
+        fi
+
+        # If the resource and mount-point are not currently being advertised/used
+        # then ask the user whether are not to advertise it now.
+        if /usr/lbin/rfsrunning 
+        then 
+                /usr/bin/adv | /usr/bin/egrep "^$res | $path " >/dev/null
+                if [ $? -ne 0 -a "$ADV" = "OK" ]
+                then
+                        if /usr/lbin/checkyn $cflags -f "$ADVNOW"
+                        then
+                                /usr/bin/adv $rw -d "$desc" $res $path $clist 2>/usr/tmp/advnow$$
+                                if [ $? -ne 0 ]
+                                then
+                                        echo "WARNING: \c"
+                                        /bin/sed "s/^.*adv://" /usr/tmp/advnow$$
+                                else
+                                        echo "\n\"$res\" is now advertised and available to client machines."
+                                fi
+                        fi
+                fi
+        fi
+
+        # Ask the user whether or not to repeat the sequence.
+        if /usr/lbin/checkyn $cflags -f "$REDOQ"
+        then
+                continue
+        else
+                break
+        fi
+done

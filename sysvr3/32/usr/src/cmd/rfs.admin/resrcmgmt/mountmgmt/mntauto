@@ -1,0 +1,230 @@
+#ident	"@(#)rfs.admin:resrcmgmt/mountmgmt/mntauto	1.11"
+#menu# add remote resources to the automatic mount list
+
+#help#  
+#help#  To use remote resources you first mount them on directories
+#help#  in your local file system.  After a resource is mounted it
+#help#  can be accessed just like a local resource.
+#help#
+#help#  The subcommand "mntauto" lets you add remote resources to 
+#help#  the Automatic Mount List.  Your system will attempt to mount 
+#help#  these resources each time RFS is started.  If RFS is 
+#help#  running when you access this subcommand, you may also be 
+#help#  able to have the mount take effect immediately.
+#help#
+
+# trap
+trap '/bin/rm -f /usr/tmp/mountnow$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo "\n\n              ADD REMOTE RESOURCES TO AUTOMATIC MOUNT LIST"
+
+#  Questions, error/help, and general messages
+QUEST3="
+Enter the full pathname of the local directory to be
+used as the mount point [?, q]:"
+
+QUEST4="
+Enter the resource identifier of the remote resource 
+to be mounted [?, q]:"
+
+QUEST5="
+Select 
+    r) if the resource is to be mounted as read-only.
+    w) if the resource is to be mounted as read-write.
+[r, w, ?, q (default w)]:"
+
+INTRO="
+To use remote resources that have been made available to you from
+remote machines, you mount the resources on local directories.
+Users on your machine can then access the resources as if they were local.
+
+This subcommand lets you add remote resources to the Automatic Mount List.
+Your system will attempt to mount these resources each time 
+RFS is started.  If RFS is running on your machine, you may also be able 
+to immediately mount the resources you have added to the Automatic Mount 
+List."
+
+DEF_PATH="
+Enter the full pathname of the local directory you want to use as
+a mount point.  The pathname must begin with a \"/\". The system will
+attempt to mount the remote resource on this local directory when RFS
+is started.  If the directory does not exist when you access this
+subcommand the system will warn you, but allow you to add the resource
+entry to the Automatic Mount List.  If you do not create the directory
+before the next time RFS is started, you will get an error message when
+you try to start RFS."
+
+DEF_PERM="
+If a resource is mounted as read-only, users will not be able to write
+to the resource. If the resource is mounted as read-write, users may
+be able to both read and write depending on the ID mappings and file 
+permissions that have been established by the remote machine administrator. 
+
+If the machine owning the resource has advertised it as read-only you
+can only mount the resource as read-only."
+
+VQ="
+Is this information correct?"
+
+REDOQ="
+Do you want to add another resource to the Automatic Mount List?"
+
+MNTNOW="
+The remote resource has been added to the Automatic Mount List.  Your
+system will attempt to mount this resource each time RFS is started.
+RFS is now running on your machine.  You can choose to have the
+system immediately try to mount the resource on your local file system.
+
+Do you want to mount the resource immediately?"
+
+READ_ONLY="
+The resource has been advertised as read-only.
+Do you want to mount the resource as read-only?"
+
+DEF_SYM_RES="
+Enter the resource identifier of the remote resource to be added to the 
+automatic mount list.  The resource identifier is the name the resource 
+was assigned when it was advertised."
+
+#initialization
+cflags="-qq -k$$"
+MNT=
+
+# Print description
+echo "$INTRO\n"
+
+while /bin/true
+do
+        # Get directory path that resource is to be mounted under
+        path=`/usr/lbin/checkre $cflags -fe                             \
+        -H"$DEF_PATH" \
+        "$QUEST3"                                               \
+        '^[^ ]*$' 'The pathname must not contain a space.'              \
+        '^/.*$' 'You must specify a full pathname starting with /.'`
+
+        if [ ! -d $path ]
+        then
+                if [ -r $path ]
+                then
+                        echo "\nWARNING: $path is not a directory.\n"
+                else
+                        echo "\nWARNING: $path does not exist.\n"
+                fi
+        fi
+
+	#remove all the special function of "."
+	path2=`echo $path | /bin/sed 's/\./\\\./g'`
+
+
+        # Get resource's symbolic name.
+        res=`/usr/lbin/checkre $cflags -fe                              \
+        -H"$DEF_SYM_RES" \
+        "$QUEST4"                                               \
+        '^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+        '^[^ \.\/:]*$'  'The resource identifier must not contain a space, ":", "." or "/".'`
+
+        # Get permissions
+        rw=`/usr/lbin/checkre $cflags -fe       -D "w"                          \
+        -H"$DEF_PERM" \
+        "$QUEST5"                                               \
+        '^[rw]$' 'You must enter r, w, or <RETURN>.' `
+
+        if [ "$rw" = "w" ]
+        then
+                rw=-d
+                perm="read-write"
+        else
+                rw="-dr"
+                perm="read-only"
+        fi
+
+        # Verify permissions
+        # goto the beginning if info is incorrect
+        echo "\nLocal mount point: $path"
+        echo "Resource identifier: $res"
+        echo "Local access permissions: $perm"
+
+        if /usr/lbin/checkyn $cflags -f "$VQ"
+        then
+                : OK!
+        else
+                echo "\"$res\" will not be added to the Automatic Mount List."
+                continue
+        fi
+
+        # Determine if info is already in /etc/fstab.  If so print appropriate message
+        # and ask the user whether or not to replace the old info.
+        t=`/bin/sed "s/^\#.*$//" /etc/fstab | /usr/bin/egrep "[ 	]*$path2[ 	]|^[ 	]*$res[ 	]" 2>/dev/null`
+        if [ "$t" = "" ]
+        then
+                echo "$res $path $rw" >>/etc/fstab
+                echo "\nResource \"$res\" has been added to the Automatic Mount List."
+        else
+                echo "\n\"$res\" or $path is already in the Automatic Mount List."
+                echo "The following information is now in the Automatic Mount List:"
+                echo "$t\n"
+                if /usr/lbin/checkyn $cflags -f "Do you want your new entry to replace the old information?"
+                then
+                        /bin/sed "s/^\#.*$//" /etc/fstab | /usr/bin/egrep -v "[ 	]*$path2[ 	]|^[ 	]*$res[ 	]" >/usr/tmp/$$.fstab 2>/dev/null
+                        /bin/mv /usr/tmp/$$.fstab /etc/fstab
+                        echo "$res $path $rw" >>/etc/fstab
+                        echo "\nNew mount information for \"$res\" has replaced your old entry(-ies)."
+                else
+                        echo "\nExisting mount information in the automatic mount list will NOT be changed."
+                fi
+        fi
+
+        # If the resoucre is not currently advertised and does not belong to the system
+        # and the mount-point is not currently used, then prompt the user to mount
+        # the resource now.
+        if /usr/lbin/rfsrunning 
+        then 
+                ad=`/usr/bin/adv | /bin/grep "^$res "`
+                ns=`/usr/bin/nsquery -h | /usr/bin/egrep "^$res[ 	]" 2>/dev/null`
+                mt=`/etc/mount | /usr/bin/egrep "^$path2[ 	]|[ 	]$res[ 	]" 2>/dev/null`
+                if [ "$mt" = "" -a "$ns" != "" -a "$ad" = "" -a -d $path ]
+                then 
+
+                        if /usr/lbin/checkyn $cflags -f "$MNTNOW"
+                        then
+                                echo "$ns" | /bin/grep " read-only " >/dev/null
+                                if [ $? -eq 0 -a "$rw" = "-d" ]
+                                then
+                                        if /usr/lbin/checkyn $cflags -f "$READ_ONLY"
+                                        then
+                                                rw=-dr
+                                                /etc/mount $rw $res $path 2>/usr/tmp/mountnow$$
+                                                if [ $? -ne 0 ]
+                                                then
+                                                        echo "WARNING: \c"
+                                                        /bin/sed "s/^.*mount://" /usr/tmp/mountnow$$
+                                                else
+                                                        echo "\n\"$res\" is mounted and is available to local users."
+                                                fi
+                                        fi
+                                else
+                                        /etc/mount $rw $res $path 2>/usr/tmp/mountnow$$
+                                        if [ $? -ne 0 ]
+                                        then
+                                                echo "WARNING: \c"
+                                                /bin/sed "s/^.*mount://" /usr/tmp/mountnow$$
+                                        else
+                                                echo "\n\"$res\" is mounted and is available to local users."
+                                        fi
+                                fi
+
+                        fi
+                fi
+        fi
+
+        # promt the user to repeat the sequence.
+        if /usr/lbin/checkyn $cflags -f "$REDOQ"
+        then
+                continue
+        else
+                break
+        fi
+done

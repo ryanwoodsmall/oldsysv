@@ -1,0 +1,10 @@
+
+\S loop:  infinite loop \S
+
+A loop is a way to repeat a sequence of statements in a computer program.
+Most computer languages provide ways to create loops. Usually there is a
+test at the beginning, or top, of the loop.  As long as the result of the
+test is true, the sequence of statements in the loop is repeated. If the
+test is always true, then the loop will repeat forever.  This is called an
+infinite loop.
+

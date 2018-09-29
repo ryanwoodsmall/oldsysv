@@ -1,0 +1,46 @@
+
+\Sxargs\S:  Options
+
+
+     -p   prints the command line that \Sxargs\S will execute, and prompts you
+          to respond.  A "y" response causes \Sxargs\S to execute the command.
+          Any other response causes \Sxargs\S to skip the command.  You can
+          terminate \Sxargs\S by holding down the control key and striking the
+          letter "d" simultaneously.
+
+
+     -t   traces <command> as it executes.  Prints <command> and arguments
+          before the output.
+
+
+     -x   terminates <command> if any argument list is greater than the <size>
+          option argument for the "s" option.
+
+
+
+     -estring   treats <string> as the end of file string.  If you don't use the
+                "e" option and <string>, the end of file character is an
+                underbar, "_". If you use "e", but you do not designate
+                <string>, underbar is no longer the default end of file string.
+                \Sxargs\S reads arguments from standard input until it hits
+                the end-of-file string or there are no more arguments to read.
+       
+     -ireplace   Use <replace> as an argument on the command line.  \Sxargs\S
+                 executes the command once for every line of standard input and
+                 the value of the line from standard input is substituted for
+                 every occurrence of <replace> on the command line.  Up to five
+                 arguments on the command may contain one or more occurrences
+                 of <replace>.
+
+
+
+     -llines   executes <command> using the next <lines> lines of arguments
+               from standard input. \Sxargs\S executes the command until 
+               all of the lines have been used.
+
+     -nnumber   executes <command> with up to <number> arguments from standard
+                input. Ignores <size> limitations unless you also use the "x"
+                option.
+
+     -ssize   sets the maximum size of each argument list to <size>, which is
+              any positive integer up to 470.  The default for <size> is 470.

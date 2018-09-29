@@ -1,0 +1,32 @@
+#ident	"@(#)xenv:m32/pted.integr	1.1"
+if [ "on" = "$INTGR" ]
+then
+	if [ $# -eq 0 ]
+	then
+		echo "usage: "${0}" mach"
+		exit 1
+	else	
+		mach=${1}
+		SRC=`cd ../../../../;pwd`
+		HEAD=$SRC/head
+		SYSHEAD=$SRC/uts/$mach/sys
+		BASE=`cd ../../../../../../;pwd`
+		INC=$BASE/usr/include
+		INCSYS=$INC/sys
+		MACHSYS=$INC/${mach}sys
+		if [ -d $HEAD -a -d $SYSHEAD ]
+		then
+			rm -rf $INC
+			mkdir $INC $INCSYS $MACHSYS
+			cd $HEAD
+			find . -print|cpio -pdu $INC
+			cd $SYSHEAD
+			find . -print|cpio -pdu $INCSYS
+			cd $INCSYS
+			find . -print|cpio -pdlu $MACHSYS
+		else
+			echo ${0}:" ERROR files not in expected places"
+			exit 1
+		fi
+	fi
+fi

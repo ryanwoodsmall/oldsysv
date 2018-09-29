@@ -1,0 +1,10 @@
+
+\S electronic mail \S
+
+Electronic mail is a means of communicating with people through the
+computer. Electronic mail allows you to send messages to and receive and
+read messages from UNIX system users on your "local system"\S*\S and on
+"remote systems"\S*\S.  mail(1) and mailx(1) are commands that are used
+to transmit electronic mail on UNIX systems.
+
+\S*\S defined in the \Sglossary\S

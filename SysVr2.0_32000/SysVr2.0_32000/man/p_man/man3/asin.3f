@@ -1,0 +1,24 @@
+.TH ASIN 3F
+.SH NAME
+asin, dasin \- \s-1FORTRAN\s+1 arcsine intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = asin(r1)"
+.P
+.B "dp2 = dasin(dp1)"
+.B "dp2 = asin(dp1)"
+.SH DESCRIPTION
+.I Asin\^
+returns the real arcsine of its real argument.
+.I Dasin\^
+returns the double-precision arcsine of its double-precision argument.
+The generic form
+.I asin\^
+may be used with impunity
+as it derives its type from that of its argument.
+.SH SEE ALSO
+trig(3M).
+.\"	%W% of %G%

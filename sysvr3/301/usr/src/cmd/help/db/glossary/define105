@@ -1,0 +1,12 @@
+
+\S screen:  display:  cursor:  home position: \S
+
+The screen or display is the part of your video display terminal where your
+dialog with the UNIX system is printed.  Screen can also refer to a
+specific screenful of information.  For example, the options screen in the
+help facility refers to the screen that contains information on
+options for a command.  The cursor is the marker on the screen that
+indicates where the next character will be displayed.  The home position
+for the cursor is the top leftmost point on the screen that the cursor can
+occupy.
+

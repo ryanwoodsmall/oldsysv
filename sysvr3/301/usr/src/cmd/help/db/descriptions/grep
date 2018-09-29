@@ -1,0 +1,21 @@
+
+\Sgrep\S:  Description
+
+Syntax Summary:
+      grep [-b][-c][-i][-l][-n][-s][-v] limited_expr [name ...]
+
+         where:  limited_expr  is a limited regular expression.
+
+                 name  is the name of a file or directory.
+
+Description:
+     \Sgrep\S searches a file for a pattern and prints all lines that contain
+     the pattern. \Sgrep\S patterns are limited regular expressions like those
+     used with ed(1).  If you do not specify a <name>, \Sgrep\S uses standard
+     input.  With options, you can get a count of lines containing the pattern,
+     the names of files containing found lines, and line and block numbers
+     associated with the found line.  For more information about regular 
+     expressions see the manual page for ed(1).  
+     See also: egrep(1), and fgrep(1) for commands with functions similar 
+     to grep, and csplit(1) and cut(1) for commands that might be used 
+     with \Sgrep\S.

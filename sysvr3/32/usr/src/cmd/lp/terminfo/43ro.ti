@@ -1,0 +1,23 @@
+#ident	"@(#)nlp:terminfo/43ro.ti	1.4"
+#01-08-88
+
+43ro|att43ro|Model 43 Receive Only matrix printer,
+
+	bufsz#64,
+	cols#132,
+	lines#66,
+	orc#1,
+	orhi#10,
+	orl#1,
+	orvi#6,
+	cps#30,
+
+	cr=^M,
+	cud1=^J,
+	cuf1=\s,
+	ht=^I,
+#Clear margins and return carriage
+	is2=\Em^M,
+	mgc=\Em,
+	smgl=\El,
+	smgr=\Er,

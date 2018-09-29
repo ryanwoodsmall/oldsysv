@@ -1,0 +1,89 @@
+.TH GRAPHICS 1G
+.SH NAME
+graphics \- access graphical and numerical commands
+.SH SYNOPSIS
+.B graphics
+[ \fB\-r\fP ]
+.SH DESCRIPTION
+.I Graphics\^
+prefixes the path name
+.B /usr/bin/graf
+to the current
+.B $\s-1PATH\s+1
+value,
+changes the primary shell prompt to \fB^\fR,
+and executes a new shell.
+The directory
+.B /usr/bin/graf
+contains all of the Graphics subsystem commands.
+If the \fB\-r\fR option is given,
+access to the graphical commands is created
+in a restricted environment;
+that is,
+.B $\s-1PATH\s+1
+is set to
+.ce
+.RS
+.RB  : /usr/bin/graf : \%/rbin : \%/usr/rbin : \%/bin : \%/usr/bin
+.RE
+and the restricted shell,
+.IR rsh ,
+is invoked.
+To restore the environment that existed prior to
+issuing the
+.I graphics\^
+command, type
+.B \s-1EOT\s+1
+(control-d on most terminals).
+To logoff from the graphics environment,
+type
+.BR quit .
+.PP
+The command line format for a command in
+.I graphics\^
+is \fIcommand name\fR followed by \fIargument\fR(s).
+An \fIargument\fR may be a \fIfile name\fR or an \fIoption string\fR.
+A \fIfile name\fR is the name of any \s-1UNIX\s+1 system file except those
+beginning with \fB\-\fR.
+The \fIfile name\fR \fB\-\fR is the name for the standard input.
+An \fIoption string\fR consists of \fB\-\fR followed by one or more \fIoption\fR(s).
+An \fIoption\fR consists of a keyletter possibly followed by a value.
+\fIOptions\fR may be separated by commas.
+.PP
+The graphical commands have been partitioned into four groups.
+.IP
+Commands that manipulate and plot numerical data; see
+.IR stat (1G).
+.IP
+Commands that generate tables of contents; see
+.IR toc (1G).
+.IP
+Commands that interact with graphical devices; see
+.IR gdev (1G)
+and
+.IR ged (1G).
+.IP
+A collection of graphical utility commands; see
+.IR gutil (1G).
+.PP
+A list of the
+.I graphics\^
+commands can be generated
+by typing
+.B whatis
+in the 
+.I graphics\^
+environment.
+.SH SEE ALSO
+gdev(1G),
+ged(1G),
+gutil(1G),
+stat(1G),
+toc(1G).
+.br
+gps(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+.sp
+.IR "\s-1UNIX\s+1 System V Graphics Guide" .
+.\"	@(#)graphics.1g	6.3 of 9/2/83

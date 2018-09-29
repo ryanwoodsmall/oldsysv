@@ -1,0 +1,15 @@
+
+   An object is the Office frame, the Filecabinet,  a  menu  item,  a
+   folder, a standard file, an application (e.g., graph, spreadsheet),
+   a data file, a foreign file, or an executable  program.  Generally,
+   it is something that is the target of command actions such as copy,
+   open and delete.  Some objects  are  not  subject  to  all  of  the
+   FACE  commands.   For example, the Filecabinet and the Office
+   frame cannot be deleted, and the Office frame cannot be closed.
+
+   When assigning an object name  to  a  Filecabinet  object  you  are
+   creating  or  renaming,  it  must  be one word with a maximum of 12
+   characters. The following special characters are not  allowed  when
+   naming  objects:  ! @ # $ ^ & * [ ] ( ) { } < > ? / | " ' ` ;.  The
+   following characters may be used in object names, but  not  as  the
+   first character:  . + -.

@@ -1,0 +1,66 @@
+.TH EMULSTAT 1M "3B20S only"
+.SH NAME
+emulstat \- get 3270 emulation controller/terminal status
+.SH SYNOPSIS
+.B /etc/emulstat
+device
+.SH DESCRIPTION
+.I Emulstat
+reports the status of
+.IR device .
+.I Device
+may be a 3270 emulation controller or terminal.
+The status is reported as hexadecimal values representing the following:
+.PP
+.TP 10
+.I flags\^
+The value of the
+.I device
+flags.
+Possible
+.I flag
+values for controllers or terminals are given in
+.IR emulio (7).
+.TP
+.I code\^
+A value used by the driver for indicating certain error conditions
+or return values.
+.TP
+.I station\^
+For terminals, this is the value of the
+.I station
+(controller) identification byte.
+For controllers, it is the value of the
+.I Polling
+byte used by the remote system.
+.TP
+.I terminal\^
+For terminals, this is the value of the
+.I terminal
+identification byte.
+For controllers, it is the value of the
+.I Selection
+byte used by the remote system.
+.TP
+.I dev\^
+This value indicates the physical hardware device being used
+by this controller (e.g., the
+.I un53
+minor device number).
+.PP
+.I Emulstat
+will fail if the controller has not been started.
+.SH FILES
+/dev/emc?	3270 emulation controller devices
+.PP
+/dev/emt*	3270 emulation terminal devices
+.PP
+/lib/a3270scr	\s-1ASCII\s+1 3270 script
+.PP
+/lib/e3270scr	\s-1EBCDIC\s+1 3270 script
+.SH "SEE ALSO"
+emulcntrl(1M),
+emulload(1M),
+vpmset(1M),
+emulio(7).
+.\"	@(#)emulstat.1m	5.2 of 5/18/82

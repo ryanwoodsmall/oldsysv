@@ -1,0 +1,249 @@
+.TH HPIO 1
+.SH NAME
+hpio \- \s-1HP\s+1 2645A terminal tape file archiver
+.SH SYNOPSIS
+.B hpio
+.BR \-o [ rc ]
+file ...
+.PP
+.B hpio
+.BR \-i [ rta ]
+.RB [ \-n
+count]
+.SH DESCRIPTION
+.I Hpio
+is designed to take advantage of the tape drives on Hewlett Packard 2645A
+terminals.
+Up to 255 \s-1UNIX\s+1 system files can be archived onto a tape cartridge for off-line
+storage or for transfer to another \s-1UNIX\s+1 system.
+The actual number of files depends on the sizes of the files.
+One file of about 115,000 bytes will almost fill a tape cartridge.
+Almost 300 1-byte files will fit on a tape,
+but the terminal will not be able to retrieve files after the first 255.
+This manual page is not intended to be a guide for using tapes on
+.SM HP
+2645A terminals,
+but tries to give enough information to be able to create and
+read tape archives and to position a tape for access to a desired file in
+an archive.
+.PP
+.B Hpio \-o
+(copy out)
+copies the specified
+.IR file (s),
+together with path name and status information to a tape drive on your
+terminal
+(which is assumed to be positioned at the beginning of a tape or immediately
+after a tape mark).
+The left tape drive is used by default.
+Each
+.I file
+is written to a separate tape file and terminated with a tape mark.
+When
+.I hpio
+finishes,
+the tape is positioned following the last tape mark written.
+.PP
+.B Hpio \-i
+(copy in)
+extracts a file(s) from a tape drive
+(which is assumed to be positioned at the beginning of a file that was
+previously written by a
+.BR "hpio \-o" ).
+The default action extracts the next file from the left tape drive.
+.PP
+.I Hpio
+always leaves the tape positioned after the last file read from or written
+to the tape.
+Tapes should always be rewound before the terminal is turned off.
+To rewind a tape depress the green function button,
+then function key 5,
+and then select the appropriate tape drive by depressing either function key 5
+for the left tape drive or function key 6 for the right.
+If several files have been archived onto a tape,
+the tape may be positioned at the beginning of a specific file by
+depressing the green function button,
+then function key 8,
+followed by typing the desired file number (1\-255) with no \s-1RETURN\s+1,
+and finally function key 5 for the left tape or function key 6 for the right.
+The desired file number
+may also be specified by a signed number relative to the current
+file number.
+.PP
+The meanings of the available options are:
+.PP
+.PD 0
+.TP \w'\fBn\fP\ \fIcount\fP\ \ 'u
+.B r
+Use the right tape drive.
+.TP
+.B c
+Include a checksum at the end of each
+.IR file .
+The checksum is always checked by
+.B hpio \-i
+for each file written with this option by
+.B hpio
+.BR \-o .
+.TP
+.BI n " count"
+The number of input files to be extracted is set to
+.IR count .
+If this option is not given,
+.I count
+defaults to 1.
+An arbitrarily large
+.I count
+may be specified to extract all files from the tape.
+.I Hpio
+will stop at the end of data mark on the tape.
+.TP
+.B t
+Print a table of contents only.
+No files are created.
+Printed information gives the file size in bytes,
+the file name,
+the file access modes,
+and whether or not a checksum is included for the file.
+.TP
+.B a
+Ask before creating a file.
+.B Hpio \-i
+normally prints the file size and name,
+creates and reads in the file,
+and prints a status message when the file has been read in.
+If a checksum is included with the file,
+it reports whether the checksum matched its computed value.
+With this option,
+the file size and name are printed followed by a
+.BR ? .
+Any response beginning with
+.B y
+or
+.B Y
+will cause the file to be copied in as above.
+Any other response will cause the file to be skipped.
+.PD
+.SH FILES
+.TP 20
+/dev/tty??
+to block messages while accessing a tape
+.SH SEE ALSO
+cu(1C).
+.SH DIAGNOSTICS
+.PD 0
+.TP 10
+.SM
+BREAK
+An interrupt signal terminated processing.
+.TP
+Can't create `\fIfile\fP'.
+File system access permissions did not allow
+.I file
+to be created.
+.TP
+Can't get tty options on stdout.
+.I Hpio
+was unable to get the input-output control settings associated with
+the terminal.
+.TP
+Can't open `\fIfile\fP'.
+.I File
+could not be accessed to copy it to tape.
+.TP
+End of Tape.
+No tape record was available when a read from a tape was requested.
+An end of data mark is the usual reason for this,
+but it may also occur if the wrong tape drive is being accessed and no
+tape is present.
+.TP
+`\fIfile\fP' not a regular file.
+.I File
+is a directory or other special file.
+Only regular files will be copied to tape.
+.TP
+Readcnt = \fIrc\fP, termcnt = \fItc\fP.
+.I Hpio
+expected to read
+.I rc
+bytes from the next block on the tape,
+but the block contained
+.I tc
+bytes.
+This is caused by having the tape improperly positioned or by a tape block
+being mangled by interference from other terminal I/O.
+.TP
+Skip to next file failed.
+An attempt to skip over a tape mark failed.
+.TP
+Tape mark write failed.
+An attempt to write a tape mark at the end of a file failed.
+.TP
+Write failed.
+A tape write failed.
+This is most frequently caused by specifying the wrong tape drive,
+running off the end of the tape,
+or trying to write on a tape that is write protected.
+.PD
+.SH WARNINGS
+Tape I/O operations may copy bad data if any other I/O involving the
+terminal occurs.
+Do not attempt any type ahead while
+.I hpio
+is running.
+.I Hpio
+turns off write permissions for other users while it is running,
+but processes started asynchronously from your terminal can still interfere.
+The most common indication of this problem,
+while a tape is being written,
+is the appearance of characters on the display screen that should have been
+copied to tape.
+.PP
+The keyboard,
+including the terminal
+.SM BREAK
+key,
+is locked during tape write operations;
+the
+.SM BREAK
+key is only functional between writes.
+.PP
+.I Hpio
+must have complete control of the attributes of the terminal to
+communicate with the tape drives.
+Interaction with commands such as
+.IR cu (1C)
+may interfere and prevent successful operation.
+.SH BUGS
+Some binary files contain sequences that will confuse the terminal.
+.PP
+An
+.B hpio \-i
+that encounters the end of data mark on the tape
+(e.g., scanning the entire tape with \fBhpio \-itn 300\fP),
+leaves the tape positioned \fIafter\fP the
+end of data mark.
+If a subsequent
+.B hpio \-o
+is done at this point,
+the data will not be retrievable.
+The tape must be repositioned manually using the terminal
+.SM FIND FILE\*S \-1
+operation
+(depress the green function button,
+function key 8,
+and then function key 5 for the left tape or
+function key 6 for the right tape)
+before the
+.B hpio \-o
+is started.
+.PP
+If an interrupt is received by
+.I hpio
+while a tape is being written,
+the terminal may be left with the keyboard locked.
+If this happens,
+the terminal's
+.SM RESET TERMINAL
+key will unlock the keyboard.
+.\"	@(#)hpio.1	6.2 of 9/2/83

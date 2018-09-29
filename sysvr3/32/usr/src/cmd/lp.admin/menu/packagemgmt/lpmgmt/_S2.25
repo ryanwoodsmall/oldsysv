@@ -1,0 +1,1079 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/_S2.25	1.7"
+## IDOC:   SCREEN 2.25: DEFINE PRINTER CONFIGURATION
+
+##+++ (functions)
+chk_integer () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!integer!}" \
+		'^[0-9]\{1,\}$' \
+			'Your response must be an integer.' \
+	`
+}
+chk_character_set_list () {
+# listof: character-set
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!character-set-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( IFS=" ="; set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid character set name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_type_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!type-name!}" \
+		'^[-a-zA-Z0-9]\{1,14\}$' \
+			'A type name can contain only 1 to 14 letters, digits, and dashes.' \
+	`
+}
+chk_install_edit_skip () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!install-edit-skip!}" \
+		'^install$' -o '^i$' -o '^edit$' -o '^ed$' -o '^e$' -o '^skip$' -o '^s$' \
+			'You must answer with "install", "edit", or "skip".' \
+	`
+}
+chk_form_list () {
+# listof: form-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!form-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 )|| exit 1
+			if [ -d /usr/spool/lp/admins/lp/forms/$1 -o none = ${1} -o all = ${1} -o any = ${1} ]
+			then
+				:
+			else
+				exit 1
+			fi
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid form name or one of
+	the form(s) listed does not currently exist.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_form_deny_list () {
+# listof: form-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!form-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 )|| exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid form name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_fault_recovery () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!fault-recovery!}" \
+		continue -o beginning -o wait \
+			'You must give one of "continue", "beginning", or "wait".' \
+	`
+}
+chk_printer_or_path () {
+# oneof: printer-name path-name     
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!printer-or-path!}" \
+		$4 \
+		'.*' ''`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	echo "${RESP}" | ( flags="-m1"; chk_path_name >/dev/null 2>&1 ) && return 0
+	echo "${RESP}" | ( flags="-m1"; chk_name >/dev/null 2>&1 ) && return 0
+	echo '	You did not give a valid file name or printer name.
+\c'
+    done
+}
+chk_printer_type () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!printer-type!}" \
+		'^[-a-zA-Z0-9]\{1,14\}$' \
+			'A printer type name can contain only 1 to 14 letters, digits, and dashes.' \
+	`
+}
+chk_stty_option_list () {
+# listof: stty-option
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!stty-option-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_stty_option >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid stty option.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_print_wheel_list () {
+# listof: print-wheel
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!print-wheel-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid print wheel name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_user_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!user-name!}" \
+		'^[a-z0-9]\{1,8\}$' \
+			'A user name can contain no more than 8 lower case letters and digits.' \
+	`
+}
+chk_user_list () {
+# listof: user-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!user-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_user_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid user name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_stty_option () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!stty-option!}" \
+		'^[-a-zA-Z0-9:]\{1,\}$' \
+			'You must give a valid "stty" command option.' \
+	`
+}
+chk_alert_type () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!alert-type!}" \
+		'.\{1,\}' \
+			'You must give "mail", "write", "none", or a shell command.' \
+	`
+}
+chk_dial_info () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!dial-info!}" \
+		'^[-=\*\#0-9]\{1,\}$' -o '^[a-zA-Z0-9]\{1,8\}$' \
+			'You must give a phone number or valid system name.' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+chk_one_line_comment () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!one-line-comment!}" \
+		'.*' '' \
+	`
+}
+chk_path_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!path-name!}" \
+		'^/' 'A full path name must begin with a "/".' \
+		'[^/]$' 'No trailing "/" in the path name.' \
+		-R \
+		'/[^/]\{14,\}' 'No more than 14 characters in each part of the path name.' \
+	`
+}
+chk_content_type_list () {
+# listof: content-type
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!content-type-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+ 	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_type_name >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	echo '	You did not give a valid content type name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+##--- (functions)
+
+DEF_c=${DEF_c:-none}
+##+++ (2.25.1)
+chk_name \
+	"Printer class to add it to:${DEF_c:+ (default: ${DEF_c})}" \
+	"${DEF_c}" \
+	"\
+        You are expected to enter the name of a class of printers to which this
+ 	printer should belong. Classes are used to group similar printers under
+	a single name, so that users can  pick a  class as  the destination for
+	their print request. This helps when you want to control to some extent
+	the  printing load on the  printers in  the  class:   The  printers are
+        selected  from the class in  the order  they  have been added. Thus the
+	first printers in the class will generally be the busiest, and the last
+	printers in  the  class  will  be  the least used.
+
+        You don't need to group  printers  by  manufacturer  or by similar type
+	as the  LP  Print  Service automatically does that. When user's specify
+	the  type of files  they want  to  print but don't select  a particular
+	printer, any printer that will handle the type will be used.
+
+	NOTE:  if  you are adding a printer similar to an existing printer, or
+	if you  are changing a printer's configuration, default class(es) will
+	NOT be displayed. You can only add a printer to a class  at  this time.
+
+        Just press return if you don't care to add this printer to a class. \
+"
+OPT_c=${RESP}
+##--- (2.25.1)
+if [ "none" = "${OPT_c}" ]
+then
+	OPT_c=
+fi
+
+##+++ (line 2)
+echo \
+"Enter one line that describes the printer for your users."
+##--- (line 2)
+
+
+: ${DEF_D:=none}
+##+++ (2.25.3)
+chk_one_line_comment \
+	"${DEF_D:+(default: ${DEF_D})}" \
+	"${DEF_D}" \
+	"\
+        You are expected to enter a single line of text that will be
+        displayed  to  people whenever they ask for a description of
+        the printer.  It's a good idea to keep it short so  that  it
+        will  fit across the screen.  Just press return if you don't
+        want to give a description  or  don't  want  to  change  the
+        default shown.  \
+"
+OPT_D=${RESP}
+##--- (2.25.3)
+if [ "none" = "${OPT_D}" ]
+then
+	OPT_D=
+fi
+
+##+++ (line 4)
+echo \
+""
+##--- (line 4)
+
+
+DEF_T=${DEF_T:-unknown}
+while true
+do
+
+##+++ (2.25.5)
+chk_printer_type \
+	"Type of printer:${DEF_T:+ (default: ${DEF_T})}" \
+	"${DEF_T}" \
+	"\
+        You are expected to identify the type of  printer  this  is.
+        You  must give a name that's known in the Terminfo database;
+        you'll be told if it isn't.
+
+        The printer type is needed if the LP Print  Service  is  to:
+        screen print requests that ask for certain page sizes, print
+        spacing, and character sets; verify the default page  sizes,
+        print spacing, and list of available character sets you give
+        later; and properly initialize the printer before printing a
+        user's  files.   You  do  not  have  to give a printer type,
+        though.
+
+        Just press return to skip the printer type or  to  keep  the
+        default shown.  \
+"
+OPT_T=${RESP}
+##--- (2.25.5)
+	f=${TERMINFO:-/usr/lib/terminfo}/`expr "${OPT_T}" : "\(.\).*$"`/${OPT_T}
+	if [ -r "${f}" ]
+	then
+		name=`TERM=${OPT_T} tput longname </dev/null 2>/dev/null`
+		if [ -z "${name}" -o "${name}" = "${OPT_T}" ]
+		then
+			echo \
+"
+That appears to be a known Terminfo type, but no description of
+the printer is available. The printer type will be accepted, but
+if you have trouble later using this type, change it.
+"
+			break
+		fi
+
+		article=a
+		expr "${name}" : '^[aeiouAEIOU].*$' >/dev/null 2>&1 \
+		&& article=an
+
+		if checkyn ${flags} -f \
+			-Dyes -H \
+			"\
+        Enter \"y\" (for yes) if you think this is the correct printer
+        type.  Enter \"n\" (for no) if it is wrong and you want to try
+        a different printer type.  \
+" \
+			"
+Is the printer ${article} ${name}?
+(default: yes)"
+		then
+			break
+		fi		
+	else
+		echo "
+That isn't a recognized Terminfo type. If you need help finding the
+correct name, consult Appendix F in the UNIX System V User's Guide.
+"
+	fi
+done
+
+##+++ (line 6)
+echo \
+"Types of files printable without filtering:"
+##--- (line 6)
+
+
+##+++ (2.25.7)
+chk_content_type_list \
+	"${DEF_I:+(default: ${DEF_I})}" \
+	"${DEF_I}" \
+	"\
+        You are expected to identify the types of files the  printer
+        can  handle directly, without filtering.  If the name of the
+        printer type is sufficient here,  then  you  don't  have  to
+        enter  anything.   However, some printers can accept several
+        types because they convert them automatically into a  common
+        type  or  in some other way understand the different control
+        sequences in each type.  You should list all the  types  the
+        printer can handle.
+
+        An important type on UNIX systems is identified by the  word
+        \"simple\";  this  is  a file type often found on UNIX systems
+        because the files contain only linefeeds  and  perhaps  tabs
+        and  backspaces.   If the printer can accept \"simple\" files,
+        give that name here.
+
+        Separate several names with spaces or commas.
+
+        Just press return if the  printer  type  is  the  only  type
+        appropriate  or  if  you  don't want to name a type or don't
+        want to change the default shown.  \
+"
+OPT_I=${RESP}
+##--- (2.25.7)
+
+##+++ (line 8)
+echo \
+""
+##--- (line 8)
+
+while true
+do
+
+##+++ (2.25.9)
+chk_printer_or_path \
+	"Printer interface to use:${DEF_i:+ (default: ${DEF_i})}" \
+	"${DEF_i}" \
+	"\
+        You are expected to  identify  the  interface  program  that
+        should  be used with this printer.  The interface program is
+        responsible, before each print request, for:  setting up the
+        port  to  which  the  printer is attached (but not dialing a
+        modem or connecting to a network); initializing the  printer
+        and  setting  the  correct  page  size,  printing pitch, and
+        character set; printing a banner page; and  controlling  the
+        number of copies printed.
+
+        You can enter one of four values:  the  word  \"standard\"  if
+        the  standard  interface  program is to be used; the name of
+        another model that should be  used  as  the  basis  for  the
+        interface  program  (not  recommended  unless you have added
+        your own models); the name of another printer to specify the
+        same  interface  program used with it; or the FULL path name
+        of a program you have provided as an interface program.
+
+        Just press return to select the \"standard\" interface  or  to
+        keep the default shown.  \
+"
+OPT_i=${RESP}
+##--- (2.25.9)
+	if expr "${OPT_i}" : '^/' >/dev/null
+	then
+		if [ -r "${OPT_i}" ]
+		then
+			OPT_m= OPT_e=
+			break
+		else
+			echo \
+"The program \"${OPT_i}\" doesn't exist."
+		fi
+	else
+		if [ -r "/usr/spool/lp/model/${OPT_i}" ]
+		then
+			OPT_m=${OPT_i}
+			OPT_i= OPT_e=
+			break
+		else
+			if [ -r "/usr/spool/lp/admins/lp/printers/${OPT_i}/configuration" ]
+			then
+				OPT_e=${OPT_i}
+				OPT_m= OPT_i=
+				break
+			else
+				echo \
+"The name \"${OPT_i}\" isn't a model or existing printer."
+			fi
+		fi
+	fi
+	echo "Try again:"
+done
+
+
+if [ "${DEF_onobanner}" != "yes" ]
+then
+	DEF_onobanner=no
+else
+	DEF_onobanner=yes
+fi
+##+++ (2.25.10)
+if checkyn ${flags} -f \
+	${DEF_onobanner:+"-D${DEF_onobanner}"} -H \
+	"\
+        Enter a \"y\" (for yes) if a user can skip the printing  of  a
+        banner  page before his or her request, or a \"n\" (for no) if
+        not.  It is generally a good idea to require the printing of
+        banner  pages,  because  it will help the people who have to
+        separate output into individual print-outs  for  each  user,
+        unless  you  have some other means of doing this.  There are
+        cases, such as the printing of checks, where being  able  to
+        turn off the banner page is important.  \
+" \
+	"Can a user skip the banner page?${DEF_onobanner:+ (default: ${DEF_onobanner})}"
+then
+	OPT_onobanner=yes
+else
+	OPT_onobanner=
+fi
+##--- (2.25.10)
+
+##+++ (line 11)
+echo \
+""
+##--- (line 11)
+
+
+if [ -n "${DEF_length}" -o "${DEF_width}" -o "${DEF_cpi}" -o "${DEF_lpi}" ]
+then
+	DEF=no
+else
+	DEF=yes
+fi
+##+++ (2.25.12)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        Enter a \"y\" (for yes) if you will accept the  default  pitch
+        and size or don't want to change them.  Enter a \"n\" (for no)
+        if you  want  to  specify  the  line  or  character  spacing
+        (printing  pitch) or page size that should be in effect when
+        users' files are printed.  Note that any defaults  you  give
+        here will be used only if a user does not print on a form or
+        does not specify an alternate page size or print spacing.
+
+        If you do not specify the defaults,  the  defaults  will  be
+        those provided by the printer after it has been initialized.
+        Typically this is 10 characters per inch, 6 lines per  inch,
+        and  80  or  132  columns  by  66  lines,  but  this  is NOT
+        guaranteed.  If you aren't sure that the  defaults  will  be
+        adequate, enter a \"y\" and specify them.  \
+" \
+	"Use the default page size and printing pitch?${DEF:+ (default: ${DEF})}"
+then
+	OPT_cpi=
+	OPT_lpi=
+	OPT_width=
+	OPT_length=
+else
+	. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.18
+fi
+##--- (2.25.12)
+
+##+++ (line 13)
+echo \
+"
+Enter a command to run to alert you when the printer faults."
+##--- (line 14)
+
+##+++ (2.25.15)
+chk_alert_type \
+	"${DEF_A:+(default: ${DEF_A})}" \
+	"${DEF_A}" \
+	"\
+        You are expected to enter the type of alert that  should  be
+        issued  when the printer has a problem.  Enter \"none\" if you
+        don't want to be alerted, otherwise:  enter  \"mail\"  if  you
+        want  mail  sent to you; enter \"write\" if you want a message
+        written to your terminal; or enter a  shell  command  to  be
+        run each  time  an alert is  to  be  made (the shell command
+	\"list\" is not allowed, sorry.)
+
+        Just press return if you want to receive mail or don't  want
+        to change the default shown.  \
+"
+OPT_A=${RESP}
+##--- (2.25.15)
+
+if [ "none" != "${OPT_A}" ]
+then
+##+++ (2.25.16)
+chk_integer \
+	"How often should you be alerted (minutes, 0 = once)?${DEF_W:+ (default: ${DEF_W})}" \
+	"${DEF_W}" \
+	"\
+        You are expected to enter the number of minutes that  should
+        elapse between repeated alerts.  To keep you informed that a
+        problem still exists, the LP Print Service will keep issuing
+        alerts  until  the  problem has been fixed.  Entering 0 will
+        mean you want to be alerted just once. Just press return for
+        0 or if you don't want to change the default shown.  \
+"
+OPT_W=${RESP}
+##--- (2.25.16)
+
+##+++ (line 17)
+echo \
+"How should printing restart after you fix a printer fault?"
+##--- (line 17)
+
+##+++ (2.25.18)
+chk_fault_recovery \
+	"${DEF_F:+(default: ${DEF_F})}" \
+	"${DEF_F}" \
+	"\
+        You are expected to specify how the LP Print Service  should
+        recover  after  a  printer  problem  has  been fixed.  Enter
+        \"continue\" if the printer is to continue printing at the top
+        of the page where printing stopped.  Enter \"beginning\" if it
+        is to start at the beginning again.  Enter \"wait\" if  it  is
+        to leave the printer disabled and wait for someone to enable
+        the printer again.
+
+                                  WARNING
+The LP Printer Service requires the use of a filter to provide  the  ability
+to  continue  where  printing  stopped.   If a filter capable of this is not
+being used when a printer stops with a problem, then you will be told in the
+alert message printing won't continue where it left off if you had wanted it
+to.
+
+        Just press return if you don't want to  change  the  default
+        shown.  \
+"
+OPT_F=${RESP}
+##--- (2.25.18)
+fi
+
+##+++ (line 19)
+echo \
+""
+##--- (line 19)
+
+if [ -n "${DEF_U}" ]
+then
+	DEF=no
+else
+	DEF=yes
+fi
+##+++ (2.25.20)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        Enter a \"y\" (for yes) if the printer is  directly  connected
+        to a port on the system, or a \"n\" (for no) if the printer is
+        connected over a network.  You will be asked to identify the
+        printer  port  or  network  connection  method.   Just press
+        return if you don't want to change the default shown.  \
+" \
+	"Is the printer directly connected?${DEF:+ (default: ${DEF})}"
+then
+##--- (2.25.20)
+
+OPT_U=
+
+##+++ (2.25.21)
+chk_path_name \
+	"Printer port to use: ${DEF_v:+(default: ${DEF_v})}" \
+	"${DEF_v}" \
+	"\
+        Since this printer is directly connected, you must  identify
+        which   port   is   used.   The  names  are  typically  like
+        \"/dev/contty\", \"/dev/tty23\", etc., but will  depend  on  the
+        configuration  of  your  system.   Just  press return if you
+        don't want to change the default shown.  (If no  default  is
+        shown, you MUST give a port name.) \
+"
+OPT_v=${RESP}
+##--- (2.25.21)
+
+if [ "${DEF_l}" != "yes" ]
+then
+	DEF_l=no
+else
+	DEF_l=yes
+fi
+##+++ (2.25.22)
+if checkyn ${flags} -f \
+	${DEF_l:+"-D${DEF_l}"} -H \
+	"\
+        Enter a \"y\" (for yes) if this printer  is  also  used  as  a
+        login   terminal  by  someone,  or  enter  a  \"n\"  (for  no)
+        otherwise.
+
+        \
+" \
+	"Is the printer also a login terminal?${DEF_l:+ (default: ${DEF_l})}"
+then
+	OPT_l=yes
+else
+	OPT_l=
+fi
+##--- (2.25.22)
+
+else
+##+++ (line 23)
+echo
+##--- (line 23)
+
+##+++ (2.25.24)
+chk_dial_info \
+	"Enter the phone number or network address to use to connect
+to the printer:${DEF_U:+ (default: ${DEF_U})}" \
+	"${DEF_U}" \
+	"\
+        Since this printer is connected through a network, you  must
+        specify  the  dialing  instructions to use to connect to the
+        printer.  The Basic Networking Utilities will  be  used  for
+        all  network  connections.  Enter the same argument (a phone
+        number or system name) you would give with  the  \"cu\"  shell
+        command  to  reach the printer.  (Don't give any of the \"cu\"
+        options.) You will have  to  set  up  the  Basic  Networking
+        configuration for this to work.
+
+        Just press return if you don't want to  change  the  default
+        shown.  \
+"
+OPT_U=${RESP}
+##--- (2.25.24)
+fi
+
+##+++ (line 25)
+echo \
+"
+The default port settings will be:
+	9600
+	cs8 cstopb -parenb -parodd
+	ixon -ixany
+	opost -olcuc onlcr -ocrnl -onocr -onlret
+	-ofill nl0 cr0 tab0 bs0 vt0 ff0"
+##--- (line 28)
+
+##+++ (2.25.29)
+chk_stty_option_list \
+	"Enter any changes or additional settings that must be in
+effect:${DEF_ostty:+ (default: ${DEF_ostty})}" \
+	"${DEF_ostty}" \
+	"\
+        If the \"standard\" interface program is being  used  it  will
+        set the port attributes as listed above.  These are the same
+        options one could give to  the  \"stty\"  shell  command.   If
+        these  are  sufficient  for  the printer, just press return.
+        However, if some of them are wrong, give the correct values.
+        If  other  values  should  be added, list them as well.  All
+        values you give  must  be  valid  arguments  to  the  \"stty\"
+        command.
+
+        Separate several values with spaces.  \
+"
+OPT_ostty=${RESP}
+if [ "${OPT_ostty}" = "none" ]
+then
+	OPT_ostty=
+fi
+##--- (2.25.29)
+
+
+TERM=${OPT_T:-unknown}
+export TERM
+if [ "unknown" = "${TERM}" ]
+then
+
+	echo "
+No printer type has been given for this printer, so no print wheels
+or character sets can be defined. Skipping to the next step."
+
+elif tput daisy 2>/dev/null
+then
+
+##+++ (2.25.32)
+chk_print_wheel_list \
+	"
+List the print wheels you have available for this printer:
+${DEF_S:+(default: ${DEF_S})}" \
+	"${DEF_S}" \
+	"\
+        You are expected to enter the list of print wheels  or  font
+        cartridges  that  are  available  for this printer.  You can
+        choose whatever names you want, as long as they are composed
+        of  letters,  digits,  and underscores and are 14 characters
+        long or less.  However, you should use  names  consistently:
+        If  another  printer  has a print wheel or cartridge that is
+        similar enough that users won't care about  the  difference,
+        name them the same.
+
+        If you don't list the print wheels or  cartridges  available
+        for this printer, the LP Print Service will assume that none
+        can be used on it.  Print  requests  for  a  print  wheel or
+        cartridge  not  listed here will be refused UNLESS you first
+        mount it on the  printer.  (Giving  a  list  here  will  not
+        restrict  you from mounting other print wheels or cartridges
+        on the printer.)
+
+        Just press return if you don't want to list the print wheels
+        or cartridges, or don't want to change the default shown.  \
+"
+OPT_S=${RESP}
+##--- (2.25.32)
+
+else
+
+	echo
+
+	charsets=
+	sep="	"
+	for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+	do
+		charset=`tput csnm ${i} 2>/dev/null` || break
+		[ -z "${charset}" ] && break
+		charsets="${charsets}${sep}${charset}"
+		sep="
+	"
+	done
+
+	if [ -z "${charsets}" ]
+	then
+		charsets="cs0"
+	fi
+
+	cat <<EOF
+The printer type ${TERM} has the following character sets:
+${charsets}
+EOF
+
+prompt="Map these names into aliases that will be more meaningful to your
+users, by listing name=alias pairs (for example, cs0=standard):"
+
+while [ -n "${prompt}" ]
+do
+
+##+++ (2.25.34)
+chk_character_set_list \
+	"${prompt}
+${DEF_S:+(default: ${DEF_S})}" \
+	"${DEF_S}" \
+	"\
+    You are expected to list aliases for the character sets defined  for  this
+    printer,  mapping  each one to a name defined in the Terminfo database for
+    this type of printer.  You don't have to give a list here,  because the LP
+    Print  Service  will use the list given in the Terminfo database,  or will
+    use the names \"cs0\", \"cs1\", \"cs2\", etc., as alternatives  to  real  names.
+    However,  the  names  given in the Terminfo database may not be consistent
+    across all printers, and the names \"cs0\", etc.  are  not  descriptive,  so
+    users may be confused.
+
+    You can help avoid this confusion by listing  the  names  you  would  like
+    people  to  use on your system. If you have a mix of printers of different
+    styles, some that take print wheels,  some that take font cartridges,  and
+    some that have selectable character sets,  you can give the same names for
+    the print wheels, cartridges, and character sets that  print  sufficiently
+    similar.
+
+    Give each alias as \"name=alias\", where \"name\" is one listed above from the
+    Terminfo database, or \"cs0\", \"cs1\", \"cs2\", etc., to indicate character set
+    0, character set 1, character set 2, etc. (Character set 0 is the  default
+    character set, that prints when the printer is initialized.)
+
+    If you enter a list, separate names with  blanks  or  commas.  Just  press
+    return  if  you  don't  want  to  list the character sets or don't want to
+    change the default shown."
+##--- (2.25.34)
+
+if [ "${RESP}" = none ]
+then
+	OPT_S=none
+	prompt=
+else
+	OPT_S=
+	sep=
+	prompt=
+	for set in ${RESP}
+	do
+		IFS=" ="; set -- ${set}
+		IFS="
+ 	"
+		if expr "$1" : '^cs[0-9][0-9]*$' >/dev/null 2>&1
+		then
+			OPT_S="${OPT_S}${sep}${set}"
+			sep=","
+		elif expr "${charsets}" : ".*[^a-z]*$1[^a-z]*" >/dev/null 2>&1
+		then
+			OPT_S="${OPT_S}${sep}${set}"
+			sep=","
+		else
+			echo \
+"\"$1\" isn't recognized from the Terminfo database."
+			prompt="
+List the name=alias pairs:"
+		fi
+	done
+fi
+done
+fi
+
+##+++ (line 35)
+echo \
+""
+##--- (line 36)
+
+: ${DEF_udeny:=none}
+##+++ (2.25.37)
+chk_user_list \
+	"List the users who are denied access to this printer.
+${DEF_udeny:+(default: ${DEF_udeny})}" \
+	"${DEF_udeny}" \
+	"\
+        You are expected to list the users who are  NOT  allowed  to
+        use this printer.  Please give the login names of the users,
+        not their proper names.  Separate several names with  blanks
+        or commas.
+
+        If  it  is  easier to specify access restrictions by listing
+        just those who ARE allowed to use the printer,  enter \"none\"
+        here and then answer the next question.
+
+        You can deny EVERYBODY by entering the  word  \"any\".   Press
+        return if you don't want to change the list shown.  \
+"
+OPT_udeny=${RESP}
+##--- (2.25.37)
+
+if [ "none" != "${OPT_udeny}" ]
+then
+	OPT_uallow=
+else
+	if [ -z "${DEF_uallow}" -o "none" = "${DEF_uallow}" ]
+	then
+		DEF_uallow=all
+	fi
+
+##+++ (2.25.39)
+chk_user_list \
+	"List the users who are allowed access to this printer.
+${DEF_uallow:+(default: ${DEF_uallow})}" \
+	"${DEF_uallow}" \
+	"\
+        You are expected to list the users who ARE  allowed  to  use
+        this printer.  Please give the login names of the users, not
+        their proper names.  Separate several names with  blanks  or
+        commas.
+
+        You can allow EVERYBODY by entering the  word  \"any\".  Press
+        return if you don't want to change the list shown. \
+"
+OPT_uallow=${RESP}
+##--- (2.25.39)
+
+	if [ "none" = "${OPT_uallow}" ]
+	then
+		OPT_udeny=all
+	elif [ "all" = "${OPT_uallow}" -o "any" = "${OPT_uallow}" ]
+	then
+		OPT_udeny=none
+	else
+		OPT_udeny=
+	fi
+fi
+
+: ${DEF_fallow:=none}
+##+++ (2.25.41)
+chk_form_list \
+	"List the forms that can be used with this printer.
+${DEF_fallow:+(default: ${DEF_fallow})}" \
+	"${DEF_fallow}" \
+	"\
+        You are expected   to  list the forms that are   allowed  to
+        be  used  with  this  printer.   Separate several names with
+        blanks or commas.
+
+        If  it  is  easier to specify access restrictions by listing
+        just  those  forms  that are  NOT allowed  with the printer,
+        enter \"none\" here and then answer the next question.
+
+        You can allow ALL forms by entering the  word \"any\". Press
+        return if you don't want to change the list shown.  \
+"
+OPT_fallow=${RESP}
+##--- (2.25.41)
+
+if [ "none" != "${OPT_fallow}" ]
+then
+	OPT_fdeny=
+else
+	if [ -z "${DEF_fdeny}" -o "none" = "${DEF_fdeny}" ]
+	then
+		DEF_fdeny=all
+	fi
+
+##+++ (2.25.43)
+chk_form_deny_list \
+	"List the forms that can't be used with this printer.
+${DEF_fdeny:+(default: ${DEF_fdeny})}" \
+	"${DEF_fdeny}" \
+	"\
+        You are expected to list the forms that are NOT  allowed  to
+        be  used  with this  printer.  Separate  several  names with
+        blanks or commas.
+
+        You can deny  ALL forms by entering the  word  \"any\".  Press
+        return if you don't want  to  change  the  list  shown. \
+"
+OPT_fdeny=${RESP}
+##--- (2.25.43)
+
+	if [ "none" = "${OPT_fdeny}" ]
+	then
+		OPT_fallow=all
+	elif [ "all" = "${OPT_fdeny}" -o "any" = "${OPT_fdeny}" ]
+	then
+		OPT_fallow=none
+	else
+		OPT_fallow=
+	fi
+fi
+
+##+++ (line 44)
+echo \
+""
+##--- (line 44)
+
+DEF="install"
+##+++ (2.25.45)
+chk_install_edit_skip \
+	"install, edit, or skip this printer entry:${DEF:+ (default: ${DEF})}" \
+	"${DEF}" \
+	"\
+        If you enter \"i\" (or \"install\")  the  printer  configuration
+        you  just specified will be put in the system.  If you enter
+        \"e\" (or \"edit\") you can go back and fix  the  configuration.
+        If  you  enter \"s\" (or \"skip\") the configuration will not be
+        put in the system.  \
+"
+OPT_install=${RESP}
+##--- (2.25.45)
+
+case "${RESP}" in
+i | install )
+	OPT_install="install";;
+e | ed | edit )
+	OPT_install="edit";;
+s | skip )
+	OPT_install="skip";;
+esac

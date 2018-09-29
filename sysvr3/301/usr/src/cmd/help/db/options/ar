@@ -1,0 +1,64 @@
+
+\Sar\S:  Options
+
+     The following are independent options:
+
+
+     -d    deletes <file_name> from <archive_file>.
+
+     -m    moves <file_name> from one place to another in the <archive_file>
+           depending on the modifiers; "a" for after, "b" for before, and "i"
+           for insert. Otherwise it moves <file_name> to the end of
+           <archive_file>.
+
+     -p    print the contents of all of the files in <archive_file>.  If you
+           specify a <file_name>, \Sar\S prints only that file.
+
+     -q    appends <file_name> to the end of <archive_file> without checking if
+           <file_name> already exists.
+
+     -r    replaces <file_name> in the archive file, <archive_file>.  With the
+           "u" modifier, if you modified the file more recently than
+           <file_name> in <archive_file>, it will replace it.  With modifiers
+           "a" for after, "b" for before and "i" for insert, you can add a new
+           file to <archive_file> before or after the file "location".
+           Otherwise \Sar\S adds the new file to the end.
+     
+     -t    prints a table of contents of the files in <archive_file>, if you do
+           not list <file_name>.  If you do list <file_name>, \Sar\S prints
+           only those file names.
+
+     -x    extracts copies of all the files in <archive_file>. If you specify
+           <file_name>, \Sar\S only extracts that file.
+
+
+
+     (See the next screen for dependent options.)
+     
+
+     The following options are dependent options:
+
+
+     c    suppresses the message about the creation of <archive_file>.
+
+     l    places temporary files in the current working directory.
+
+     s    regenerates the archive symbol table.  \Sar\S normally regenerates
+          the symbol table only when you modify <archive_file>.
+
+     u    replaces only those files with more recent modification times than
+          those in <archive_file>.
+
+     v    gives a verbose (detailed) explanation of the creation or changes
+          to <archive_file>.
+
+
+     a location    moves or adds <file_name> after the file <location> in
+                   <archive_file>.
+
+     b location    moves or adds <file_name> before the file <location> in
+                   <archive_file>.
+
+     i location    inserts <file_name> before the file <location> in
+                   <archive_file>.
+

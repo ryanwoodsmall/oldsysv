@@ -1,0 +1,170 @@
+/dev/null
+1422 200
+d--755 0 3
+install d--775 0 3
+	INSTALL		---555 2 2	./install/sys/INSTALL.sys
+	UNINSTALL	---555 2 2	./install/sys/UNINSTALL
+	Rlist		---775 2 2	./install/sys/Rlist.sys
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		options	d--775 0 3
+			sys.name	---555	2 2	./install/sys/sys.name
+		$
+		include	d--775 2 2
+			pn.h	---444	2 2	../usr/include/pn.h
+			sys	d--775 2 2
+				acct.h	---444	2 2	../usr/include/sys/acct.h
+				adv.h	---444	2 2	../usr/include/sys/adv.h
+				bitmasks.h	---444	2 2	../usr/include/sys/bitmasks.h
+				boot.h	---444	2 2	../usr/include/sys/boot.h
+				boothdr.h	---444	2 2	../usr/include/sys/boothdr.h
+				buf.h	---444	2 2	../usr/include/sys/buf.h
+				callo.h	---444	2 2	../usr/include/sys/callo.h
+				cdump.h	---444	2 2	../usr/include/sys/cdump.h
+				cio_defs.h	---444	2 2	../usr/include/sys/cio_defs.h
+				cirmgr.h	---444	2 2	../usr/include/sys/cirmgr.h
+				clock.h	---444	2 2	../usr/include/sys/clock.h
+				cmn_err.h	---444	2 2	../usr/include/sys/cmn_err.h
+				comm.h	---444	2 2	../usr/include/sys/comm.h
+				conf.h	---444	2 2	../usr/include/sys/conf.h
+				crtctl.h	---444	2 2	../usr/include/sys/crtctl.h
+				csr.h	---444	2 2	../usr/include/sys/csr.h
+				ctype.h	---444	2 2	../usr/include/sys/ctype.h
+				debug.h	---444	2 2	../usr/include/sys/debug.h
+				devcode.h	---444	2 2	../usr/include/sys/devcode.h
+				diagnostic.h	---444	2 2	../usr/include/sys/diagnostic.h
+				dir.h	---444	2 2	../usr/include/sys/dir.h
+				dirent.h	---444	2 2	../usr/include/sys/dirent.h
+				disasm.h	---444	2 2	../usr/include/sys/disasm.h
+				diskette.h	---444	2 2	../usr/include/sys/diskette.h
+				dma.h	---444	2 2	../usr/include/sys/dma.h
+				dsd.h	---444	2 2	../usr/include/sys/dsd.h
+				du_dep.h	---444	2 2	../usr/include/sys/du_dep.h
+				edt.h	---444	2 2	../usr/include/sys/edt.h
+				elog.h	---444	2 2	../usr/include/sys/elog.h
+				erec.h	---444	2 2	../usr/include/sys/erec.h
+				err.h	---444	2 2	../usr/include/sys/err.h
+				errno.h	---444	2 2	../usr/include/sys/errno.h
+				fblk.h	---444	2 2	../usr/include/sys/fblk.h
+				fcntl.h	---444	2 2	../usr/include/sys/fcntl.h
+				file.h	---444	2 2	../usr/include/sys/file.h
+				filsys.h	---444	2 2	../usr/include/sys/filsys.h
+				firmware.h	---444	2 2	../usr/include/sys/firmware.h
+				flock.h	---444	2 2	../usr/include/sys/flock.h
+				fsid.h	---444	2 2	../usr/include/sys/fsid.h
+				fstyp.h	---444	2 2	../usr/include/sys/fstyp.h
+				gate.h	---444	2 2	../usr/include/sys/gate.h
+				gdpstr.h	---444	2 2	../usr/include/sys/gdpstr.h
+				getpages.h	---444	2 2	../usr/include/sys/getpages.h
+				hdeioctl.h	---444	2 2	../usr/include/sys/hdeioctl.h
+				hdelog.h	---444	2 2	../usr/include/sys/hdelog.h
+				hetero.h	---444	2 2	../usr/include/sys/hetero.h
+				id.h	---444	2 2	../usr/include/sys/id.h
+				idtab.h	---444	2 2	../usr/include/sys/idtab.h
+				if.h	---444	2 2	../usr/include/sys/if.h
+				immu.h	---444	2 2	../usr/include/sys/immu.h
+				inline.h	---444	2 2	../usr/include/sys/inline.h
+				ino.h	---444	2 2	../usr/include/sys/ino.h
+				inode.h	---444	2 2	../usr/include/sys/inode.h
+				io.h	---444	2 2	../usr/include/sys/io.h
+				iobd.h	---444	2 2	../usr/include/sys/iobd.h
+				iobuf.h	---444	2 2	../usr/include/sys/iobuf.h
+				ioctl.h	---444	2 2	../usr/include/sys/ioctl.h
+				ipc.h	---444	2 2	../usr/include/sys/ipc.h
+				iu.h	---444	2 2	../usr/include/sys/iu.h
+				jioctl.h	---444	2 2	../usr/include/sys/jioctl.h
+				lboot.h	---444	2 2	../usr/include/sys/lboot.h
+				lihdr.h	---444	2 2	../usr/include/sys/lihdr.h
+				lla.h	---444	2 2	../usr/include/sys/lla.h
+				lla_ppc.h	---444	2 2	../usr/include/sys/lla_ppc.h
+				lock.h	---444	2 2	../usr/include/sys/lock.h
+				log.h	---444	2 2	../usr/include/sys/log.h
+				macro.h	---444	2 2	../usr/include/sys/macro.h
+				map.h	---444	2 2	../usr/include/sys/map.h
+				mau.h	---444	2 2	../usr/include/sys/mau.h
+				message.h	---444	2 2	../usr/include/sys/message.h
+				mount.h	---444	2 2	../usr/include/sys/mount.h
+				msg.h	---444	2 2	../usr/include/sys/msg.h
+				nami.h	---444	2 2	../usr/include/sys/nami.h
+				netid.h	---444	2 2	../usr/include/sys/netid.h
+				npack.h	---444	2 2	../usr/include/sys/npack.h
+				nserve.h	---444	2 2	../usr/include/sys/nserve.h
+				nvram.h	---444	2 2	../usr/include/sys/nvram.h
+				open.h	---444	2 2	../usr/include/sys/open.h
+				page.h	---444	2 2	../usr/include/sys/page.h
+				panregs.h	---444	2 2	../usr/include/sys/panregs.h
+				param.h	---444	2 2	../usr/include/sys/param.h
+				pcb.h	---444	2 2	../usr/include/sys/pcb.h
+				pfdat.h	---444	2 2	../usr/include/sys/pfdat.h
+				poll.h	---444	2 2	../usr/include/sys/poll.h
+				pp_dep.h	---444	2 2	../usr/include/sys/pp_dep.h
+				ppc.h	---444	2 2	../usr/include/sys/ppc.h
+				ppc_lla.h	---444	2 2	../usr/include/sys/ppc_lla.h
+				proc.h	---444	2 2	../usr/include/sys/proc.h
+				psw.h	---444	2 2	../usr/include/sys/psw.h
+				pump.h	---444	2 2	../usr/include/sys/pump.h
+				que.h	---444	2 2	../usr/include/sys/que.h
+				queue.h	---444	2 2	../usr/include/sys/queue.h
+				rdebug.h	---444	2 2	../usr/include/sys/rdebug.h
+				recover.h	---444	2 2	../usr/include/sys/recover.h
+				reg.h	---444	2 2	../usr/include/sys/reg.h
+				region.h	---444	2 2	../usr/include/sys/region.h
+				rfsys.h	---444	2 2	../usr/include/sys/rfsys.h
+				sbd.h	---444	2 2	../usr/include/sys/sbd.h
+				sccsid.h	---444	2 2	../usr/include/sys/sccsid.h
+				seg.h	---444	2 2	../usr/include/sys/seg.h
+				sem.h	---444	2 2	../usr/include/sys/sem.h
+				sema.h	---444	2 2	../usr/include/sys/sema.h
+				sgs.h	---444	2 2	../usr/include/sys/sgs.h
+				shm.h	---444	2 2	../usr/include/sys/shm.h
+				signal.h	---444	2 2	../usr/include/sys/signal.h
+				sit.h	---444	2 2	../usr/include/sys/sit.h
+				stat.h	---444	2 2	../usr/include/sys/stat.h
+				statfs.h	---444	2 2	../usr/include/sys/statfs.h
+				stdio.h	---444	2 2	../usr/include/sys/stdio.h
+				stermio.h	---444	2 2	../usr/include/sys/stermio.h
+				stream.h	---444	2 2	../usr/include/sys/stream.h
+				strlog.h	---444	2 2	../usr/include/sys/strlog.h
+				stropts.h	---444	2 2	../usr/include/sys/stropts.h
+				strstat.h	---444	2 2	../usr/include/sys/strstat.h
+				swap.h	---444	2 2	../usr/include/sys/swap.h
+				sxt.h	---444	2 2	../usr/include/sys/sxt.h
+				sys3b.h	---444	2 2	../usr/include/sys/sys3b.h
+				sysgdb.h	---444	2 2	../usr/include/sys/sysgdb.h
+				sysinfo.h	---444	2 2	../usr/include/sys/sysinfo.h
+				sysmacros.h	---444	2 2	../usr/include/sys/sysmacros.h
+				systm.h	---444	2 2	../usr/include/sys/systm.h
+				tcon.h	---444	2 2	../usr/include/sys/tcon.h
+				termio.h	---444	2 2	../usr/include/sys/termio.h
+				tihdr.h	---444	2 2	../usr/include/sys/tihdr.h
+				times.h	---444	2 2	../usr/include/sys/times.h
+				timod.h	---444	2 2	../usr/include/sys/timod.h
+				tiuser.h	---444	2 2	../usr/include/sys/tiuser.h
+				todc.h	---444	2 2	../usr/include/sys/todc.h
+				trace.h	---444	2 2	../usr/include/sys/trace.h
+				ttold.h	---444	2 2	../usr/include/sys/ttold.h
+				tty.h	---444	2 2	../usr/include/sys/tty.h
+				tuneable.h	---444	2 2	../usr/include/sys/tuneable.h
+				types.h	---444	2 2	../usr/include/sys/types.h
+				uadmin.h	---444	2 2	../usr/include/sys/uadmin.h
+				user.h	---444	2 2	../usr/include/sys/user.h
+				ustat.h	---444	2 2	../usr/include/sys/ustat.h
+				utsname.h	---444	2 2	../usr/include/sys/utsname.h
+				var.h	---444	2 2	../usr/include/sys/var.h
+				vtoc.h	---444	2 2	../usr/include/sys/vtoc.h
+				fs	d--775	0 3
+					prfcntl.h	---444	2 2	../usr/include/sys/fs/prfcntl.h
+					s5fblk.h	---444	2 2	../usr/include/sys/fs/s5fblk.h
+					s5dir.h	---444	2 2	../usr/include/sys/fs/s5dir.h
+					s5filsys.h	---444	2 2	../usr/include/sys/fs/s5filsys.h
+					s5inode.h	---444	2 2	../usr/include/sys/fs/s5inode.h
+					s5macros.h	---444	2 2	../usr/include/sys/fs/s5macros.h
+					s5param.h	---444	2 2	../usr/include/sys/fs/s5param.h
+				$
+			$
+		$
+	$
+$
+$
+#ident "@(#)pkg.sys:proto.sys	1.9"

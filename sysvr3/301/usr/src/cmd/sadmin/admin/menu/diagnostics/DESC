@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:admin/menu/diagnostics/DESC	1.2"
+#menu# system diagnostics menu
+#head#			SYSTEM DIAGNOSTICS
+#help#
+#help#	These subcommands look for and sometimes repair problems in the
+#help#	system.  Those subcommands that issue reports allow you to determine
+#help#	if there are detectable problems.
+#help#	Commands that attempt repair are for repair people only.  You must
+#help#	know what you are doing!

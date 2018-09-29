@@ -1,0 +1,143 @@
+.TH EXP 3M
+.SH NAME
+exp, log, log10, pow, sqrt \- exponential, logarithm, power, square root functions
+.SH SYNOPSIS
+.nf
+.B #include <math.h>
+.PP
+.B double exp (x)
+.B double x;
+.PP
+.B double log (x)
+.B double x;
+.PP
+.B double log10 (x)
+.B double x;
+.PP
+.B double pow (x, y)
+.B double x, y;
+.PP
+.B double sqrt (x)
+.B double x;
+.SH DESCRIPTION
+.I Exp\^
+returns
+\f2e\u\s8x\s10\d\fR.
+.PP
+.I Log\^
+returns the natural logarithm of
+.IR x .
+The value of
+.I x\^
+must be positive.
+.PP
+.I Log10\^
+returns the logarithm base ten of
+.IR x .
+The value of
+.I x\^
+must be positive.
+.PP
+.I Pow\^
+returns
+\f2x\u\s8y\s10\d\fR.
+If
+.I x\^
+is zero,
+.I y\^
+must be positive.
+If
+.I x\^
+is negative,
+.I y\^
+must be an integer.
+.PP
+.I Sqrt\^
+returns the non-negative square root of
+.IR x .
+The value of
+.I x\^
+may not be negative.
+.SH DIAGNOSTICS
+.I Exp\^
+returns
+.SM
+.B HUGE
+when the correct value would
+overflow,
+or 0 when the correct value would underflow,
+and sets
+.I errno\^
+to
+.SM
+.BR ERANGE\*S .
+.PP
+.I Log\^
+and
+.I log10
+return
+.SM
+.B \-HUGE
+and set
+.I errno\^
+to
+.SM
+.B EDOM
+when
+.I x\^
+is non-positive.
+A message indicating \s-1DOMAIN\s+1 error (or \s-1SING\s+1 error when
+.I x\^
+is 0) is printed on the standard error output.
+.PP
+.I Pow\^
+returns 0
+and sets
+.I errno\^
+to
+.SM
+.B EDOM
+when
+.I x\^
+is 0 and
+.I y\^
+is non-positive, or when
+.I x\^
+is negative and
+.I y\^
+is not an integer.
+In these cases a message indicating \s-1DOMAIN\s+1 error is 
+printed on the standard error output.
+When the correct value for
+.I pow\^
+would overflow or underflow,
+.I pow\^
+returns
+.SM
+.B \(+-HUGE
+or 0 respectively, and sets
+.I errno\^
+to
+.SM
+.B ERANGE.
+.PP
+.I Sqrt\^
+returns 0
+and sets
+.I errno\^
+to
+.SM
+.B EDOM
+when
+.I x\^
+is negative.
+A message indicating \s-1DOMAIN\s+1 error is
+printed on the standard error output.
+.PP
+These error-handling procedures may be changed with the function
+.IR matherr (3M).
+.SH SEE ALSO
+hypot(3M),
+matherr(3M),
+sinh(3M).
+.\"	%W% of %G%

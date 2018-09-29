@@ -1,0 +1,18 @@
+
+\Slocate\S:  Description
+
+Syntax Summary:  locate [keyword ...]
+
+                 help locate [keyword ...]
+
+         where:  keyword  is an English word.
+
+Description:
+     \Slocate\S identifies UNIX System commands, and it is one module of the
+     UNIX system on-line help facility.  Use \Slocate\S to find UNIX system
+     commands whose functions are related to keywords you list on the command
+     line.  With keywords as arguments, \Slocate\S searches through its data
+     base to find all commands related to the keywords.  \Slocate\S without
+     any arguments prints a menu that asks you for keywords.  See also:
+     help(1), starter(1), usage(1), glossary(1) for commands that might be used
+     with \Slocate\S.

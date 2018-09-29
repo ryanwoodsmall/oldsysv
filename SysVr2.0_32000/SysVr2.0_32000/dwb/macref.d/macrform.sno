@@ -1,0 +1,40 @@
+#  macref output formatter
+start	sym = ""
+	olline = ""
+
+mloop	lline = syspit		/f(fls)
+	hline = ""
+
+	lline *nsym* "	" *lline*	/f(mloop)
+
+rd0	lline *ttt* ")" = ""	/s(rd4)
+rd1	lline *ttt* " " = ttt	/s(rd1)
+	lline = hline lline
+
+	sym nsym		/f(rd2)
+	nsym sym		/s(rd5)
+
+rd2	"" olline		/s(rd3)
+	syspot = olline
+rd3	sym = nsym
+	osym = sym "      "
+	osym *osym/"6"*	
+	olline = osym		/(rd6)
+
+rd4	hline = hline ttt ")"	/(rd0)
+
+rd5	"" olline		/f(rd6)
+	olline = "      "
+rd6	lline ** "#"		/s(rd7)
+	lline = lline " "
+rd7	lline = "                 " lline "	"
+	lline ** *lline/"17"* "	"
+	olline = olline lline
+	olline *ttt/"68"*	/f(mloop)
+	syspot = olline
+	olline = ""		/(mloop)
+
+fls	"" olline		/s(end)
+	syspot = olline
+
+end	bye bye "@(#)macrform.sno	1.2"

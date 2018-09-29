@@ -1,0 +1,26 @@
+
+\S rm \S:  Examples
+
+       rm code
+
+    Removes the file named "code" from the current working directory.
+
+    ----------------------------------------------------------------------
+
+       rm -i *.o
+
+    You are asked whether each file that ends in ".o" should be removed. If you
+    had a file "jqr.o", the \S rm \S command would print
+
+       jqr.o: ?
+
+    \S rm \S waits for you to respond "y" for yes, or "n" for no.
+
+    ----------------------------------------------------------------------
+
+       rm -rf $HOME/ITEMS
+
+    All files and directories in the directory "$HOME/ITEMS" are removed and
+    then the directory "ITEMS" itself is removed.  If you do not have write
+    permission for a file, the "f" option removes it without notifying you of
+    that fact.

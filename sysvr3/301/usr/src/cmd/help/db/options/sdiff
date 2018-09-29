@@ -1,0 +1,15 @@
+
+\Ssdiff\S:  Options
+
+     -l   prints only the left column if the lines are identical.
+
+     -o output_file   creates a file called <output_file> that is a combination
+                      of lines from <file_name1> and <file_name2>.  Prompts the
+                      user with a "%" for a decision on how to incorporate each
+                      difference into the new file.  See the manual page for
+                      details on this option.
+
+     -s   suppresses the printing of identical lines
+
+     -w width   changes the width of the output lines to <width> characters.
+                The default and the maximum is 130.

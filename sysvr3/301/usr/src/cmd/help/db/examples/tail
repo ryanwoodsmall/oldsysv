@@ -1,0 +1,27 @@
+
+\S tail \S:  Examples
+
+
+       tail logfile
+
+    Prints the last ten lines of the file "logfile".
+
+    ----------------------------------------------------------------------
+
+       tail +3c logfile
+
+    Skips the first three characters of "logfile" and prints the rest of the
+    file on the standard output.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       tail +0f /usr/spool/uucp/logfile
+
+    Prints the entire file "/usr/spool/uucp/logfile" on the standard output and
+    monitors the growth of the file by sending the material that is appended to
+    the file to standard output.  You must strike the break key when the 
+    process ends or \S tail \S will continue to wait for more input.
+

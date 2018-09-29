@@ -1,0 +1,84 @@
+/*LINTLIBRARY*/
+
+/*	from file usermgmt.c */
+#include <stdio.h>
+#include "lp.h"
+#include "users.h"
+int
+putuser(user, pri_s)
+char *user;
+USER *pri_s;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+USER *
+getuser(user)
+char *user;
+{	static USER *
+ _returned_value;
+	return _returned_value;
+}
+int
+deluser(user)
+char *user;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+int
+getdfltpri()
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+trashusers()
+{	static  _returned_value;
+	return _returned_value;
+}
+
+/*	from file loadpri.c */
+#include <errno.h>
+struct user_priority
+*ld_priority_file(path)
+char *path;
+{	static struct user_priority
+* _returned_value;
+	return _returned_value;
+}
+int
+add_user(ppri_tbl, user, limit)
+struct user_priority *ppri_tbl;
+char *user;
+int limit;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+char *
+next_user(f, buf, pp)
+FILE *f;
+char *buf, **pp;
+{	static char *
+ _returned_value;
+	return _returned_value;
+}
+del_user(ppri_tbl, user)
+struct user_priority *ppri_tbl;
+char *user;
+{	static  _returned_value;
+	return _returned_value;
+}
+
+/*	from file storepri.c */
+print_tbl(ppri_tbl)
+struct user_priority *ppri_tbl;
+{	static  _returned_value;
+	return _returned_value;
+}
+output_tbl(f, ppri_tbl)
+FILE *f;
+struct user_priority *ppri_tbl;
+{	static  _returned_value;
+	return _returned_value;
+}

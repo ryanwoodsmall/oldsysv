@@ -1,0 +1,99 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/modgroup/chgname	1.2"
+#menu# change name of a group on the system 
+#help# 
+#help#	Chgname allows you to change the name of a group that you enter when
+#help#	you run "addgroup" to set up new groups.  Only groups with group IDs
+#help#	larger than 100 can be modified.
+
+
+trap 'exit 0' 1 2 15
+
+flags="-qq -k$$"
+
+echo '\nAnytime you want to quit, type "q".
+If you are not sure how to answer any prompt, type "?" for help.
+'
+
+
+loginlen=8	# Maximum login ID length
+minid=100	# Minimum user and group ID
+
+if [ -r ${MENUTOP:?}/defadduser ]
+then	# This file allows easy modification of the defaults.
+	. ${MENUTOP}/defadduser
+fi
+
+while true
+do
+
+	while true
+	do
+		groupname=`checkre ${flags} -fe 'Which group name do you wish to change? [q]:' \
+			'.' 'You must enter at least one character.'  \
+			'^[a-z0-9]*$' 'Answer contains an illegal character.
+	Only numbers and lowercase letters are permitted.'`
+		idline=`grep "^${groupname}:" /etc/group`
+		if [ -z "${idline}" ]
+		then
+			echo "\\t'${groupname}' is not an existing group.
+	This is the current list:"
+			cut -d: -f1 /etc/group  |  sort  |  pr -t -w80 -6
+		else
+			gid=`echo "${idline}"  |  cut -d: -f3`
+			if [ "${gid}" -lt ${minid} ]
+			then
+				echo "\\tThat group has group ID ${gid} which is less than ${minid}.
+		The name cannot be changed."
+				continue     # Ask again
+			fi
+			break   # Valid name
+		fi
+	done
+
+	echo "\\nThis is the information for that group:
+	Group name:	${groupname}
+	Group ID:	${gid}
+	"
+
+	while true
+	do
+		newname=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the group.
+	It also is used to identify data that belongs to the group. The
+	group name may be any combination of numbers and letters not already
+	used by another group.  Typically, people choose the initials
+	or name of their project group.' \
+		-fe "Enter new group name [?, q]: " \
+			'.' 'You must enter a value.' \
+			'^[a-z0-9]*$' 'Answer contains an illegal character.
+	Only numbers and lower case letters are permitted.' \
+			"^.\{1,${loginlen}\}$" "Answer is too long.
+	No more than ${loginlen} characters are permitted."`
+
+		if grep "^${newname}:" /etc/group >/dev/null
+		then
+			echo "\\tGroup '${newname}' already exists. 
+                Choose another."
+			continue    # Ask again
+
+		elif checkyn ${flags} -H"If you answer yes, the group with the ID ${gid} will be called '${newname}.'" \
+			-f "Do you want to change the name of group '${groupname}'
+	to '${newname}'?"
+		then
+			ed - /etc/group <<-! || { admerr $0 'Cannot edit /etc/group.'; exit 1;}
+				H
+				/^${groupname}:/s//${newname}:/
+				w
+				q
+			!
+			echo "The name of the group '${groupname}' has been changed to '${newname}.'"
+		fi
+		break
+   	done
+
+	if checkyn ${flags} -f 'Do you want to change the name of another group?'
+	then 
+		continue
+	fi
+	break
+done

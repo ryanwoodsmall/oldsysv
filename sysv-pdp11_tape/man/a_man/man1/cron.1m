@@ -1,0 +1,103 @@
+.TH CRON 1M
+.SH NAME
+cron \- clock daemon
+.SH SYNOPSIS
+.B /etc/cron
+.SH DESCRIPTION
+.I Cron\^
+executes commands at specified dates and times
+according to the instructions in the file
+.BR /usr/lib/crontab .
+Because
+.I cron\^
+never exits,
+it should be executed only once.
+This is best done by running
+.I cron\^
+from the initialization
+process through the file
+.B /etc/rc
+(see
+.IR init (1M)).
+.PP
+The file
+.B crontab
+consists of lines of six fields each.
+The fields are separated by spaces or tabs.
+The first five are integer patterns that
+specify in order:
+.RS
+minute (0-59),
+.br
+hour (0-23),
+.br
+day of the month (1-31),
+.br
+month of the year (1-12),
+.br
+and day of the week (0-6, with 0=Sunday).
+.RE
+.PP
+Each of these patterns may
+contain:
+.RS
+a number in the (respective) range indicated above;
+.br
+two numbers separated by a minus (indicating an inclusive range);
+.br
+a list of numbers separated by commas (meaning all of these numbers); or
+.br
+an asterisk (meaning all legal values).
+.RE
+.PP
+The sixth field is a string
+that is executed by the shell at the
+specified time(s).
+A
+.B %
+in this field is translated into a new-line
+character.
+Only the first line (up to a
+.B %
+or the end of line)
+of the command field is executed by the shell.
+The other lines are made available to the
+command as standard input.
+.PP
+.I Cron\^
+examines
+.B crontab
+once a minute to see
+if it has changed;
+if it has,
+.I cron\^
+reads it.
+Thus it takes only a minute
+for entries to become effective.
+.SH FILES
+/usr/lib/crontab
+.br
+/usr/adm/cronlog
+.SH SEE ALSO
+init(1M), sh(1).
+.SH DIAGNOSTICS
+A history of all actions by
+.I cron\^
+are recorded in
+.BR /usr/adm/cronlog .
+.SH BUGS
+.I Cron\^
+reads
+.B crontab
+only when
+it
+has changed, but it reads the in-core
+version of that table once a minute.
+A more efficient algorithm could be used.
+The overhead in running
+.I cron\^
+is about one percent of the
+.SM CPU\*S,
+exclusive of any commands executed by
+.IR cron .
+.\"	@(#)cron.1m	5.2 of 5/18/82

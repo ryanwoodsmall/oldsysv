@@ -1,0 +1,183 @@
+2 0 0 #ident	"@(#)script.files:t.viopts	1.2"
+12 
+30 
+8 2 30 vi OPTIONS
+31 
+705 5 7 62
+A useful feature of vi is that you can customize its behavior. 
+For example, you can set vi to do the following: (A) produce
+automatic line splitting, which allows you to type in text
+without having to hit the carriage return key; (B) display
+matching parentheses and braces; and (C) automatically indent
+for program formatting.  The Unix System User's manual page for
+"ex" lists these and other options you can use with vi. 
+
+This walkthru will tell you about two of vi's frequently used
+options: line numbering and show mode.  
+706 
+520 arrow
+2 0 0
+12 
+15 
+705 3 7 56
+             LINE NUMBERING 
+
+
+The default version of vi shows your text without showing
+line numbers.  The line number option of vi allows you to
+see each line number on the screen.
+706 
+520 arrow
+520 redraw
+8 13 0 "mary" 
+705 0 0 28
+Mary had a little lamb
+Its fleece was white as snow
+And everywhere that Mary went
+The lamb was sure to go.
+706 
+15 
+705 16 7 61
+This is how vi appears when the line number option is not set.
+706 
+520 arrow
+520 clear1
+705 16 7 62
+DESCRIPTION:  The command :set nu followed by a carriage return
+              turns on the line numbering option.
+706 
+520 instruct
+3 Enter the command :set nu<RETURN>
+2 3 24
+15 
+253 set nu
+520 excmd
+1 1
+705 0 0 34
+   1  Mary had a little lamb
+   2  Its fleece was white as snow
+   3  And everywhere that Mary went
+   4  The lamb was sure to go.
+706 
+15 
+520 clear1
+705 16 7 60
+This is how vi appears when the line number option is set.
+The numbers are on the screen, but are not in the file "mary"
+706 
+520 arrow
+520 clear1
+705 16 7 69
+You can turn off the line numbering with the command :set nonu<RETURN>
+706 
+520 arrow
+520 clear1
+520 instruct
+3 Unset the line numbering option
+2 3 30
+15 
+253 set nonu
+520 excmd
+1 1
+705 0 0 40
+Mary had a little lamb                   
+Its fleece was white as snow          
+And everywhere that Mary went      
+The lamb was sure to go.        
+706 
+520 clear1
+520 arrow
+2 0 0
+12 
+15 
+705 3 7 65
+                INPUT MODE INFORMATION
+
+
+The vi walkthru on how to add text showed the phrase "INPUT MODE"
+at the bottom right of the vi screen when you were inserting text.
+The phrase disappeared when you were at the command level of vi.
+
+The default version of vi does not have this "show mode" feature,
+which many new users of vi find very helpful.  
+706 
+520 arrow
+520 redraw
+705 0 0 29
+Jack and Jill went up the hill
+to fetch a of water.
+Jack fell down
+and his crown,
+and Jill came tumbling after.
+706 
+705 16 7 52
+First, we'll input text without the show mode option.
+706 
+520 arrow
+520 clear1
+520 instruct
+3 Insert the word "pail" 
+2 1 11
+18 
+15 
+256 105
+254 i to start inserting text
+253 pail 
+520 ansloop
+2 2000 2000
+15 
+520 ansloopins
+256 27
+254 <ESCAPE> to stop inserting text.
+520 ansloop
+520 clear1
+520 arrow
+705 16 7 57
+The command :set smd<RETURN> turns on the showmode option.
+706 
+520 instruct
+3 Turn on the showmode option.
+2 3 4
+18 
+253 set smd
+520 excmd
+1 1
+520 clear1
+705 16 7 68
+There is no INPUT MODE phrase at the lower right of the vi screen
+because we are at vi's command level.  You will see the phrase appear
+when you use an input command (such as a, i, o, or O) and the phrase
+disappear when you strike the ESCAPE key to stop entering text. 
+706 
+520 arrow
+520 clear1
+520 instruct
+3 Insert the word "broke"
+2 3 4
+18 
+15 
+256 105
+254 i to start inserting text
+253 broke 
+520 ansloop
+520 mode
+520 ansloopins
+256 27
+254 <ESACPE> to stop inserting text.
+520 ansloop
+520 nomode
+520 clear1
+520 arrow
+2 0 0
+12 
+15 
+8 3 18 SUMMARY OF COMMANDS FOR SETTING 
+8 5 15 LINE NUMBERING AND SHOW MODE OPTIONS OF VI
+705 8 11 52
+:set nu<RETURN> ...... turn on line numbering option
+:set nonu<RETURN> .... turn off line numbering option
+
+:set smd<RETURN> ..... turn on show mode option
+:set nosmd<RETURN> ... turn off show mode option
+706 
+15 

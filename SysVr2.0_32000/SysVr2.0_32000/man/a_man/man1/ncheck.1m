@@ -1,0 +1,50 @@
+.TH NCHECK 1M 
+.SH NAME
+ncheck \- generate names from i-numbers
+.SH SYNOPSIS
+.B /etc/ncheck
+[
+.B \-i
+numbers ]  [
+.B \-a
+] [
+.B \-s
+]  [ file-system ]
+.SH DESCRIPTION
+.I Ncheck\^
+with no argument
+generates a path-name vs. i-number
+list of all files
+on a set of default file systems.
+Names of directory files are followed by
+.BR /. .
+The
+.B \-i
+option reduces the report to only those files whose i-numbers follow.
+The
+.B \-a
+option
+allows printing of the names
+.B .
+and
+.BR .. ,
+which are ordinarily suppressed.
+The
+.B \-s
+option reduces the report to special files
+and files with set-user-\s-1ID\s0 mode;
+it is intended to discover concealed violations
+of security policy.
+.PP
+A file system may be specified.
+.PP
+The report is in no useful
+order, and probably should be sorted.
+.SH "SEE ALSO"
+fsck(1M), sort(1).
+.SH DIAGNOSTICS
+When the file system structure is improper,
+\f3??\fP denotes the ``parent'' of
+a parentless file and
+a path-name beginning with \f3...\fP denotes a loop.
+.\"	@(#)ncheck.1m	6.2 of 9/2/83

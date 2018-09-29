@@ -1,0 +1,57 @@
+#ident "@(#)lp:model/lqp40	1.2"
+
+# lp interface for LQP-40 Letter Quality Printer
+#
+#
+
+x="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+stty -parenb -parodd 9600 cs8 cread clocal ixon 0<&1
+stty -ignbrk -brkint -ignpar -parmrk -inpck -istrip 0<&1
+stty -inlcr -igncr -iuclc -ixany 0<&1
+stty opost -ocrnl onlcr -onlret tab3 0<&1
+echo "\033P"
+id=$1
+name=$2
+title=$3
+copies=$4
+shift; shift; shift; shift; shift
+files="$*"
+echo "\014\c"
+echo "\n\n\n\n\n\n\n\n\n\n"
+echo "$x\n$x\n$x\n$x\n\n\n\n\n"
+banner "$name"
+echo "\n"
+echo "Request id: $id"  
+date
+echo "\n"
+if [ -n "$title" ]
+then
+	banner $title
+fi
+echo "\n\n\n\n\n"
+echo "$x\n$x\n$x\n$x\n\n\n\n\n"
+echo "\014\c"
+i=1
+while [ $i -le $copies ]
+do
+	for file in $files
+	do
+		case $file
+		in
+			*.g|*.n|*.mm)
+			stty -opost 0<&1
+			;;
+		esac
+		cat "$file" 2>&1
+		stty opost -ocrnl onlcr -onlret tab3 0<&1
+		echo "\033P"
+		echo "\014\c"
+	done
+	i=`expr $i + 1`
+done
+echo "\n\n\n\n\n\n\n\n\n\n"
+echo "$x\n$x\n$x\n$x\n\n\n\n\n"
+banner "END"
+echo "$x\n$x\n$x\n$x\n\n\n\n\n"
+echo "\014\c"
+exit 0

@@ -1,0 +1,18 @@
+
+\S window:  layer \S
+
+A window is an area within your terminal screen.  The window is set off
+from the rest of the screen, and it functions independent of the processes
+on the rest of the screen.  If you have two windows on your screen they are
+independent of each other and the rest of the screen.
+
+The most common way to create windows on a UNIX system is by using the
+layers capability of the TELETYPE 5620 Dot-Mapped Display.  Each window you
+create with this program runs a separate shell.  Each one of these shells
+is called a layer.
+
+The shl(1) command, which stands for shell layer, offers a function similar
+to the layers program for users who do not have a 5620 terminal.  You can
+not create windows using shl(1), but you can start different shells which
+are independent of each other.  Each of the shells you create with shl(1)
+is called a layer.

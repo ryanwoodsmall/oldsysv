@@ -1,0 +1,10 @@
+MEMORY {
+	valid : org = 0x80000000, len = 0x40000000
+}
+SECTIONS {
+	.text	: { }
+	GROUP	ALIGN(0x200) : {
+		.data : { }
+		.bss : { }
+	}
+}

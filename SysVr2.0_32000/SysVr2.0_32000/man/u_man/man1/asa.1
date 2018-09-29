@@ -1,0 +1,68 @@
+.TH ASA 1
+.SH NAME
+asa \- interpret \s-1ASA\s+1 carriage control characters
+.SH SYNOPSIS
+.B asa
+\%[\|files\|]
+.SH DESCRIPTION
+.I Asa
+interprets the output of
+.SM FORTRAN
+programs that
+utilize \s-1ASA\s+1 carriage control characters.
+It processes either
+the
+.I files
+whose names are given as arguments or the standard input if no
+file names are supplied.
+The first character of each line is assumed to be
+a control character; their meanings are:
+.PP
+.TP 8
+.B \(fm\0\(fm
+(blank) single new line before printing
+.TP
+.B 0
+double new line before printing
+.TP
+.B 1
+new page before printing
+.TP
+.B +
+overprint previous line.
+.PP
+Lines beginning with other than the above characters are treated as if
+they began with
+.BR \(fm\0\(fm .
+The first character of a line is
+.IR not
+printed.
+If any such lines appear, an appropriate diagnostic will appear on standard
+error.
+This program forces the first line of each input file to start on
+a new page.
+.PP
+To view correctly the output of 
+.SM FORTRAN
+programs which use
+.SM ASA
+carriage control characters, \fIasa\fP could be used as a filter thus:
+.sp
+.DS
+	a.out | asa | lp
+.DE
+.sp
+and the output, properly formatted and paginated, would be directed to the
+line printer.
+.SM FORTRAN
+output sent to a file could be viewed by:
+.sp
+.DS
+	asa file
+.DE
+.SH SEE ALSO
+ef\&l(1),
+f77(1),
+fsplit(1),
+ratfor(1).
+.\"	@(#)asa.1	6.2 of 9/2/83

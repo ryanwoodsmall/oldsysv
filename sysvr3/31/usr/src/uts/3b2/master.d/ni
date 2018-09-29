@@ -1,0 +1,15 @@
+*#ident	"@(#)kern-port:master.d/ni	10.2.1.1"
+*
+* NI
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ac	1	ni	-	1       12
+						ni_cnt(%i) ={#D}
+						ni_ports(%i) ={NIPORTS}
+						ni_buf(%i) ={NIKBSZ}
+						ni_kbuff[NIKBSZ + 4] (%c)
+						port_ctl[NIPORTS + 1] (%0x34)
+$$$
+* NI2: number of ports and buffer size
+NIPORTS =	10
+NIKBSZ 	=	30000

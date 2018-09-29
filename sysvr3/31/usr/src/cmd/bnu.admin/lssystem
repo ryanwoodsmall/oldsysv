@@ -1,0 +1,70 @@
+#ident	"@(#)bnu.admin:lssystem	2.3"
+#	This shell is used to list system entries from /usr/lib/uucp/Systems
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ ! -r $SYSTEMS ]; then
+	echo "There are no entries in the '$SYSTEMS' file
+Use systemsmgmt to add entries.\n"
+	exit
+fi
+
+syslist=`grep '^[^#]' $SYSTEMS  2>/dev/null | cut -d' ' -f1 $SYSTEMS \
+	|  sort -u  |	grep '^[A-Za-z0-9]'`
+
+if [ $? -ne 0 ]; then
+	echo "There are no entries in the '$SYSTEMS' file
+Use systemsmgmt to add entries.\n"
+	exit
+fi
+
+nsys=`echo "$syslist" | wc -l`
+
+while $FIRST || chkyn ${flags} -f '
+Do you want to see another systems entry?' || break
+
+do
+FIRST=false
+	echo "
+This is the current list of systems known to the $PACKAGE:"
+	echo "${syslist}"  |  pr -t -w80 -6
+	if [ $nsys -le 600 ]
+	then
+		systemname=`chkyn ${flags} -fec '
+Enter system name you want to see in detail [q]:' \
+		${syslist}`
+	else
+		# if syslist is very long, can't use chkyn
+		# so handle it here.
+		echo "Enter system name you want to see in detail [q]: \c"
+		read systemname
+		echo "${syslist}" | grep "^${systemname}$"  >/dev/null
+		found=$?
+		while [ $found -ne 0 ]
+		do
+			echo "Permissible answers are:"
+			echo "${syslist}"  |  pr -t -w72 -6
+			echo "q to quit\n\nEnter system name you want to see in detail [q]: \c"
+			read systemname
+			echo "${syslist}" | grep "^${systemname}$" >/dev/null
+			found=$?
+		done
+	fi
+	echo "\nHere is the Systems file entry(ies) for machine '${systemname}'."
+	grep "^${systemname}[ 	]" $SYSTEMS |
+		while read a
+		    do /bin/sh _systemprint $a
+		done
+done

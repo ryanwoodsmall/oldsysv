@@ -1,0 +1,122 @@
+#ident	"@(#)rfs.admin:resrcmgmt/advmgmt/unadvauto	1.10"
+#menu# remove local resources from the automatic advertise list
+
+#help# 
+#help#  When you no longer want to share a resource with other machines 
+#help#  you withdraw your resource by unadvertising it.
+#help#
+#help#  The subcommand "unadvauto" allows you to remove local resources 
+#help#  from the Automatic Advertise List.  The next time RFS is started
+#help#  the resources will no longer be readvertised.
+#help#
+#help#  NOTE: This subcommand does NOT unadvertise the resources 
+#help#  immediately.  Use the subcommand "unadnow" to unadvertise
+#help#  immediately.
+#help# 
+
+# print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo "\n\n\tREMOVE LOCAL RESOURCES FROM AUTOMATIC ADVERTISE LIST"
+
+# define messages and questions
+DEF_UNADV="
+When you no longer want to share a resource with client machines
+you unadvertise it.  Resources that have been set up to be advertised 
+automatically, however, will be readvertised by the system the next 
+time RFS is started unless they are removed from the Automatic 
+Advertise List. 
+
+This subcommand lets you remove resources from the Automatic Advertise List.
+NOTE: This subcommand does NOT unadvertise immediately.  To unadvertise
+immediately use \"unadvnow\"."
+
+QUEST3="
+Enter the resource identifier of the resource to be removed from the 
+Automatic Advertise List [?, q]:"
+
+SYM_HELP="
+Enter the resource identifier that was assigned to the resource when 
+it was advertised.  Resource identifiers must be 1 to 14 printable 
+characters.  If you try to enter a resource identifier that is not 
+in the list, the system will warn you and show you the resources that 
+are in the list."
+
+REDOQ="
+Do you want to remove another resource from the Automatic
+Advertise List?"
+
+NOMORE="
+There are no resources in the Automatic Advertise List."
+
+# print description
+echo "$DEF_UNADV\n"
+
+#initialization
+cflags="-qq -k$$"
+
+# set trap
+trap '/bin/rm -f /usr/tmp/rstab$$; /bin/chmod 644 /etc/rstab; /bin/chgrp bin /etc/rstab; trap 0; exit' 0 1 2 3 15
+
+# strip comments from /etc/rstab
+/bin/sed "s/^\#.*$//
+	/^$/d" /etc/rstab >/usr/tmp/rstab$$ 2>/dev/null
+
+# Determine if an auto-advertise listing exist.  If not, then print the appropriate
+# error message
+if [ ! -s /usr/tmp/rstab$$ ]
+then
+        echo "$NOMORE\n"
+        exit
+fi
+
+while /bin/true
+do
+        # Get the resource symbolic name.  If the resource is not in the auto list
+        # then print those that are, and ask the user for another resource, else
+        # change /etc/rstab appropriately.
+        res=`/usr/lbin/checkre $cflags -fe                      \
+        -H "$SYM_HELP"                                          \
+        "$QUEST3"                                               \
+        '^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+        '^[^\.\/ :]*$'  'The resource identifier must not contain a space, ":", "." or a "/".'`
+
+                /usr/bin/fgrep " $res " /usr/tmp/rstab$$ 2>/dev/null 1>&2
+                if [ $? -ne 0 ]
+                then
+                        echo "\nResource \"$res\" is not in the Automatic Advertise List.\n"
+                        echo "The following resources are in the Automatic Advertise List:\n"
+                        /bin/sed -e 's/".*"//' -e 's/-[dr]//g' /usr/tmp/rstab$$ | /usr/bin/awk '{printf "\t%s\n", $2}' | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+                        continue
+                else
+                        /usr/bin/fgrep -v " $res " /etc/rstab >/usr/tmp/$$.rstab
+                        if [ $? -lt 2 ]
+                        then
+                                /bin/mv /usr/tmp/$$.rstab /etc/rstab
+                                echo "\nResource \"$res\" has been removed from Automatic Advertise List."
+                        else
+                                echo "\nResource \"$res\" has NOT been removed from the Automatic Advertise List."
+                                continue
+                        fi
+                fi
+
+        # Determine if an auto-advertise listing exist.  If not, then print the
+        # appropriate error message, else ask the user whether or not to repeat the
+        # sequence.
+	
+	# strip comments from /etc/rstab
+	/bin/sed "s/#.*$//
+		/^$/d" /etc/rstab >/usr/tmp/rstab$$ 2>/dev/null
+        if [ -s /usr/tmp/rstab$$ ]
+        then
+                if /usr/lbin/checkyn $cflags -f "$REDOQ"
+                then
+                        continue
+                else
+                        break
+                fi
+        else
+                echo "$NOMORE"
+                break
+        fi
+done

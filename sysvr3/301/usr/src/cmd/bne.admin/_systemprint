@@ -1,0 +1,44 @@
+#ident	"@(#)bne.admin:_systemprint	2.5"
+#
+#	This internal program prints system entries in
+#	user readable form
+
+if [ "$1" = "$3" ]; then
+	TYPE="Direct"
+else
+	TYPE=$3
+fi
+
+echo "
+SYSTEM NAME:	$1"
+
+case $3 in
+ACU)	echo "DEVICE TYPE:	$TYPE" ;;
+Develcon|Micom|Sytek) echo "DEVICE TYPE:	$TYPE" ;;
+DK)	echo "DEVICE TYPE:	$TYPE" ;;
+*)	echo "NETWORK NAME:	$TYPE" ;;
+esac
+
+echo "SPEED:		$4"
+
+case $3 in
+ACU)	echo "PHONE NUMBER:	$5" ;;
+Develcon|Micom|Sytek) echo "SWITCH TOKEN:	$5" ;;
+DK)	echo "DK NUMBER:	$5" ;;
+*)	echo "ADDRESS:	$5" ;;
+esac
+
+shift 5
+while [ $# -gt 0 ]
+do
+	if [ `expr "$1" : '.*rd[:-]'`  -ne 0 ]; then
+	    echo "PASSWORD:	$2"
+	    shift 2
+	    continue
+	fi
+	if [ `expr "$1" : '.*in[:-]'`  -ne 0 ]; then
+	    echo "LOGIN:		$2"
+	    shift
+	fi
+	shift
+done

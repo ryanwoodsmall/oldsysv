@@ -1,0 +1,23 @@
+
+\S login : login name : login directory : password \S
+
+To login  means to connect your terminal to the computer and  become
+a user of a UNIX system.  You begin the login process by  typing
+your login name.   You choose your login name when you first become
+a user of the system, and you must select a login name that is 
+different from the other users on your system.  After you type your
+login name, the system asks you for your password.  Your password is
+a "string"\S*\S that verifies your identity as the "owner"\S*\S of your 
+login name.  Your password is to remain secret.  To make your password 
+hard to guess you should make it seven or eight characters long, 
+include at least one number or "special character"\S*\S, and change  
+your password every six months. Your login name is usually used to 
+name the directory that you enter once you are logged in. This is
+called your login directory. 
+
+Your login name also identifies you as the owner of certain files
+and directories in your system.  This means that you have control of
+the "access permissions"\S*\S for the files you own, and the
+permissions for the owner are the ones that apply to you.
+
+\S*\S defined in the \Sglossary\S

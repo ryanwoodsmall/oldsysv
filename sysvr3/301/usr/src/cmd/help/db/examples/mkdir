@@ -1,0 +1,25 @@
+
+\S mkdir \S:  Examples
+
+       mkdir bin
+
+    Creates an empty directory named "bin" in the current working directory.
+
+    ----------------------------------------------------------------------
+
+       mkdir $HOME/tmp
+
+    Creates a new, empty directory named "tmp" in your HOME directory.
+
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+       mkdir ../SOURCE ../SOURCE/CMD
+
+    Creates a new, empty directory named "SOURCE" at the same level as the
+    current working directory (both directories have the same parent directory)
+    and then creates a new, empty directory named "CMD" in directory "SOURCE".

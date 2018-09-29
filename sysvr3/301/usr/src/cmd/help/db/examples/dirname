@@ -1,0 +1,8 @@
+
+\Sdirname\S: Examples
+
+        CMDSRC=`dirname /usr/src/cmd/cat.c`
+
+    This command line sets the value of the variable "CMDSRC" to the path name
+    of the parent directory of "cat.c".  The value of "CMDSRC" becomes
+    "/usr/src/cmd".

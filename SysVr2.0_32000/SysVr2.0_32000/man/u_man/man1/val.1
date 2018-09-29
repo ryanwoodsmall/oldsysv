@@ -1,0 +1,115 @@
+.TH VAL 1
+.SH NAME
+val \- validate \s-1SCCS\s0 file
+.SH SYNOPSIS
+\fBval \-\fR
+.br
+.B val
+.SF s
+.SP r \s-1SID\s0 ]
+.SP m name ]
+.SP y type ]
+files
+.SH DESCRIPTION
+.I Val\^
+determines if the specified
+.I file\^
+is an \*(S) file meeting the characteristics specified by the optional
+argument list.
+Arguments to
+.I val\^
+may appear in any order.
+The arguments consist of keyletter arguments, which begin with a \fB\-\fR, and
+named files.
+.PP
+.I Val\^
+has a special argument, \fB\-\fR, which causes reading of the standard input
+until an end-of-file condition is detected.
+Each line read is independently processed as if it were a command line argument
+list.
+.PP
+.I Val\^
+generates diagnostic messages on the standard output for each command line
+and file processed, and also returns a single 8\fB-\fRbit code upon exit as
+described below.
+.PP
+The keyletter arguments are defined as follows.
+The effects of any keyletter argument apply independently to each named file
+on the command line.
+.AR s The
+presence of this argument silences the diagnostic message normally
+generated on the standard output for any error that is detected while processing each named file on
+a given command line.
+.A2 r \s-1SID\s0 The
+argument value
+\*(I)
+.RI ( S \s-1CCS\s+1 " ID" entification
+String) is an \*(S) delta number.
+A check is made to determine if the
+\*(I)
+is ambiguous (e. g.,
+.B \*-r\c
+1 is ambiguous because it physically does not exist but implies 1.1, 1.2,
+etc., which may exist) or invalid (e. g.,
+.B \*-r\c
+1.0 or
+.B \*-r\c
+1.1.0 are invalid because neither case can exist as a valid delta number).
+If the
+\*(I)
+is valid and not ambiguous, a check is made
+to determine if it actually exists.
+.A2 m name The
+argument value
+.I name\^
+is compared with the \*(S) %\&M% keyword in
+.IR file .
+.A2 y type The
+argument value
+.I type\^
+is compared with the \*(S) %\&Y% keyword in
+.IR file .
+.RE
+.PP
+The 8\fB-\fRbit code returned by
+.I val\^
+is a disjunction of the possible errors, i.\ e., can be interpreted as
+a bit string where (moving from left to right) set bits are interpreted as follows:
+.nf
+.PP
+.RS
+bit 0 = missing file argument;
+bit 1 = unknown or duplicate keyletter argument;
+bit 2 = corrupted \*(S) file;
+bit 3 = cannot open file or file not \*(S);
+bit 4 = \*(I) is invalid or ambiguous;
+bit 5 = \*(I) does not exist;
+bit 6 = %\&Y%, \fB\-y\fR mismatch;
+bit 7 = %\&M%, \fB\-m\fR mismatch;
+.RE
+.fi
+.PP
+Note that
+.I val\^
+can process two or more files on a given command line and in turn can
+process multiple command lines (when reading the standard input).
+In these cases an aggregate code is returned \- a logical \fB\s-1OR\s0\fR of the
+codes generated for each command line and file processed.
+.bp
+.SH "SEE ALSO"
+admin(1),
+delta(1),
+get(1),
+help(1),
+prs(1).
+.SH DIAGNOSTICS
+Use
+.IR help (1)
+for explanations.
+.SH BUGS
+.I Val\^
+can process up to 50 files on a single command line.
+Any number above 50 will produce a
+.B core
+dump.
+.\"	@(#)val.1	6.2 of 9/2/83

@@ -1,0 +1,7 @@
+//testjob job (6270,p114),multitest,typrun=copy,msgclass=a
+//*   usr=(rje1,job,1)
+this job tests the ibm link.
+......
+the test apparently worked!!!
+/*
+//

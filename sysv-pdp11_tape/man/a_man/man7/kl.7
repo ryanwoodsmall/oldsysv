@@ -1,0 +1,26 @@
+.TH KL 7 "PDP-11 only"
+.SH NAME
+kl \- \s-1KL-11\s0 or \s-1DL-11\s0 asynchronous interface
+.SH DESCRIPTION
+The discussion of typewriter
+.SM I/O
+given in
+.IR tty (7)
+applies to these devices.
+.PP
+Since they run at a constant speed, attempts to change the speed are ignored.
+.PP
+The on-line console typewriter is normally interfaced using
+a
+.SM KL-11
+or
+.SM DL-11.
+.SH FILES
+/dev/console
+.SH "SEE ALSO"
+init(1M), tty(7).
+.SH BUGS
+Modem control for the
+.SM DL-11E
+is not implemented.
+.\"	@(#)kl.7	5.2 of 5/18/82

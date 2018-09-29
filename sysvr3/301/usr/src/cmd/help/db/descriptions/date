@@ -1,0 +1,23 @@
+
+\Sdate\S:  Description
+
+Syntax Summary:  date [+format]
+                 date [mmddhhmm [yy] ]
+
+         where:  format  is a list.
+                 mddhhmm  is an eight digit number with the first
+                          two digits specifying month, the second
+                          two specifying day, the third two
+                          specifying hour, and the last two
+                          specifying minutes.
+
+                 yy  is the last two digits of the year.
+
+Description:
+     \Sdate\S prints the day, the month, the time and the year by default on 
+     the standard output.  This is the default.  You can change the format of
+     the output for \Sdate\S by listing a "+" followed by field descriptors. 
+     More information about field descriptors is available on the options 
+     screen and manual page for \Sdate\S.  A super user can change the date
+     and time on the computer by using the <mmddhhmm> and <yy> arguments.
+     Regular users can not use these arguments.

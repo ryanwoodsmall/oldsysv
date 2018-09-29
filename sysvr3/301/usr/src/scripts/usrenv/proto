@@ -1,0 +1,60 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/usrenv/Rlist.usrenv
+	UNINSTALL	---555 2 2	./install/usrenv/UNINSTALL
+	INSTALL 	---555 2 2	./install/usrenv/INSTALL
+	setup		---555 2 2	./install/usrenv/setup
+	unsetup	 	---555 2 2	./install/usrenv/unsetup
+$
+new	d--775 0 3
+	boot	d--775 0 3
+		sxt.o			---555 2 2	../usr/src/uts/3b2/io/sxt.o
+	$
+	etc	d--775 0 3
+		master.d	d--775 0 3
+			sxt			---444 2 2	../usr/src/uts/3b2/master.d/sxt
+		$
+	$
+	bin	d--775 2 2
+		basename	---555 2 2	../bin/basename
+		dirname		---555 2 2	../bin/dirname
+		env		---555 2 2	../bin/env
+		line		---555 2 2	../bin/line
+		nice		---555 2 2	../bin/nice
+		nohup		---555 2 2	../bin/nohup
+		time		---555 2 2	../bin/time
+		tty		---555 2 2	../bin/tty
+	$
+	usr	d--775 0 3
+		bin 	d--775 2 2
+			at		-u-555 0 2	../usr/bin/at
+			banner		---555 2 2	../usr/bin/banner
+			batch		---555 2 2	../usr/bin/batch
+			bc		---555 2 2	../usr/bin/bc
+			cal		---555 2 2	../usr/bin/cal
+			calendar	---555 2 2	../usr/bin/calendar
+			crontab		-u-555 0 2	../usr/bin/crontab
+			dc		---555 2 2	../usr/bin/dc
+			factor		---555 2 2	../usr/bin/factor
+			logname		---555 2 2	../usr/bin/logname
+			shl		-u-555 0 2	../usr/bin/shl
+			tabs		---555 2 2	../usr/bin/tabs
+			units		---555 2 2	../usr/bin/units
+			xargs		---555 2 2	../usr/bin/xargs
+		$
+		lib	d--775 0 3
+			calprog		---555 2 2	../usr/lib/calprog
+			lib.b		---444 2 2	../usr/lib/lib.b
+			unittab		---444 2 2	../usr/lib/unittab
+		$
+		options	d--775 0 3
+			calc.name	---555 2 2	./install/usrenv/calc.name
+			shell.name	---555 2 2	./install/usrenv/shell.name
+			usrenv.name	---555 2 2	./install/usrenv/usrenv.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.usrenv:usrenv/proto	1.11"

@@ -1,0 +1,18 @@
+#ident	"@(#)rfs.admin:resrcmgmt/mountmgmt/DESC	1.2"
+#menu# remote resource mounting and info management menu
+
+#head# 		REMOTE RESOURCE MOUNTING AND INFO MANAGEMENT
+#help# 
+#help#	You access remote resources from other server machines  
+#help#	in your domain by mounting them on a directory in your 
+#help#	own file system.  The subcommands of the Mount Remote  
+#help#	Resource Management Menu allow you to handle all aspects 
+#help#	of mounting remote resources from server machines in your 
+#help#	domain.  The subcommands provide two information lists: 
+#help#	one that lists remote resources available for mounting, 
+#help#	and one that lists remote resources that are already locally 
+#help#	mounted.  The subcommands allow you to mount and unmount 
+#help#	remote resources and to add and remove resource from the 
+#help#	Automatic Mount List.  Your system will attempt to mount 
+#help#	the remote resources on this list each time RFS is started. 
+#help#	

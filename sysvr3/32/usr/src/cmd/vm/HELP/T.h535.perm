@@ -1,0 +1,37 @@
+
+   The Security on New Objects Form sets  the access permission levels
+   on new objects created by you.  You have the option of editing this
+   form to reflect  the levels you want. Note that any changes made to
+   the values in this form only effect files and folders created after
+   the new form is saved.  All files and  folders  currently  in  your
+   Filecabinet and Wastebasket are not affected.
+
+   For each permission field specify your preference by  pressing  the
+   CHOICES screen labeled key or by typing "yes" or "no".  You may set
+   permissions to Read, Write, and Run/Search for yourself,  for  your
+   group  (check  with your system administrator), and for anyone with
+   access to your system.
+
+   READ PERMISSIONS determine who can view the contents of  an  object
+   owned  by  you.  WRITE PERMISSIONS determine who can edit/change an
+   object owned by you.  RUN/SEARCH PERMISSIONS determine who can  run
+   your  executable  objects or search your file folders.  Permissions
+   on existing objects may be changed using the SECURITY command.
+
+   Function Keys active for this form (in addition to  PREV-FRM,
+   NEXT-FRM, CMD-MENU, and HELP) are:
+
+      - CANCEL -- Cancels the form without saving the new field values
+        entered in the form, closes the frame, and returns you to the
+        point in the interface that you were at  prior  to  accessing
+        the form.
+
+      - CHOICES -- For the field where  the  cursor  resides  pressing
+        CHOICES toggles between the values of "yes" and "no".
+
+      - SAVE -- Saves all the field values entered in the form, closes
+        the frame, and returns you to the point in the interface that
+        you were at prior to accessing the form.
+
+      - RESET - resets the field back to the value in  effect  at  the
+        beginning of the current editing session.

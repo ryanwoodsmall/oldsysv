@@ -1,0 +1,20 @@
+2 3 25
+3 First line
+30 
+8 4 25 Second line
+31 
+8 5 25 Third line
+8 1 22 HIGHLIGHTING CHECK
+705 11 8 67
+Does the second line stand out from the first and third lines?
+
+Answer y if the second line looks different from the first and
+third lines. For example, the second line may have
+     - Inverse video
+     - Underlining
+     - Brightness  difference
+
+Answer n if the second line is similar to the first and third lines.
+706 
+15 
+1000 

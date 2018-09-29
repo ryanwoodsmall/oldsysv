@@ -1,0 +1,26 @@
+
+\S \:  backslash \S
+
+1)  A backslash suspends the meaning of a "special character"\S*\S. 
+When a special character is preceded by a backslash the character no
+longer has a special meaning; therefore it will be treated the same
+as an  alphanumeric character.  For example, the command
+
+	rm temp\*
+
+removes only the file named  "temp*".  If the special meaning of
+"asterisk (*)"\S*\S were not suspended, the command would also
+remove "temp", "temp1", "tempsave", and all other files whose names
+begin with "temp".
+
+2)  A backslash also gives special meaning to some alphanumeric
+characters that are used in "shell programs"\S*\S:
+
+	\n is a newline, i.e., a carriage return and a linefeed
+	\t is a tab
+	\b is a backspace
+	\r is a carriage return without a linefeed
+	\c inhibits a carriage return
+
+\S*\S defined in the \Sglossary\S
+

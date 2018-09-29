@@ -1,0 +1,107 @@
+.TH STRIP 1
+.SH NAME
+\*pstrip \- strip symbol and line number information from a common object file
+.SH SYNOPSIS
+.B \*pstrip
+.RB [ \-l ]
+.RB [ \-x ]
+.RB [ \-r ]
+.RB [ \-V ]
+filename
+.SH DESCRIPTION
+The 
+.I \*pstrip
+command
+strips the symbol table and line number information from
+common object files,
+including archives.
+Once this has been done, no symbolic debugging access
+will be available for that file; therefore, this command is
+normally run only on production modules that have
+been debugged and tested.
+.PP
+The amount of information stripped from the symbol table
+can be controlled by using any of the 
+following  options:
+.PP
+.TP 9
+.BR \-l
+Strip line number information only;
+do not strip any symbol table information.
+.PP
+.TP 9
+.B \-x
+Do not strip static or external symbol information.
+.PP
+.TP 9
+.B \-r
+Reset the relocation indexes into the symbol table.
+.PP
+.TP 9
+.B \-V
+Print the version of the \*pstrip command executing on the standard error output.
+.DT
+.br
+.PP
+If there are any relocation entries in the object file and any symbol
+table information is to be stripped,
+.I \*pstrip
+will complain and terminate without stripping
+.I file-name
+unless the
+.B \-r
+flag is used.
+.PP
+If the 
+.IR strip
+command is executed on a common archive file [see
+.IR ar (4)]
+the archive symbol table will be removed.  The archive
+symbol table must be restored by executing the
+.IR ar (1)
+command with the 
+.B s
+option before the archive can be
+link-edited by the 
+.IR ld (1)
+command.  
+.IR Strip
+will instruct the user with appropriate warning messages when this
+situation arises.
+.PP
+The purpose of this command is to reduce the file storage
+overhead taken by the object file.
+.SH "FILES"
+/usr/tmp/strp??????
+.SH "SEE ALSO"
+ar(1),
+\*pas(1),
+\*pcc(1),
+\*pld(1).
+.br
+a.out(4),
+ar(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH "DIAGNOSTICS"
+.TP 17
+\*pstrip:  name:  cannot open
+	if
+.I name
+cannot be read.
+.PP
+.TP 17
+\*pstrip:  name:  bad magic 
+	if
+.I name
+is not an appropriate common object file.
+.PP
+.TP 17
+\*pstrip:  name:  relocation entries present; cannot strip 
+	if
+.I name
+contains relocation entries and the
+.B \-r 
+flag is not used,
+the symbol table information cannot be stripped.
+'\" \%W\%
+.\"	@(#)strip.1	6.2 of 9/2/83

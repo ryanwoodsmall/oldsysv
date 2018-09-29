@@ -1,0 +1,64 @@
+
+
+
+The directories under the directory `/usr/man' contain the
+machine-readable copy of the UNIX System User's Manual and
+the UNIX System Administrator's Manual along with various
+shell procedures for regenerating the Table of Contents
+and Permuted Index, as well as for performing various verifica-
+tion procedures on the contents of that manual.  The following
+table describes the directories and files in /usr/man:
+
+/usr/man/[au]_man/man0:   intro   Text and macros for the front matter,
+                                  namely the title and trademark pages,
+                                  Acknowledgements, Introduction, and
+                                  How to Get Started.
+                          ptxin   Macros for Permuted Index.
+                          ptxx    Text for Permuted Index, created by
+                                  `tocrc' (see `/usr/man/tools' below).
+                          tocin   Macros for Table of Contents.
+                          toc[1-8]
+                                  Text for Table of Contents (created
+                                  by `tocrc').
+                          skeleton
+                                  A skeleton manual page showing the
+                                  standard order of the major headings.
+
+/usr/man/[au]_man/man[1-8]:  *    Machine-readable copies of all entries
+                                  in Sections 1 through 8.
+
+/usr/man/tmp:             cattoc  An intermediate file created by `tocrc'.
+                          tocx[1-8]
+                                  Intermediate files created by `tocrc'.
+                          *       Other temporary and result files used
+                                  by the various shell procedures in
+                                  `/usr/man/tools'.
+
+/usr/man/tools:           .param  Shell file that parses arguments and
+                                  initializes global variables for other
+                                  procedures in `/usr/man/tools'.
+                          TOOLKIT File that describes shell procedures
+                                  in `/usr/man/tools'.
+                          break   Break characters for `/usr/bin/ptx', the
+                                  program that carries out the permutation
+                                  for the Permuted Index (see ptx(1)).
+                          ignore  List of words to be ignored during
+                                  the creation of the Permuted Index.
+                         sp.ignore
+                                   List of strings commonly found in the
+                                   manual that are flagged as errors by
+                                  `spell'.  Used by `ckspell' (see
+                                  `/usr/man/tools').
+                          *       Other files as described in the
+                                  file TOOLKIT.
+
+/usr/man/local:         man[0-8]
+                                  Additional entries, local to a given site,
+                                  may exist in these directories on some
+                                  systems.
+
+
+
+
+
+

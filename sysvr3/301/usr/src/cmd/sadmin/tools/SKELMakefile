@@ -1,0 +1,35 @@
+#ident	"@(#)sadmin:tools/SKELMakefile	1.5"
+#	skeleton Makefile for tools used in building sadmin
+
+ROOT = /
+
+CMDS = --EXECUTABLES--
+
+PARTS = $(CMDS) --FILES--
+
+ALL:		$(PARTS)
+	chmod go-w $(PARTS)
+	chmod +x $(CMDS)
+
+install:
+
+remove:
+
+partslist:	$(PARTS)
+	@echo $(PARTS)  |  tr ' ' '\012'  |  sort
+	
+product productdir:
+
+clean:
+
+clobber:
+
+srcaudit:
+	@(	find * -print;  \
+		ls -d $(DIRECTORIES) $(PARTS) SKELMakefile Makefile  \
+	)  |  sort  |  uniq -u  |  sed 's/$$/	unexpected/'
+
+newmakefile:	genmakefile SKELMakefile ALL
+	cp Makefile OMakefile
+	./genmakefile SKELMakefile OMakefile >Makefile
+	rm -f OMakefile

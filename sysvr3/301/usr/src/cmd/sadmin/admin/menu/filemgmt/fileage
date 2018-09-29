@@ -1,0 +1,56 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/fileage	2.3"
+#menu# list files older than a particular date
+
+#help# 
+#help#	Fileage prints the names of all files older than the date you
+#help#	specify.  If you don't enter a date, all files older than 90 days
+#help#	will be listed.  If you don't specify the directory to look in,
+#help#	your HOME directory will be used.
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"	# checkyn flags
+defdays=90	# default number of days to go back to
+
+while true
+do
+	fsys=`checkre ${flags} -D "$HOME" -H'
+	This is the starting point used to locate inactive files.' \
+		-fe "Enter full path name of the directory to search
+(default $HOME): " \
+		'^/.*' 'Directory name must begin with "/"'`
+	
+	if [ -d "${fsys}" ]
+	then
+		break
+	else
+		echo "\t${fsys} is not the full path name of a valid directory."
+	fi
+done
+
+days=`checkre ${flags} -D "${defdays}" -H'
+	All files that have not been written to, created, or edited
+	within the number of days that you specify, will be listed.' \
+		-fe "Enter the number of days to go back (default ${defdays}): " \
+		'^[0-9]*$' 'Answer contains an illegal character.
+	Only numbers are permitted.' \
+		'^.\{1,3\}$' 'Answer must not be larger than 999.'`
+
+
+cd ${fsys}
+
+flist=`find . -mtime +${days} -print`
+if [ -z "${flist}" ]
+then
+	echo "
+	There are no files older than ${days} days in" `pwd`
+	exit 0
+fi
+
+echo "
+FILES NOT MODIFIED IN THE LAST ${days} DAYS IN" `pwd`"
+
+         file size   date of
+owner   (characters) last access  filename
+-----   ------------ ------------ --------"
+
+	echo ${flist} | sort  | xargs ls -dl  | cut -c16-24,30-54,57-

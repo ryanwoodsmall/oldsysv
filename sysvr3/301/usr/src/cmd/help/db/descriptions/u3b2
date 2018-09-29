@@ -1,0 +1,16 @@
+
+\Su3b2\S:  Description
+
+Syntax Summary:  u3b2
+
+Description:
+     \Su3b2\S stands for "UNIX 3B2". The \Su3b2\S command checks the
+     machine ID of the computer it is running on.  If the computer is an
+     AT&T 3B2 computer, \Su3b2\S sets the exit status to zero showing that
+     it executed successfully.  If the computer is anything other than a u3b2,
+     \Su3b2\S sets the exit status to a non-zero number.  Use \Su3b2\S as a test
+     in shell programs to identify the type of computer.  It insures that the
+     system executes the machine specific lines that are appropriate to the
+     3B2.  See also:  false(1), pdp11(1), sh(1), test(1), true(1), u370(1),
+     u3b(1), u3b5(1), and vax(1) for commands with functions similar to
+     \Su3b2\S, and make(1) for a command that might be used with \Su3b2\S.

@@ -1,0 +1,23 @@
+.TH TN74 7 "3B20S only"
+.SH NAME
+tn74 \- two line asynchronous interface
+.SH DESCRIPTION
+Each of the two lines attached to a
+.SM TN\*S74
+behaves as described in
+.IR termio (7).
+The
+.I c_cflag
+items of
+.BR B200 ,
+.SM
+.BR EXTA\*S ,
+and
+.SM
+.B EXTB
+are not available.
+.SH FILES
+/dev/tty\(**
+.SH "SEE ALSO"
+termio(7), tn4(7).
+.\"	@(#)tn74.7	5.2 of 5/18/82

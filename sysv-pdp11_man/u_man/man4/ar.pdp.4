@@ -1,0 +1,48 @@
+.TH AR 4 "PDP-11 only"
+.SH NAME
+ar \- archive file format
+.SH DESCRIPTION
+The archive command
+.I ar\^
+is used to combine several files into
+one.
+Archives are used mainly as libraries to be searched
+by the link editor
+.IR ld (1).
+.PP
+A file produced by
+.I ar\^
+has a magic number at the start,
+followed by the constituent files, each preceded by a file header.
+The magic number is
+0177545(octal)
+(it was chosen to be unlikely to occur anywhere else).
+The header of each file is 26 bytes long:
+.RS
+.ta 8n +6n +6n
+.PP
+.nf
+#define	ARMAG	0177545
+struct	ar_hdr {
+	char	ar_name[14];
+	long	ar_date;
+	char	ar_uid;
+	char	ar_gid;
+	int	ar_mode;
+	long	ar_size;
+};
+.fi
+.RE
+.PP
+Each file begins on a word boundary;
+a null byte is inserted between files if necessary.
+Nevertheless the size given reflects the
+actual size of the file exclusive of padding.
+.PP
+Notice there is no provision for empty areas in an archive
+file.
+.SH SEE ALSO
+ar(1),
+ld(1).
+'\" \%W\%
+.\"	@(#)ar.pdp.4	5.2 of 5/18/82

@@ -1,0 +1,106 @@
+#ident	"@(#)sadmin:admin/menu/ttymgmt/lineset	2.5"
+#menu# show tty line settings and hunt sequences
+#help#
+#help#	The tty line settings often are hunt sequences, where, if the
+#help#	first line setting does not work, the line "hunts" to the next line
+#help#	setting, until one that works comes by.  This subcommand shows the
+#help#	various sequences of line settings.  It also shows each line
+#help#	setting in detail.
+
+flags="-q q -k $$"
+
+trap exit 1 2 15
+trap '	trap "" 1 2 15
+	rm -f /tmp/$$ttybaud' 0
+
+list=`sed -n 's/[ #].*//p' /etc/gettydefs  |  sort -n`
+
+while true
+do
+	echo '\nTty Line Settings and Sequences
+	'
+	if [ ! -r /tmp/$$ttybaud ]
+	then
+		eval `sed 's/\([^ #]*\).*# */LInE\1=/' /etc/gettydefs`
+		while i=`set  |  sed -n '/^LInE/s///p'  |  sort -n  |
+			sed -n '1s/\([^=]*\)=.*/\1/p'`  &&
+			[ -n "${i}" ]
+		do
+			echo "${i}\\c"
+			eval j=\$LInE${i}
+			unset LInE${i}
+			if [ "${i}" = "${j}" ]
+			then
+				echo '	(does not sequence)'
+				continue
+			fi
+			while [ "${j}" != "${i}" ]
+			do
+				echo "	${j}\\c"
+				k=${j}
+				eval j=\$LInE${j}
+				unset LInE${k}
+				if [ -z "${j}" ]
+				then
+					echo >&2 /etc/gettydefs has a bad \
+						sequence. It includes ${k}. \
+						It should be repaired.
+					break
+				fi
+			done
+			echo ''
+		done  |  pr -t -e'	'10  >/tmp/$$ttybaud
+	fi
+	cat /tmp/$$ttybaud
+	echo
+	i=`checklist ${flags} -fep -H '
+	The selected line setting will be shown in detail.  The novice user
+	should pay attention to the baud rate and the next setting.  The rest
+	of the information is for the expert user, useful for fine-tuning.
+	Each sequence above starts at any value and cycles to the next value
+	(to the right).  After the last value the sequence wraps around to the
+	first line setting.' \
+		"Select one line setting to see it in detail [?, q]:" ${list}`
+	while  true
+	do
+		echo
+		ed - /etc/gettydefs <<-!
+			H
+			v/^${i} *#/ d
+			s/^/Line Setting:		/
+			s/ *# */#/g
+			s/  */ /g
+			s/#/\\
+			\	Initial Flags:	/
+			s/#/\\
+			\	Final Flags:	/
+			s/#/\\
+			\	Login Prompt:	/
+			s/#/\\
+			\	Next Setting:	/
+			\$a
+
+			.
+			,p
+			v/ Flags:	/d
+			,s/.* Flags:	//
+			,s/[ 	][ 	]*/\\
+			/g
+			,g/^[ 	]*\$/d
+			,s;.*;/^&	/;
+			w !sort -u|ed - \${MENUTOP}/gettyvalues
+		!
+		echo
+		i=`checklist ${flags} -D '<RETURN>' -fep \
+			-H '
+	You may see the same detail information for another line setting by
+	entering its name.  To see the original line setting/sequence list just
+	hit the <RETURN> key.' \
+			"Select another line setting or
+<RETURN> to see the original list [?, q]:" ${list} '<RETURN>'`
+		if [ "${i}" = '<RETURN>' ]
+		then
+			break
+		fi
+	done
+done

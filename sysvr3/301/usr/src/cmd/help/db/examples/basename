@@ -1,0 +1,24 @@
+
+\Sbasename\S:  Examples
+
+        basename PRINT/letter
+
+    Reduces the path name "PRINT/letter" to the file name "letter".
+
+    ----------------------------------------------------------------------
+
+        basename PRINT/letter.z .z
+
+    Removes "PRINT" and ".z" from "PRINT/letter.z" and prints "letter" on
+    standard output.
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+        MYNAME=`basename $HOME`
+
+    If your "HOME" directory is /a8/xyz, the shell variable "MYNAME" is
+    assigned the value "xyz".

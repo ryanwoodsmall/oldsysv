@@ -1,0 +1,111 @@
+.TH LDGETNAME 3X
+.SH NAME
+ldgetname \- retrieve symbol name for common object file symbol table entry
+.SH SYNOPSIS
+.ta \w'\s-1LDFILE\s+1\ \ \ 'u
+.nf
+.ft B
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <syms.h>
+.B #include <ldfcn.h> \}
+.el \{\
+.B #include "\s-1INCDIR\s+1\/filehdr.h>
+.B #include "\s-1INCDIR\s+1\/syms.h"
+.B #include "\s-1INCDIR\s+1\/ldfcn.h" \}
+.PP
+.B char \(**ldgetname (ldptr, symbol)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B \s-1SYMENT\s+1 \(**symbol;
+.ft R
+.fi
+.DT
+.SH DESCRIPTION
+.I Ldgetname\^
+returns a pointer to the name associated with
+.BR symbol\^
+as a string.
+The string is contained in a static buffer local to
+.I ldgetname\^
+that is overwritten by each call to
+.IR ldgetname ,
+and therefore must be copied by the caller if the name is to be saved.
+.PP
+As of
+.SM UNIX
+system release 5.0, the common object file format has been extended to handle
+arbitrary length symbol names with the addition of a ``string table''.
+.I Ldgetname\^
+will return the symbol name associated with a symbol table entry for
+either a pre-\s-1UNIX\s+1 system 5.0 object file or a
+.SM UNIX
+system 5.0 object file.  Thus,
+.I ldgetname\^
+can be used to retrieve names from object files without any backward
+compatibility problems.
+.I Ldgetname\^
+will return
+.SM NULL
+(defined in
+.BR stdio.h )
+for a
+.SM UNIX
+system 5.0 object file if the name cannot be retrieved.  This situation can
+occur:
+.TP
+\-
+if the ``string table'' cannot be found,
+.TP
+\-
+if not enough memory can be allocated for the string table,
+.TP
+\-
+if the string table appears not to be a string table (for example,
+if an auxiliary entry is handed to
+.I ldgetname\^
+that looks like a reference to a name in a non-existent string table), or
+.TP
+\-
+if the name's offset into the string table is past the end of the
+string table.
+.PP
+Typically,
+.I ldgetname\^
+will be called immediately after a successful call to
+.I ldtbread\^
+to retrieve the name associated with the symbol table entry
+filled by
+.IR ldtbread .
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+\s-1LIBDIR\s+1\/libld.a .
+\}
+.if !'\*p'' \{\
+.PP
+.IR Intro (5)
+describes
+.IR \s-1INCDIR\s+1  and  \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X),
+ldopen(3X),
+ldtbread(3X),
+ldtbseek(3X),
+ldfcn(4).
+\}
+.el \{\
+ldclose(3X),
+ldopen(3X),
+ldtbseek(3X),
+ldtbread(3X),
+intro(4),
+ldfcn(4),
+paths.h(4).
+\}
+.\"	%G% of %W%

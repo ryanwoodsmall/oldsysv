@@ -1,0 +1,53 @@
+
+   The OFFICE PREFERENCES form allows you to customize some FACE
+   features.   The  following list defines the fields included in this
+   form.
+
+      - DELETE OBJECTS FROM  MY  WASTEBASKET  AFTER  (#  of  days)  --
+        Objects  may  be  maintained  in your Wastebasket from 1 to 30
+        days.  Type in your preference.
+
+      - PROMPT BEFORE EMPTYING THE WASTEBASKET  --  If  you  set  this
+        option to 'yes', a prompt will appear when you login notifying
+        you that objects in the Wastebasket are  ready  for  deletion.
+        If you set this option to 'no', the prompt will not appear and
+        objects will be deleted on schedule without an opportunity for
+        you to retrieve them.
+
+      - DEFAULT EDITOR -- "vi"  is set  up as  the default  editor for
+        FACE.  You can  change your  default editor to any other
+        editor  or word  processing  package  on  your  system.  Check
+        with  your  system   administrator  for information  on  other
+        editors and word processors available on your system.
+
+      - ADDITIONAL  FRAMES OPEN  UPON LOGIN --  The  Office  frame  is
+        always  open  upon  login.  In  addition, you may select up to
+        4  other frames to be opened.  To use this feature,  type  the
+        name  of  each  of the  frames you would like opened, one name
+        per line.  Examples are:
+
+        services - an Office menu object
+        folder1 - pathname relative to your filecabinet
+        /usr/john/FILECABINET/folder1 - full pathname
+
+        Function Keys active for this form (in  addition  to PREV-FRM,
+        NEXT-FRM, CMD-MENU, and HELP) are:
+
+           - CANCEL -- Cancels  the form without saving  the field new
+             values  entered  in  the  form,  closes  the  frame,  and
+             returns you to the point in the interface that  you  were
+             at prior to accessing the form.
+
+           - CHOICES  --  For  the  field  where  the  cursor resides,
+             pressing  CHOICES  either  toggles  between  the possible
+             values for the  field,  or  displays  a  pop-up  menu  of
+             available  choices.  For fields requiring you to set your
+             own values, a definition of  the field  requirement  will
+             appear on the message line.
+
+           - SAVE -- Saves all the field values entered in  the  form,
+             closes  the  frame,  and returns  you to the point in the
+             interface that you were at prior to accessing the form.
+
+           - RESET - resets the field back to the value(s)  in  effect
+             at the beginning of the current editing session.

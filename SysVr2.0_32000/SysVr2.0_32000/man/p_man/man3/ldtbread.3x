@@ -1,0 +1,76 @@
+.TH LDTBREAD 3X
+.SH NAME
+ldtbread \- read an indexed symbol table entry of a common object file
+.SH SYNOPSIS
+.ta \w'\s-1LDFILE\s+1\ \ \ 'u
+.nf
+.ft B
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <syms.h>
+.B #include <ldfcn.h> \}
+.el \{\
+.B #include "\s-1INCDIR\s+1\/filehdr.h>
+.B #include "\s-1INCDIR\s+1\/syms.h"
+.B #include "\s-1INCDIR\s+1\/ldfcn.h" \}
+.PP
+.B int ldtbread (ldptr, symindex, symbol)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B long symindex;
+.B \s-1SYMENT\s+1 \(**symbol;
+.ft R
+.fi
+.DT
+.SH DESCRIPTION
+.I Ldtbread
+reads the symbol table entry specified by
+.B symindex
+of the common object file
+currently associated with
+.B ldptr
+into the area of memory beginning at
+.BR symbol .
+.PP
+.I Ldtbread
+returns
+.BR \s-1SUCCESS\s+1 " or " \s-1FAILURE\s+1 .
+.I Ldtbread 
+will fail if 
+.B symindex
+is greater than the number of symbols in the object file,
+or if it cannot read the specified symbol table entry.
+.PP
+Note that the first symbol in the symbol table has an index of
+.IR zero .
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+\s-1LIBDIR\s+1\/libld.a .
+\}
+.if !'\*p'' \{\
+.PP
+.IR Intro (5)
+describes
+.IR \s-1INCDIR\s+1  and  \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X),
+ldopen(3X),
+ldtbseek(3X),
+ldgetname(3X),
+ldfcn(4).
+\}
+.el \{\
+ldclose(3X),
+ldopen(3X),
+ldtbseek(3X),
+intro(4),
+ldfcn(4),
+paths.h(4).
+\}
+.\"	%W% of %G%

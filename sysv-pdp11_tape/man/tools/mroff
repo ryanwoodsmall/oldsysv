@@ -1,0 +1,31 @@
+args="$0 $@"
+set x $*
+. ./.param
+
+for dir in $DIRLST
+do
+	echo "$args\n\n" > $TMPDIR/mlog$dir
+	date >> $TMPDIR/mlog$dir
+	echo >> $TMPDIR/mlog$dir
+	cd $MANDIR/man$dir
+	for file in $FILLST
+	do
+		so=`line < $file`
+		case "$so" in
+		.so*)
+			echo "$file: .so link -- ignored" >> $TMPDIR/mlog$dir
+			continue
+			;;
+		*)
+			echo "$file:" >> $TMPDIR/mlog$dir
+			if [ "$PFLAG" = 1 ]
+			then
+				man -t -d $file
+			else
+				man -s -d $file
+			fi
+			;;
+		esac
+	done
+done
+#	@(#)mroff	5.2 of 5/19/82

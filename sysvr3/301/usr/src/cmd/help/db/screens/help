@@ -1,0 +1,17 @@
+
+ \Shelp\S:  UNIX System On-Line Help 
+
+
+              choices            description 
+
+                \S s \S              \Sstarter\S:  general information
+
+                \S l \S              \Slocate\S:  find a command with keywords
+
+                \S u \S              \Susage\S:  information about commands
+
+                \S g \S              \Sglossary\S:  definitions of terms
+
+
+                \S r \S              Redirect to a file or a command
+                \S q \S              Quit

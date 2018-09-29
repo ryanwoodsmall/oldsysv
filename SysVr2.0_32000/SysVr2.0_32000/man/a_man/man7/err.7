@@ -1,0 +1,19 @@
+.TH ERR 7
+.SH NAME
+err \- error-logging interface
+.SH DESCRIPTION
+Minor device 0 of the
+.I err\^
+driver is the interface between a process and
+the system's error-record collection routines.
+The driver may be opened only for reading
+by a single process with super-user permissions.
+Each read causes an entire error record to be
+retrieved;
+the record is truncated if the read request is for
+less than the record's length.
+.SH FILES
+/dev/error   special file
+.SH "SEE ALSO"
+errdemon(1M).
+.\"	@(#)err.7	6.2 of 9/6/83

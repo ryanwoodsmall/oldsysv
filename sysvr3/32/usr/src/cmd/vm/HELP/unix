@@ -1,0 +1,15 @@
+
+   The UNIX command invokes the default shell.
+
+   To invoke UNIX use one of the following options:
+
+      - Command menu - Select UNIX + RETURN
+
+      - COMMAND LINE - Type unix + RETURN
+
+   Your  screen  will be cleared and the "UNIX:" prompt  
+   will be displayed.
+
+   To return to FACE from the shell, hold down the control
+   key (CTRL) and press d, or type "exit" and press RETURN.
+   You will then be prompted to press RETURN to continue.

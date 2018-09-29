@@ -1,0 +1,64 @@
+#ident	"@(#)bne.admin:portmgmt	2.2"
+#menu# manage I/O ports (list, modify)
+#help#
+#help#	This subcommand manages the "inittab" file which
+#help#  controls the use of the I/O ports used by
+#help#  "Basic Networking Utilities" commands:
+#help#	uucp, cu, and ct.
+#help#
+#help#  Ports that do not appear in the "inittab" file may
+#help#  be used for outgoing traffic by uucp, cu, and ct.
+#help#  Ports that have status "off" in the "inittab" file
+#help#  can also be used for outgoing traffic.
+#help#
+#help#  Ports that have status "respawn" will be used for
+#help#  incoming traffic if a "getty" command appears on
+#help#  the 'inittab' line.  They will be used for bidirectional
+#help#	traffic if a "uugetty" appears.
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+cmdlist='
+	1 list
+	2 modify
+	
+'
+flags="-qq -k$$"
+trap exit 1 2 15
+
+echo "
+This procedure is used to list and modify
+the entries that control the direction of traffic
+on the $PACKAGE I/O ports used by uucp, cu, and ct commands.
+
+Type 'q' at any time to quit the present operation.
+If a '?' appears as a choice, type '?' for help.
+
+If a default appears in the question, type <RETURN> for the default.
+"
+
+while true
+do
+
+	CMD=`chkyn ${flags} -fec -Dlist "
+Enter the operation you want to perform:
+${cmdlist}
+(default list)[q]:  " ${cmdlist}`
+
+	case "$CMD" in
+	list|1)
+		/bin/sh lsport ;;
+	modify|2)
+		/bin/sh modifyport ;;
+	*)
+		break ;;
+	esac
+done

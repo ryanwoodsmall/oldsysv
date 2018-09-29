@@ -1,0 +1,19 @@
+#ident	"@(#)cmd-3b2:inst/bin/fstab	1.2.1.1"
+#
+# fstab
+#
+# Extract integral hard disk entries from an fstab. Ignores
+# comments, blank lines and references to external devices.
+#
+
+while read dev dir ronly junk
+do
+	case "${dev}" in
+	/dev/dsk/c1d*s* | /dev/idsk* )
+		if [ ! \( "${ronly}" = "S52K" -o "${junk}" = "S52K" \) ]
+		then
+			echo "${dev} ${dir} ${ronly}"
+		fi
+		;;
+	esac
+done

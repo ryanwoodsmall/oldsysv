@@ -1,0 +1,57 @@
+form=Find `pathconv -t -v "${ARG1:-$OPWD}"`
+
+help=OPEN TEXT OBJECTS/Text.mfhelp find Find
+begrow=any
+begcol=any
+done=OPEN MENU OBJECTS/Menu.find "${ARG1:-$OPWD}" "$F1" "$F2" "$F3" "$F4"
+
+name=Name:
+nrow=0
+ncol=5
+frow=0
+fcol=11
+flen=16
+rows=1
+columns=16
+choicemsg=const "Enter the name of a file - '*' matches any string, '?' any single letter"
+value=*
+
+name=Type:
+nrow=1
+ncol=5
+frow=1
+fcol=11
+flen=16
+rows=1
+columns=16
+rmenu=const { `regex '^.*	(.*)$0$' < $OASYS/info/OH/externals/allobjs` Any }
+value=Any
+valid=`regex -v "$F2" '^[aA][nN][yY]$' || regex "^.*	$F2\$" < $OASYS/info/OH/externals/allobjs`
+
+name=Owner:
+nrow=2
+ncol=4
+frow=2
+fcol=11
+flen=16
+rows=1
+columns=8
+rmenu=const { `regex '^([^:]*)$0:' '$m0' < /etc/passwd ` "Any" }
+valid=`regex -v "$F3" '^[aA][nN][yY]$' || regex "^$F3:" < /etc/passwd` 
+value=Any
+
+name=Age:
+nrow=3
+ncol=6
+frow=3
+fcol=11
+flen=16
+rows=1
+columns=11
+choicemsg=const "Enter a number of days, or a range of days like 3-6"
+valid=`regex -v "$F4" '^[><]{0,1}[0-9]+$' "true" '^[0-9]+-[0-9]+$' "true" '^[0-9]+\.\.[0-9]+$' "true" '^[aA][nN][yY]$' "true"`
+value=Any
+
+name=RESET
+button=8
+action=reset

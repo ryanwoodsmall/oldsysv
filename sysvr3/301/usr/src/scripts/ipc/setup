@@ -1,0 +1,13 @@
+#ident	"@(#)pkg.ipc:ipc/setup	1.2"
+#
+# Install IPC "drivers"
+#
+DRVPATH=/boot
+/etc/drvinstall -d $DRVPATH/ipc.o -v 1.0
+/etc/drvinstall -d $DRVPATH/msg.o -v 1.0
+/etc/drvinstall -d $DRVPATH/sem.o -v 1.0
+/etc/drvinstall -d $DRVPATH/shm.o -v 1.0
+rm -f $DRVPATH/ipc.o
+rm -f $DRVPATH/msg.o
+rm -f $DRVPATH/sem.o
+rm -f $DRVPATH/shm.o

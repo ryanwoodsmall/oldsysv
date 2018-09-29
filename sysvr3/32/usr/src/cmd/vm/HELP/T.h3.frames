@@ -1,0 +1,18 @@
+
+   A FACE frame is a separated screen area surrounded by a  box,
+   used  to  display  the  various tasks you are currently working on.
+   Each frame is numbered  as you open it with the exception  of  some
+   pop-up  menu frames.  Unnumbered pop-up  frames require you to make
+   a selection to initiate or complete an action  before  going  on to
+   other activities (e.g., navigating to another frame).
+
+   You can open and  close all frames except  the Office Frame.  Using
+   NEXT-FRM  and  PREV-FRM  you  can move from one activity to another
+   allowing you to work with or display information from several tasks
+   at  the same time.  As  you open  each frame that frame becomes the
+   active frame.  All key strokes and the screen labeled keys apply to
+   the active frame.
+
+   You may also change the position of all frames (except  unnumbered
+   pop-up  frames)  and  the size  of menu and text frames, using the 
+   FRM-MGMT command.

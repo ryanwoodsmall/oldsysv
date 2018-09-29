@@ -1,0 +1,123 @@
+#ident	"@(#)rfs.admin:resrcmgmt/mountmgmt/unmntauto	1.9"
+#menu# remove remote resources from the automatic mount list
+
+#help# 
+#help#  When you no longer want to use a remote resource you can unmount
+#help#  it from your file system. As soon as the resource is unmounted
+#help#  local users on your machine will no longer be able to access
+#help#  the resource.
+#help#  
+#help#  The subcommand "unmntauto" lets you remove resources you may have
+#help#  set up on the Automatic Mount List.  Removing a remote resource
+#help#  from the Automatic Mount List means that your system will NOT try
+#help#  to mount this resource when RFS is started.  
+#help#
+#help#  NOTE: This subcommand does NOT immediately unmount resources 
+#help#  for you.  Use the subcommand "unmntnow" to immediately unmount 
+#help#  resources.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/mntlist$$; /bin/chmod 644 /etc/fstab 2>/dev/null; /bin/chgrp bin /etc/fstab 2>/dev/null; trap 0; exit' 0 1 2 3 15
+
+# print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo "\n\n\tREMOVE REMOTE RESOURCES FROM THE AUTOMATIC MOUNT LIST"
+
+# define messages and questions/prompts
+DEF_UNMNT="
+When you no longer want to share remote resources you can unmount them 
+from your file system.  If the resources have been added to the Automatic
+Mount List and you do not want the system to try to mount them the next 
+time RFS is started, you use this subcommand to remove the resources
+from the Automatic Mount List.   
+
+NOTE: This subcommand does not immediately unmount resources. 
+Use the subcommand \"unmntnow\" to immediately unmount resources."
+
+QUEST3="
+Enter the resource identifier of the remote resource to be removed 
+from the Automatic Mount List [?, q]:"
+
+SYM_HELP="
+The resource identifier is the name that was assigned to the resource
+when it was advertised. If you enter a resource identifier that is not
+in the Automatic Mount List, the system will warn you and show you a 
+list of the resources that are in the list."
+
+REDOQ="
+Do you want to remove another remote resource from 
+the Automatic Mount List?"
+
+NOMORE="
+There are no remote resources in the Automatic Mount List."
+
+# print description of program
+echo "$DEF_UNMNT\n"
+
+#initialization
+cflags="-qq -k$$"
+
+# Determine if an auto-mount list exist.  If not, then print appropriate error
+# message.
+if [ -s /etc/fstab ]
+then
+        /bin/sed "s/^#.*$//" /etc/fstab | /bin/grep '[	 ][-][r]*d[r]*[	 ]*$' |
+        /usr/bin/awk '{ printf "\t%s\n", $1 }' >/usr/tmp/mntlist$$
+        if [ ! -s /usr/tmp/mntlist$$ ]
+        then
+                echo "$NOMORE\n"
+                exit
+        fi
+else
+        echo "$NOMORE\n"
+        exit
+fi
+
+while /bin/true
+do
+        # Get symbolic name of resource.
+        res=`/usr/lbin/checkre $cflags -fe                      \
+        -H "$SYM_HELP"                                          \
+        "$QUEST3"                                               \
+        '^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+        '^[^\.\/ :]*$'  'The resource identifier must not contain a space, ":", "." or a "/".'`
+
+        # Determine if the resouce exist in the auto-mount list.
+        # If it doesn't then print those that do (if any), and ask the user to enter
+        # another resource to remove.  If the resource does exist, then remove it
+        # from /etc/fstab.
+        /bin/grep "^$res " /etc/fstab 2>/dev/null 1>&2
+        if [ $? -ne 0 ]
+        then
+                echo "\nResource \"$res\" is not in the Automatic Mount List.\n"
+                echo "The following resources are in the Automatic Mount List:\n" 
+                /usr/bin/pg -e -p"Enter <RETURN> to continue:" /usr/tmp/mntlist$$
+                continue
+        else
+                /bin/grep -v "^$res " /etc/fstab >/usr/tmp/$$.fstab 2>/dev/null
+                if [ 2 -gt $? ]
+                then
+                        /bin/mv /usr/tmp/$$.fstab /etc/fstab
+                        echo "\n\"$res\" has been removed from the Automatic Mount List.\n"
+                else
+                        echo "\n\"$res\" has NOT been removed from the Automatic Mount List.\n"
+                fi
+        fi
+
+        # Determine if the new auto-mount list exist.  If so, then ask the user to
+        # repeat the sequence.  If not, then print the appropriate error message.
+        /bin/grep '[-][r]*d[r]*' /etc/fstab |
+        /usr/bin/awk '{ printf "\t%s\n", $1}' >/usr/tmp/mntlist$$
+        if [ ! -s /usr/tmp/mntlist$$ ]
+        then
+                echo "$NOMORE\n"
+                exit
+        elif /usr/lbin/checkyn $cflags -f "$REDOQ"
+        then
+                continue
+        else
+                break
+        fi
+done

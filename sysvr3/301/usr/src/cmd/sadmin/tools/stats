@@ -1,0 +1,30 @@
+#ident	"@(#)sadmin:tools/stats	1.2"
+#	statistics
+
+#!	chmod +x ${file}
+
+cd ..
+make -f sadmin.mk productdir product  |
+	cut -f1  |
+	xargs ls -sd 2>/dev/null  |
+	awk '
+		{	a += $1 + $1%2
+			files++
+		}
+	END	{
+			print "Deliverd product size:	" a " blocks"
+			print "			" files " files & dirs"
+		}
+	'
+make -f sadmin.mk partslist  |
+	cut -f1  |
+	xargs ls -sd 2>/dev/null  |
+	awk '
+		{	a += $1 + $1%2
+			files++
+		}
+	END	{
+			print "Source size:		" a " blocks"
+			print "			" files " files"
+		}
+	'

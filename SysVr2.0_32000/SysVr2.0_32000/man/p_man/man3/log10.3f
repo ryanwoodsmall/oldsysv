@@ -1,0 +1,28 @@
+.TH LOG10 3F
+.SH NAME
+log10, alog10, dlog10 \- \s-1FORTRAN\s+1 common logarithm intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = alog10(r1)"
+.B "r2 = log10(r1)"
+.P
+.B "dp2 = dlog10(dp1)"
+.B "dp2 = log10(dp1)"
+.SH DESCRIPTION
+.I Alog10\^
+returns the real common logarithm of its real argument.
+.I Dlog10\^
+returns the double-precision common logarithm of its double-precision argument.
+The generic function
+.I log10\^
+becomes a call to
+.I alog10\^
+or
+.I dlog10\^
+depending on the type of its argument.
+.SH SEE ALSO
+exp(3M).
+.\"	%W% of %G%

@@ -1,0 +1,51 @@
+#ident	"@(#)nlp:terminfo/477.ti	1.5"
+#01-07-88
+
+477|att477|AT&T 477 ;Fujitsu DPL24C,
+
+	cpix,
+
+	bufsz#8192,
+	cols#136,
+	it#8,
+	lines#66,
+	orc#18,
+	orhi#180,
+	orl#10,
+	orvi#60,
+	cps#80,
+	
+	cr=^M,
+	cpi=%?%p1%{10}%=%t^R\033P%e%p1%{12}%=%t^R\EM%e%p1%{20}%=%t^O\EM%e%p1%{18}%=%t^O\033P%;,
+	chr=%?%p1%{256}%<%t\Eh%p1%c%;,
+	cvr=%?%p1%{128}%<%t\EA%p1%c\E2%;,
+	csnm=%?%p1%{0}%=%p1%{1}%=%O%tcharacter_set_1%e%p1%{2}%=%tcharacter_set_2%e%p1%{3}%=%tusa%e%p1%{4}%=%tfrench%e%p1%{5}%=%tgerman%e%p1%{6}%=%tuk%e%p1%{7}%=%tdanish%e%p1%{8}%=%tswedish%e%p1%{9}%=%titalian%e%p1%{10}%=%tspanish%;,
+	cud1=^J,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+#Reset tabs,CRON,LFON;Set 10 cpi and 6 lpi; Emphasize,double strike and width,super and subscript,ovverscore, and underline off.
+
+	is2=\E\032I,
+	lpi=%?%p1%{2}%=%t\EA\036\E2%e%p1%{3}%=%t\EA^T\E2%e%p1%{4}%=%t\EA^O\E2%e%p1%{6}%=%t\EA^J\E2%e%p1%{8}%=%t\E0%e%p1%{12}%=%t\EA^E\E2%;,
+	rwidm=\EW0,
+	rmul=\E-0,
+	ritm=\E5,
+	rsupm=\ET,
+	rsubm=\ET,
+	swidm=\EW1,
+	smul=\E-1,
+	sitm=\E4,
+	ssupm=\ES0,
+	ssubm=\ES1,
+
+	scs=%?%p1%{0}%=%p1%{1}%=%O%t\E7%e%p1%{2}%=%t\E6%e%p1%{3}%=%t\ER0%e%p1%{4}%=%t\ER1%e%p1%{5}%=%t\ER2%e%p1%{6}%=%t\ER3%e%p1%{7}%=%t\ER4%e%p1%{8}%=%t\ER5%e%p1%{9}%=%t\ER6%e%p1%{10}%=%t\ER7%;,
+	smgbp=%?%p1%{0}%>%p1%{128}%<%&%t\EC%p1%c%;,
+
+#The left margin will have to shift over 1 when a 0 margin is asked for do to
+# the inability to send out nulls to get column 0
+
+	smglp=%?%p1%{256}%<%t\El%p1%{1}%+%c%;,
+	smgrp=%?%p1%{256}%<%t\EQ%p1%{2}%+%c%;,
+#Set form length
+	u9=%?%p1%{0}%>%p1%{128}%<%&%t\EC%p1%c%;,

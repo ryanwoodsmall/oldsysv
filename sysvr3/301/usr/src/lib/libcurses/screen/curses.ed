@@ -1,0 +1,38 @@
+e keycaps
+H
+g/.*KEY_/s//KEY_/
+g/KEY_F([1-9]/d
+g'\(KEY_[^,]*\),[ 	]*\([0-9][0-9]*\),[ 	]*\(.*\)'s''#define \1	\2		/* \3 */'
+w /usr/tmp/keycaps
+e !sort +2n /usr/tmp/keycaps
+g'\(KEY_[^	]	\)'s''\1	'
+g'\(KEY_[^	][^	]	\)'s''\1	'
+g'\(KEY_[^	][^	][^	]	\)'s''\1	'
+1i
+/* Funny "characters" enabled for various special function keys for input */
+/* This list is created from caps and curses.ed. Do not edit it! */
+#define KEY_BREAK	0401		/* break key (unreliable) */
+.
+/KEY_F(0)/s//KEY_F0	/
+a
+#define KEY_F(n)	(KEY_F0+(n))	/* Space for 64 function keys is reserved. */
+.
+/KEY_ENTER/a
+#define KEY_SRESET	0530		/* soft (partial) reset (unreliable) */
+#define KEY_RESET	0531		/* reset or hard reset (unreliable) */
+.
+/KEY_A1/i
+					/* The keypad is arranged like this: */
+					/*    a1    up    a3   */
+					/*   left   b2  right  */
+					/*    c1   down   c3   */
+.
+0r curses.form
+$a
+
+# endif /* NOMACROS */
+#endif /* _SUBWIN */
+.
+0r copyright.h
+/screen\/copyright\.h/d
+w curses.h

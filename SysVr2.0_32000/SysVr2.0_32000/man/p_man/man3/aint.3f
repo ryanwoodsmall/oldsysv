@@ -1,0 +1,22 @@
+.TH AINT 3F
+.SH NAME
+aint, dint \- \s-1FORTRAN\s+1 integer part intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = aint(r1)"
+.P
+.B "dp2 = dint(dp1)"
+.B "dp2 = aint(dp1)"
+.SH DESCRIPTION
+.I Aint\^
+returns the truncated value of its real argument in a real.
+.I Dint\^
+returns the truncated value of its double-precision argument as a
+double-precision value.
+.I Aint\^
+may be used as a generic function name, returning either a real or
+double-precision value depending on the type of its argument.
+.\"	%W% of %G%

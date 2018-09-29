@@ -1,0 +1,87 @@
+#ident	"@(#)bne.admin:deldevice	2.3"
+#	This shell is used to delete device entries from /usr/lib/uucp/Devices
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+FIRST=true
+
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -f "$DEVICES" -a \( ! -w "$DEVICES" -o ! -r "$DEVICES" \) ]; then
+	admerr $0 "Can't write and read '$DEVICES'\nCan't do delete operation!\n"
+	exit
+fi
+
+if [  ! -r $DEVICES ]; then 
+	echo "There are no entries in the '$DEVICES' file.
+None can be deleted!\n"
+	exit
+fi
+
+while $FIRST || chkyn -f ${flags} '
+Do you want to delete any other devices?'  ||  exit
+do
+FIRST=false
+
+devlist=`grep '^[^# 	]' $DEVICES  2>/dev/null | cut -d' ' -f2  |  sort -u  |
+			grep '^[a-z0-9]' 2>/dev/null`
+
+if [ -z "${devlist}" ]; then
+	echo "There are no entries in the '$DEVICES' file.
+None can be deleted!\n"
+	exit
+else
+	echo "\nThis is the list of devices available to the '$PACKAGE':\n"
+fi
+
+echo "${devlist}"  |  pr -t -w80 -6
+	
+devicename=`chkyn ${flags} -fec '
+Which device name do you want to delete? [q]' \
+		${devlist}`
+
+idline=`grep "^[^# 	].*[ 	]${devicename}[ 	]" $DEVICES`
+if [ -n "${idline}" ]; then
+	echo "\nFound the following entry for ${devicename}:"
+	cat <<-! | while read a; do /bin/sh _deviceprint $a; done
+		${idline}
+	!
+
+	if  chkyn ${flags} -h'?' -H"
+	If you answer  y  '${devicename}' will no longer be known to UUCP." \
+		-f "Do you want to delete device name '${devicename}'?"
+	then
+		ed - $DEVICES <<-!
+			H
+			g/^[^#].*[ 	]${devicename}[ 	]/d
+			w
+			q
+		!
+
+		if [ $? != 0 ]
+		then
+			admerr $0 Could not edit $DEVICES
+			exit 1
+		fi
+
+		echo "\n****  Device '${devicename}' has been deleted from '$DEVICES' ****\n"
+
+
+# delete the port from inittab
+		/bin/sh _delinittab ${devicename}
+		chown root /dev/${devicename}
+	fi
+else
+	echo "\n\\t'${devicename}' is not in the '$DEVICES' file.\n"
+fi
+
+done

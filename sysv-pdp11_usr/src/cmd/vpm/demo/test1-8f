@@ -1,0 +1,11 @@
+#	test1-8f 1.1 of 7/19/81
+#	@(#)test1-8f	1.1
+
+./fsr /dev/vpm0 100000 >junk30 2>junk302&
+./fsr /dev/vpm1 100000 >junk31 2>junk312&
+./fsr /dev/vpm2 100000 >junk32 2>junk322&
+./fsr /dev/vpm3 100000 >junk33 2>junk332&
+./fsr /dev/vpm4 100000 >junk34 2>junk342&
+./fsr /dev/vpm5 100000 >junk35 2>junk352&
+./fsr /dev/vpm6 100000 >junk36 2>junk362&
+./fsr /dev/vpm7 100000 >junk37 2>junk372&

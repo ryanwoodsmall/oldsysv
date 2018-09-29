@@ -1,0 +1,139 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/addgroup	2.5"
+#menu# add a group to the system
+#help# 
+#help#	Addgroup adds a new group name or ID to the computer.  Group
+#help#	names and IDs are used to identify groups of users who
+#help#	desire common access to a set of files and directories.
+
+trap 'exit 0' 1 2  15
+
+flags="-qq -k$$"
+
+echo '\nAnytime you want to quit, type "q" .
+If you are not sure how to answer any prompt, type "?" for help,
+or see the Owner/Operator Manual.
+\nIf a default appears in the question, press <RETURN> for the default.
+'
+
+defgnamef=
+defgname=
+defgid=
+
+loginlen=8	# Maximum login ID length
+minid=100	# Minimum user and group ID
+maxid=50000	# Maximum user and group ID
+
+if [ -r ${MENUTOP:?}/defadduser ]
+then	# This file allows easy modification of the defaults.
+	. ${MENUTOP}/defadduser
+fi
+
+while  true
+do
+	while true
+	do
+		groupname=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the group.
+	It also is used to identify data that belongs to the group. The
+	group name may be any combination of numbers and letters not already
+	used by another group.  Typically, people choose the initials
+	or name of their project group.' \
+			-fe"${defgnamef}" "Enter group name${defgname} [?, q]:  " \
+			'.' 'You must enter a value.' \
+			'^[a-z0-9]*$' 'Answer contains an illegal character.
+	Only numbers and lower case letters are permitted.' \
+			"^.\{1,${loginlen}\}$" "Answer is too long.
+	No more than ${loginlen} characters are permitted."`
+		if  grep "^${groupname}:" /etc/group >/dev/null
+		then
+			echo "\\tGroup '${groupname}' already exists.  Choose another."
+			continue
+		fi
+		break
+	done
+
+	if [ -z "${defgid}" ]
+	then
+		# Sort 4th field in /etc/passwd and 3rd in /etc/group
+		# then cut 4th field
+		# from last line.  Increment this field by 1 to
+		# come up with a unique new group ID number.
+
+		defgid=`(cut -d: -f4 /etc/passwd
+			cut -d: -f3 /etc/group)  |  sort -n  |  tail -1`
+			
+		defgid=`expr ${defgid} + 1`
+
+		# don't allow group ID numbers less than minid
+		if [ ${defgid} -lt ${minid} ]
+		then
+			defgid=${minid}
+		fi
+	fi
+
+	while true
+	do
+		groupid=`checkre ${flags} -fe -D ${defgid} -H"
+	This number is used to associate files with the group.
+	It can be any unique number from ${minid} to ${maxid}.  The
+	computer will pick an appropriate value if you just press <RETURN>." \
+		"Enter group ID number (default ${defgid}) [?, q]: " \
+			'^[0-9]\{1,\}$' 'Answer must be <RETURN> or only digits.'`
+		if [ ${groupid} -eq ${defgid} ]
+		then
+			break
+		fi
+		if [ "${groupid}" -le ${maxid}  -a  "${groupid}" -ge ${minid} ]
+		then
+			# Look for groups that already use specified
+			# group ID number.  Consider IDs with leading zeros.
+
+			x=`sed -n "/^[^:]*:[^:]*:0*${groupid}:/ s/\([^:]*\):.*/\1/p" /etc/group`
+			if [ -n "${x}" ]
+			then
+				echo \\t\'${x}\' "already uses that ID number.
+	Pick another."
+				continue
+			fi
+			break	# Got it!
+		fi
+		echo "\\tGroup ID must be all digits, at least ${minid} and not larger than ${maxid}.
+	q  for quit"
+	done
+
+	echo "\\nThis is the information for the new group:
+	Group name:	${groupname}
+	group ID:	${groupid}"
+	case `checklist ${flags} -fep 'Do you want to install, edit, or skip this entry? [i, e, s, q]:' install edit skip` in
+	install )
+		/bin/sh -c "
+			trap '' 1 2 3 15
+			set -e
+			echo '${groupname}::${groupid}:' >>/etc/group
+			echo Group installed.
+		"  ||  {
+			admerr $0 'Failure in attempting to create new group.'
+			exit 1
+		}
+		;;
+	edit )
+		defgnamef="D${groupname}"
+		defgname="  (default \"${groupname}\")"
+		defgid=${groupid}
+		continue
+		;;
+	skip )
+		echo Group not installed.
+		;;
+	esac
+
+	defgnamef=
+	defgname=
+	defgid=
+
+	if  checkyn ${flags} -f 'Do you want to add another group?'
+	then
+		continue
+	fi
+	break
+done

@@ -1,0 +1,1202 @@
+#ident	"@(#)search.files:unix/ref-file	1.8"
+ 300  Special functions of DASI 300 and 300s
+ 300 -d  Control delay factors
+ 300 -n  Control line spacing size
+ 4014  Paginator for TEKTRONIX 4014
+ 4014 -c  Divide screen into columns
+ 4014 -n  Print & never erase screen
+ 4014 -p  Page length
+ 4014 -t  Do not wait between pages
+ 450  Special functions of DASI 450
+ admin  Create and administer SCCS files
+ admin -a  Add login name or group ID
+ admin -d  Causes deletion of specified flag
+ admin -e  Erase login name or group ID
+ admin -f  Flag for SCCS file
+ admin -h  Check SCCS file structure
+ admin -i  Text file with new SCCS text
+ admin -m  Insert MR list into SCCS file
+ admin -n  Create new SCCS file
+ admin -r  Release for initial delta insert
+ admin -t  Descriptive text file
+ admin -y  Add comment text to SCCS file
+ admin -z  Recompute check-sum on SCCS
+ ar  Create and maintain groups of files in one archive file
+ ar -d  Delete named files from archive
+ ar -m  Move files to archive end
+ ar -p  Print named archive files
+ ar -q  Quickly append files to archive
+ ar -r  Replace archive files named
+ ar -t  Print table of contents
+ ar -x  Extract named files
+ ar (option)c  Suppress creation message
+ ar (option)l  Place temporary files in local directory
+ ar (option)s  Force archive symbol table regeneration
+ ar (option)v  Verbose description
+ as  Common assembler
+ as -dl  No line number information in object file
+ as -m  Run m4 macro pre-processor
+ as -n  Turn off optimization
+ as -o  Output object file
+ as -R  Remove (unlink) input file
+ as -u  Do not produce unreferenced structure, union, enumeration, and typedef symbols in object file symbol table
+ as -V  Version number
+ as -Y  Find m4 preprocessor or file of predefined macros in specified directory instead of customary place
+ assist  Assistance with using UNIX system commands including menu interface, command forms, and other informational tools*3.0
+ assist cfname  Invoke specified command form*3.0
+ assist -c  Run assist on menu or form in local directory*3.0
+ assist -s  Run assist setup activities: check terminal for assist use, get info on possible terminal names, see introductory info about assist*3.0
+ astgen  Create and revise menus and command forms for assist(1)*3.0
+ at  Execute commands at later time
+ at -l  Report all jobs for user
+ at -r  Remove jobs previously scheduled
+ awk  Pattern scanning and processing language
+ awk -F  Field separator character
+ awk -f  File containing awk program
+ banner  Show strings in large letters
+ basename  Deliver portions of path names
+ batch  Execute commands at later time when system loads permit [(at(1)]
+ bc  Arbitrary-precision arithmetic language
+ bc -c  Compile only
+ bc -l  Name of math library
+ bdiff  Show differences between files too large for diff
+ bdiff -s  No diagnostics
+ bfs  Scan big file
+ bfs -  Do not print sizes
+ build  Version of make(1) supporting independent software views; see make(1) for options *3.0
+ build -o  Object tracking *3.0
+ build -v  Viewpath specification *3.0
+ cal  Print calendar
+ calendar  Reminder service
+ cancel  Cancel requests to LP line printer [lp(1)]
+ cat  Concatenate and show files
+ cat -e  Print $ before each newline
+ cat -s  Silent about non-existing files
+ cat -t  Print tabs as ^I
+ cat -u  Do not buffer output
+ cat -v  Non-printing chars print visibly
+ cb  C program beautifier; pretty print C language programs
+ cb -j  Put split lines back together
+ cb -l  Split lines longer than specified length
+ cb -s  Canonicalize code to style of Kernighan and Ritchie
+ cc  C compiler
+ cc -c  Do not do link editing phase of compilation, and do not remove any produced object files
+ cc -ds  No symbol attribute information for symbolic debugger
+ cc -dl  No symbolic debugging line number information
+ cc -E  Run only cpp(1) on named C programs and put result to stdout
+ cc -f  Cause link editor to load floating point emulation code
+ cc -F  Cause compiler to generate code for single precision arithmetic
+ cc -g  Generate additional information needed for sdb(1)
+ cc -K  Do optimizations tuned for size and speed
+ cc -O  Object code optimizer
+ cc -o  Produce output object file with specified name
+ cc -p  Produce code that counts calls; output used with prof(1)
+ cc -P  Run only cpp(1) and leave result in files suffixed .i
+ cc -qp  Arrange for profiled code to be produced
+ cc -S  Compile and do not assemble named C programs
+ cc -V  Print version of compiler, optimizer, assembler, and/or link editor
+ cc -W  Hand off arguments to preprocessor, compiler, optimizer, assembler, or link editor
+ cc -Y  Specify new pathname for location of preprocessor, compiler, optimizer, assembler, link editor, start-up routines, directory searched by cpp(1), library directories searched by ld(1)
+ cd  Change working directory
+ cdc  Change delta commentary of SCCS delta
+ cdc -m  Add MR numbers
+ cdc -r  Specify SCCS Identification
+ cdc -y  Comment for existing delta
+ cflow  Generate C flow graph
+ cflow -d  Cutoff depth
+ cflow -i_  Include names that begin with underscore
+ cflow -ix  Include external and static data
+ cflow -r  Reverse caller and callee
+ checkmm  Check documents formatted with mm (DWB2.0) macros*DWB
+ chgrp  Change group [chown(1)]
+ chmod  Change mode including read, write, and execute permissions
+ chmod (option)r  Read permission
+ chmod (option)w  Write permission
+ chmod (option)x  Execute permission
+ chmod (option)s  Set-ID
+ chmod (option)t  Sticky bit
+ chmod (option)l  Mandatory locking*2.1
+ chmod -  Take away permission
+ chmod +  Add permission
+ chmod =  Assign permission absolutely
+ chmod u  User's permissions 
+ chmod g  Group's permission
+ chmod o  Others' permissions  
+ chown  Change owner
+ cmp  Compare two files showing byte and line numbers of differences
+ cmp -l  Byte number
+ cmp -s  Print nothing for diff files
+ comb  Combine SCCS deltas
+ comm  Select or reject lines common to two sorted files
+ conv  Common object file converter
+ conv -a  If input is archive, produce SVR2.0 portable archive format
+ conv -o  if input is archive, produce pre system V archive format
+ conv -p  If input is archive, produce SVR1.0 random access archive format
+ conv -t  Convert object file to byte ordering of target machine
+ convert  Convert archive files to common formats
+ cp  Copy files
+ cpio  Copy file archives in and out
+ cpio -o  Copy out; read standard input & copy files to standard output
+ cpio -i  Copy in; extract files from standard output
+ cpio -p  Pass; conditionally create and copy files
+ cpio (option)6  Process UNIX 6th edition format
+ cpio (option)a  Reset access time of input files
+ cpio (option)B  Block input/output
+ cpio (option)b  Reverse order of bytes within each word
+ cpio (option)c  Write header in ASCII character format
+ cpio (option)d  Create directories as needed
+ cpio (option)f  Copy all files except patterns
+ cpio (option)l  Link files rather than copy
+ cpio (option)m  Retain file modification time
+ cpio (option)r  Interactively rename files
+ cpio (option)S  Swap halfwords within each word
+ cpio (option)s  Swap bytes within each halfword
+ cpio (option)t  Table of contents of input
+ cpio (option)u  Copy unconditionally
+ cpio (option)v  Verbose
+ cpp  C language preprocessor
+ cpp -C  Do not strip C-style comments
+ cpp -D  Define name
+ cpp -H  Print pathnames of included files
+ cpp -I  Change algorithm used to search for include files
+ cpp -P  Do not produce line control information used by next pass of C compiler
+ cpp -T  Use only first eight characters
+ cpp -U  Remove reserved symbol
+ cpp -Y  Use specified directory in place of standard list when searching for include files
+ cprs  Compress common object file
+ cprs -p  Statistical messages
+ crontab  User crontab file
+ crontab -l  List user crontab file
+ crontab -r  Remove user's crontab from dir
+ crypt  Encode / decode
+ csplit  Split a file into sections by an expression
+ csplit -f  Name created files
+ csplit -k  Leave created files intact
+ csplit -s  Do not print character counts
+ ct  Spawn getty to remote terminal
+ ct -h  Do not hangup current line
+ ct -s  Set data rate speed
+ ct -v  Running narrative sent to output
+ ct -w  Wait n minutes
+ ctrace  C program debugger
+ ctrace -b  Only basic functions
+ ctrace -e  Floating point format
+ ctrace -f  Trace functions
+ ctrace -l  Check looping trace statements
+ ctrace -o  Octal format
+ ctrace -p  Change trace print function
+ ctrace -P  Run C preprocessor on input first
+ ctrace -r  Use file f not runtime.c trace
+ ctrace -s  No redundant output
+ ctrace -t  Trace variables
+ ctrace -u  Unsigned format
+ ctrace -v  Do not trace these functions
+ ctrace -x  Hexadecimal format
+ cu  Call another UNIX system
+ cu -d  Diagnostic traces
+ cu -e  Even parity
+ cu -h  Emulate local echo half-duplex
+ cu -l  Device communication line
+ cu -n  Interactive phone number request
+ cu -o  Odd parity
+ cu -s  Transmission speed
+ cu -t  ASCII terminal
+ cut  Cut out selected fields of each line of file
+ cut -c  Cut by character positions
+ cut -d  Character delimiter
+ cut -f  Cut by fields separated by delimiter character
+ cut -s  Suppress lines with no delimiter character
+ cxref  Generate C program cross-reference
+ cxref -c  Combined cross reference
+ cxref -o  Output to named file
+ cxref -s  Operate silently
+ cxref -w  Width option format
+ daps  Post-processor for the Autologic APS-5 phototypesetter*DWB
+ daps -b  Report if typesetter busy*DWB
+ daps -h  String in job header*DWB
+ daps -o  Print specified pages*DWB
+ daps -r  Report number 11-inch pages*DWB
+ daps -s  Stop after every nth page*DWB
+ daps -t  Output to standard output*DWB
+ daps -w  Wait for typesetter to be free*DWB
+ date  Show and set date, time
+ date +  Output in user defined format
+ dc  Desk calculator
+ dd  Convert and copy file
+ delta  Change SCCS file
+ delta -g  Ignore specified deltas
+ delta -m  Supply MR numbers
+ delta -n  Retain edited g-file
+ delta -p  Delta on standard output
+ delta -r  Identify delta for SCCS file
+ delta -s  Suppress issue
+ delta -y  Comments
+ df  Report number of free disc blocks
+ df -f  Actual count of free list blocks
+ df -l  Only report on local file systems*3.0
+ df -t  Report total allocated blocks
+ di10  Postprocessor for Imagen Imprint-10 laser printer*DWB
+ di10 -o  Print specified pages*DWB
+ di10 -t  Output to standard output*DWB
+ diff  Compare two files showing lines that differ
+ diff -b  Ignore trailing blanks
+ diff -e  Editor script
+ diff -f  Inverted editor script
+ diff -h  Fast half-hearted job
+ diff3  Compare three files
+ diff3 -e  Editor script
+ diffmk  Mark differences between files*DWB
+ dircmp  Compare directories
+ dircmp -d  Compare files same in both dir's
+ dircmp -s  Suppress messages
+ dircmp -w  Change output width
+ dirname  Deliver portions of path names [basename(1)]
+ dis  Object code disassembler
+ dis -o  Numbers in octal
+ dis -V  Version number of disassembler
+ dis -L  Lookup source labels in symbol table for subsequent printing
+ dis -s  Perform symbolic disassembly
+ dis -d  Disassemble the named section as data, printing offset of data from beginning of section
+ dis -da  Disassemble named section as data, printing actual address of data
+ dis -F  Disassemble only named function in each specified object file
+ dis -t  Disassemble named section as text
+ dis -l  Disassemble specified library file
+ disable  Disable LP printers [enable(1)]
+ disable -c  Cancel current print requests
+ disable -r  Reason for deactivation of print
+ du  Report disk usage
+ du -a  Generate entry for each file
+ du -r  Error on unreadable directories
+ du -s  Summary only
+ dump  Dump selected parts of object file
+ dump -a  Dump archive header
+ dump -g  Dump global symbols in symbol table of archive
+ dump -f  Dump file headers
+ dump -o  Dump optional headers
+ dump -h  Dump section headers
+ dump -s  Dump section contents
+ dump -r  Dump relocation information
+ dump -l  Dump line number information
+ dump -L  Interpret and print contents of .lib sections*3.0
+ dump -t  Dump symbol table entries
+ dump -z  Dump line number entries for named function
+ dump -c  Dump string table
+ dump -d  Dump sections by number or range of sections starting at specified number
+ dump +d  Dump sections by range ending at specified number
+ dump -p  Do not print headers
+ dump -t  Dump only indexed symbol table entry or range of symbol table entries beginning with specified entry
+ dump +t  Dump symbol table entries in range ending with specified entry
+ dump -u  Underline file name
+ dump -v  Symbolic representation rather than numeric
+ dump -z  Dump line number entry or range of line numbers starting at specified number
+ dump +z  Dump line numbers up to specified number
+ echo  Echo arguments
+ ed  Line-oriented text editor
+ ed -  No diagnostic output (System V, Release 2)
+ ed -s  No diagnostic output*3.0
+ ed -p  Prompt string
+ ed -x  Encrypted file
+ edit  Text editor (variant of ex(1) for casual users)
+ egrep  Search files for full regular expression pattern [grep(1)]
+ egrep -b  Line preceded by block number
+ egrep -c  Count of matching lines
+ egrep -e  Expression
+ egrep -f  File with expression
+ egrep -i  Ignore case during comparisons
+ egrep -l  File names with matching lines
+ egrep -n  Precede each line by line number
+ egrep -v  Print all but matches
+ enable  Enable LP printers
+ env  Set environment for command execution
+ env -  Ignore inherited environment
+ eqn  Format mathematical text for troff(1)*DWB
+ eqn -d  Set delimiters*DWB
+ eqn -p  Change point size of subscripts and superscripts*DWB
+ eqn -s  Change point size*DWB
+ eqn -f  Specify font*DWB
+ eqn -T  Specify typesetter*DWB
+ erase  Graphical device routines and filters [gdev(1)]
+ eval  Arguments read as input to shell and resulting cmds executed [sh(1)]
+ ex  Text editor
+ ex -  Suppress user feedback
+ ex +command  Specify command to be done before editing
+ ex -R  Readonly mode
+ ex -r  Recover after crash
+ ex -t  Edit file containing tag
+ ex -v  Invoke vi
+ ex -x  Encryption mode
+ exec  Execute cmd specified by args without creating new process [sh(1)]
+ exit  Cause shell to exit [sh(1)]
+ export  Put variable values in environment [sh(1)]
+ expr  Evaluate arguments as expression
+ factor  Factor number
+ false  Provide truth values [true(1)]
+ fgrep  Search files for fixed string patterns [grep(1)]
+ fgrep -b  Line preceded by block number
+ fgrep -c  Count of matching lines
+ fgrep -e  Expression
+ fgrep -f  File with expressions
+ fgrep -i  Ignore case during comparisons
+ fgrep -l  File names with matching lines
+ fgrep -n  Precede each line with line number
+ fgrep -v  Print all but matches
+ fgrep -x  Only lines matched entirely
+ file  Determine file type
+ file -c  Check file containing file types for format errors
+ file -f  File with files to be examined
+ file -m  Use alternate magic file
+ find  Find files
+ find -atime  True if accessed in n days
+ find -cpio  Write current file on device
+ find -ctime  True if changed in n days
+ find -depth  Act on entries before directory
+ find -exec  True if executed cmd return 0
+ find -group  True if file belongs to group
+ find -links  True if file has n links
+ find -mtime  True if modified in n days
+ find -name  True if file name=current file
+ find -newer  True if current file more recently modified than specified file
+ find -ok  Interactive, execute return 0
+ find -perm  True if permissions=octal number
+ find -print  Print current path name
+ find -size  True if file is n blocks long
+ find -type  True if file type = character
+ find -user  True if file belongs to user
+ find -mount  Always true; restrict search to file system containing the specified directory or current directory*3.0
+ find -local  True if file physically resides on local system*3.0
+ gencc  Create front-end to cc(1) command*3.0
+ ged  Graphical editor
+ ged -e  Do not erase screen
+ ged -r  Region number
+ ged -R  Restricted shell invoked
+ ged -u  Display entire GPS universe
+ get  Get version of SCCS file
+ get -a  Delta sequence number
+ get -b  Branch
+ get -c  Cutoff date
+ get -e  Edit file
+ get -g  Suppress text retrieval
+ get -i  Include list of deltas
+ get -k  Suppress identification keywords
+ get -l  Write delta summary
+ get -m  Text preceded by SID
+ get -n  Precede text with keyword ref-file
+ get -p  Write text to standard output
+ get -r  Retrieve string version of file
+ get -s  Suppress output
+ get -t  Most recent delta
+ get -w  Substitute string for (#)get.1
+ get -x  Exclude list of deltas
+ getopt  Parse command options; does not support part of Rule 8 of syntax standards; use new command getopts(1) instead
+ getopts  Parse command options*3.0
+ getoptcvt  Read shell script in specified file; convert script to use getopts(1)instead of getopt(1) [getopts(1)]*3.0
+ getoptcvt -b  Results of running getoptcvt will be portable to earlier releases of UNIX system*3.0
+ glossary  Definitions of common UNIX system terms and symbols*3.0
+ grap  pic preprocessor for drawing graphs*DWB
+ grap -l  Do not look for library file of macro defines*DWB
+ graph  Draw graph
+ graph -a  Supply abscissas automatically
+ graph -b  Break after each label
+ graph -s  Save screen do not erase
+ graph -t  Transpose horizontal axes
+ graph -x  If l is present, logarithmic
+ graph -y  If l is present, logarithmic
+ graphics  Access graphical and numerical commands
+ graphics -r  Restricted shell
+ greek  Select terminal filter
+ greek -T  Terminal type
+ grep  Search files for regular expression pattern
+ grep -b  Line preceded by block number
+ grep -c  Count of matching lines
+ grep -i  Ignore case during comparisons
+ grep -l  File names with matching lines
+ grep -n  Precede each line by line number
+ grep -s  Suppress error messages for nonexistent or unreadable files
+ grep -v  Print all but matches
+ gutil  Graphical utilities
+ hardcopy  Graphical device routines and filters [gdev(1)]
+ help  UNIX system help facility*3.0
+ helpadm  Make changes to help database*3.0
+ hp  Special functions of HP 2640 and 2621-series
+ hp -e  Display enhancements
+ hp -m  Minimize newline output
+ hpd  Graphical device routines and filters [gdev(1)]
+ hpd -c  Select character set
+ hpd -p  Select pen
+ hpd -r  Window region
+ hpd -s  Slant characters
+ hpd -u  Window the universe
+ hpd -xd  x-displacement on viewport
+ hpd -xv  Width of viewport
+ hpd -yd  y-displacement on viewport
+ hpd -yv  Height of viewport
+ hpio  HP 2645A tape file archiver
+ hpio -a  Ask before creating file
+ hpio -c  Include checksum at file end
+ hpio -i  Copy in
+ hpio -n  Set number input files
+ hpio -o  Copy out
+ hpio -r  Use right tape drive
+ hpio -t  Table of contents
+ hyphen  Find hyphenated words*DWB
+ id  Print user and group IDs and names
+ install  Install commands
+ install -c  Install command file in specified directory if not already there
+ install -f  Force installation of command file in specified directory
+ install -i  Ignore default directory list
+ install -n  If file not found in any of searched directories, then put in specified directory
+ install -m  Set mode of new file
+ install -u  Set owner of new file
+ install -g  Set group of new file
+ install -o  Save copy of "found" file in OLDfile
+ install -s  Do not print messages other than error messages
+ ipcrm  Remove message queue, semaphore set, or shared memory id*3.0
+ ipcrm -q  Remove specified message queue identifier*3.0
+ ipcrm -m  Remove specified shared memory identifier*3.0
+ ipcrm -s  Remove specified semaphore identifier*3.0
+ ipcrm -Q  Remove message queue identifier created with specified key*3.0
+ ipcrm -M  Remove shared memory identifier created with specified key*3.0
+ ipcrm -S  Remove semaphore identifier created with specified key
+ ipcs  Report inter-process communication facilities status
+ ipcs -a  Use all print options
+ ipcs -b  Biggest size information
+ ipcs -c  Creator's login
+ ipcs -C  Use corefile instead of /dev/kmem
+ ipcs -m  Print active shared memory segs
+ ipcs -N  Name of alternate namelist
+ ipcs -o  Outstanding usage
+ ipcs -p  Process number
+ ipcs -q  Active message queues
+ ipcs -s  Active semaphores
+ ipcs -t  Time information
+ join  Relational database operator
+ join -a  In addition to normal output
+ join -e  Replace empty output by string
+ join -j  Join on mth field
+ join -o  Print output lines specified
+ join -t  Use character as separator
+ kill  Terminate process
+ kill -9  Terminate process with sure kill
+ kill -signo  Send signal number to specified processes
+ ld  Link editor for common object files
+ ld -e  Default entry point address
+ ld -f  Default fill pattern
+ ld -l  Search library named lib<name>.a
+ ld -L  Search dir before /lib
+ ld -M  Output message
+ ld -m  Produce map of input/output
+ ld -N  Put data section after text
+ ld -o  Produce named output object file
+ ld -r  Retain relocation entries
+ ld -s  Strip line number entries
+ ld -t  Turn off warning about multiply-defined symbols that are not same size
+ ld -u  Enter specified name as undefined symbol in symbol table
+ ld -V  Version information
+ ld -VS  Version stamp identifier
+ ld -x  Do not preserve local symbols
+ ld -Y  Change default directories used for finding libraries
+ ld -z  Do not bind anything to address zero; allows run-time detection of null pointers
+ lex  Generate programs for lexical analysis of text
+ lex -c  C action
+ lex -n  Will not print - summary
+ lex -t  Write to standard output
+ lex -v  Provide summary statistics
+ line  Read one line
+ lint  C program checker
+ lint -a  Suppress assignment complaints
+ lint -b  Suppress break complaints
+ lint -c  Produce .ln for each .c
+ lint -D  Define name
+ lint -h  Do not apply heuristic tests
+ lint -I  Change search to include dir
+ lint -l  Include additional library
+ lint -n  Do not check compatibility
+ lint -o  Create lint library llib-llib.ln
+ lint -p  Attempt to check portability
+ lint -U  Remove initial definition name
+ lint -u  Suppress complaints about functions and external variables used and not defined, and defined and not used
+ lint -v  Suppress unused arg complaints
+ lint -x  Do not report external variables
+ list  Produce C source listing from common object file
+ list -V  Version number of list command
+ list -h  Suppress heading output
+ list -F  List only named function
+ ln  Link files; give files more than one name [cp(1)]
+ ln -f  Do not question
+ locate  Identify UNIX system command using keywords*3.0
+ login  Sign on
+ lorder  Find ordering relation for object library
+ lp  Send requests to line printer
+ lp -c  Make copies of the files
+ lp -d  Destination of printer(s)
+ lp -m  Send mail after print
+ lp -n  Print number copies of output
+ lp -o  Specify printer or class options
+ lp -s  Suppress messages
+ lp -t  Print title on banner page
+ lp -w  Write to user when print is done
+ lpstat  Print line printer status information
+ lpstat -a  Acceptance status
+ lpstat -c  Class names and members
+ lpstat -d  System default destination
+ lpstat -o  Output request status
+ lpstat -p  Status of printers
+ lpstat -r  Request scheduler status
+ lpstat -s  Status summary
+ lpstat -t  All status information
+ lpstat -u  Users requests status
+ lpstat -v  Printer/device association
+ ls  List contents of directory
+ ls -l  Long format
+ ls -a  All entries
+ ls -b  Non-graphic chars in octal
+ ls -C  Sort entries down columns
+ ls -c  Time last modified i-node
+ ls -d  List directory name not contents
+ ls -f  Force each arg to be directory
+ ls -F  Put * after executable file
+ ls -g  Long with owner not printed
+ ls -i  Print i-number
+ ls -m  Stream output format
+ ls -n  Long with owner & group numbers
+ ls -o  Long with group not printed
+ ls -p  Put / after each directory name
+ ls -q  Print non-graphic chars as ?
+ ls -R  Recursively list subdirectories
+ ls -r  Reverse order of sort to get reverse alphabetic or oldest time first
+ ls -s  Size in blocks
+ ls -t  Sort by latest modification time
+ ls -u  Sort by last access time
+ ls -x  Sort entries across page
+ m4  Macro processor
+ m4 -B  Change push-back argument
+ m4 -D  Define name
+ m4 -e  Operate interactively
+ m4 -H  Change hash array size
+ m4 -S  Change size of stack
+ m4 -s  Enable line sync output
+ m4 -T  Change token buffer size
+ m4 -U  Undefine name
+ macref  Produce cross-reference listing of macro files*DWB
+ macref -t  Macro table of contents*DWB
+ macref -s  Symbol-use statistics*DWB
+ macref -n  Line for each reference to symbol*DWB
+ macref --  Delimit end of options*DWB
+ mail  Send mail to users or read mail
+ mail -e  Print exit value not mail
+ mail -F  Install and remove forwarding of mail*3.0
+ mail -f  Use file not default file
+ mail -h  Display window of headers*3.0
+ mail -o  Suppress address optimization facility*3.0
+ mail -p  Print mail without prompting
+ mail -q  Mail terminates after interrupts
+ mail -r  First in first out
+ mail -s  No addition of newline at letter top*3.0
+ mail -t  Print to whom message is sent
+ mail -w  Send letter to remote user without waiting for completion of remote transfer program*3.0
+ mailx  Interactive mail message processing system
+ mailx -e  Test for presence of mail
+ mailx -f  Read messages from filename
+ mailx -F  Record mail in recipient file
+ mailx -h  Number of network hops
+ mailx -H  Header summary only
+ mailx -i  Ignore interrupts
+ mailx -n  Do not initialize sys default
+ mailx -N  Do not print initial header
+ mailx -r  Pass address to network
+ mailx -s  Subject header field
+ mailx -U  Convert uucp addresses
+ mailx -u  Read user's mailbox
+ make  Maintain, update, and regenerate groups of programs
+ make -b  Compatibility mode for old files
+ make -d  Debug mode
+ make -e  Environment variables override
+ make -f  Description makefile
+ make -i  Ignore error codes returned
+ make -k  Abandon work on current dir
+ make -n  No execute mode
+ make -p  Print macro definitions
+ make -q  Question
+ make -r  Do not use built-in rules
+ make -s  Silent mode
+ make -t  Touch target files
+ make -u  Unconditional update*3.0
+ makekey  Generate encryption key
+ mcs  Manipulate object file comment section
+ mcs -a  Append string to comment section of object file
+ mcs -a  Compress contents of comment section
+ mcs -d  Delete contents of comment section
+ mcs -n  Specify name of section to access
+ mcs -p  Print contents of comment section
+ mesg  Report, change permissions for users to write to you
+ mesg -n  Forbid messages
+ mesg -y  Reinstate message permissions
+ mkdir  Make a directory
+ mkdir -m  Specify mode for new directory*3.0
+ mkdir -p  Create all non-existing parent directories before creating new directory*3.0
+ mkshlib  Create shared library*3.0
+ mkshlib -s  Shared library specification file*3.0
+ mkshlib -t  Specify name of target shared library produced on host machine*3.0
+ mkshlib -h  Specify name of host shared library*3.0
+ mkshlib -n  Do not generate new target shared library*3.0
+ mkshlib -q  Quiet warning messages*3.0
+ mm  Format documents with nroff(1) and mm text formatting macro package *DWB
+ mm -T  Output terminal*DWB
+ mm -12  12-pitch output*DWB
+ mm -c  Invoke col(1)*DWB
+ mm -e  Invoke neqn(1)*DWB
+ mm -rAn  Set register A to n*DWB
+ mm -t  Invoke tbl(1)*DWB
+ mm -E  Invoke -e option of nroff(1)*DWB
+ mmt  Typeset troff(1) documents with mm macro package*DWB
+ mmt -a  Call -a option of troff(1)*DWB
+ mmt -e  Invoke eqn(1)*DWB
+ mmt -rAn  Set register A to n*DWB
+ mmt -t  Invoke tbl(1)*DWB
+ mmt -p  Invoke pic(1)*DWB
+ mmt -g  Invoke grap(1)*DWB
+ mmt -T  Device type*DWB
+ mmt -D  Destination device*DWB
+ mmt -z  No output filter*DWB
+ mv  Move files [cp(1)]
+ mv -f  Done no questions asked
+ mvt  Typeset view graphs and slides*DWB
+ mvt -a   Invoke -a option of troff(1)*DWB
+ mvt -e  Invoke eqn(1)*DWB
+ mvt -t  Invoke tbl(1)*DWB
+ mvt -p  Invoke pic(1)*DWB
+ mvt -g  Invoke grap(1)*DWB
+ mvt -T  Device type*DWB
+ mvt -D  Destination device*DWB
+ mvt -z  No output filter*DWB
+ ndx  Create subject-page index*DWB
+ neqn  Format mathematical text for nroff*DWB
+ neqn -d  Set delimiters*DWB
+ neqn -f  Specify font*DWB
+ neqn -T  Terminal type*DWB
+ newform  Change format of text file
+ newform -a  Append chars to line end
+ newform -b  Truncate from line beginning
+ newform -c  Change prefix/append char
+ newform -e  Truncate from end of line
+ newform -f  Write tab specification format
+ newform -i  Input tab specification
+ newform -l  Line length
+ newform -o  Output tab specification
+ newform -p  Prefix to line beginning
+ newform -s  Shear off leading chars on line
+ newgrp  Log in to new group
+ newgrp -  Login again environment
+ news  Print news items
+ news -a  All items
+ news -n  Names of items not content
+ news -s  Number of existing items
+ nice  Run command at low priority
+ nice -increment  Command priority increment
+ nl  Number lines
+ nl -b  Specify lines numbered in body
+ nl -d  Page delimiter characters
+ nl -f  Specify lines numbered in footer
+ nl -h  Specify lines numbered in header
+ nl -i  Page number increments
+ nl -l  Blank lines considered as one
+ nl -n  Line numbering format
+ nl -p  Do not re-number at page breaks
+ nl -s  Separator character(s)
+ nl -v  Initial page number value
+ nl -w  Number of chars for line number
+ nm  Print name list of common object file
+ nm -e  Print only external & static
+ nm -f  Full output
+ nm -h  Do not display output header
+ nm -n  Sort external symbols by name
+ nm -o  Print in octal
+ nm -T  Truncate names to fit columns
+ nm -u  Undefined symbols only
+ nm -V  Command version
+ nm -v  Sort external symbols by value
+ nm -x  Print in hexadecimal
+ nm -r  Prepend name of object or archive file to output line
+ nm -p  Easily parsible, terse output
+ nohup  Run command immune to hangups and quits
+ nroff  Text formatting language*DWB
+ nroff -e  Produce equally spaced words in adjusted lines*DWB
+ nroff -h  Use output tabs during horizontal spacing*DWB
+ nroff -i  Read standard input after files*DWB
+ nroff -m  Macro package*DWB
+ nroff -n  Assign number to first generated page*DWB
+ nroff -o  Output only pages whose numbers appear in list*DWB
+ nroff -q  Use simultaneous input/output mode of .rd request*DWB
+ nroff -r  Set specified register specified number*DWB
+ nroff -s  Stop every Nth page*DWB
+ nroff -T  Specify terminal type*DWB
+ nroff -u  Set emboldening factor*DWB
+ nroff -z  Print only messages generated by .tm requests*DWB
+ od  Dump octal file in ASCII, binary, hex, or octal
+ od -b  Bytes in octal
+ od -c  Bytes in ASCII
+ od -d  Words in unsigned decimal
+ od -o  Words in octal
+ od -s  16-bit in signed decimal
+ od -x  Words in hexadecimal
+ pack  Compress files
+ pack -  Byte statistics on output
+ pack -f  Force packing
+ passwd  Change login password
+ paste  Merge same lines of files or subsequent lines of one file
+ paste -d  Specify tab character
+ paste -s  Merge subsequent lines
+ pcat  Cat (show) compressed (packed) files [pack(1)]
+ pg  File perusal filter for soft-copy terminals; see files one screen at a time
+ pg +NUMBER  Start at specified line number
+ pg +/PATTERN  Start at line containing pattern
+ pg -c  Clear screen between pages
+ pg -e  Do not pause at file end
+ pg -f  Do not split lines
+ pg -n  End of command
+ pg -number  Window size
+ pg -p  Prompt string
+ pg -s  Standout mode
+ pic  troff preprocessor for drawing pictures*DWB
+ pic -T  Specify device*DWB
+ pr  Print files
+ pr +  Begin printing with Nth page
+ pr -a  Print output across page
+ pr -d  Double space the output
+ pr -e  Expand input tabs
+ pr -f  Use form-feed char for new pages
+ pr -h  Use next arg as header
+ pr -i  Insert tabs for white space
+ pr -  Produce N column output
+ pr -l  Set page length
+ pr -m  Merge all files
+ pr -n  Set line numbering
+ pr -o  Line offset
+ pr -p  Pause before printing page
+ pr -r  No diagnostic reports
+ pr -s  Separate columns with character
+ pr -t  Do not print header or trailer
+ pr -w  Set line width
+ prof  Display profile data
+ prof -a  Sort by increasing address
+ prof -c  Sort by decreasing calls
+ prof -g  Include non global symbols
+ prof -h  Suppress heading
+ prof -m  Use mdata not mon.out as input
+ prof -n  Sort lexically by name
+ prof -o  Address and name in octal
+ prof -s  Summary
+ prof -t  Sort by decreasing total time
+ prof -x  Address and name in hex
+ prof -z  Include all symbols, even zero
+ prs  Print SCCS file
+ prs -a  Information for both removed and existing deltas
+ prs -c  Cutoff date
+ prs -d  Specify output data specific
+ prs -e  Info on earlier deltas
+ prs -l  Info on later deltas
+ prs -r  Specify SID identification
+ ps  Report process status of currently executing commands
+ ps -a  All processes except process group leaders and processes not associated with a terminal
+ ps -d  All processes except group leaders
+ ps -e  Every process now running
+ ps -f  Full listing
+ ps -g  Only processes whose process group leader's ID numbers are specified
+ ps -l  Long listing
+ ps -n  Name of alternate system
+ ps -p  Only processes in list of pid's
+ ps -t  Restrict to specified terminals
+ ps -u  Restrict to user id list
+ ptx  Make permuted index*DWB
+ ptx -f  Fold upper- and lower-case letters*DWB
+ ptx -w  Width of output line*DWB
+ ptx -t  Prepare for typesetter*DWB
+ ptx -g  Specify gap*DWB
+ ptx -o  Keywords file only*DWB
+ ptx -i  Ignore keywords in ignore file*DWB
+ ptx -b  Word separators*DWB
+ ptx -r  Reference identifier*DWB
+ pwd  Print working directory name
+ read  Read one line from standard input assigning variables [sh(1)]
+ readonly  values of names may not be changed later [sh(1)]
+ red  Restricted text editor (See ed(1) for options) [ed(1)]
+ regcmp  Regular expression compile
+ regcmp -  Place output in file.c
+ rm  Remove files or directories
+ rm -f  Remove without questioning permissions
+ rm -i  Interactive mode
+ rm -r  Recursively delete directory and contents
+ rmail  Send mail to users [mail(1)]
+ rmail -o  No address optimization*3.0
+ rmail -s  No addition of newline at top*3.0
+ rmail -w  Send without waiting for remote transfer to complete*3.0
+ rmail -t  Print to whom mail is sent
+ rmdel  Remove delta from SCCS file
+ rmdel -r  Remove specified delta
+ rmdir  Remove directories [rm(1)]
+ rmdir -p  Remove empty parent directories*3.0
+ rmdir -s  Silence messages about removing parent directories*3.0
+ rsh  Restricted command programming language; see sh(1) for options [sh(1)]
+ sact  Print current SCCS file editing activity
+ sag  System activity graph
+ sag -e  Select data up to time
+ sag -f  Use file as the data source
+ sag -i  Select data at intervals
+ sag -s  Select data later than time
+ sag -T  Produce output for terminal
+ sag -x  x axis specification
+ sag -y  y axis specification
+ sar  System activity reporter
+ sar -A  All data
+ sar -a  File access routines
+ sar -b  Buffer activity
+ sar -c  System calls
+ sar -d  Activity for block device
+ sar -D  Remote File Sharing activity*3.0
+ sar -e  End time of report
+ sar -f  Extract data from previously recorded file
+ sar -i  Select records at specified intervals
+ sar -m  Report message & semaphore
+ sar -o  Save samples in binary format
+ sar -p  Report paging activities*2.1
+ sar -q  Report average queue length
+ sar -r  Report unused memory pages and disc blocks*2.1
+ sar -s  Report start time
+ sar -S  Report server and request queue status*3.0
+ sar -u  Report CPU utilization
+ sar -v  Report text, process, inode tables
+ sar -w  Report swap and switch activity
+ sar -y  Report TTY device activity
+ sccsdiff  Compare two versions of an SCCS file
+ sccsdiff -p  Pipe output through pr(1)
+ sccsdiff -r  Specify delta to compare
+ sccsdiff -s  Pass file segment size
+ sdb  Symbolic debugger
+ sdb -W  Disable checking & warnings
+ sdb -w  Permit overwriting locations
+ sdiff  Side-by-side difference program
+ sdiff -l  Print left 1/2 of identical line
+ sdiff -o  Use string as 3rd output file
+ sdiff -s  Do not print identical lines
+ sdiff -w  Width of output line
+ sed  Stream editor
+ sed -e  Script used to edit
+ sed -f  Take script from file
+ sed -n  Suppress default output
+ set  A shell function [sh(1)]
+ setup  Initialize system for first user
+ sh  Shell, the standard command programming language; execute commands
+ sh +a  Turn off mark on export variable
+ sh +e  Turn off exit on nonzero exit
+ sh +f  Turn off disable for names
+ sh +h  Turn off locate & remember
+ sh +k  Turn off keywords in environment
+ sh +n  Turn off read not execute cmds
+ sh +t  Turn off exit after executing 1
+ sh +u  Turn off unset variable errors
+ sh +v  Turn off print as read
+ sh --  Do not change any flags
+ sh -a  Mark variables for export
+ sh -c  Read commands from string
+ sh -e  Exit if cmd exits nonzero status
+ sh -f  Disable file name generation
+ sh -h  Locate & remember function cmds
+ sh -i  Shell is interactive
+ sh -k  Put keyword args in environment
+ sh -n  Read, do not execute commands
+ sh -r  Restricted shell
+ sh -s  Read commands from standard input
+ sh -t  Exit after executing one command
+ sh -u  Treat unset variables as errors
+ sh -v  Print lines as they are read
+ sh -x  Print cmds & args as executed
+ shl  Shell layer manager
+ size  Print sizes of object files
+ size -f  Full output*3.0
+ size -n  Include NOLOAD sections*3.0
+ size -o  Numbers in octal
+ size -V  Version number of size command
+ size -x  Numbers in hexadecimal
+ sleep  Suspend execution for interval
+ sort  Sort and/or merge files
+ sort -b  Ignore leading blanks
+ sort -c  Check sorted file
+ sort -d  Dictionary order
+ sort -f  Fold lower case to upper case
+ sort -i  Ignore chars outside ASCII range 040-0176; use only characters normally found in text
+ sort -M  Compare as months
+ sort -m  Merge sorted input files
+ sort -n  Compare numeric string w/value
+ sort -o  Output file
+ sort +POS  Start sort at specified position
+ sort -POS  End sort at specified position
+ sort -r  Reverse sense of comparisons
+ sort -t  Field separator
+ sort -u  Suppress all but unique lines
+ sort -y  Amount of sorting space
+ sort -z  Length of line buffer required
+ spell  Find spelling errors
+ spell -b  British spelling
+ spell -l  Follow chains of all files
+ spell -v  Print all words
+ spell -x  Print stem with = for each word
+ spell +local_file  Remove words found in local_file from output
+ split  Split file into pieces by number of lines
+ split -NUMBER  Split into NUMBER-line pieces
+ starter  Info about UNIX system for beginning users*3.0
+ stat  Statistical network useful with graphical commands
+ strip  Remove symbols and line numbers from obect files
+ strip -l  Strip line number
+ strip -r  Reset relocation indexes
+ strip -V  Print version of strip
+ strip -x  Do not strip static or external
+ strip -b  Do not strip static or external symbol information; also do not strip scoping information
+ stty  Set options for terminal; without arguments report current setting of certain options, e.g. speed
+ stty -a  Report all option settings
+ stty -g  Report current compatible info
+ su  Become super-user or another user
+ su -  Change environment to user env
+ subj  Generate subject list from document*DWB
+ sum  Print checksum and block count of file
+ sum -r  Use alternate algorithm
+ sync  Update super block
+ sysadm  Menu interface to do system administration
+ tabs  Set tabs on terminal
+ tabs -NUMBER  Repetitive specification
+ tabs +m  Margin argument specification
+ tabs --  First line of file has tabspecs
+ tabs -a  Assembler, IBM S/370 1st format
+ tabs -a2  Assembler, IBM S/370 2nd format
+ tabs -c  COBOL normal format
+ tabs -c2  COBOL compact format
+ tabs -c3  COBOL compact format update
+ tabs -f  FORTRAN
+ tabs -n  Specification of tab requests
+ tabs -p  PL/I format
+ tabs -s  SNOBOL
+ tabs -T  Terminal type
+ tabs -u  UNIVAC
+ tail  Show last part of file
+ tail +NUMBER  Begin at NUMBER from beginning
+ tail -f  Enter endless loop
+ tail -NUMBER  Begin at NUMBER from end
+ tail (option)l  Count by lines
+ tail (option)b  Count by blocks
+ tail (option)c  Count by characters
+ tar  Tape file archiver
+ tar -c  Create new tape
+ tar -r  replace; named files written on tape end
+ tar -t  Table; list names of files on tape
+ tar -u  Add named files to tape
+ tar -x  Extract named files
+ tar (option)#  Tape drive number
+ tar (option)b  Blocking factor
+ tar (option)f  Take next arg as file name
+ tar (option)l  Complain if links not dumped
+ tar (option)m  Restore modification times
+ tar (option)o  Ownership
+ tar (option)v  Verbose
+ tar (option)w  Print action to be taken
+ tbl  Format tables for nroff(1) or troff(1)*DWB
+ tbl -TX  Use only full vertical line motions*DWB
+ tc  troff(1) output interpreter for TEXTRONIX 4014*DWB
+ tc -t  No wait between pages*DWB
+ tc -o  Output specified pages*DWB
+ tc -a  Set aspect ratio*DWB
+ tc -e  No erase*DWB
+ td  Graphical device routines and filters
+ td -e  Do not erase screen
+ td -r  Display region
+ td -u  Display entire universe
+ tee  Pipe fitting
+ tee -a  Append output not overwrite
+ tee -i  Ignore interrupts
+ tekset  Graphical device routines and filters [gdev(1)]
+ test  Condition evaluation command
+ test -a  Binary and operator
+ test -b  0 if file exists and is block special file
+ test -c  0 if file exists and is character special
+ test -d  0 if file exists and is directory
+ test -f  0 if file exists and is regular file
+ test -g  0 if set-group-id bit is set
+ test -k  0 if sticky bit is set
+ test -n  0 if string length != 0
+ test -o  Binary or operator
+ test -p  0 if file is named pipe
+ test -r  0 if file exists and is readable
+ test -s  0 if file has size > 0
+ test -t  0 if the open file is associated with terminal device
+ test -u  0 if set-user-id bit is set
+ test -w  0 if file exists and is writable
+ test -x  0 if file exists and is executable
+ test -z  0 if string length = 0
+ time  Time a command
+ timex  Time a command; report process data and system activity
+ timex -o  Report total blocks
+ timex -p  List process accounting records
+ timex -f  Print fork/exec flag and system exit status in output
+ timex -h  Hog factor
+ timex -k  Total kcore-minutes
+ timex -m  Mean core size
+ timex -r  CPU factor
+ timex -t  Separate system and user CPU times
+ timex -s  Report total system activity
+ toc  Graphical table of contents routines
+ touch  Update access and modification times of file
+ touch -a  Update access time
+ touch -c  Silently prevent file creation
+ touch -m  Update modification time
+ tplot  Graphics filters
+ tplot -e  Send raster to plotter
+ tplot -T  Terminal type
+ tput  Query terminfo(4) database for terminal strings and information
+ tput -T  Specify terminal type
+ tput init  Output terminal's initialization strings and other terminal initialization activities*3.0
+ tput reset  Output terminal's reset strings; otherwise same as tput init*3.0
+ tr  Translate characters
+ tr -c  Complement character set
+ tr -d  Delete all input characters
+ tr -s  Squeeze all strings to single
+ trap  Read and execute when shell receives signals [sh(1)]
+ troff  Text formatting and typesetting language*DWB
+ troff -a  ASCII approximation*DWB
+ troff -F  Specify font directory*DWB
+ troff -i  Read standard input after files*DWB
+ troff -m  Macro package*DWB
+ troff -n  Assign number to first generated page*DWB
+ troff -o  Output only pages whose numbers appear in list*DWB
+ troff -q  Use simultaneous input/output mode of .rd request*DWB
+ troff -r  Set specified register specified number*DWB
+ troff -s  Stop every Nth page*DWB
+ troff -T  Specify typesetter*DWB
+ troff -z  Print only messages generated by .tm requests*DWB
+ true  Provide truth values
+ tsort  Topological sort
+ tty  Get name of terminal
+ tty -l  Print synchronous line number
+ tty -s  Inhibit term path name print
+ umask  Set mode mask that changes permissions of a file when created
+ uname  Print name of current UNIX system
+ uname -a  Print all system information
+ uname -m  Print machine hardware name
+ uname -n  Print nodename
+ uname -r  Print system release
+ uname -s  Print system name
+ uname -v  Print version
+ unget  Undo previous get of SCCS file
+ unget -n  Retain gotten file
+ unget -r  Delta to undo
+ unget -s  No printout
+ uniq  Report repeated lines in a file
+ uniq +n  Ignore n characters
+ uniq -c  Default output
+ uniq -d  Print one copy of repeat lines
+ uniq -n  Ignore n fields
+ uniq -u  Unique lines are output
+ units  Conversion program
+ unpack  Expand compressed (packed) files [pack(1)]
+ usage  Command description and usage examples*3.0
+ uucp  UNIX system to UNIX system copy messaging system
+ uucp -C  Force copy to spool directory
+ uucp -c  Do not copy local file to spool directory
+ uucp -d  Make all directories necessary
+ uucp -f  Do not make intermediate dir
+ uucp -g  Specification of relative transmission time
+ uucp -j  Job identification string
+ uucp -m  Inform requester when complete
+ uucp -n  Notify remote user
+ uucp -r  Queue job but do not transfer
+ uucp -s  Status of transfer
+ uucp -x  Debugging output
+ uulog  Query log of uucp and uux transactions [uucp(1)]
+ uulog -s  Info on work on specified system
+ uulog -f  Does "tail -f" of file transfer log
+ uulog -x  Look at uuxqt file
+ uulog -NUMBER  "tail" NUMBER lines
+ uuname  List uucp names of known systems [uucp(1)]
+ uuname -l  Local system name
+ uuname -c  Names known to cu(1)*3.0
+ uupick  Accept or reject files transmitted via uuto [uuto(1)]
+ uupick -s  Search only PUBDIR for files
+ uustat  uucp status inquiry and job control
+ uustat -a  All jobs in queue
+ uustat -k  Kill request
+ uustat -m  Report accessibility of machine
+ uustat -p  Execute "ps -flp" for all pid's in lock files
+ uustat -q  List jobs queued for machines
+ uustat -r  Rejuvenate job
+ uustat -s  Status of system requests
+ uustat -u  Status of user requests
+ uuto  Public UNIX system to UNIX system file copy
+ uuto -m  Send mail to user when complete
+ uuto -p  Copy source before transmission
+ uux  UNIX system to UNIX system command execution
+ uux -a  User identification
+ uux -b  Return standard input to uux command
+ uux -c  No copy of local file to spool directory
+ uux -C  Force local file copy
+ uux -g  Specification of relative transmission time
+ uux -j  Job identification string
+ uux -n  Send no user notification
+ uux -p  Standard input to uux is made standard input to command string
+ uux -r  Queue job but do not transfer
+ uux -s  Status of transfer
+ uux -x  Debugging output
+ uux -z  Notify user of success
+ val  Validate SCCS file
+ val -m  Compare name with ref-file keyword
+ val -r  Check if SID is ambiguous
+ val -s  Silence diagnostic message
+ val -y  Compare type with  keyword
+ vc  Version control
+ vc -a  Replace keywords in all lines
+ vc -c  Control char instead of :
+ vc -s  Silence warning messages
+ vc -t  Ignore chars up to first tab
+ vedit  Variant vi(1) intended for beginners (see vi(1) for options) [vi(1)]
+ vi  Screen-oriented (visual) display editor based on ex(1)
+ vi +command  Do specified command before editing
+ vi -R  Read only mode
+ vi -r  Recover after system crash
+ vi -t  Edit file containing tag
+ vi -w  Set window size
+ vi -x  Encryption mode
+ view  Same as vi(1), but readonly flag is set [vi(1)]
+ wait  Await completion of process
+ wall  Write to all users
+ wc  Report number of characters, words, and lines in file
+ wc -c  Count characters
+ wc -l  Count lines
+ wc -w  Count words
+ what  Identify SCCS files by searching for SCCS IDentification string of version ( delta)
+ what -s  Stop after first pattern found
+ who  Who is on system
+ who -a  Process  /etc/utmp or specified alternative file
+ who -b  Time of last system start up
+ who -d  Display expired processes
+ who -H  Column headings
+ who -l  Lines waiting for login
+ who -p  List active system initiated processes
+ who -q  Quick; names and numbers of current users
+ who -r  Current run level
+ who -s  Only name, line, & time
+ who -t  Last change to system clock
+ who -T  State of terminal line
+ who -u  Long listing for logged in users
+ who am I  Identify user
+ write  Write to another user
+ xargs  Construct argument lists and execute command
+ xargs -l  Do for specified number of non-empty lines
+ xargs  Insert mode
+ xargs -n  Use as many standard input args as possible
+ xargs -t  Trace mode
+ xargs -p  Prompt mode
+ xargs -x  Terminate if any arg list greater than specified size
+ xargs -s  Maximum size
+ xargs -e  Logical end-of-file string
+ yacc  Yet another compiler-compiler
+ yacc -d  Associate token codes
+ yacc -l  y.tab.c will not contain any #line constructs
+ yacc -t  Debugging code
+ yacc -v  Prepare y.output describing parsing tables and conflicts caused by grammar ambiguities
+ <CTRL>d  Quit the UNIX system

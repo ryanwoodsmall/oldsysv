@@ -1,0 +1,392 @@
+[]:glossary:define1
+square brackets:glossary:define1
+$:glossary:define2
+dollar sign:glossary:define2
+.:glossary:define51
+*:glossary:define4
+asterisk:glossary:define4
+\:glossary:define5
+backslash:glossary:define5
+&:glossary:define6
+ampersand:glossary:define6
+background:glossary:define6
+"":glossary:define7
+'':glossary:define7
+quote:glossary:define7
+quotes:glossary:define7
+double quotes:glossary:define7
+``:glossary:define8
+grave accents:glossary:define8
+#:glossary:define9
+pound sign:glossary:define9
+?:glossary:define10
+question mark:glossary:define10
+|:glossary:define45
+pipe:glossary:define45
+pipeline:glossary:define45
+k:locate:getkey
+k:keysrch:getkey
+access permissions:glossary:define11
+permissions:glossary:define11
+mode:glossary:define11
+owner:glossary:define11
+owner:glossary:define11
+group:glossary:define11
+other:glossary:define11
+read:glossary:define11
+write:glossary:define11
+execute:glossary:define11
+active process:glossary:define12
+argument:glossary:define13
+ASCII:glossary:define14
+ASCII collating sequence:glossary:define14
+block:glossary:define15
+block number:glossary:define15
+byte:glossary:define17
+bit:glossary:define17
+byte number:glossary:define17
+character number:glossary:define17
+command:glossary:define18
+command line:glossary:define18
+directory:glossary:define27
+subdirectory:glossary:define20
+parent directory:glossary:define20
+erase character:glossary:define22
+error message:glossary:define23
+field:glossary:define24
+file:glossary:define25
+file type:glossary:define25
+file descriptor:glossary:define16
+file name:glossary:define26
+simple file name:glossary:define26
+file system:glossary:define27
+file system structure:glossary:define27
+current working directory:glossary:define27
+full pathname:glossary:define28
+pathname:glossary:define28
+group ID:glossary:define29
+numeric group ID:glossary:define29
+group ID number:glossary:define29
+HOME:glossary:define31
+$HOME:glossary:define31
+HOME directory:glossary:define31
+interrupt:glossary:define32
+kill character:glossary:define33
+limited regular expression:glossary:define34
+full regular expression:glossary:define34
+regular expression:glossary:define34
+expression:glossary:define34
+logical expression:glossary:define34
+logical operator:glossary:define34
+pattern matching:glossary:define34
+link:glossary:define35
+login:glossary:define36
+login name:glossary:define36
+login directory:glossary:define36
+password:glossary:define36
+machine hardware name:glossary:define38
+machine ID:glossary:define38
+mail file:glossary:define39
+manual page:glossary:define40
+section number:glossary:define40
+non-printing character:glossary:define41
+octal:glossary:define42
+option:glossary:define43
+default-option:glossary:define43
+operand:glossary:define44
+process:glossary:define12
+process number:glossary:define12
+program:glossary:define48
+prompt:glossary:define49
+prompt string:glossary:define49
+primary prompt:glossary:define49
+secondary prompt:glossary:define49
+redirection:glossary:define50
+relative pathname:glossary:define51
+dot:glossary:define51
+root directory:glossary:define52
+root:glossary:define52
+separator:glossary:define53
+separator character:glossary:define53
+shell:glossary:define54
+shell level:glossary:define54
+shell command level:glossary:define54
+shell language:glossary:define55
+shell script:glossary:define56
+shell program:glossary:define56
+shell variable:glossary:define64
+export:glossary:define64
+exported variable:glossary:define64
+special character:glossary:define58
+standard error output:glossary:define59
+standard error:glossary:define59
+standard input:glossary:define59
+standard output:glossary:define59
+string:glossary:define60
+system name:glossary:define61
+terminal type:glossary:define62
+user ID:glossary:define63
+user ID number:glossary:define63
+UNIX:glossary:define66
+UNIX system:glossary:define66
+UNIX operating system:glossary:define66
+operating system:glossary:define66
+kernel:glossary:define66
+white space:glossary:define65
+angle brackets:glossary:define67
+arrow:glossary:define67
+dash:glossary:define68
+-:glossary:define68
+minus:glossary:define68
+hyphen:glossary:define68
+abnormal termination:glossary:define69
+archive:glossary:define70
+archive file:glossary:define70
+header:glossary:define70
+symbol table:glossary:define70
+file format:glossary:define70
+baud rate:glossary:define71
+transmission rate:glossary:define71
+buffer:glossary:define72
+editor buffer:glossary:define72
+byte order:glossary:define73
+half word order:glossary:define73
+compiler:glossary:define74
+link editor:glossary:define74
+loader:glossary:define74
+interpreter:glossary:define74
+control-d:glossary:define75
+<control d>:glossary:define75
+central processing unit:glossary:define76
+CPU:glossary:define76
+CPU priority:glossary:define76
+crash:glossary:define77
+editor crash:glossary:define77
+system crash:glossary;define77
+device:glossary:define78
+device driver:glossary:define78
+directory name:glossary:define79
+simple directory name:glossary:define79
+editor:glossary:define80
+text editor:glossary:define80
+editor command:glossary:define80
+encrypt:glossary:define81
+decrypt:glossary:define81
+environment:glossary:define82
+environment variable:glossary:define82
+EOF:glossary:define83
+end-of-file:glossary:define83
+end-of-file character:glossary:define83
+exit status:glossary:define84
+return code:glossary:define84
+false:glossary:define84
+true:glossary:define84
+filter:glossary:define85
+high-level language:glossary:define86
+machine language:glossary:define86
+interpreted language:glossary:define86
+inode:glossary:define87
+i-number:glossary:define87
+inode number:glossary:define87
+library:glossary:define88
+line:glossary:define89
+port:glossary:define89
+terminal line:glossary:define89
+login port:glossary:define89
+line number:glossary:define89
+port number:glossary:define89
+tty number:glossary:define89
+line editor:glossary:define90
+line-oriented editor:glossary:define90
+screen editor:glossary:define90
+screen-oriented editor:glossary:define90
+display-oriented editor:glossary:define90
+local system:glossary:define91
+remote system:glossary:define91
+loop:glossary:define92
+infinite loop:glossary:define92
+electronic mail:glossary:define93
+network hop:glossary:define94
+newline character:glossary:define95
+tab character:glossary:define95
+blank character:glossary:define95
+newline:glossary:define95
+blank:glossary:define95
+tab:glossary:define95
+option argument:glossary:define96
+parent process:glossary:define97
+child process:glossary:define97
+parity:glossary:define98
+parity bit:glossary:define98
+even parity:glossary:define98
+odd parity:glossary:define98
+PDP-11/45:glossary:define99
+PDP-11/70:glossary:define99
+3B20:glossary:define99
+3B5:glossary:define99
+3B2:glossary:define99
+VAX-11/750:glossary:define99
+VAX-11/780:glossary:define99
+portable:glossary:define100
+portability:glossary:define100
+positional parameters:glossary:define101
+.profile:glossary:define102
+release:glossary:define103
+version:glossary:define103
+operating system version:glossary:define103
+operating system release:glossary:define103
+request:glossary:define104
+macro:glossary:define104
+register:glossary:define104
+macro package:glossary:define104
+screen:glossary:define105
+display:glossary:define105
+cursor:glossary:define105
+home position:glossary:define105
+signal:glossary:define106
+signal number:glossary:define106
+catch:glossary:define106
+simplex:glossary:define107
+duplex:glossary:define107
+half-duplex:glossary:define107
+source code:glossary:define108
+source file:glossary:define108
+object file:glossary:define108
+object code:glossary:define108
+a.out file:glossary:define108
+executable:glossary:define108
+synchronous transmission:glossary:define109
+asynchronous transmission:glossary:define109
+syntax:glossary:define110
+syntax summary:glossary:define110
+terminal mode:glossary:define111
+standout mode:glossary:define111
+reverse video:glossary:define111
+word:glossary:define112
+half word:glossary:define112
+process group leader:glossary:define113
+super user:glossary:define114
+window:glossary:define115
+layer:glossary:define115
+c:starter:basiccmds
+d:getdoe:getdesc
+d:getexample:getdesc
+d:getoption:getdesc
+d:starter:documents
+e:getdesc:getexample
+e:getdoe:getexample
+e:getoption:getexample
+e:starter:education
+g:help:glossary
+g:glossary:glossary
+l:getdesc:keysrch
+l:getexample:keysrch
+l:getoption:keysrch
+l:help:locate
+l:starter:local
+o:getdesc:getoption
+o:getdoe:getoption
+o:getexample:getoption
+p:getdesc:listcmds
+p:getexample:listcmds
+p:getoption:listcmds
+p:usage:listcmds
+s:basiccmds:starter
+s:documents:starter
+s:education:starter
+s:help:starter
+s:teach:starter
+s:local:starter
+t:starter:teach
+u:help:usage
+cat:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+cd:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+chmod:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+cp:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+cut:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+date:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+echo:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+egrep:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+fgrep:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+file:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+find:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+grep:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+ln:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+ls:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+mail:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+mesg:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+mkdir:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+mv:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+news:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+pr:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+ps:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+pwd:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+rm:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+sleep:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+sort:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+stty:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+tabs:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+tail:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+tee:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+time:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+tty:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+touch:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+uname:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+wall:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+wc:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+who:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+write:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+p:getdesc,getexample,getoption,usage:listcmds
+ar:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+at:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+basename:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+batch:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+bdiff:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+chgrp:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+chown:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+cmp:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+comm:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+cpio:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+crontab:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+diff:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+diff3:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+dircmp:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+dirname:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+ed:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+env:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+expr:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+false:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+file:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+find:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+getopt:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+glossary:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+help:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+kill:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+line:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+locate:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+login:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+nice:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+nohup:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+pack:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+passwd:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+pcat:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+pdp11:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+red:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+rmdir:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+rsh:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+sdiff:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+sed:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+sh:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+shl:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+starter:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+sum:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+test:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+true:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+u3b2:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+umask:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+unpack:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+usage:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+wait:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+xargs:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+u3b5:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe
+vax:getdesc,listcmds,getexample,getoption,usage,keysrch:getdoe

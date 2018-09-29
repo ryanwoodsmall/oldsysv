@@ -1,0 +1,24 @@
+#ident	"@(#)sadmin:etc/save.d/except	1.3"
+#	Patterns of file names to be excluded from saving by savefiles.
+#	These are ed(1) regular expressions.
+/\.news_time$
+/a.out$
+/core$
+/dead.letter$
+/ed\.hup$
+/nohup\.out$
+/tmp/
+\.o$
+^/etc/mnttab$
+^/etc/save.d/timestamp
+^/etc/utmp$
+^/etc/wtmp$
+^/usr/adm/
+^/usr/asp/
+^/usr/at/
+^/usr/crash/
+^/usr/games/
+^/usr/news/
+^/usr/rje/
+^/usr/spool/
+^/usr/tmp/

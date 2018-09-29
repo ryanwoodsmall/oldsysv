@@ -1,0 +1,4 @@
+rs::sysinit:/inst/etc/insth < /dev/console > /dev/console 2>&1
+wm::sysinit:/bin/sh -c "echo INSTALLATION NOT COMPLETED" > /dev/console 2>&1
+rf::sysinit:/etc/uadmin 2 2			# Return to firmware
+is:s:initdefault:

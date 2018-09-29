@@ -1,0 +1,34 @@
+#ident	"@(#)pkg.sgs:UNINSTALL.sgs	1.5"
+#
+# UNINSTALL a 3B2 Package
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/sgs.name`
+
+#
+# determine if domestic version of libcrypt is on machine
+#
+
+if [ -s /usr/options/crypt.name ]
+then
+	rmfiles=''
+	rm -f /usr/lib/libcrypt_i.a
+else
+	rmfiles=/usr/lib/libcrypt.a
+fi
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+for i in `cat /install/install/Rlist` $rmfiles
+do
+	echo $i
+	rm -f $i
+done
+echo "The ${PKGNAME} has been removed."

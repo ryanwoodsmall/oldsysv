@@ -1,0 +1,187 @@
+#ident	"@(#)sadmin:admin/menu/ttymgmt/modtty	2.11"
+#menu# show and optionally modify characteristics of tty lines
+#help#
+#help#	This subcommand reports and allows you to change the characteristics
+#help#	of tty lines, (sometimes called "ports").
+
+trap exit 1 2 15
+
+flags="-qq -k$$"
+mesg='
+Warning:  Your terminal will be disconnected shortly.
+		Please log off now.'
+
+linesets=`sed -n 's/#.*//p' /etc/gettydefs  |  sort -n  |  pr -t -8 -o8` 
+states='	off	on'
+ttylist=`sed -n '\;getty;s;.*getty[^#]* \([/a-z]*tty[a-z0-9]*\)  *[^-# 	]\{1,\}.*;\1;p' /etc/inittab  |
+	sort  |  pr -t -8 -o8`
+ttys="${ttylist} "`echo ${ttylist}  |  tr ' ' '\012'  |  sed -n 's/^[^0-9]*//p'`
+
+inuse() {
+	a=`who | grep " $1 "`
+	if [ -n "${a}" ]
+	then
+		echo "Line $1 is in use:  ${a}"
+		case "$2" in
+		off )
+			echo '
+Note:  Installing the new characteristics will disconnect this user.'
+			if  checkyn ${flags} -f -H "
+	The user will be sent the following message if you answer \"yes\":
+	${mesg}" \
+				'Do you want to send them a warning?'
+			then
+				set -- ${a}
+				echo "${mesg}"  |  write $1 $2
+			fi
+			;;
+		on )
+			echo '
+Note:  Installing the new characteristics will not change this user'\''s line.
+However, when they log off, the new characteristics will then take effect.'
+		esac
+	fi
+}
+
+while true
+do
+	tty=`checklist ${flags} -fep -H '
+	The system knows about these tty lines.  They may not be active.
+	When you select one, you will be shown it and given the opportunity
+	to change some or all of its attributes.' \
+	"
+Changeable tty lines:
+${ttylist}
+Select the tty you wish to modify,
+or enter ALL to see a report of all ttys [?, q]:" ALL ${ttys}`
+	case "${tty}" in
+	ALL )
+		echo '\nChangeable tty lines:
+		Hangup	Line
+Tty	State	Delay	Setting	Description
+---	-----	-----	-------	-----------'
+		sed -n '\;getty ;{
+				h
+				s;^[^:]*:[^:]*:\([a-z]*\):[a-z/]*getty[^#]* \([/a-z]*tty[a-z0-9]*\)  *[^-# 	]\{1,\}.*;\2	\1	;
+				s/	respawn	/	on	/
+				G
+				s;\n.*getty[^#]* -t \([0-9]\{1,\}\).*;\1;
+				/\n/s/\n.*/off/
+				G
+				s;\n.*getty[^#]* [/a-z]*tty[a-z0-9]*  *\([^-# 	]\{1,\}\)[^#]*#* *\(.*\);	\1	\2;p
+			}
+			' /etc/inittab  |  sort
+		echo ''
+		checkyn ${flags} -f -D y 'Continue (default: y)?'  ||  exit 0
+		continue
+		;;
+	[0-9]* )
+		tty=tty${tty}
+	esac
+	curdelay='off'
+	eval `sed -n "
+		\;getty[^#:]* ${tty} ; {
+			h
+			s/.*getty[^#:]* -t *\([0-9]\{1,\}\) .*/curdelay=\1/p
+			g
+			s;[^:]*:[^:]*:\([^:]*\):.* ${tty}  *\([^-# 	]\{1,\}\)[ 	]*#*[ 	]*\(.*\);curstate=\1 curlineset=\2 curdesc='\3';
+			p
+		}" /etc/inittab`
+
+	if [ "${curstate}" = respawn ]
+	then
+		curstate=on
+	fi
+
+	echo "
+${tty}:  current characteristics:
+	State		${curstate}
+	Hangup Delay	${curdelay}
+	Line Setting	${curlineset}
+	Description	${curdesc}"
+	inuse ${tty}
+
+	state=`checklist ${flags} -fep -D "${curstate}" -H '
+	A tty in the "off" state is not available for login, but may be used
+	as an outgoing line for a printer or networking connections.
+	A tty in the "on" state is available for incoming logins.
+	If a tty is "off", then none of the other values have any meaning;
+	they are simply remembered so it is easy to turn lines on and off.' \
+	"
+Available states:
+${states}
+Select a state (default: ${curstate}) [?, q]: " ${states}`
+
+	delay=`checkre ${flags} -fe -D "${curdelay}" -H '
+	A hangup delay of "off" makes the tty keep the incoming line open once
+	it has successfully opened it.
+	A delay of, say, "60" seconds means that if a someone does not log in
+	within 60 seconds, the line will be dropped.
+	Delay "off" is recommended for ttys where the terminal is permanently
+	connected and you want the "login:" message to appear as soon as it
+	is turned on.  A hangup delay is recommended when the connection is
+	made through a dial-up modem or a local area network.' \
+	-r  "
+Enter a hangup delay, in seconds, or 'off' (default: ${curdelay}) [?, q]: " \
+	'^[0-9]\{1,3\}$' -o \
+	'^off$' 'Answer must be either 1 to 3 digits or the word "off".'`
+
+	lineset=`checklist ${flags} -fep -D "${curlineset}" -H '
+	Most line settings are a number, say "1200", and set the line to start
+	at that speed.  Sending a "BREAK" will usually make it "hunt" to the
+	next line setting, usually at a different speed.  Some line settings
+	have names, usually the same as a special tty line, and may be
+	appropriate for that particular line.' \
+	"
+Available line settings:
+${linesets}
+Select a line setting (default: ${curlineset}) [?, q]: " ${linesets}`
+
+	desc=`checkre ${flags} -fe -D "${curdesc}" -r -H '
+	The description is strictly commentary for your own benefit.
+	We suggest you keep it short and meaningful.' \
+	"
+Current description:
+	${curdesc}
+Enter a new description (default: current description) [?, q]:
+	" \
+	'^[	 -~]*$' 'Input contains illegal character, try again.' \
+	'^.\{0,100\}$' 'Input is too long, 100 character limit.'`
+
+	echo "
+${tty}: new characteristics:
+	State		${state}
+	Hangup Delay	${delay}
+	Line Setting	${lineset}
+	Description	${desc}"
+	inuse ${tty} ${state}
+
+	if [ "${curstate}" = on ]
+	then
+		curstate=respawn
+	fi
+	if [ "${state}" = on ]
+	then
+		state=respawn
+	fi
+	if checkyn ${flags} -f 'Do you want to install these new characteristics?'
+	then
+		#	The substitution for ${desc} contains bells.
+		ed - /etc/inittab <<-!  ||  admerr $0 Cannot change /etc/inittab.
+			H
+			/getty.* ${tty} /  s/$/ # /
+			s/ ${tty}  *${curlineset} / ${tty} ${lineset} /
+			s/:${curstate}:/:${state}:/
+			.v/ -t /  s/getty  */&-t ${delay} /
+			.g/ -t /  s/-t  *[0-9]\{1,\}  */-t ${delay} /
+			.g/ -t off /  s// /
+			s *#.* # ${desc}
+			s/[# ]*\$//
+			w
+			!echo ${tty} now has new characteristics.
+			q
+		!
+		#    Make change known to the system
+		/etc/init q  ||  admerr $0 Cannot signal /etc/init.
+	fi
+done

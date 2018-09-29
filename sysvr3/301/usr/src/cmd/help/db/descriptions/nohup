@@ -1,0 +1,18 @@
+
+\Snohup\S:  Description
+
+Syntax Summary:  nohup command
+
+         where:  command  is a UNIX system command, a shell program,
+                          or an executable file and any arguments
+                          it might take.
+Description:
+     \Snohup\S stands for do "not hang up."  \Snohup\S insures that the
+     command will be executed even if your terminal is disconnected from the
+     system.  Normally, logging off the system stops the execution of commands,
+     including processes that are running in the background.  If you run a
+     command in the background and run it with \Snohup\S, logging off will not
+     terminate it.  You can terminate the command with the kill(1) command.  
+     The output and error output for the command is directed to a file named
+     nohup.out unless you redirect it to another file. See also:  kill(1) and
+     nice(1) for commands that might be used with \Snohup\S.

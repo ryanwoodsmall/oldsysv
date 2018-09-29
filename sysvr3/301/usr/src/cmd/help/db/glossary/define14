@@ -1,0 +1,12 @@
+
+\S ASCII:  ASCII collating sequence \S
+
+ASCII is an acronym for American Standard Code for Information Interchange.
+ASCII code uses one "byte"\S*\S of computer memory to represent each
+character.  Each alphanumeric and "special character"\S*\S has an ASCII
+equivalent.  When files and directories are printed according to the ASCII
+code equivalent of the first letter of their names, the order is called
+ASCII collating sequence.  The order is special characters first, numbers
+second, then upper case and lower case letters.
+
+\S*\S defined in the \Sglossary\S

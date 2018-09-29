@@ -1,0 +1,38 @@
+.TH OSM 7 "3B20S only"
+.SH NAME
+osm \- interface to \s-1UNIX\s+1 System messages
+.SH DESCRIPTION
+Operating system messages are stored in a circular buffer in the
+system and can be read or written using the special files \fB/dev/osm\(**\fP.
+A read from the file \fB/dev/osm\(**\fP
+will return some portion of the data in the circular buffer.
+A write to the file \fB/dev/osm\(**\fP
+will add the user data to the current end of the circular buffer.
+Any number of users can use the \fIosm\fP interface at once.
+.PP
+In particular:
+Reads from the file \fB/dev/osm\fP
+start at the current end of the circular buffer and wait for
+new data to be added.
+Reads from the file \fB/dev/osm.cur\fP
+start at the begining of the circular buffer and 
+return zero bytes when the current end of the circular buffer is reached.
+Reads from the file \fB/dev/osm.all\fP
+start at the begining of the circular buffer, go to the current end of the
+circular buffer, and then wait for new data to be added.
+.PP
+The easiest way to use the \fIosm\fP interface is by typing:
+.RS
+.sp
+	cat \|\-u \|/dev/osm \|&
+.sp
+.RE
+or by typing:
+.RS
+.sp
+	echo \|\fImessage\fP \|> \|/dev/osm
+.sp
+.RE
+.SH FILES
+/dev/osm\(**
+.\"	@(#)osm.7	5.2 of 5/18/82

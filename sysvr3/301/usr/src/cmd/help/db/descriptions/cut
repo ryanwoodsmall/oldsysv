@@ -1,0 +1,25 @@
+
+\Scut\S:  Description
+
+Syntax Summary:  cut -c char_list [file_name ...]
+                 cut -f field_list [-d char] [-s] [file_name ...]
+
+         where:  char_list  is a list of integers that identify a character.
+
+                 field_list  is a list of integers that identify a field.
+
+                 file_name  is the name of a file.
+
+                 char  is a separator character.
+
+Description:
+     \Scut\S displays one or more specified columns or fields of a file on the
+     standard output.  Together with the \Spaste\S command, it can be used to
+     reformat data files.  \Scut\S works by identifying characters or fields.
+     A field is composed of characters separated from the rest of the line by a
+     separator character.  A tab character is the default field separator. 
+     \Scut\S counts tabs as one character, even though the tab might be equal
+     to 8 spaces. You can display certain fields or characters by specifying a
+     <field_list> or <char_list> on the command line.  If you don't specify a
+     file name on the command line, \Scut\S reads from the standard input. See
+     also: grep(1) and paste(1) for commands that might be used with \Scut\S.

@@ -1,0 +1,114 @@
+.TH DGN 1M "3B20S only"
+.SH NAME
+dgn \- initiate on-line diagnostics
+.SH SYNOPSIS
+.B /dgn/bin/dgn
+name unit [ options ]
+.SH DESCRIPTION
+\fIDgn\fP initiates on-line diagnostics on
+the device
+indicated by \fIname\fP and
+\fIunit\fP.
+\fIOptions\fP is a string of
+keyword parameters
+separated from each other
+by white space.
+\fIDgn\fP parses the parameter string \fIoptions\fP
+and verifies that each
+keyword parameter does not contain
+any missing components or values
+that are out-of-range.
+.P
+The following \fIoptions\fP are recognized,
+each as a separate argument:
+.PP
+.PD 0
+.TP \w'\fBfile\fP=\fIfilename\fP\ \ \ 'u
+.B raw
+Print the diagnostic results of every phase
+and all failures.
+By default, only the
+final results and the first five
+failures of each failing phase
+will be printed.
+.TP
+.B ucl
+Unconditionally execute the diagnostic with no
+early termination (i.e., the diagnostic will be
+run to completion in spite of failures).
+By default, the diagnostic will
+terminate after the first failing phase.
+.TP
+\fBph\fP=\fIx\fP[\fB\-\fP\fIy\fP]
+Execute only the specified phase numbers.
+May be either a single decimal number or a range of
+numbers.
+The letter \fIx\fP denotes the beginning phase number
+and \fIy\fP the ending phase number.
+.TP
+\fBrpt\fP=\fIx\fP
+Repeats the diagnostic \fIx\fP times.
+The maximum value allowed is 256.
+.TP
+.B tlp
+Executes the Trouble Location Procedure at the
+conclusion of the diagnostic.
+This process analyzes diagnostic failures
+and generates a weighted list of
+faulty circuit packs.
+This option must \fInot\fP
+be used in conjunction with the
+\fBucl\fP option.
+.TP
+\fBfile\fP=\fIfilename\fP
+Routes all output messages
+into a file named \fIfilename\fP,
+instead of the user's terminal.
+\fIFilename\fP is opened for appending
+and is relative to the directory
+\fB/dgn/dgnc\fP unless a
+full pathname is specified.
+.TP
+.B cont
+This option is effective only when
+\fIname\fP and \fIunit\fP is an \s-1IOP\s+1
+By default, after an \s-1IOP\s+1 is diagnosed,
+all of its Peripheral Controllers (\s-1PC\s+1s)
+are diagnosed automatically.
+The \fBcont\fP option causes
+only the \s-1IOP\s+1 diagnostics to be run.
+Note that \s-1MHD\s+1s are never automatically
+diagnosed when \fIname\fP and \fIunit\fP
+is a \s-1DFC\s+1.
+.TP
+\fBhu=\fIname\ \|unit\fR
+This
+.I option
+allows a helper unit identified by
+.I name
+and 
+.I unit
+to be specified.
+For example,
+when diagnosing the magnetic tape controller (i.e.,
+.SM UN\*S32),
+a diagnostic test tape with a write ring must be
+mounted on the specified helper unit.
+The following example shows how one might invoke
+diagnostics using the helper unit option:
+.RS
+.RS
+dgn \|un32 \|0 \|ph=5 \|hu=mt \|2
+.RE
+.RE
+.SH "SEE ALSO"
+rmv(1M),
+rst(1M).
+.br
+.IR "3B DMERT Output Messages" ,
+OM-4C000-01.
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+
+.\"	@(#)dgn.1m	5.2 of 5/18/82

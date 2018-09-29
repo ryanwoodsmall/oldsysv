@@ -1,0 +1,119 @@
+#ident	"@(#)bne.admin:addport	2.2"
+#	This shell is used to add a port to /etc/inittab
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+portname=$1
+
+if [ -f "$INITTAB" -a \( ! -w "$INITTAB" -o ! -r "$INITTAB" \) ]; then
+	admerr $0 "Can't write and read '$INITTAB'\nCan't do add operation!\n"
+	exit
+fi
+
+echo "
+This procedure is used to add I/O direction control
+information for the devices/ports known to the
+'$PACKAGE' (in the '$INITTAB' file).
+" 
+portlist=`grep '^[^#]' $DEVICES 2>/dev/null | cut -d' ' -f2  |  sort -u  |
+			grep '^[a-z0-9]' 2>/dev/null`
+
+if [ -z "$portlist" ]; then
+	admerr $0 "There are no ports in the '$DEVICES' file.\nCan't do add operation!\n"
+	exit
+fi
+
+while $FIRST ||  [ -n "$1" ] || chkyn ${flags} -f "
+Do you want to add another port?"
+do
+FIRST=false
+
+if [ -z "$1" ]; then
+	echo "\nThis is the current list of the device ports
+known to '$PACKAGE':\n"
+	echo "${portlist}"  |  pr -t -w80 -6
+
+	echo
+	portname=`chkyn ${flags} -fec 'Enter device port name you want to add [q]:'\
+		${portlist}`
+
+	entry=`grep "${portname}[ 	]" $INITTAB 2>/dev/null`
+	if [ $? -eq 0 ]; then
+		echo "\nFound the following entry in '$INITTAB':\n"
+		cat <<-! | while read a; do /bin/sh _initprint $a; done
+			${entry}
+		!
+		echo "You can't added another entry for the same port.\n"
+		continue
+	fi
+fi
+
+#  first field in inittab entry
+F1=`echo ${portname} | sed  's/^.*\(..\)$/\1/'`
+
+SPEED=`chkyn ${flags} -efc -D1200 "
+Enter the baud rate of port ${portname}:
+1200 300 1800 2400 4800 9600 19200
+(default 1200):  "  1200 300 1800 2400 4800 9600 19200`
+
+direction='
+	1 incoming
+	2 outgoing
+	3 bidirectional
+'
+
+ret=`chkyn ${flags} -efc -D1 "
+Do you want the port ${portname} to be used for
+incoming, outgoing, or bidirectional traffic?
+Enter:
+${direction}
+(default 1): " ${direction}`
+
+case $ret in
+1|incoming)
+	GETTY="/etc/getty"
+	STATUS=respawn
+	DIRECTION=incoming
+	;;
+2|outgoing)
+	GETTY="/etc/getty"
+	STATUS=off
+	DIRECTION=outgoing
+	;;
+3|bidirectional)
+	GETTY="/usr/lib/uucp/uugetty -r"
+	SPEED=${SPEED}H
+	STATUS=respawn
+	DIRECTION=bidirectional
+	;;
+esac
+
+echo "The following entry has been created:\n"
+/bin/sh _initprint	$F1:2:$STATUS:$GETTY -t 60 ${portname} $SPEED
+
+
+if  chkyn ${flags} -f "
+Should this be entered into the '$INITTAB' file?"
+then
+	cat<<-! >> $INITTAB
+	$F1:2:$STATUS:$GETTY -t 60 ${portname} $SPEED
+	!
+	echo "*** ${portname} has been added to '$INITTAB'. ***"
+
+# execute init to reread inittab
+	/etc/init q 2>/dev/null
+
+fi
+
+if [ -n "$1" ] ; then break; fi
+done

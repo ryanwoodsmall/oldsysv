@@ -1,0 +1,549 @@
+/*	static char  ID[] = "@(#)optim:3b/defs	1.22";	*/
+
+#include	<ctype.h>
+
+#define	LOWOP	3
+#define ACJL	3
+#define ACJLE	4
+#define ACJLEU	5
+#define ACJLU	6
+#define ADDB2	7
+#define ADDB3	8
+#define ADDH2	9
+#define ADDH3	10
+#define ADDW2	11
+#define ADDW3	12
+#define ALSW2	13
+#define ALSW3	14
+#define ANDB2	15
+#define ANDB3	16
+#define ANDH2	17
+#define ANDH3	18
+#define ANDW2	19
+#define ANDW3	20
+#define ARSW2	21
+#define ARSW3	22
+#define ATJNZB	23
+#define ATJNZH	24
+#define ATJNZW	25
+#define ATOI	26
+#define BITB	27
+#define BITH	28
+#define BITW	29
+#define BPT	30
+#define CACHI	31
+#define CALE	32
+#define CALL	33
+#define CHRH	34
+#define CHRM	35
+#define CINOV	36
+#define CLRMD0	37
+#define CLRMD1	38
+#define CLROD0	39
+#define CLROD1	40
+#define CMPB	41
+#define CMPCC	42
+#define CMPCCE	43
+#define CMPCE	44
+#define CMPH	45
+#define CMPNW	46
+#define CMPW	47
+#define CMPZV	48
+#define CPOFF	49
+#define CPON	50
+#define CPSEMA	51
+#define CS	52
+#define CVSEMA	53
+#define DECPTH	54
+#define DECPTW	55
+#define DEQUE	56
+#define DIAG	57
+#define DIVW2	58
+#define DIVW3	59
+#define DMIOH	60
+#define DMIOW	61
+#define DOIOH	62
+#define DOIOW	63
+#define ENMD	64
+#define ENOD	65
+#define EXTZV	66
+#define FADDD2	67
+#define FADDD3	68
+#define FADDS2	69
+#define FADDS3	70
+#define FCMPD	71
+#define FCMPS	72
+#define FDIVD2	73
+#define FDIVD3	74
+#define FDIVS2	75
+#define FDIVS3	76
+#define FIDL	77
+#define FMULD2	78
+#define FMULD3	79
+#define FMULS2	80
+#define FMULS3	81
+#define FRZ	82
+#define FSUBD2	83
+#define FSUBD3	84
+#define FSUBS2	85
+#define FSUBS3	86
+#define GCC	87
+#define GETDCT	88
+#define HALTX	89
+#define HLABEL	90
+#define INCPTH	91
+#define INCPTW	92
+#define INCTST	93
+#define INHMD	94
+#define INHOD	95
+#define INITGP	96
+#define INSV	97
+#define IOCLER	98
+#define IOEACK	99
+#define IOIACK	100
+#define IOIDL	101
+#define IORD	102
+#define IOREAD	103
+#define IORINT	104
+#define IORSR	105
+#define IORST	106
+#define IOSRACK	107
+#define IOWCA	108
+#define IOWD	109
+#define IOWDP	110
+#define IOWT	111
+#define ITOA	112
+#define JBC	113
+#define JBS	114
+#define JCC	115
+#define JCS	116
+#define JE	117
+#define JFLE	118
+#define JG	119
+#define JGE	120
+#define JGEU	121
+#define JGU	122
+#define JIOE	123
+#define JIOM	124
+#define JION	125
+#define JIOT	126
+#define JL	127
+#define JLE	128
+#define JLEU	129
+#define JLU	130
+#define JMP	131
+#define JNE	132
+#define JNEG	133
+#define JNNEG	134
+#define JNPOS	135
+#define JNZ	136
+#define JPOS	137
+#define JSB	138
+#define JVC	139
+#define JVS	140
+#define JZ	141
+#define LABEL	142
+#define LLSW2	143
+#define LLSW3	144
+#define LMCHB	145
+#define LMCHS	146
+#define LOCCC	147
+#define LOCCCE	148
+#define LOCCE	149
+#define LOCKH	150
+#define LRSW2	151
+#define LRSW3	152
+#define LSM	153
+#define MCHEX	154
+#define MCHIN	155
+#define MCOMB	156
+#define MCOMH	157
+#define MCOMW	158
+#define MNEGB	159
+#define MNEGH	160
+#define MNEGW	161
+#define MODW2	162
+#define MODW3	163
+#define MOVAB	164
+#define MOVAH	165
+#define MOVAW	166
+#define MOVB	167
+#define MOVBBH	168
+#define MOVBBW	169
+#define MOVBHW	170
+#define MOVBLB	171
+#define MOVBLH	172
+#define MOVBLKB	173
+#define MOVBLKH	174
+#define MOVBLKW	175
+#define MOVBLW	176
+#define MOVCCE	177
+#define MOVCCEP	178
+#define MOVCE	179
+#define MOVD	180
+#define MOVDD	181
+#define MOVDH	182
+#define MOVDS	183
+#define MOVDW	184
+#define MOVH	185
+#define MOVHD	186
+#define MOVHS	187
+#define MOVSD	188
+#define MOVSH	189
+#define MOVSW	190
+#define MOVTDH	191
+#define MOVTDW	192
+#define MOVTHB	193
+#define MOVTSH	194
+#define MOVTSW	195
+#define MOVTWB	196
+#define MOVTWH	197
+#define MOVW	198
+#define MOVWD	199
+#define MOVWS	200
+#define MOVZBH	201
+#define MOVZBW	202
+#define MOVZHW	203
+#define MRF	204
+#define MSRF	205
+#define MSRN	206
+#define MSSRF	207
+#define MSSRN	208
+#define MSWF	209
+#define MULW2	210
+#define MULW3	211
+#define NOP	212
+#define ORB2	213
+#define ORB3	214
+#define ORH2	215
+#define ORH3	216
+#define ORW2	217
+#define ORW3	218
+#define OST	219
+#define OTHER	220
+#define PATB	221
+#define PIOE	222
+#define PIOI	223
+#define PIOR	224
+#define POPW	225
+#define PSEMA	226
+#define PSIPLSE	227
+#define PSIPO	228
+#define PSIRD	229
+#define PSIWT	230
+#define PUSHAW	231
+#define PUSHBB	232
+#define PUSHBH	233
+#define PUSHD	234
+#define PUSHW	235
+#define PUSHZB	236
+#define PUSHZH	237
+#define QUEUE	238
+#define QTEST	239
+#define RCB	240
+#define RCH	241
+#define RCREFE	242
+#define RCW	243
+#define RDBLK	244
+#define RDBLKI	245
+#define RDBLKR	246
+#define RDCSTK	247
+#define RDINHP	248
+#define RDINHPI	249
+#define RDINHPR	250
+#define RDISTK	251
+#define RDOSER	252
+#define RDPHY	253
+#define RDSER	254
+#define RDSR	255
+#define RDTIM	256
+#define RDWRD	257
+#define RDWRDI	258
+#define RDWRDR	259
+#define RET	260
+#define RETE	261
+#define RMCHB	262
+#define RMCHR	263
+#define RMCHS	264
+#define ROTLW	265
+#define ROTRW	266
+#define RP	267
+#define RRBLK	268
+#define RRWRD	269
+#define RSB	270
+#define RSBLK	271
+#define RSTAT	272
+#define RSTATI	273
+#define RSTATR	274
+#define RSWRD	275
+#define RTB	276
+#define RTI	277
+#define RTO	278
+#define RTT	279
+#define SAVE	280
+#define SCC	281
+#define SDS	282
+#define SENDINT	283
+#define SETMPR	284
+#define SINOV	285
+#define SIOH	286
+#define SIOW	287
+#define SMCCP	288
+#define SMCDP	289
+#define SMCHC	290
+#define SMCHD	291
+#define SMINST	292
+#define SMIOH	293
+#define SMIOW	294
+#define SS	295
+#define SSS	296
+#define STAT	297
+#define STMCBP	298
+#define STMCHB	299
+#define STMCHC	300
+#define STSM	301
+#define SUBB2	302
+#define SUBB3	303
+#define SUBH2	304
+#define SUBH3	305
+#define SUBW2	306
+#define SUBW3	307
+#define SVSXL	308
+#define SWITCH	309
+#define SWITCHT	310
+#define SWKS	311
+#define SWPS	312
+#define SXL	313
+#define TARBB	314
+#define TARBH	315
+#define TARBW	316
+#define TASBB	317
+#define TASBH	318
+#define TASBW	319
+#define TASK	320
+#define TIO	321
+#define UCRD	322
+#define UCWT	323
+#define UDIVW2	324
+#define UDIVW3	325
+#define UMODW2	326
+#define UMODW3	327
+#define UMULW2	328
+#define UMULW3	329
+#define UTNOP	330
+#define VSEMA	331
+#define VTOP	332
+#define WAIT	333
+#define WAITII	334
+#define WCSDUMP	335
+#define WCSPUMP	336
+#define WTBLK	337
+#define WTBLKI	338
+#define WTBLKR	339
+#define WTCMD	340
+#define WTCMDI	341
+#define WTCMDR	342
+#define WTCSTK	343
+#define WTISTK	344
+#define WTMSK	345
+#define WTMSKB	346
+#define WTMSKI	347
+#define WTMSKR	348
+#define WTPAR	349
+#define WTPARI	350
+#define WTPARR	351
+#define WTPHY	352
+#define WTRTN	353
+#define WTSR	354
+#define WTWRD	355
+#define WTWRDI	356
+#define WTWRDR	357
+#define XORB2	358
+#define XORB3	359
+#define XORH2	360
+#define XORH3	361
+#define XORW2	362
+#define XORW3	363
+#define ZEROBLK	364
+#define HIGHOP	364
+
+/*
+ *
+ *	Pseudo-Ops
+ *
+ */
+#define numpops	29
+#define ALIGN	1
+#define BSS	2
+#define BYTE	3
+#define DATA	4
+#define DEF	5
+#define FIL	6
+#define GLOBL	7
+#define LN	8
+#define SET	9
+#define TEXT	10
+#define TV	11
+#define WORD	12
+#define HALF	13
+#define VAL	14
+#define ZERO	15
+#define LINE	16
+#define SCL	17
+#define SIZE	18
+#define TAG	19
+#define TYPE	20
+#define DIM	21
+#define STRBEG	22
+#define	JMPBEG	23
+#define COMM	24
+#define ENDEF	25
+#define FLOAT	26
+#define DOUBLE	27
+#define IDENT	28
+#define IL	29
+#define POTHER	0
+
+
+struct opent {
+	char * oname;
+	long oflags;
+	short oopcode;
+	short ousedef;
+	short osetdef;
+	unsigned osrcops :5;
+	unsigned odblops :5;
+	unsigned odstops :5;
+	char onumrand;
+	char otype;
+};
+
+/*opent->otype values */
+#define	TYNONE	0x0
+#define TYBYTE	0x1
+#define	TYHALF	0x2
+#define	TYWORD	0x4
+#define	TYDOUBLE	0x8
+
+/* opent->oflags values */
+#define NOFLAG	0x0
+#define	LAB	0x1
+#define	HLAB	0x2
+#define	UNCBR	0x4
+#define	CBR	0x8
+#define	BR	0x10
+#define	HBR	0x20
+#define REV	0x40
+#define	FRET	0x80
+#define	CMP	0x100
+#define	UCCODE	0x200
+#define	SCCODE	0x400
+#define	SIDE	0x800
+#define	UNSIGN	0x1000
+#define ARITH	0x2000
+#define	ALLMATH	0x4000
+#define	SWIT	0x8000
+
+/* begin comment character */
+
+# define CC '#'
+
+# define CCODES	0x1000
+
+/* predicates and functions */
+
+# define islabel(p) (p != NULL && (p->op == LABEL || p->op == HLABEL))
+# define ishl(p) (p->opcode[0] != '.' || p->op == HLABEL)
+# define isuncbr(p) (p->userdata->oflags & UNCBR) 
+		/*(JMP <= p->op && p->op <= SWITCHT)*/
+# define iscbr(p) (p->userdata->oflags & CBR)  /* (p->op >= JIOE && p->op <= JGEU) */
+# define isbr(p) (p->userdata->oflags & BR) /*(p->op >= JMP && p->op <= JBS && p->op != CALL && p->op != CALE && p->op != JSB) */
+# ifdef N3B
+#define	ishb(p)	(p->userdata->oflags & HBR) /*((p->op == RET) || (p->op == RSB) || (p->op == RETE)) */
+# else
+# define ishb(p) (0)
+# endif
+# define isrev(p) (p->userdata->oflags & REV) /*(p->op >= JZ && p->op <= JBS) */
+#define	isret(p) (p->userdata->oflags & FRET || p->op == RET) /*((p->op == RET) || (p->op == RSB) || (p->op == RETE)) */
+# define iscompare(p) (p->userdata->oflags & CMP) /*(p->op == CMPW || p->op == CMPB || p->op == CMPH || p->op == CMPNW) */
+#define	isswitch(p)	(p->userdata->oflags & SWIT || p->op == SWITCH || p->op == SWITCHT)
+# define setbr(p,l) {p->op = JMP; p->opcode = "jmp"; p->op1 = l;p->userdata = ilookup(JMP);}
+# define bboptim(f,l) 0
+# define iscclive(p)	(p->nlive & CCODES)
+
+/* maximum number of operands */
+
+# define MAXOPS 5
+
+/* register usages */
+
+# define REGS 0x1fff
+# define RETREG 0x1003
+# define LIVEREGS 0x0e00
+
+/* options */
+
+# define COMTAIL
+# define LIVEDEAD
+# define PEEPHOLE
+
+#define USERDATA
+typedef struct opent * USERTYPE;
+
+/* line number stuff */
+
+# define IDTYPE int
+# define IDVAL 0
+
+/* table sizes */
+
+/* maximum number of labels referenced in a function,
+   must be relatively prime to 5 */
+# ifdef AR16WR
+# define NUMLBLS 513
+# else
+# define NUMLBLS 917
+# endif
+/* maximum allocatable space (in shorts) */
+# ifdef AR16WR
+# define SPACE 19450
+# else
+# define SPACE 150000
+# endif
+
+/* The symbol UCODE50 is defined for 3B20's (only) when they are
+** known to have the UNIX 5.0 microcode.  
+*/
+
+#ifndef UCODE50			/* allow local definition */
+#if defined(U3B) || defined(N3B)
+#define UCODE50			/* turn on special instructions */
+#endif	/* def U3B */
+#endif	/* ndef UCODE50 */
+
+/* There is an optimization in w2opt.c which removes certain "cmpw"
+** instructions that follow a "call".  This option requires that
+** C-callable assembly language routines that return values must
+** set the result indicators according to the value of the returned
+** result.  This improvement should only be turned on for systems
+** which will adhere to that convention.
+*/
+
+#ifdef	CERTAIN			/* too many cases to be certain
+					full analysis required */
+#ifndef	CALLCMPW		/* allow local definition */
+#if defined(U3B)		/* presently enabled for 3B20S UNIX */
+#define CALLCMPW		/* enable removal of extra "cmpw" */
+#endif	/* defined ... */
+#endif	/* ndef CALLCMPW */
+#endif /* CERTAIN */
+
+#if N3B || U3B || M32
+#define ISLABREF(p)	(p->op == MOVAW)
+#endif
+
+struct opent * lookup(), *ilookup();
+
+#if M32
+#define MAXRCSE	200
+#endif

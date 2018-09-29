@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/mountfsys	2.3"
+#menu# mount a removable medium file system
+#help# 
+#help#	Mountfsys mounts a file system, found on a removable medium, making it
+#help#	available to the user.  The file system is unmounted with the
+#help#	"umountfsys" command.  THE MEDIUM MUST NOT BE REMOVED WHILE THE
+#help#	FILE SYSTEM IS STILL MOUNTED.
+
+. ${MENUTOP:?}/mountfsys

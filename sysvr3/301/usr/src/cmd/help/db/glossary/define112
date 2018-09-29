@@ -1,0 +1,11 @@
+
+\S word:  half word \S
+
+A word is a unit of storage in a computer.  A word is composed of "bytes"
+\S*\S of information.  The number of bytes in a word depends on the computer
+you are working on.  The AT&T 3B line of computers, for example, has 4
+bytes per word, and 2 bytes per half word.  Words make it convenient to
+work with numbers since most regular sized integers are represented as 4
+bytes.
+
+\S*\S defined in the \Sglossary\S

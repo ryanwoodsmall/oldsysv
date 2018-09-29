@@ -1,0 +1,10 @@
+	cc -I. -I. -O -c ./inter.c
+	cc -I. -I. -O -c ./optim.c
+	lex  local.l
+	cc -I. -I. -O -c local.c
+	cc -I. -I. -O -c oplook.c
+	cc -I. -I. -O -c supp.c
+	cc -I. -I. -O -c w1.c
+	cc -I. -I. -O -c w2.c
+	cc -I. -I. -O -c w3.c
+	cc -O inter.o optim.o local.o oplook.o supp.o w1.o w2.o w3.o -ll -o c2

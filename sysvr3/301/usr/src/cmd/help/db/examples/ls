@@ -1,0 +1,26 @@
+
+\S ls \S:  Examples
+
+       ls
+
+    Lists the names of all the files and directories in the current working
+    directory, except those files and directories whose names begin with a dot
+    (.).
+
+    ----------------------------------------------------------------------
+
+       ls -al
+
+    Lists the mode, number of links, owner, group, size in bytes, time of last
+    modification, and name of each file and directory in the current working
+    directory, including those whose names begin with a dot (.).
+
+
+    ----------------------------------------------------------------------
+
+       ls -ap | pr -4
+
+    Lists the names of all files and directories, including "." and "..", in 
+    the current working directory. Directory names are followed by a slash to
+    distinguish them from file names.  The pr(1) command prints the lists in
+    four columns.

@@ -1,0 +1,8 @@
+#ident	"@(#)sadmin3b2:admin/menu/diskmgmt/harddisk/makehdfsys	1.2"
+#help# 
+#help#	Makefilesys creates new file systems on hard disks which can then
+#help#	be used to store data.  You can use this command to make file
+#help#	systems on selected partitions of new hard disks.
+
+echo "Makehdfsys is no longer supported.  File systems are now created
+when the disk is partitioned or with the /etc/mkfs command."

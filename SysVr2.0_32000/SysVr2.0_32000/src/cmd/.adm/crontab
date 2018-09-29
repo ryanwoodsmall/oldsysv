@@ -1,0 +1,19 @@
+
+#	@(#)crontab	1.5
+
+0 * * * * date>/dev/console ; echo " " > /dev/console 
+0 4 * * 1-6 /bin/su - adm -c "/usr/lib/acct/runacct 2> /usr/adm/acct/nite/fd2log"
+0 2 * * 1-6 /bin/su root -c "/usr/lib/acct/dodisk"
+0 * * * * /bin/su - adm -c "/usr/lib/acct/ckpacct"
+15 5 1 * * /bin/su - adm -c "/usr/lib/acct/monacct"
+0 9 * * 1-5 /usr/games/turnoff > /dev/null
+0 18 * * 1-5 /usr/games/turnon > /dev/null
+0 1 * * * /usr/bin/calendar -
+0 5 * * 1 /etc/errstop 2>/dev/console;/bin/mv /usr/adm/errfile /usr/adm/oerrfile;/usr/lib/errdemon 2> /dev/console; /usr/bin/errpt /usr/adm/oerrfile | /bin/mail adm
+56 * * * * /bin/su uucp -c "/usr/lib/uucp/uudemon.hr > /dev/null"
+0 4 * * * /bin/su uucp -c "/usr/lib/uucp/uudemon.day > /dev/null"
+30 5 * * 1 /bin/su uucp -c "/usr/lib/uucp/uudemon.wk > /dev/null"
+0 8-17 * * 1-5 su sys -c "/usr/lib/sa/sa1 1200 3 &"
+0 * * * 0,6 su sys -c "/usr/lib/sa/sa1 &"
+0 18-7 * * 1-5 su sys -c "/usr/lib/sa/sa1 &"
+5 18 * * 1-5 su adm -c "/usr/lib/sa/sa2 -s 8:00 -e 18:01 -i 3600 -ubcwydaqvm &"

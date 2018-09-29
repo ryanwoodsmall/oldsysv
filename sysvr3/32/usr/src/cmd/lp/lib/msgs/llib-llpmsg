@@ -1,0 +1,208 @@
+/*LINTLIBRARY*/
+
+/*	from file _getmessage.c */
+# include	<varargs.h>
+# include	<memory.h>
+# include	<string.h>
+# include	<errno.h>
+# include	"msgs.h"
+
+/* VARARGS */
+int
+_getmessage(buf, rtype, arg)
+char	*buf;
+short	rtype;
+va_list	arg;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file _putmessage.c */
+/* VARARGS */
+int
+_putmessage(buf, type, arg)
+char	*buf;
+short	type;
+va_list	arg;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file getmessage.c */
+/* VARARGS */
+int
+getmessage(va_alist)
+va_dcl
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file hslconv.c */
+char	*
+ltos(s,l)
+char	*s;
+unsigned long	l;
+{	static char	*
+ _returned_value;
+	return _returned_value;
+}
+char	*
+htos(s, h)
+char	*s;
+unsigned short	h;
+{	static char	*
+ _returned_value;
+	return _returned_value;
+}
+unsigned long
+stol(s)
+char	*s;
+{	static unsigned long
+ _returned_value;
+	return _returned_value;
+}
+unsigned short
+stoh(s)
+char	*s;
+{	static unsigned short
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file putmessage.c */
+/* VARARGS */
+int
+putmessage(va_alist)
+va_dcl
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file mclose.c */
+#include "lp.h"
+int
+mclose ()
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+#include "sys/types.h"
+#include "sys/ipc.h"
+#include "sys/msg.h"
+
+/**
+ ** mclose() - CLOSE A MESSAGE PATH THAT USES IPC
+ **/
+int			mclose ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file mneeds.c */
+/**
+ ** mneeds() -  RETURN NUMBER OF FILE DESCRIPTORS NEEDED BY mopen()
+ **/
+int			mneeds ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file mopen.c */
+#include "fcntl.h"
+#include "unistd.h"
+#include "sys/stat.h"
+#include "sys/utsname.h"
+int
+mopen ()
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+#include "stdio.h"
+#include "pwd.h"
+#include "sys/sem.h"
+
+/**
+ ** mopen() - OPEN A MESSAGE PATH THAT USES IPC
+ **/
+int			mopen ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** nudge_sched
+ **/
+int			nudge_sched ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file mrecv.c */
+int
+mrecv (msgbuf, size)
+char	*msgbuf;
+int	size;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** mrecv() - RECEIVE A MESSAGE VIA IPC
+ **/
+int			mrecv (msgbuf, size)
+	char			*msgbuf;
+	int			size;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file msend.c */
+#include "signal.h"
+
+/**
+ ** msend() - SEND A MESSAGE VIA FIFOS
+ **/
+int
+msend (msgbuf)
+char			*msgbuf;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** msend() - SEND MESSAGE VIA IPC
+ **/
+int			msend (msgbuf)
+	char			*msgbuf;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file read_fifo.c */
+int
+read_fifo (fifo, buf, size)
+int		fifo;
+char		*buf;
+unsigned int	size;
+{	static int
+ _returned_value;
+	return _returned_value;
+}
+
+/*	from file write_fifo.c */
+int
+write_fifo (fifo, buf, size)
+int		fifo;
+char		*buf;
+unsigned int	size;
+{	static int
+ _returned_value;
+	return _returned_value;
+}

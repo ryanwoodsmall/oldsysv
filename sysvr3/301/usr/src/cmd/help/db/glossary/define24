@@ -1,0 +1,18 @@
+
+\S field \S
+
+A field is a location on a command line, or on a line in a file.  A
+field can contain any characters, and can be any size. Fields are
+delimited by "white space"\S*\S, colons, or any other character that
+is designated as a "separator"\S*\S.  For example, the three numbers
+below are in three fields, and each field is separated from the next
+by white space:
+
+	370.2   8.1   9.675
+
+The first field is five characters long and it contains the number
+370.2.  The second field is three characters long and it contains
+the  number 8.1.  The third field is five characters long and
+contains the number 9.675.
+
+\S*\S defined in the \Sglossary\S

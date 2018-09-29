@@ -1,0 +1,14 @@
+
+\S starter \S: Examples
+
+       starter
+
+    Prints a menu screen from which the information in \S starter \S can be
+    requested.
+
+    ----------------------------------------------------------------------
+
+       help starter
+
+    Prints a menu screen from which the information in \S starter \S can be
+    requested.

@@ -1,0 +1,42 @@
+/dev/null
+1422 200
+d--755 0 3
+install	d--755 0 3
+	Rlist		---555 2 2	./install/s52k/Rlist.s52k
+	UNINSTALL	---555 2 2	./install/s52k/UNINSTALL
+	INSTALL 	---555 2 2	./install/s52k/INSTALL
+	setup 		---555 2 2	./install/s52k/setup
+	unsetup 	---555 2 2	./install/s52k/unsetup
+$
+new	d--755 0 3
+	boot	d--755 0 3
+		s52k.o		---444 0 0	../usr/src/uts/3b2/fs/s52k/s52k.o
+	$
+	etc	d--755 0 3
+		mkfs2K		---555 2 2	../etc/mkfs2K
+		master.d	d--755	0 3
+			s52k	---444  0 0	../usr/src/uts/3b2/master.d/s52k
+		$
+	$
+	usr	d--755 0 3
+		options	d--755 0 3
+			s52k.name	---444 2 2	./install/s52k/s52k.name
+		$
+	$
+$
+cond	d--755 0 3
+	etc	d--755 0 3
+		ff	---555 2 2	../etc/ff
+		finc	---555 2 2	../etc/finc
+		frec	---555 2 2	../etc/frec
+	$
+	usr	d--755 0 3
+		lib	d--755 0 3
+			scsi	d--755 0 3
+				scsivolcopy ---555 2 2	../usr/lib/scsi/scsivolcopy
+			$
+		$
+	$
+$
+$
+#ident	"@(#)pkg.s52k:proto	10.2"

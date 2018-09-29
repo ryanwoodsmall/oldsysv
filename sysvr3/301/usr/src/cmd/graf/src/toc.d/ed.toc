@@ -1,0 +1,10 @@
+g/S#ident	"@(#)graf:src/toc.d/ed.toc	1.1"/
+g/^.nr Cl/d
+g/^.hy/d
+1i
+.nr Cl 7
+.nr Hy 0
+.
+/^\.TC/s/\.TC.*/.TC 1 1 0 0 "Table of Contents"/
+1,$p
+Q

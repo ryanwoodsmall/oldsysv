@@ -1,0 +1,18 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/status_f	1.3"
+## IDOC:   SCREEN 2.55: STATUS OF FORMS
+#menu# Display status of forms
+
+##+++ (help _H145)
+#help#        You use the "forms" command in the "status" menu  to  get  a
+#help#        list  of  all  forms  you have defined in the print service.
+#help#        The report will include an indication of which printers  the
+#help#        forms are currently mounted on.
+##--- (help _H145)
+
+##+++ (line 1)
+echo \
+"
+Forms currently available:"
+##--- (line 4)
+
+lpstat -f all

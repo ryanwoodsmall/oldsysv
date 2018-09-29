@@ -1,0 +1,78 @@
+.TH EMULCNTRL 1M "3B20S only"
+.SH NAME
+emulcntrl \- perform 3270 emulation control functions
+.SH SYNOPSIS
+.B /etc/emulcntrl
+device function [ arg ]
+.SH DESCRIPTION
+.I Emulcntrl\^
+is used to communicate with the 3270 emulation controller driver.
+.I Device
+is the name of the emulation controller to use (e.g.,
+.BR /dev/emc0 ).
+.I Function
+is a string indicating the operation to perform.
+Some functions require an additional argument
+.IR arg .
+Valid
+.I function
+strings and additional arguments are as follows:
+.PP
+.TP 7
+.B on
+Start the 3270 emulation script associated with
+.IR device .
+.TP
+.B off
+Stop the 3270 emulation script associated with
+.IR device .
+.TP
+.B ascii
+This 3270 emulation controller is to be \s-1ASCII\s+1.
+The \s-1ASCII\s+1 3270 script must be loaded on the associated physical device.
+.TP
+.B ebcdic
+This 3270 emulation controller is to be \s-1EBCDIC\s+1.
+The \s-1EBCDIC\s+1 3270 script must be loaded on the associated physical device.
+Controllers are \s-1EBCDIC\s+1 by default.
+.TP
+.B pollid
+Change the \s-1POLL\s+1 character for this controller to
+.IR arg .
+.I Arg
+must be the decimal value of the character desired.
+.TP
+.B selid
+Change the \s-1SELECT\s+1 character for this controller to
+.IR arg .
+.I Arg
+must be the decimal value of the character desired.
+.TP
+.B delay
+Set the time delay before transmitting \s-1EOT\s+1's to
+.IR arg /10
+seconds.
+The default is 2 seconds.
+.TP
+.B trace
+Force the script to trace certain events.
+.PP
+Except for starting and stopping, these functions should be performed
+.B before
+starting the script.
+.SH FILES
+/dev/emc?	3270 emulation controller devices
+.PP
+/lib/a3270scr	\s-1ASCII\s+1 3270 script
+.PP
+/lib/e3270scr	\s-1EBCDIC\s+1 3270 script
+.SH "SEE ALSO"
+emulload(1M),
+emulstat(1M),
+vpmset(1M),
+emulio(7).
+.SH DIAGNOSTICS
+.I Emulcntrl
+fails if the function cannot be performed, e.g., changing the \s-1POLL\s+1
+character on a running controller.
+.\"	@(#)emulcntrl.1m	5.2 of 5/18/82

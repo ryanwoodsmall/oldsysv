@@ -1,0 +1,23 @@
+#
+#	@(#):mk	1.2
+#
+if [ "$ROOT" = "" ] ; then
+	PATH=/bin:/etc:/usr/bin; export PATH
+fi
+./:mkhead
+./:mksyshead
+./:mklib libc
+if vax || pdp11 ; then
+	./:mkcmd $* cc
+else
+	./:mkcmd sgs
+fi
+./:mklib \*
+if [ "$ROOT" != "" ] ; then
+	./:mkcmd .adm
+fi
+./:mkcmd $* \*
+if vax || pdp11 ; then
+	./:mkstand
+fi
+./:mkuts

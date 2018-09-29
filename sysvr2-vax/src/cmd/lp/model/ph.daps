@@ -1,0 +1,18 @@
+#	SCCS	@(#)ph.daps	1.1
+
+# lp interface to Autologic APS-5 phototypesetter.
+#	output is passed through filter daps, which is also a
+#	command.
+
+logname=$2
+shift;shift;shift;shift
+while [ $copies -gt 0 ]
+do
+	if daps -h$logname $*
+	then
+		copies=`expr $copies - 1`
+	else
+		exit $?
+	fi
+done
+exit 0

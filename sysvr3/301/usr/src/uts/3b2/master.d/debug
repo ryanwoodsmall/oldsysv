@@ -1,0 +1,6 @@
+*#ident	"@(#)kern-port:master.d/debug	10.2"
+*
+* DEBUG
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ox

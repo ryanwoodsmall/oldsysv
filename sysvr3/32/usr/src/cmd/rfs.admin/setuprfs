@@ -1,0 +1,979 @@
+#ident	"@(#)rfs.admin:setuprfs	1.29"
+#menu#	set up your machine to run RFS
+
+#help#
+#help#	The subcommand "setuprfs" is designed to serve two purposes.  First, 
+#help#	it helps you to configure your machine to run RFS, and second, it 
+#help#	allows you to later change domain configuration information that you
+#help#	can not change from other RFS Management menus.
+#help#  
+#help#	For initial set up, this subcommand will walk you through all the 
+#help#	steps that must be taken before RFS will successfully start.  At every
+#help#	step, new terms and concepts will be explained, and the menus to use 
+#help#	for future modifications will be pointed out.  The very last question 
+#help#	of the subcommand will allow you to start RFS.
+#help#
+#help#	Many of the steps you can do when first setting up RFS are functions 
+#help#	you will be doing on an ongoing basis.  There are separate RFS menus 
+#help#	to help you to do these tasks.  There are a few tasks that can only 
+#help#	be done by rerunning this subcommand.  These tasks are: change domains
+#help#	change to a new transport provider, recognize a new primary name server
+#help#	and change secondary name server assignments (primary only).
+#help#
+#help#	This subcommand assumes you have already installed a transport provider
+#help#	and that the network provider is properly set up.  You will be unable 
+#help#	to set up RFS until these assumptions are met.
+
+#set file permissions
+umask 066
+
+# set trap
+trap '/bin/rm -f /usr/tmp/keepmem$$ /usr/tmp/sec$$ /usr/tmp/mem$$ /usr/tmp/rfmaster$$; /bin/chmod 555 /etc/inittab; /bin/chown bin /etc/inittab; /bin/chgrp bin /etc/inittab; /bin/stty echo; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo "\nIf you are not sure how to answer any prompt, type \"?\" for HELP."
+echo "If you want to QUIT the subcommand at any time, type \"q\".\n"
+INTRO="
+			    SET UP RFS
+
+If you have not yet set up RFS on your machine, this subcommand will walk you 
+through all the steps necessary to set up RFS.  These steps are:
+
+	* entering the name of the transport provider 
+	* designating your machine as a primary name server or a non-primary
+	* entering the domain name
+	* primary only: adding members to domain (optional)
+	* primary only: designating secondary name servers (optional)
+	* setting up ID mappings (optional)
+	* putting local resources on the Automatic Advertise List (optional)
+	* putting remote resources on the Automatic Mount List (optional)
+	* setting up RFS to start automatically (optional)
+	* starting RFS (optional)
+  
+
+If these terms are unfamiliar do not be concerned.  All new terms and 
+concepts will be explained.  Explanations of RFS terms and concepts can
+also be found in your System Administrator's Guide.
+
+
+In most cases, the \"setuprfs\" subcommand will call other RFS sysadm menus
+to do the specific tasks.  Later, when you want to do these tasks as part of
+your ongoing RFS administration you will use these specific RFS sysadm menus.
+
+
+There are a few tasks (that you won't need to do very often) that can not
+be done through the specific menus.  To do these you will have to stop RFS
+and rerun this \"setuprfs\" subcommand.  These tasks are:
+
+	- changing the name of the transport provider
+	- changing the name of the domain
+	- recognizing a new primary name server
+	- primary only: adding secondary name servers
+
+
+If you are running this command to change something in your domain 
+configuration, any old domain configuration information will be saved 
+for you in /usr/nserve/Orfmaster.
+
+This \"setuprfs\" subcommand assumes you have already installed a 
+transport provider and that the network listener is properly set up.  
+You will be unable to set up RFS until these assumptions are met.
+
+
+
+
+"
+echo "$INTRO" |/usr/bin/pg -e -p "Enter <RETURN> to continue:"
+# Define messages and questions/prompts
+
+#DOC: explain what a DOMAIN is
+DEF_DOMAIN="
+SET UP YOUR DOMAIN NAME ...
+
+A DOMAIN in Remote File Sharing provides a means of logically grouping
+machines for administrative and addressing purposes.  One machine in
+each domain is designated as the primary name server and is in charge of
+keeping track of available resources and domain member information.
+
+Every machine running RFS must be a member of one domain.  The size of a 
+domain can range from one machine to as many as will be supported by your 
+transport provider."
+
+H_DOMAIN="
+You must enter a domain name to continue.  Domain names are usually chosen
+by the primary name server.  They must not contain a space, \".\", \"/\", or \":\"."
+
+#DOC: explain what a PRIMARY, SECONDARY, and OTHER name-server is
+DEF_PRIMARY="
+DECIDE WHAT YOUR MACHINE TYPE WILL BE ...
+
+One machine in each domain is designated as the PRIMARY name server for
+that domain.  This machine keeps track of all the resources that are
+available in the domain.  It also maintains the list of domain member
+machines and keeps track of member information such as passwords.
+
+To keep RFS active in your domain in case the primary name server is 
+temporarily not working, the primary machine can (but does not have to) 
+designate one or more SECONDARY machines to take over in case the primary
+name server fails.
+
+All machines that are not PRIMARY name servers are called NON-PRIMARY.
+Secondary name servers are considered non-primary.
+
+Both primary and non-primary machines may offer their local resources for 
+sharing by other machines and may use remote resources from other machines.  
+A machine that uses a resource from another machine is called a CLIENT."
+
+H_PRIMARY="
+If your machine will be handling the administration of keeping the lists 
+of domain members and resources available for your domain,  you will be the 
+primary name server.  Enter a "p".  Otherwise, you should enter a "n"
+for non-primary.  You are considered non-primary even if you know that
+your machine will be designated as a secondary name server."
+
+DEF_SECONDARY=" 
+Any machine in your domain may be designated as a secondary name server.  
+If you have not already added the machine as a member of the domain, it
+will be automatically added now.  The name of the secondary must not contain
+a space, \".\", \"/\", or \":\"."
+
+DEF_SEC_ADDRESS="
+The format of the address of the secondary machine will depend on the transport
+provider you are using.  If you do not know the secondary machine's address,
+contact the administrator of that machine."
+
+DEF_NETWORK="
+SET THE TRANSPORT PROVIDER ...
+
+To share resources between machines, the machines must be connected in some 
+way.  Because RFS is media independent, it is not tied to any one type of 
+connection medium.  The connection between machines, the TRANSPORT PROVIDER, 
+may be any network that is compatible to the AT&T Transport Interface.  The 
+System Administrator's Guide explains the Network Support Utilities and how 
+they work together with RFS.
+
+RFS assumes that this transport provider has been installed.  "
+
+H_NETWORK="
+The name you enter here depends on the transport provider that has been 
+installed on your machine.  You will get a warning message and another prompt
+if the name you enter is not recognized by your machine. "
+
+DEF_PNAME="
+Every domain has one machine that has been designated as the PRIMARY name 
+server.  Enter the node name of the primary name server for the domain you 
+are joining. A node name must not contain a space, \".\", \"/\", or \":\"."
+
+DEF_ADDRESS="
+Every machine has an address that allow it to be located on the transport 
+provider.  The format of the address depends on the type of transport 
+provider you are using.  You should get this address from the primary
+name server for the domain you are joining."
+
+DEF_MAP="
+SET UP ID MAPPINGS FOR SECURITY ...
+
+As an administrator, you can maintain strict control of your resources.
+No files, directories, subdirectories, or devices in your file system can 
+be accessed by other machines unless you offer to share them.  
+
+Direct access to your computer is controlled because local users still
+have to log in as always.  As for remote accessibility, you can set up 
+security to allow only certain remote machines to access your resources.
+You can also define with what permissions each user on remote machines 
+will be able to access your resources.  You define these permissions via 
+ID mappings.  These mapping are saved in rules files as described in your
+documentation.  If you do not specifically define a mapping configuration,
+RFS will protect your resources for you using a default mapping configuration,
+but it will not build the rules files.  As part of this \"setuprfs\" subcommand
+you can very easily set up basic ID mappings by choosing from pre-defined 
+options.  ID mapping will be described in further detail if you choose to 
+set up mappings at this time."
+
+
+DEF_ADV="
+SET UP LOCAL RESOURCES TO BE ADVERTISED ...
+
+If you have a directory that you wish to offer to other machines in your 
+domain, you ADVERTISE that directory.  When you advertise a resource you 
+assign it a name called a RESOURCE IDENTIFIER.  This identifier must be 
+unique within your domain.
+
+You can set up local resources to be automatically advertised for you
+every time RFS is started by adding these resources to the AUTOMATIC
+ADVERTISE LIST.  A resource stays on this list until you remove it.
+
+When RFS is running, resources you have advertised are available to 
+client machines.  As part of advertising, you may specify exactly which 
+machines may use each resource."
+
+DEF_MNT="
+SET UP REMOTE RESOURCES TO BE MOUNTED ...
+
+You access a resource from a remote machine by MOUNTING it on a directory 
+in your file system.  The directory you mount the resource on should be 
+empty.  Once the remote resource is mounted, the users on your machine can 
+access the resource as if it were local.
+
+You can set up remote resources to be automatically mounted for you every 
+time RFS is started by adding these resources to the AUTOMATIC MOUNT LIST.  
+A resource stays on this list until you remove it."
+
+
+DEF_BOOT="
+SET UP RFS AUTO-START ...
+
+You can start RFS manually after starting your machine, or you can 
+have the system automatically start RFS for you.  "
+
+ADDMEM="
+Do you want to add members to your domain?"
+
+SECURITY2="
+Every machine has a password which allows the RFS domain to recognize it
+when it starts RFS and joins the domain. This password was assigned to you
+by the primary name server.  You will be prompted to re-enter the password
+to verify that you have not made typing mistakes."
+
+P_SECURITY="
+SET RFS PASSWORD ...
+
+As the primary name server you assign RFS passwords to each machine in the 
+domain.  The first time that a machine wants to join the domain it enters
+the password and is then allowed to share resources as a member of the domain.
+Since you are the primary name server machine, you give yourself an 
+RFS password.  After you assign yourself this password you will be prompted
+to enter it again to add yourself to the domain.
+
+The password you choose should be at least six characters in length and should 
+contain at least one non-alphabetic character.  <CR> is a valid password."
+
+Q1="
+Enter the name of your transport provider [?, q]:"
+
+Q2="
+Enter your machine type:
+      p) primary
+      n) non-primary (secondaries are non-primary)
+
+[p, n, ?, q]:"
+
+OQ1="
+Enter the name of the domain you want to join [?, q]:"
+
+OQ2="
+Enter the primary name server machine for this domain [?, q]:"
+
+OQ3='
+Enter the address of this primary name server machine [?, q]:'
+
+PQ1="
+Enter the name of the domain for which you will be the primary 
+name server [?, q]:"
+
+PQ2="
+Do you want to designate secondary name server machines for 
+this domain?"
+
+PQ2_1="
+Do you want to designate another secondary name server machine?"
+
+PQ3="
+Enter the node name of a secondary name server machine [?, q]:"
+
+PQ4="
+Enter the address of this secondary machine [?, q]:"
+
+MAPQ="
+Do you want to set up the ID mappings?"
+
+ADVQ="
+Do you want to add local resources to the Automatic Advertise List?"
+
+MNTQ="
+Do you want to add remote resources to the Automatic Mount List?"
+
+BOOTQ="
+Do you want RFS to start automatically when the system starts?"
+
+RFSUPQ="
+Do you want to start RFS now?"
+
+VQ="
+Is this information correct?"
+
+CHANGE="
+Do you want to change it?"
+
+CUR_PRIM="
+You are currently designated as a primary name server. Do you want 
+to remain the primary name server?"
+
+CUR_OTHR="
+You are currently designated as a non-primary.  Do you wish to remain 
+a non-primary?"
+
+#initialization
+cflag="-qq -k$$"
+SERV_CODE=105
+STATE=`/bin/grep ":initdefault:" /etc/inittab 2>/dev/null | /usr/bin/cut -d":" -f2`
+
+#Check to see if RFS is currently running
+if  /usr/lbin/rfsrunning 
+then
+        echo "\n\nRFS is currently running on your machine."
+        echo "\nIf you need to change your domain, transport provider, "
+	echo "primary or secondary name server designation, you must "
+	echo "first stop RFS (use the subcommand \"stoprfs\" on the "
+	echo "RFS Start / Stop Menu) and then rerun this set up subcommand."
+	echo "For other RFS administrative tasks use the specific RFS"
+	echo " Management Menus."
+        exit 
+fi
+
+#Identify network (transport provider) to use
+#network specification
+echo "$DEF_NETWORK"
+
+ONETWORK=`/usr/bin/dname -n 2>/dev/null`
+#get net_spec
+if [ "$ONETWORK" != "" ]
+then
+        echo "\nThe transport provider is currently $ONETWORK."
+        if /usr/lbin/checkyn $cflag -f "$CHANGE"
+        then
+                NEW=yes
+        else
+                NEW=no
+                NETWORK=$ONETWORK
+        fi
+fi
+if [ "$ONETWORK" = "" -o "$NEW" = "yes" ]
+then
+        while /bin/true
+        do
+                NETWORK=`/usr/lbin/checkre $cflag -fe \
+                -H"${H_NETWORK}" \
+                "$Q1" \
+                '^[^ \/\.:]*$'  'The transport provider name must not contain a space, ":", "/", or ".".'  \
+                -r '.' 'You must enter a transport provider name.'`
+        
+		NET=`/usr/bin/nlsadmin -x | /bin/grep -i "^$NETWORK[ 	]" 2>/dev/null`
+                if [ "$NET" != "" ]
+                then 
+			NETWORK=`echo "$NET" | /usr/bin/awk '{ print $1 }'`
+                        /usr/bin/dname -N $NETWORK
+                        echo "\nThe transport provider has been set to $NETWORK."
+                        break
+                else
+                        echo "\nThe transport provider you specified does not exist on your system.\n"
+                fi
+        done
+else
+                echo "\nThe transport provider has NOT been changed."
+fi
+
+# Determine if the transport provider is running for $NETWORK
+/usr/bin/nlsadmin -q $NETWORK 2>/dev/null
+if [ "$?" != "0" ]
+then
+        echo "\nThe network listener has not been established for $NETWORK."
+        echo "See your System Administrator's Guide for help in setting"
+        echo "up the network listener.\n"
+        echo "Unable to set up RFS at this time.\n"
+        exit
+fi
+
+# Determine if the transport provider is set up for RFS
+/usr/bin/nlsadmin -q -z $SERV_CODE $NETWORK 2>/dev/null
+if [ "$?" != "0" ]
+then
+        echo "\nThe network listener has not been set up for RFS."
+        echo "See your System Administrator's Guide for help in setting"
+        echo "up the the network listener.\n"
+        echo "Unable to set up RFS at this time.\n"
+        exit
+fi
+
+#get rid of comment lines
+/bin/grep -v "^\#" /usr/nserve/rfmaster 2>/dev/null |
+	/usr/bin/awk  "
+	#determine if an entry ends with a backslash
+		/\\\\$/ {
+			#put the entry into an array
+			x[0]=\$0
+			#print all characters of entry except the last
+			#one, which is a backslash, and no new line.
+			printf substr(x[0],0,length-1)
+		}
+
+	#determine if an entry does NOT end with a backslash
+		!/\\\\$/ {
+			#print all chars of the entry followed by a new line.
+			print \$0
+		}" |
+	# format to normal standards
+	/usr/bin/awk '{
+		for ( i = 1; i <= NF; i++) {
+			if ( i == NF )
+				printf "%s\n", $i
+			else
+				printf "%s ", $i
+		}
+	}' >/usr/tmp/rfmaster$$ 2>/dev/null
+
+#Identify machine's nodename
+NODENAME=`/bin/uname -n 2>/dev/null`
+
+#give Primary, secondary, or other name-server definition
+echo "$DEF_PRIMARY"
+
+# get old info from /usr/nserve/rfmaster$$
+if [ -s /usr/tmp/rfmaster$$ ]
+then
+        OD_NAME=`/usr/bin/dname 2>/dev/null`
+
+        OP_NAME=`/bin/grep "^$OD_NAME[ 	][	 ]*[Pp]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//" 2>/dev/null`
+        OP_ADDR=`/bin/grep "^$OD_NAME.$OP_NAME[	 ][	 ]*[Aa]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^$OD_NAME.$OP_NAME[	 ][ 	]*[Aa][ 	]*//" 2>/dev/null`
+
+	if [ "$NODENAME" = "$OP_NAME" ]
+	then
+		if /usr/lbin/checkyn $cflag -f "$CUR_PRIM"
+		then
+			R1="p"
+		else
+			R1="n"
+		fi
+	else
+		if /usr/lbin/checkyn $cflag -f "$CUR_OTHR"
+		then
+			R1="n"
+		else
+			R1="p"
+		fi
+	fi
+else
+	#Identify machine as a primary name-server or as an "other"
+	R1=`/usr/lbin/checkre $cflag -fe \
+	-H "${H_PRIMARY}" \
+	"$Q2" \
+	"^[pn]$" 'Enter p, or n.'`
+fi
+
+case $R1 in
+     n)
+        #FOR OTHER
+        #give Domain definition
+        echo "$DEF_DOMAIN"
+
+        while /bin/true
+        do
+                #get domain
+                NEW_D=
+                if [ "$OD_NAME" != "" ]
+                then
+                        echo "\nThe domain is currently $OD_NAME."
+                        if /usr/lbin/checkyn $cflag -f "$CHANGE"
+                        then
+                                NEW_D=yes
+                        else
+                                NEW_D=no
+                                D_NAME=$OD_NAME
+                        fi
+                fi
+
+                if [ "$OD_NAME" = "" -o "$NEW_D" = "yes" ]
+                then
+                        D_NAME=`/usr/lbin/checkre $cflag -fe \
+                        -H"${H_DOMAIN}" \
+                        "$OQ1" \
+                        '^[^ \/\.:]*$'  'The domain name must not contain a space, ":", "/", or ".".'     \
+			'^.\{1,14\}$' 'The domain name must be 1 to 14 printable characters.'`
+                fi
+
+                #get primary
+                NEW_P=
+                if [ "$OP_NAME" != "" ]
+                then
+                        echo "\nThe primary name server assigned to your domain is $OP_NAME."
+                        if /usr/lbin/checkyn $cflag -f "$CHANGE"
+                        then
+                                NEW_P=yes
+                        else
+                                NEW_P=no
+                                P_NAME=$OP_NAME
+                                P_ADDRESS=$OP_ADDR
+                        fi
+                fi
+
+                if [ "$OP_NAME" = "" -o "$NEW_P" = "yes" ]
+                then
+                        P_NAME=`/usr/lbin/checkre $cflag -fe \
+                        -H"${DEF_PNAME}" \
+                        "$OQ2" \
+                        '^[^ \\\.:]*$'  'The machine name must not contain a space, ":", "\", or ".".'     \
+                        '^.\{1,8\}$' 'The primary machine name must be 1 to 8 printable characters.'`
+                fi
+
+                if [ "$NEW_P" = "yes" -o "$NEW" = "yes" -o "$OP_NAME" = "" ]
+                then
+                        #get primary's address
+                        P_ADDRESS=`/usr/lbin/checkre $cflag -fe \
+                        -H"${DEF_ADDRESS}" \
+                        "$OQ3" \
+                        '^[^ ]*$'  'The addresses must not contain a space.'   \
+                        -r '.' 'You must enter an address.'`
+                fi
+
+                #verify
+                echo "\nDomain to join: ${D_NAME}"
+                echo "Primary Machine for this domain: ${P_NAME}"
+                echo "Primary name server address: ${P_ADDRESS}"
+
+                if /usr/lbin/checkyn $cflag -f "$VQ"
+                then 
+                        echo "$D_NAME  P ${D_NAME}.${P_NAME}" >/usr/nserve/rfmaster
+                        echo "${D_NAME}.${P_NAME} A ${P_ADDRESS}" >>/usr/nserve/rfmaster
+                        /usr/bin/dname -D $D_NAME 2>/dev/null 1>&2
+                        /bin/rm -rf /usr/nserve/auth.info/$OD_NAME/passwd
+                        echo "\nDomain configuration for ${D_NAME} has been set up.\n"
+                else
+			echo "\nDomain configuration for ${D_NAME} has NOT been set up."
+			echo "The domain set up section will be restarted."
+                        continue
+                fi
+
+        if [ ! -f /usr/nserve/loc.passwd ]
+        then
+                echo "$SECURITY2"
+		/bin/stty -echo
+                while /bin/true
+                do
+                        echo "Enter your RFS password:\c"
+                        read PASSWD1
+			echo
+                        echo "Re-enter your RFS password:\c"
+                        read PASSWD2
+			echo
+                        if [ "$PASSWD1" = "$PASSWD2" ]
+                        then
+                                echo "$PASSWD2\c" >/usr/nserve/loc.passwd
+                                break
+                        else
+                                echo "RFS password entries do not match.\n"
+                                continue
+                        fi
+                done
+		/bin/stty echo
+        fi
+        break
+        done
+        break
+        ;;
+
+        p)
+        #FOR PRIMARY
+        # get secondary machine information to be used later.
+
+        sec=`/bin/grep "^$OD_NAME[ 	][ 	]*[Ss]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^.*\.//" 2>/dev/null`
+        if [ "$sec" != "" ]
+        then
+                >/usr/tmp/sec$$
+                for name in $sec
+                do
+                        OS_NAME=$name
+                        OS_ADDR=`/bin/grep "^$OD_NAME.$name[ 	][ 	]*[Aa]" /usr/tmp/rfmaster$$  2>/dev/null | /bin/sed "s/^$OD_NAME.$name[ 	][ 	]*[Aa][ 	]*//" 2>/dev/null`
+                        echo "$OS_NAME $OS_ADDR" >>/usr/tmp/sec$$
+                done
+        fi
+
+        #DOC: explain what a DOMAIN is
+        echo "$DEF_DOMAIN"
+
+        #get primary domain name
+        NEW_D=
+        if [ "$OD_NAME" != "" ]
+        then
+                echo "\nThe current domain is $OD_NAME."
+                if /usr/lbin/checkyn $cflag -f "$CHANGE"
+                then
+                        NEW_D=yes
+                else
+                        NEW_D=no
+                        D_NAME=$OD_NAME
+                fi
+        fi
+
+        if [ "$OD_NAME" = "" -o "$NEW_D" = "yes" ]
+        then
+                D_NAME=`/usr/lbin/checkre $cflag -fe \
+                -H"${H_DOMAIN}" \
+                "$PQ1" \
+                        '^[^ \/\.:]*$'  'The domain name must not contain a space, ":", "/", or ".".'      \
+			'^.\{1,14\}$' 'The domain name must be 1 to 14 printable characters.'`
+        fi
+
+        #get the address of the node
+        P_ADDRESS=`/usr/bin/nlsadmin -l - ${NETWORK}`
+
+        if [ -s /usr/nserve/rfmaster ]
+        then
+                /bin/cp /usr/nserve/rfmaster /usr/nserve/Orfmaster
+                echo "\nPrevious domain configuration information has been saved in"
+                echo "/usr/nserve/Orfmaster."
+        fi
+
+        echo "${D_NAME}  P ${D_NAME}.${NODENAME}" >/usr/nserve/rfmaster
+        echo "${D_NAME}.${NODENAME} A ${P_ADDRESS}" >>/usr/nserve/rfmaster
+        if [ "$NEW_D" = "yes" -o "$OD_NAME" = "" ]
+        then
+                /usr/bin/dname -D $D_NAME
+        fi
+        echo "\n\nDomain configuration set up for ${D_NAME} is complete."
+	echo "Your machine is the primary name server for ${D_NAME}."
+	echo "Your address is ${P_ADDRESS}. "
+	echo "*******   IMPORTANT:  Write down this address!  *******"
+	echo "Other machines joining your domain will need to know it.\n\n"
+
+        /bin/grep "^$NODENAME:" /usr/nserve/auth.info/$D_NAME/passwd >/dev/null 2>&1
+        if [ $? -ne 0 ]
+        then
+                echo "$P_SECURITY"
+		while /bin/true
+		do
+                	/usr/bin/rfadmin -a ${D_NAME}.${NODENAME}
+			if [ $? -eq 0 ]
+			then
+				break
+			else
+				echo "$P_SECURITY"
+			fi
+		done
+                /bin/rm -f /usr/nserve/loc.passwd
+                echo "\n${NODENAME} has been added as a member of ${D_NAME}."
+        fi
+
+        if [ ! -f /usr/nserve/loc.passwd ]
+        then
+                echo "$SECURITY2"
+		/bin/stty -echo
+                while /bin/true
+                do
+                        echo "Enter your RFS password:\c"
+                        read PASSWD1
+			echo
+                        echo "Re-enter your RFS password:\c"
+                        read PASSWD2
+			echo
+                        if [ "$PASSWD1" = "$PASSWD2" ]
+                        then
+                                echo "$PASSWD2\c" >/usr/nserve/loc.passwd
+                                break
+                        else
+                                echo "RFS password entries do not match.\n"
+                                continue
+                        fi
+                done
+		/bin/stty echo
+        fi
+
+        #DOMAIN MEMBERS
+	echo "\n\nADD MEMBERS TO YOUR DOMAIN ..."
+        /bin/grep -v "^$NODENAME:" /usr/nserve/auth.info/$OD_NAME/passwd >/usr/tmp/mem$$ 2>/dev/null
+        if [ -s /usr/tmp/mem$$ -a "$NEW_D" = "yes" ]
+        then
+                echo "\nThe following machines are members of domain $OD_NAME."
+                /bin/sed "s/:.*//
+                        s/^/    /" /usr/tmp/mem$$ | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+                echo
+                if /usr/lbin/checkyn $cflag -f "Do you want to move these members in domain $D_NAME?"
+                then
+                        /bin/cat /usr/tmp/mem$$ >> /usr/nserve/auth.info/$D_NAME/passwd 2>/dev/null
+                        /bin/sort -o /usr/nserve/auth.info/$D_NAME/passwd -u /usr/nserve/auth.info/$D_NAME/passwd
+        
+                        echo "\nMembers will be kept in domain $D_NAME"
+                fi
+        fi
+
+        if [ "$OD_NAME" != "$D_NAME" -a "$OD_NAME" != "" ]
+        then
+                /bin/rm -rf /usr/nserve/auth.info/$OD_NAME
+                echo "\n$OD_NAME and its members have been removed."
+        fi
+
+        if [ -s /usr/tmp/mem$$ -a "$NEW_D" = "no" ]
+        then
+                echo "\nThe following machines are members of domain $D_NAME."
+                /bin/sed "s/:.*//
+                        s/^/    /" /usr/tmp/mem$$ | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+                echo
+		if /usr/lbin/checkyn $cflag -f "Do you wish to keep them?"
+		then
+			echo "\nMembers will be kept in domain $D_NAME."
+		else
+			/usr/bin/fgrep -v -f/usr/tmp/mem$$ /usr/nserve/auth.info/$D_NAME/passwd >/usr/tmp/keepmem$$ 2>/dev/null
+			if [ $? -ne 0 ]
+			then
+				echo "\nWARNING: Unable to remove clients.\n"
+			else
+				/bin/mv /usr/tmp/keepmem$$ /usr/nserve/auth.info/$D_NAME/passwd
+				echo "\nMachines have been removed. \n"
+			fi
+		fi
+        fi
+
+        if /usr/lbin/checkyn $cflag -f "$ADDMEM"
+        then
+		echo "Now calling the \"addmember\" subcommand from the RFS Domain"
+		echo "Configuration Management Menu.  Entering \"q\" to any prompt"
+		echo "in the subcommand will quit the \"addmember\" subcommand and"
+		echo "return you to the \"setuprfs\" subcommand."
+                /bin/sh /usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/addmember 
+        else
+                echo "\nNo new members will be added to your domain."
+        fi
+
+        echo "\nTo add domain members in the future use the \"addmember\" subcommand"
+        echo "on the RFS Domain Configuration Management Menu."
+
+        echo "\nTo delete domain members in the future use the \"delmember\" subcommand"   
+	echo "on the RFS Domain Configuration Management Menu."
+	echo "\nTo see a list of domain members in the future use the \"lsmember\""
+	echo "subcommand on the RFS Domain Configuration Management Menu.\n"
+        #SECONDARY SERVERS
+        #NOW GET SECONDARY INFORMATION, state that you can have at max
+        #two secondary servers
+	echo "\n\nDESIGNATE SECONDARY NAME SERVERS ..."
+        echo "\nAs a primary name server, you can designate one or more"
+        echo "secondary name servers."
+        
+        NEW_S=
+        NEWINFO=
+        if [ "$sec" != "" ]
+        then
+                echo "\nThe following are secondary name servers defined in $OD_NAME:\n"
+                /usr/bin/awk '{printf "\t%s with address %s\n", $1, $2}' /usr/tmp/sec$$
+                echo
+                if /usr/lbin/checkyn $cflag -f "Do you want these to be the secondaries for domain $D_NAME?"
+                then 
+                        NEW_S=yes
+                else
+                        NEW_S=no
+                        if /usr/lbin/checkyn $cflag -f "$PQ2"
+                        then
+                                NEWINFO=yes
+                        else
+                                NEWINFO=no
+                        fi
+                fi
+        elif /usr/lbin/checkyn $cflag -f "$PQ2"
+        then
+                NEWINFO=yes
+        else
+                NEWINFO=no
+        fi
+
+        if [ "$NEWINFO" = "yes" ]
+        then
+                while /bin/true
+                do
+                        while /bin/true
+                        do
+                                #get secondary machine name
+                                S_NAME=`/usr/lbin/checkre $cflag -fe \
+                                -H "${DEF_SECONDARY}" \
+                                "$PQ3" \
+                                '^[^ \\\.:]*$'  'The machine name must not contain a space, ":", "\", or ".".'     \
+                                '^.\{1,8\}$' 'The secondary machine name must be 1 to 8 printable characters.'`
+
+                                if [ "$S_NAME" = "$NODENAME" ]
+                                then
+					echo "${NODENAME} is the primary name server."
+                                        echo "A primary cannot also be a secondary name server.\n"
+                                        continue
+                                else
+                                        /bin/grep "^$D_NAME.$S_NAME[ 	]" /usr/tmp/rfmaster$$ >/dev/null 2>&1
+                                        if [ $? -eq 0 ]
+                                        then
+                                                echo "\n$S_NAME is already defined as a secondary name server.\n "
+                                                continue
+                                        fi
+                                fi
+                                break
+                        done
+
+                        #get secondary machine address
+                        S_ADDRESS=`/usr/lbin/checkre $cflag -fe \
+                        -H "${DEF_SEC_ADDRESS}" \
+                        "$PQ4" \
+                        '^[^ ]*$'  'The address must not contain a space.'   \
+                        -r '.' 'You must enter an address.'`
+
+                        #verify
+                        echo "\nSecondary Machine for domain ${D_NAME}: ${S_NAME}"
+                        echo "\nAddress of this secondary machine: ${S_ADDRESS}"
+                        if /usr/lbin/checkyn $cflag -f "$VQ"
+                        then 
+                                echo "$D_NAME  S ${D_NAME}.${S_NAME}" >>/usr/nserve/rfmaster
+                                echo "${D_NAME}.${S_NAME} A ${S_ADDRESS}" >>/usr/nserve/rfmaster
+                                /bin/grep "^$S_NAME:" /usr/nserve/auth.info/${D_NAME}/passwd >/dev/null 2>&1
+                                if [ "$?" != "0" ]
+                                then
+                                        echo "Adding $S_NAME as a secondary name server."
+					echo "If it was not already a member of the domain it will be added now."
+					while /bin/true
+					do
+                                        	/usr/bin/rfadmin -a ${D_NAME}.${S_NAME}
+						if [ $? -eq 0 ]
+						then
+							break
+						else
+                                        		echo "\nAdding $S_NAME as a secondary name server."
+							echo "If it was not already a member of the domain it will be added now."
+						fi
+					done
+                                fi
+                                echo "\nYou should inform the administrator of machine \"$S_NAME\" that "
+                                echo "it has been designated as a secondary name server for domain ${D_NAME}"
+                                echo "with primary address ${P_ADDRESS}."
+                                if /usr/lbin/checkyn $cflag -f "$PQ2_1"
+                                then
+                                        : OK
+                                else
+                                        break
+                                fi
+                        fi
+                done
+        elif [ "$NEW_S" = "yes" ]
+        then
+                for seconds in `/usr/bin/cut -d" " -f1  /usr/tmp/sec$$`
+                do
+                        S_NAME=$seconds
+                        S_ADDRESS=`/bin/grep $seconds /usr/tmp/sec$$ | /usr/bin/cut -d" " -f2`
+                        echo "$D_NAME  S ${D_NAME}.${S_NAME}" >>/usr/nserve/rfmaster
+                        echo "${D_NAME}.${S_NAME} A ${S_ADDRESS}" >>/usr/nserve/rfmaster
+                        /bin/grep "^$S_NAME:" /usr/nserve/auth.info/${D_NAME}/passwd >/dev/null 2>&1
+                        if [ "$?" != "0" ]
+                        then
+                                echo "\nAttempting to add $S_NAME as a secondary name server."
+				while /bin/true
+				do
+                                	/usr/bin/rfadmin -a ${D_NAME}.${S_NAME}
+					if [ $? -eq 0 ]
+					then
+						break
+					else
+                                        	echo "\nAttempting to add $S_NAME as a secondary name server."
+					fi
+				done
+                        fi
+                done
+        else
+                echo "\nNo secondary machines have been defined."
+        fi
+        break
+        ;;
+
+esac
+
+#Set up uid/gid mapping scheme
+echo "$DEF_MAP\n"
+if /usr/lbin/checkyn $cflag -f "$MAPQ"
+then
+		echo "Now calling the \"idmapping\" subcommand from the RFS Domain"
+		echo "Configuration Management Menu.  Entering \"q\" to any prompt"
+		echo "in the subcommand will quit the \"idmapping\" subcommand and"
+		echo "return you to the \"setuprfs\" subcommand."
+        /bin/sh /usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/idmapping
+else
+	if [ -s /usr/nserve/auth.info/uid.rules -o -s /usr/nserve/auth.info/gid.rules ]
+	then
+		echo "\nPrevious ID mappings are being used.\n"
+	else
+		echo "\nRFS default ID mappings are being used.\n"
+	fi
+fi
+echo "\nTo change UID/GID mappings in the future use the \"idmapping\" subcommand"
+echo "on the RFS Domain Configuration Management Menu.\n\n"
+
+#Ask to auto-advertise resources
+echo "$DEF_ADV\n"
+if /usr/lbin/checkyn $cflag -f "$ADVQ"
+then
+		echo "Now calling the \"advauto\" subcommand from the Advertise Local"
+		echo "Resource Management Menu.  Entering \"q\" to any prompt"
+		echo "in the subcommand will quit the \"advauto\" subcommand and"
+		echo "return you to the \"setuprfs\" subcommand."
+        /bin/sh /usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/advauto
+else
+        echo "\nNo resources will be added to the Automatic Advertise List.\n"
+fi
+
+echo "\nTo add local resources to the Automatic Advertise List in the future use"
+echo "the \"advauto\" subcommand on the Advertise Local Resource Management Menu."
+echo "\nTo delete local resources from the Automatic Advertise List in the future"
+echo "use the \"unadvauto\" subcommand on the Advertise Local Resource "
+echo "Management Menu.\n\n"
+
+#Ask to auto-mount resources
+echo "$DEF_MNT\n"
+if /usr/lbin/checkyn $cflag -f "$MNTQ"
+then
+		echo "Now calling the \"mntauto\" subcommand from the Mount Remote"
+		echo "Resource Management Menu.  Entering \"q\" to any prompt"
+		echo "in the subcommand will quit the \"mntauto\" subcommand and"
+		echo "return you to the \"setuprfs\" subcommand."
+        /bin/sh /usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/mntauto
+else
+        echo "\nNo resources will be added to the Automatic Mount List.\n"
+fi
+
+echo "\nTo add remote resource to the Automatic Mount List in the future use "
+echo "the \"mntauto\" subcommand on the Mount Remote Resource Management Menu.\n"
+#Determine if is set up for auto start, if not, ask to start it.  If so, then
+#  report so.
+echo "$DEF_BOOT\n"
+if [ "$STATE" != "3" ]
+then
+	#Ask  do you want RFS started at system boot
+	if /usr/lbin/checkyn $cflag -f "$BOOTQ"
+	then
+        	# grep for initdefault in /etc/inittab and change the setting to
+        	# 3
+
+        	/bin/grep -v ":initdefault:" /etc/inittab >/usr/tmp/setauto$$
+        	echo "is:3:initdefault:" >>/usr/tmp/setauto$$
+        	/bin/mv /usr/tmp/setauto$$ /etc/inittab
+		echo "\nRFS auto-start is ON."
+
+	else
+        	echo "\nRFS auto-start is OFF.\n"
+	fi
+else
+	echo "\nRFS auto-start is ON."
+fi
+
+echo "\nTo turn on / off RFS auto-start in the future use the \"setauto\""
+echo "subcommand on the Start / Stop RFS Menu.\n"
+
+#Ask if you want to start RFS now
+echo "RFS is now set up."
+echo "\nNOW YOU CAN START RFS ..."
+
+if /usr/lbin/checkyn $cflag -f "$RFSUPQ"
+then
+		echo "Now calling the \"startrfs\" subcommand from the Start / Stop RFS Menu."
+        /bin/sh /usr/admin/menu/packagemgmt/rfsmgmt/startstop/startrfs
+	echo "\nTo start RFS in the future use the \"startrfs\" subcommand"
+	echo "on the Start / Stop RFS Menu."
+	echo "\nTo stop RFS in the future use the \"stoprfs\" subcommand"
+	echo "on the Start / Stop RFS Menu.\n"
+	echo "\n\t\tThis completes the \"setuprfs\" subcommand."
+else
+	
+	echo "\nTo start RFS in the future use the \"startrfs\" subcommand"
+	echo "on the Start / Stop RFS Menu."
+	echo "\nTo stop RFS in the future use the \"stoprfs\" subcommand"
+	echo "on the Start / Stop RFS Menu.\n"
+	echo "\nTHE \"setuprfs\" SUBCOMMAND IS NOW COMPLETE."
+fi

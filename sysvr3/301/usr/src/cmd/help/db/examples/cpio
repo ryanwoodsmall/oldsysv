@@ -1,0 +1,25 @@
+
+\Scpio\S:  Examples
+
+
+        ls|cpio -o > /tmp/names.archive
+
+    Copies the files in the current directory and archives them into the
+    archive file "/tmp/names.archive".
+
+    ---------------------------------------------------------------------------
+
+        cpio -i *.o < names.archive
+
+    Unarchives the files in "names.archive" that end in ".o".  "names.archive"
+    is an archive you created with "cpio -o".
+
+
+
+    ---------------------------------------------------------------------------
+
+        find . -depth -print | cpio -pd ../SOURCE
+
+    Descends the current directory and copies the files and directories in
+    hierarchical order.  Passes the contents of the current directory to the
+    directory "../SOURCE".

@@ -1,0 +1,28 @@
+
+\Ssdiff\S:  Examples
+
+        sdiff version.1 version.2
+
+    Prints two columns with "version.1" on the left and "version.2" on the
+    right.  Between the columns are symbols that show that the lines are only
+    in one file, or the lines are different.  \Ssdiff\S does not print a symbol
+    between the columns if the lines are identical.
+
+    ---------------------------------------------------------------------------
+        
+        sdiff -s -w80 -o v.1.5 v.1 v.2
+
+    Prints the non-identical lines in "v.1" and "v.2" in two columns.
+    \Ssdiff\S truncates the lines in the right column to keep the line to 80
+    characters.  "v.1.5" is a file that the user creates by selecting parts of
+    "v.1" and "v.2".
+
+    ---------------------------------------------------------------------------
+
+        sdiff v.1 v.2 | pr -n -p -h "differences"
+
+    Prints two columns, each containing one file.  Between the columns are
+    symbols that show the differences between the lines of the files.  pr(1)
+    prompts the user to hit carriage return before it prints each 66 line page
+    "differences" is the header for each page, and each line of output is
+    numbered.

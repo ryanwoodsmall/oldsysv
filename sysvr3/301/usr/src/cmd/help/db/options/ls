@@ -1,0 +1,62 @@
+
+\Sls\S:  Options
+
+     -C   prints multi-column output and sorts entries down the page.
+
+     -F   places a slash after each filename if file is a directory and place
+          an asterisk after each filename if file is executable.
+
+     -R   prints a recursive list of all subdirectories.
+
+     -a   lists all entries, including those beginning with a dot.
+
+     -b   prints non-graphic characters in their octal form.
+
+     -c   prints time of last modification of the inode, instead of time of
+          last modification of the file.  Must be used with "t" or "l" options.
+
+
+
+     -d   prints <name> only if <name> is a directory. Does not list contents
+         of the directory.
+
+     -f   lists the files in the order that they are created in the directory.
+
+     -g   prints a long detailed listing (same as "l") that includes a group 
+          name but does not include the owner's login name.  Output contains 
+          access permissions, number of links, group name, size in bytes, or 
+          device number if its a special file, and time of last modification.  
+
+     -i   prints the inode number in the first column of the report.
+
+     -l   prints a long detailed listing.  Output contains access permissions,
+          number of links, owner, group, size in bytes or device number if it's
+          a special file, and time of last modification.
+
+     -m   prints entries on one line, one after another, separated by commas.
+
+     
+     -n   same as "l" except the owners user ID number and the group's group ID
+          number are printed rather than the owner's login name and the group's
+          name.
+
+     -o   same as "l" option, except it prints the owner's name and not the
+          group name.
+
+     -p   places a slash after filename if file is a directory.
+
+     -q   prints non-graphic characters in the file names as "?".
+
+     -r   reverses the order of the output.  Order will be reverse alphabetical
+          order unless you use "c", "t", or "u" options.
+
+     -s   gives size in blocks for each entry.
+
+
+     -t   sorts and prints by time of last modification (latest first) instead
+          of alphabetically.
+  
+     -u   prints time of last access instead of time of last modification.
+          Must be used with "t" or "l" option.
+
+     -x   prints multi-column output and sorts entries across the page.

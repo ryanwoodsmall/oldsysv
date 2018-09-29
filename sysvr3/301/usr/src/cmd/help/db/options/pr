@@ -1,0 +1,72 @@
+
+\Spr\S:  Options
+
+     -d   double-spaces the output.
+
+     -f   uses single form-feed character for new pages.
+
+     -p   pauses before beginning each page of output.
+
+     -r   suppresses diagnostic reports on files that will not open.
+
+     -t   suppresses both five-line header and five-line trailer.  (Overrides
+          the "h" and "l" options.)
+
+     -column   prints using <column> columns of output.  The default is 1.
+
+     +page   begins printing at the page numbered <page>.
+     
+     -eck   Expand the character <c>.  Replaces <c> with white spaces that
+            continue until the next tab stop.  You specify tab stops with an
+            integer <k>.  The tabs are set at columns "k+1", "2 * k + 1", etc.
+            For example, if <c> is a ":" and it appears in column 15, and your
+            value for <k> is 20, the \Spr\S command would replace ":" with 6
+            blanks.  The default character for <c> is a tab and for <k> it is 8
+            spaces.
+
+     -ick   Insert the character <c> where there are spaces to equal or exceed
+            <k> spaces.  If the number of spaces is greater than <k>, divide 
+            the number of spaces by <t> and insert that many <c>.  Leave the
+            remainder as spaces.  For example, if <c> is ":", and <k> is 12, a
+            string of 15 spaces would be replaced by a ":" and three spaces.
+            The default value for <c> is tab, and for <k> it is 8 spaces.
+ 
+     -llength    sets length of page to <length> lines. The default is 66. When
+                 <length> is less than 10, no header and trailer are used.
+
+
+
+     -nck   numbers lines with integers of length <k>. The default length is 5.
+            <c> is a character that separates the line number from the text of
+             the line.
+
+
+     -ooffset indents each line by <offset> character positions.  The default
+              is 0.
+
+     -sseparator   separates columns by character <separator> instead of white
+                   space. 
+
+     -h header  uses <header> as the header to be printed instead of the file
+                name.
+
+
+
+
+     
+     -a   prints <file_name> one line per column, (i.e., line 1 fills column 1
+          and line 2 fills column 2 etc., until all columns have one line.
+          Continues, beginning at column 1.  Repeats for additional files, each
+          file beginning on a new page.) <columns> must be greater than 1.
+          Note:  If a line is too long to fit into a column, it is truncated.
+          (Overrides "n" if "a" is farther right on the command line.)
+
+     -wwidth   sets width of the columns to <width> character positions.  The
+               default is 72.  <column> must be greater than 1.
+
+
+     -m   prints each file in a separate column (i.e., line 1 from file 1 is in
+          column 1, line 1 from file 2 is in column 2, etc.).  Note:  If a line
+          is too long to fit into a column, it is truncated.  (Overrides
+          "column".  Overrides "a" if "m" is farther right on the command line.)
+

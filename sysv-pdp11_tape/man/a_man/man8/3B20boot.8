@@ -1,0 +1,157 @@
+'\" tc
+.TH "3B20 BOOT" 8 "3B20S only"
+.SH NAME
+3B20boot \- 3B20S bootstrap procedures
+.SH DESCRIPTION
+.I Lboot
+is a program that is read in from the boot section of the disk in response
+to the
+.SM BOOT
+command on the
+.SM EAI
+page at the console.
+See
+.IR eai (8)
+for a description of the console operations.
+Other options specified on the
+.SM EAI
+page control the functions performed by
+.IR lboot .
+.PP
+If the
+.SM SEC\-DISK
+flag is clear on the
+.SM EAI
+page when the
+.SM BOOT
+command is issued,
+moving head disk 0 is used as the boot device.
+If the
+.SM SEC\-DISK
+flag is set,
+moving head disk 1 will be used as the boot device.
+The
+.SM BACKUP\-ROOT
+flag controls which one of two file systems on the chosen disk will be used.
+If the flag is clear,
+the primary root file system on the disk will be used.
+If the flag is set,
+the backup root file system will be used.
+.PP
+The
+.SM PROMPT\-UNIX
+System flag is used to specify the name of the program to be booted.
+If the
+.SM PROMPT\-UNIX
+System flag is clear,
+.B /unix
+on the chosen file system will be booted.
+If the
+.SM PROMPT\-UNIX
+System flag is set,
+.I lboot
+will ask for the name of the program to be booted.
+(NOTE:\ \ To respond to
+.IR lboot ,
+you must be out of the
+.SM EAI
+command area.
+Use the
+.SM "NORM DISP"
+or
+.SM "CMD\-MSG"
+key to get out of the command area.)\ 
+If the name given is a directory on the chosen file system,
+.I lboot
+will respond with a listing of the files present in the directory.
+If the name given is a normal,
+executable file in
+.I a.out
+format,
+it will be loaded into memory and control will be transferred to it.
+.PP
+Any standard
+.B /unix
+file will look at the
+.SM MIN\-CONFIG
+and
+.SM INH\-CACHE
+flags when it begins execution.
+If the
+.SM MIN\-CONFIG
+flag is clear,
+all of the peripheral devices will be brought into service.
+See
+.IR don (1M)
+for the normal device configuration mechanism.
+If the
+.SM MIN\-CONFIG
+flag is set,
+.B /unix
+will only bring the boot device,
+the system console,
+and a tape drive into service and only the first megabyte of main memory
+will be used.
+If the
+.SM INH\-CACHE
+flag is set,
+.B /unix
+will leave the cache memory disabled.
+If the
+.SM INH\-CACHE
+flag is clear,
+the cache will be enabled.
+.SH SEE ALSO
+don(1M),
+newboot(1M),
+dsk(7),
+eai(8),
+prm(8).
+.SH DIAGNOSTICS
+Self-explanatory messages about bad directory entries and bad file formats.
+The following code words are used in success \s-1PRM\s+1s:
+.PP
+.RS
+.TS
+cI lI
+l l.
+Code	Meaning
+dfcn	DFC number
+dskn	Moving head disk number
+.TE
+.RE
+.PP
+.ne 10
+The success \s-1PRM\s+1's issued during the boot process are:
+.PP
+.RS
+.TS
+cI s s s lI
+lB1 lB1 lB1 lB l.
+PRM	Meaning
+E100	0000	\fIdfcn\fP	\fIdskn\fP	\s-1DFC\s+1 is in service
+E100	BBBB	3B3B	3B3B	Specified program loaded into memory
+E200	0000	0000	0ADD	\s-1UNIX\s+1 System is checking memory
+E200	0000	0000	0001	\s-1UNIX\s+1 System is initializing I/O devices
+E200	0000	0000	0002	\s-1UNIX\s+1 System is ready to mount \s-1ROOTDEV\s+1
+EC00	3B3B	3B3B	3B3B	\s-1UNIX\s+1 System is ready to run user processes
+.TE
+.RE
+.PP
+Failure \s-1PRM\s+1's can be found in
+.IR prm (8).
+.SH BUGS
+.I Lboot
+never uses the cache memory.
+.I Lboot
+isn't smart enough to know what
+.I a.out
+files can be used as bootable
+programs.
+If an
+.I a.out
+is specified that is not a bootable program,
+.I lboot
+will load it in and branch to it.
+What happens after that is unpredictable.
+.\"	@(#)3B20boot.8	5.2 of 5/18/82

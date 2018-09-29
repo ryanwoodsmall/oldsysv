@@ -1,0 +1,7 @@
+
+\S octal \S
+
+Octal is the name of the number system that has a base of 8 and
+digits 0 - 7. For example, the octal number 10 is the  decimal
+number 8.  Some command lines require an octal number, and when one
+is used, it must be preceded by a zero.

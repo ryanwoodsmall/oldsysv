@@ -1,0 +1,23 @@
+.TH ML11 7 "DEC only"
+.SH NAME
+ml11 \- \s-1ML\s+1\&11 solid-state disk
+.SH DESCRIPTION
+The ML11 is a solid state disk manufactured by
+Digital Equipment Corporation.
+It has a capacity of one to four megabytes and a transfer rate
+of 0.25 to 2.00 megabytes per second.
+It is supported as part of the general disk driver
+.RI "(see " gd (7)) .
+The device is not usable as either a boot device or an
+initial load device.
+It is intended for use on the PDP-11 line for faster
+.BR /dev/swap ,
+.B /bin
+or
+.B /tmp
+operations.
+.SH FILES
+/dev/rp\(**, /dev/rrp\(**, /dev/swap
+.SH SEE ALSO
+gd(7), hm(7), hp(7), rp(7), rp07(7), rm80(7).
+.\"	@(#)ml11.7	5.2 of 5/18/82

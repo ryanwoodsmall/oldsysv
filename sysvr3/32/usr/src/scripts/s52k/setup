@@ -1,0 +1,52 @@
+#ident	"@(#)pkg.s52k:setup	10.4"
+# S52K setup script
+#
+DRVPATH=/boot
+DBUF=100
+BIN=/install/bin
+CONDPATH=/install/cond
+USROPT=/usr/options
+SCSIREL=30
+SCSITP0=0
+SCSITP1=0
+
+#  Install ff, finc, frec commands if the installed version is out of date.
+#
+if [ -f $USROPT/st00.name ]
+then
+	SCSITP0=`cat $USROPT/st00.name`
+	SCSITP0=`expr "$SCSITP0" : '.*Release \([0-9]*\.[0-9]\)' \| '0' | sed 's/\.//'`
+fi
+
+if [ -f $USROPT/st01.name ]
+then
+	SCSITP1=`cat $USROPT/st01.name`
+	SCSITP1=`expr "$SCSITP1" : '.*Release \([0-9]*\.[0-9]\)' \| '0' | sed 's/\.//'`
+fi
+
+if [ "$SCSITP0" -lt "$SCSIREL" -a "$SCSITP1" -lt "$SCSIREL" ]
+then
+	cd $CONDPATH
+	find * -print | cpio -pduvm /
+
+elif [ "$SCSITP0" -lt "$SCSIREL" ]
+then
+	cd $CONDPATH
+	ls etc/ff|cpio -pduvm /
+fi
+
+if [ $BUF != $DBUF ]
+then
+ 
+	ed - /etc/master.d/s52k <<-! >/dev/null 2>&1
+	/^NF2KBUF/s/$DBUF/$BUF/
+	w
+	q
+	!
+fi
+
+/etc/drvinstall -d $DRVPATH/s52k.o -v 1.0
+rm -f $DRVPATH/s52k.o
+
+touch /etc/system
+

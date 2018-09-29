@@ -1,0 +1,37 @@
+#ident	"@(#)nlp:terminfo/40.ti	1.3"
+#12-08-87
+
+40-80-6|att40-80-6|AT&T Model 40 line printer 80 cloumn 6 line per inch,
+
+	daisy,
+	bufsz#160,
+	cols#80,
+	lines#66,
+	orc#1,
+	orhi#10,
+	orl#1,
+	orvi#6,
+	cps#400,
+
+	cr=^M,
+	cuf1=\s,
+	ff=^L,
+
+40-80-8|att40-80-8|AT&T Model 40 line printer 80 cloumn 8 line per inch,
+
+	lines#88,
+	orvi#8,
+	use=40-80-6,
+
+40-132-6|att40-132-6|AT&T Model 40 line printer 132 cloumn 6 line per inch,
+
+	bufsz#264,
+	cols#132,
+	use=40-80-6,
+
+40-132-8|att40-132-8|AT&T Model 40 line printer 132 cloumn 8 line per inch,
+
+	lines#88,
+	orvi#8,
+	use=40-132-6,
+

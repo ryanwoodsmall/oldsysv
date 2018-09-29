@@ -1,0 +1,29 @@
+
+\Sdiff3\S:  Examples
+
+        diff3 version.1 version.2 version.3
+
+    Lists the lines in each file that you must change to make "version.1",
+    "version.2", and "version.3" identical.  \Sdiff3\S organizes the changes
+    according to those that result because all three files are different,
+    because "version.1" is different, "version.2" is different and "version.3"
+    is different.
+
+    ---------------------------------------------------------------------------
+
+        diff3 -3 version.1 version.2 version.3
+
+    Uses the changes that are listed when "version.3" is different from the
+    other two to create a script. The script can be used by ed(1) files to
+    change "version.1" so that it is identical to "version.3".
+
+    ---------------------------------------------------------------------------
+
+        diff3 -x version.1 version.2 version.3
+
+    Finds the changes that \Sdiff3\S lists when "version.1", "version.2", and
+    "version.3" are different from one another and prints a script of ed(1)
+    commands.  This script changes "version.1" to include the differences in
+    "version.3".
+
+

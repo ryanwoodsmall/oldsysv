@@ -1,0 +1,141 @@
+.TH MASTER 4 "NSC only"
+.SH NAME
+master \- master device information table
+.SH DESCRIPTION
+This file is used by the
+.IR config (1M)
+program to obtain device information that enables
+it to generate the
+configuration
+files.
+The file consists of 3 parts, each separated by a line with
+a dollar sign
+.RB ( $ )
+in column 1.
+Part 1 contains device information; part 2 contains
+names
+of devices that have aliases;
+part 3 contains tunable parameter information.
+Any line with an asterisk
+.RB ( \(** )
+in column 1 is treated as a comment.
+.PP
+Part 1 contains lines consisting of at least 10 fields
+and at most 11 fields,
+with the fields delimited by tabs and/or blanks:
+.PP
+.RS
+.PD 0
+.TP "\w'Field 11:  'u"
+Field 1:
+device name (8 chars. maximum).
+.TP
+Field 2:
+interrupt vector size (decimal).
+.TP
+Field 3:
+device mask (octal)\-each ``on'' bit indicates that
+the handler exists:
+.RS
+.RS
+000200	tty header exists
+.br
+000100  initialization handler
+.br
+000040  power-failure handler
+.br
+000020  open handler
+.br
+000010  close handler
+.br
+000004  read handler
+.br
+000002  write handler
+.br
+000001  ioctl handler.
+.RE
+.RE
+.TP
+Field 4:
+device type indicator (octal):
+.RS
+.RS
+000020  allow only one of these devices
+.br
+000010  suppress count field in the
+.B conf.c
+file
+.br
+000004  required device
+.br
+000002  block device
+.br
+000001  character device
+.RE
+.RE
+.TP
+Field 5:
+handler prefix (4 chars. maximum).
+.TP
+Field 6:
+device address size (decimal).
+.TP
+Field 7:
+major device number for block-type device.
+.TP
+Field 8:
+major device number for character-type device.
+.TP
+Field 9:
+maximum number of devices per controller (decimal).
+.TP
+Field 10:
+maximum bus request level (4 through 7).
+.TP
+Field 11:
+optional configuration table structure declaration
+(8 chars. maximum).
+.RE
+.PD
+.PP
+Part 2 contains lines with 2 fields each:
+.PP
+.RS
+.PD 0
+.TP "\w'Fields 11-13:  'u"
+Field 1:
+alias name of device (8 chars. maximum).
+.TP
+Field 2:
+reference name of device (8 chars. maximum;
+specified in part 1).
+.RE
+.PD
+.PP
+Part 3 contains lines with 2 or 3 fields each:
+.PP
+.RS
+.PD 0
+.TP "\w'Fields 11-13:  'u"
+Field 1:
+parameter name (as it appears in description file; 20 chars. maximum)
+.TP
+Field 2:
+parameter name (as it appears in the
+.B conf.c
+file; 20 chars. maximum)
+.TP
+Field 3:
+default parameter value (20 chars. maximum; parameter specification
+is required if
+this field is omitted)
+.RE
+.br
+.ne 3v
+.PD
+.PP
+Devices that are not interrupt-driven
+have an interrupt vector size of zero.
+.SH SEE ALSO
+config(1M).
+.\"	@(#)master.dec.4	5.2 of 5/18/82

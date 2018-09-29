@@ -1,0 +1,26 @@
+#ident	"@(#)sadmin:admin/menu/syssetup/nodename	1.4"
+#menu# set the node name of this machine
+#help#	This allows you to change the "node name" of this machine.  The
+#help#	"node name" used by various communications networks to identify
+#help#	this machine.
+
+flags="-qq -k$$"	# flags for checkyn to implement [q] (quit)
+
+trap 'exit 0' 1 2 15
+
+uname=`uname -n`
+
+checkyn ${flags} -f  -H '
+	The "node name" is used by various communications networks to identify
+	this machine.' \
+	"This machine is currently called \"${uname}\".
+Do you want to change it?"  ||  exit 0
+
+name=`checkre ${flags} -fe "What name do you want to give it? [q]" \
+	'.' 'There must be a name.' \
+	'^[0-9a-zA-Z]\{1,\}$' 'Only letters and numbers are permitted.' \
+	'^.\{1,8\}$' 'No more than 8 letters and numbers are permitted.'`
+
+uname -S ${name}
+date +"#	Node name changed %D %T.
+uname -S ${name}" >/etc/rc.d/nodename

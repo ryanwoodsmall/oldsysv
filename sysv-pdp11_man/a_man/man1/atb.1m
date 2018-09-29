@@ -1,0 +1,22 @@
+.TH ATB 1M "3B20S only"
+.SH NAME
+atb \- attach to an Address Translation Buffer
+.SH SYNOPSIS
+\fB/etc/atb\fP command args
+.SH DESCRIPTION
+An Address Translation Buffer (\s-1ATB\s+1) is an associative
+memory that is used to speed up the conversion of a virtual memory address
+to a physical memory address.  The 3B20S contains eight \s-1ATB\s+1s.
+\s-1ATB\s+1-0 is used by the operating system, \s-1ATB\s+1-1 is shared
+by all user processes, \s-1ATB\s+1-2 through \s-1ATB\s+1-7 are normally
+unused.
+.P
+The \fIatb\fR command ``attaches'' itself to an unused \s-1ATB\s+1,
+i.e. becomes the sole process using it, and then overlays itself
+with \fIcommand\fR.  A process ``attached to'' an \s-1ATB\s+1
+will run slightly faster if measured over a long period of time.
+.SH WARNING
+Super-user privileges are required.
+.SH "SEE ALSO"
+sys3b(2).
+.\"	@(#)atb.1m	5.2 of 5/18/82

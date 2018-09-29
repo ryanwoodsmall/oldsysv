@@ -1,0 +1,50 @@
+.TH DSKFMT 1M "3B20S only"
+.SH NAME
+dskfmt, dskvfy \- format and verify disk packs
+.SH SYNOPSIS
+.B /etc/dskfmt
+unit \[ start \[ end \] \]
+.PP
+.B /etc/dskvfy
+unit \[ start \[ end \] \]
+.SH DESCRIPTION
+.I Dskfmt\^
+formats a disk pack and
+.I dskvfy\^
+verifies the format of a disk pack.
+.I Unit\^
+specifies the unit number of the disk drive to be used. Note that this
+drive must be in the out of service state and the controller for this
+drive must be in the in service state.
+.I Start\^
+and
+.I end\^
+specify the starting and ending cylinders, inclusive, for the operation
+to be done. If no arguments are given the default for
+.I start\^
+is 0 and
+for 
+.I end\^
+is the last cylinder on the disk.
+.P
+These commands determine automatically whether you are
+manipulating a 300Mb disk or a 675Mb disk.
+If you are formatting a 675Mb disk,
+.I dskfmt
+will ask you whether you want the defect table initialized.
+The first time a given 675Mb disk is formatted,
+its defect table must be initialized.
+.SH FILES
+/dev/dgn/mhd
+.br
+/dev/dgn/dfc
+.SH "SEE ALSO"
+dsk(7).
+.SH DIAGNOSTICS
+.PP
+If 
+.I dskvfy\^
+finds an error in the 
+format of the disk the numbers of the cylinders found to be bad
+will be printed.
+.\"	%W%

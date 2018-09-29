@@ -1,0 +1,21 @@
+
+\Swait\S:  Description
+
+Syntax Summary:  wait [process_ID]
+
+         where:  process_ID  is a process identification number.
+
+Description:
+     Use \Swait\S to delay the execution of commands until active processes
+     that are running in the background are complete.  Normally, the shell
+     starts a command in the background, then moves on to the next command and
+     executes it.  If you execute \Swait\S, \Swait\S stops the execution of
+     additional commands until the first is finished.  If you use \Swait\S in
+     a shell program, \Swait\S delays the execution of the commands that
+     follow it until the commands executed in the background are complete.  You
+     can also use \Swait\S with a <process_ID> as an argument.  The execution
+     of the later commands will depend on the completion of the process with
+     that <process_ID>.  The process ID must be for a process that is 
+     running in the background of the current shell.  \Swait\S delays messages 
+     about the abnormal termination of the commands until all commands from 
+     the background are complete.

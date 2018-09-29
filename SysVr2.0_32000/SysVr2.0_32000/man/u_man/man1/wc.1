@@ -1,0 +1,33 @@
+.TH WC 1
+.SH NAME
+wc \- word count
+.SH SYNOPSIS
+.B wc
+[
+.B \-lwc
+] [ names ]
+.SH DESCRIPTION
+.I Wc\^
+counts lines, words, and characters in the named files,
+or in the standard input if no
+.I names\^
+appear.
+It also keeps a total count for all named files.
+A word is a maximal string of characters
+delimited by spaces, tabs, or new-lines.
+.PP
+The options
+.BR l ,
+.BR w ,
+and
+.B c
+may be used in any combination to specify that a subset of
+lines, words, and characters are to be reported.
+The default is
+.BR \-lwc .
+.PP
+When
+.I names\^
+are specified on the command line,
+they will be printed along with the counts.
+.\"	@(#)wc.1	6.2 of 9/2/83

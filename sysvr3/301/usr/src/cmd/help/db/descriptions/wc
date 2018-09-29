@@ -1,0 +1,14 @@
+
+\Swc\S:  Description
+
+Syntax Summary:  wc [-clw] file_name ...
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Swc\S counts the number of characters, words and lines in a file.  When
+     you specify one or more files, the name of the file is printed along with
+     the counts.  The options cause \Swc\S to count words, lines, or
+     characters or any combination.  If you do not specify a file name on the
+     command line, \Swc\S reads from the standard input.  See also:  ls(1) and
+     size(1) for commands with functions similar to \Swc\S.

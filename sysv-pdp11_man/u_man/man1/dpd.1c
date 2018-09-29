@@ -1,0 +1,196 @@
+.TH DPD 1C
+.SH NAME
+dpd, lpd \- \s-1HONEYWELL\s+1 sending daemon, line printer daemon
+.SH SYNOPSIS
+.B /usr/lib/dpd
+.br
+.B /usr/lib/lpd
+.SH DESCRIPTION
+.I Dpd\^
+is the daemon for the 200-series
+.SM DATA-PHONE\*S\*R
+data set
+or for a
+.SM KMC\*S11-B
+using
+.IR vpm (7).
+It is designed to submit jobs to
+the
+.SM HONEYWELL
+6000 computer via the
+.SM GRTS
+interface.
+.I Lpd\^
+is the daemon for a line printer.
+.PP
+.I Dpd\^
+uses the directory
+.BR /usr/spool/dpd .
+.I Lpd\^
+uses the directory
+.BR /usr/spool/lpd .
+The file
+.B lock
+in either directory
+is used
+to prevent two daemons from becoming active simultaneously.
+After the program has successfully set the lock,
+it forks and the main path exits, thus
+spawning the daemon.
+The directory is scanned for files
+beginning with
+``df''.
+Each such file is submitted as a job.
+Each line of a job file must begin with a key
+character to specify what to do with the remainder
+of the line.
+.PP
+.PD 0
+.TP 7
+.B S
+directs
+.I dpd\^
+to generate a unique
+.IR "snumb card" .
+The
+.I snumb\^
+number is generated from the file
+.I snumb\^
+in the spooling directory in the case of the
+.SM DATA-PHONE
+data set
+daemon.
+This key character is not used by
+.IR lpd .
+.TP 7
+.B L
+specifies that the remainder of the line is to
+be sent as a literal.
+.TP 7
+.B I
+is the same as
+.BR L ,
+but signals the $
+.SM IDENT
+card
+which is to be mailed back by the mail option.
+.TP 7
+.B B
+specifies that the rest of the line
+is a file name.
+That file is to
+be sent as binary cards.
+.TP 7
+.B F
+is the same as
+.B B
+except a form-feed is prepended to the file.
+.TP 7
+.B U
+specifies that the rest of the line
+is a file name.
+After the job has been transmitted,
+the file is unlinked.
+.TP 7
+.B M
+is followed by a user \s-1ID\s+1; after the job is sent,
+a message is
+mailed to the user via the
+.IR mail (1)
+command
+to verify the sending of the job.
+.TP 7
+.B N
+is followed by a user file name, to be sent back
+under the mail option.
+.TP 7
+.B Q
+is followed by a string of characters,
+which is a message to be sent back to the user
+under the mail option.
+(Not used by 
+.IR lpd ).
+.PD
+.PP
+Any error encountered will cause the daemon to
+drop the call,
+wait up to 20 minutes,
+(only 10 seconds for
+.IR lpd ),
+and start over.
+This means that an improperly constructed
+``df''
+file may cause the same job to be submitted
+every 20 minutes.
+.PP
+.I Dpd\^
+is automatically initiated
+by all of the
+.SM GCOS
+commands
+.RI ( dpr ,
+.IR gcat ,
+.IR gcosmail ,
+.IR fget ,
+and
+.IR fsend ).
+.I Lpd\^
+is automatically initiated by the line printer command,
+.IR lpr .
+.PP
+To restart
+.I dpd\^
+or
+.I lpd\^
+(in the case of hardware or software malfunction),
+it is necessary to first kill the old
+daemon
+(if it is still alive),
+and remove the lock file
+(if present),
+before initiating
+the new daemon.
+This can be done automatically
+by
+.B /etc/rc
+when the system is brought up,
+in the event there were jobs left in the spooling directory
+when the system last went down.
+.SH FILES
+.PD 0
+.TP 20
+/usr/spool/dpd/\(**
+spool area for
+.SM GCOS
+daemons.
+.TP
+/usr/spool/lpd/\(**
+spool area for line printer daemon.
+.TP
+/etc/passwd
+to get the user's name.
+.TP
+/dev/dn?
+.SM ACU
+device.
+.TP
+/dev/du?
+.SM DATA-PHONE
+data set.
+.TP
+/dev/vpm?
+.SM VPM
+device to interface to
+.SM KMC\*S11-B.
+.TP
+/dev/lp
+line printer device.
+.PD
+.SH SEE ALSO
+dpr(1C), fget(1C), fsend(1C), gcat(1C), gcosmail(1C), lpr(1).
+.SH BUGS
+If a
+.IR umask (1)
+of 077 is used, the print jobs may be spooled but won't be
+able to be printed.
+.\"	@(#)dpd.1c	5.2 of 5/18/82

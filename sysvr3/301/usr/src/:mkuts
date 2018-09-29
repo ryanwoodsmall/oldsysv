@@ -1,0 +1,84 @@
+#ident	"@(#)mk::mkuts	1.10"
+#
+#	Configure and make the UNIX Operating System with various devices
+#
+trap "exit 1" 1 2 3 15
+MAKE=${MAKE:-make}
+SRCDIR=${SRC:-$ROOT/usr/src}/uts
+if vax
+then
+#	configure an OS with the general disk/general tape (gdgt) and the
+#	general disk/TS11 tape drive (gdts) units.
+#	Note that the general disk/TU16 tape with TM02 controller (gdht)
+#	is not configured or tested here.
+	cd $SRCDIR/vax/cf
+	for i in gdgt gdts
+	do
+		echo "config $i \n$MAKE install VER=$i"
+		config $i
+		$MAKE install VER=$i
+		if [ $? -ne 0 ]
+		then
+			echo ":mkuts: *** $MAKE of $i failed"
+		fi
+	done
+elif pdp11
+then
+#	configure an OS with the general disk and rp disks
+	cd $SRCDIR/pdp11/cf
+	for i in gdht gdtm rpht rptm
+	do
+                echo "config $i \n$MAKE install VER=$i"
+		config $i
+		$MAKE install VER=$i
+                if [ $? -ne 0 ]
+                then
+                        echo ":mkuts: *** $MAKE of $i failed"
+                fi
+	done
+elif u3b
+then
+#	configure an OS with the Kennedy tape drive (un32) and the
+#	magnetic tape controller configured into DMA channels 11 and 12.
+	cd $SRCDIR/3b/cf
+	for i in un32 mtc11 mtc12
+	do
+		echo "$MAKE clobber"
+		$MAKE clobber
+                echo "config /etc/system.$i"
+		config $ROOT/etc/system.$i
+		if [ "$ROOT" != "" ]
+		then
+			$MAKE -f ../makefile ENV="VER=$i CH=# SGS=3bs"
+		else
+			$MAKE VER=$i
+		fi
+		if [ $? -eq 0 ]
+		then
+			mv ../unix$i $ROOT/unix.$i
+		else
+			echo ":mkuts: *** $MAKE of unix.$i failed"
+		fi
+	done
+elif u3b2
+then
+#
+	cd $SRCDIR/3b2
+	echo "$MAKE -f unix.mk install SYS=unix"
+	$MAKE -f unix.mk install SYS=unix
+	if [ $? -ne 0 ]
+	then
+		echo ":mkuts: *** $MAKE of unix failed"
+	fi
+elif u3b5
+then
+#
+	cd $SRCDIR/3b5
+	echo "$MAKE -f unix.mk install SYS=unix VER=2"
+	$MAKE -f unix.mk install SYS=unix VER=2
+        if [ $? -ne 0 ]
+        then
+                echo ":mkuts: *** $MAKE of unix failed"
+        fi
+fi
+exit 0

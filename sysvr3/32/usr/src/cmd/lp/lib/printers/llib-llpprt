@@ -1,0 +1,167 @@
+/*LINTLIBRARY*/
+
+/*	from file chkprinter.c */
+#include "sys/types.h"
+#include "lp.h"
+#include "lp.set.h"
+#include "printers.h"
+
+/**
+ ** chkprinter() - CHECK VALIDITY OF PITCH/SIZE/CHARSET FOR TERMINFO TYPE
+ **/
+unsigned long		chkprinter (type, cpi, lpi, len, wid, cs)
+	char			*type,
+				*cpi,
+				*lpi,
+				*len,
+				*wid,
+				*cs;
+{	static unsigned long		 _returned_value;
+	return _returned_value;
+}
+
+/*	from file default.c */
+#include "stdio.h"
+
+/**
+ ** getdefault() - READ THE NAME OF THE DEFAULT DESTINATION FROM DISK
+ **/
+char			*getdefault ()
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** putdefault() - WRITE THE NAME OF THE DEFAULT DESTINATION TO DISK
+ **/
+int			putdefault (dflt)
+	char			*dflt;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** deldefault() - REMOVE THE NAME OF THE DEFAULT DESTINATION
+ **/
+int			deldefault ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file delprinter.c */
+#include "errno.h"
+#include "fs.h"
+
+/**
+ ** delprinter()
+ **/
+int			delprinter (name)
+	char			*name;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** _delprinter()
+ **/
+
+/*	from file freeprinter.c */
+/**
+ **  freeprinter() - FREE MEMORY ALLOCATED FOR PRINTER STRUCTURE
+ **/
+void			freeprinter (pp)
+	PRINTER			*pp;
+{
+}
+
+/*	from file getprinter.c */
+#include "string.h"
+
+/**
+ ** getprinter() - EXTRACT PRINTER STRUCTURE FROM DISK FILE
+ **/
+PRINTER			*getprinter (name)
+	char			*name;
+{	static PRINTER			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** get_sdn() - PARSE SCALED DECIMAL NUMBER
+ **/
+
+/*	from file okprinter.c */
+/**
+ ** okprinter() - SEE IF PRINTER STRUCTURE IS SOUND
+ **/
+int			okprinter (name, prbufp, isput)
+	register char		*name;
+	register PRINTER	*prbufp;
+	register int		isput;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** okinterface() - CHECK THAT THE INTERFACE PROGRAM IS OKAY
+ **/
+
+/*	from file printwheels.c */
+#include "sys/stat.h"
+
+/**
+ ** getpwheel() - GET PRINT WHEEL INFO FROM DISK
+ **/
+PWHEEL			*getpwheel (name)
+	char			*name;
+{	static PWHEEL			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** putpwheel() - PUT PRINT WHEEL INFO TO DISK
+ **/
+int			putpwheel (name, pwheelp)
+	char			*name;
+	PWHEEL			*pwheelp;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** delpwheel() - DELETE PRINT WHEEL INFO FROM DISK
+ **/
+int			delpwheel (name)
+	char			*name;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** _delpwheel()
+ **/
+
+/**
+ **  freepwheel() - FREE MEMORY ALLOCATED FOR PRINT WHEEL STRUCTURE
+ **/
+void			freepwheel (ppw)
+	PWHEEL			*ppw;
+{
+}
+
+/*	from file putprinter.c */
+/**
+ ** putprinter() - WRITE PRINTER STRUCTURE TO DISK FILES
+ **/
+int			putprinter (name, prbufp)
+	char			*name;
+	PRINTER			*prbufp;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** print_sdn() - PRINT SCALED DECIMAL NUMBER WITH HEADER
+ ** print_l() - PRINT (char **) LIST WITH HEADER
+ ** print_str() - PRINT STRING WITH HEADER
+ **/

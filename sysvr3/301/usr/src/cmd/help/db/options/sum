@@ -1,0 +1,8 @@
+
+\Ssum\S:  Options
+
+     -r   calculates the checksum using an alternate algorithm which is
+          compatible with the \Ssum\S command for UNIX System Version 7.  By
+          using this algorithm as well as the default algorithm, you can
+          increase your confidence in the fact that a file transmitted without
+          errors.

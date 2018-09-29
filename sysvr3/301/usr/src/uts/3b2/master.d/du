@@ -1,0 +1,36 @@
+*#ident	"@(#)kern-port:master.d/du	10.14"
+*
+* DU
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ox	-	-	-	-	-	dufst
+						advertise[NADVERTISE] (%0x20)
+						nadvertise (%i) ={ NADVERTISE }
+						rcvd[NRCVD] (%0x2c)
+						nrcvd (%i) ={ NRCVD }
+						sndd [NSNDD] (%0x20)
+						nsndd (%i) ={ NSNDD }
+						maxgdp (%i) = { MAXGDP }
+						gdp [MAXGDP] (%0x68)
+						minserve (%i) ={ MINSERVE }
+						maxserve (%i) ={ MAXSERVE }
+						nrduser (%i) ={ NRDUSER }
+						rd_user[NRDUSER] (%0x14)
+						rfheap[RFHEAP] (%c)
+						rfsize (%i) ={ RFHEAP }
+						rfs_vhigh (%i) = { RFS_VHIGH }
+						rfs_vlow (%i) = { RFS_VLOW }
+
+$$$
+
+NADVERTISE	= 25
+MAXGDP		= 24
+NRCVD		= 150
+NRDUSER		= 250
+NSNDD		= 100
+MINSERVE	= 3
+MAXSERVE	= 6
+HIST 		= 6
+RFHEAP		= 3072
+RFS_VHIGH	= 1
+RFS_VLOW	= 1

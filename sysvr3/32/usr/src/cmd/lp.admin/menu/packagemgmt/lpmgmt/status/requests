@@ -1,0 +1,163 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/status/requests	1.6"
+## IDOC:   SCREEN 2.21: STATUS OF PRINT REQUESTS
+#menu# Check status of print requests
+
+##+++ (help _H36)
+#help#        Use  the "requests"  command to get a list of print requests
+#help#        currently  in the queue.  This is a good way to find out the
+#help#        IDs needed to  cancel,  hold,  resume,  or  change  a  print
+#help#        request.  The status listed will show when the print request
+#help#        was submitted, how big it is (the number  of  bytes  in  the
+#help#        files), and whether it is printing.
+#help#
+#help#        If you have the IDs of the requests, you can get the  status
+#help#        on  just  them.   If you don't know the IDs, you can get the
+#help#        status on all requests submitted by a particular user or for
+#help#        a particular printer or class of printers.
+##--- (help _H36)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_request_printer_user_list () {
+# listof: request-printer-user
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!request-printer-user-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo ${RESP} | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then : ; else if ( set -- ${RESP}
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| ( flags="-m1"; chk_request_printer_user >/dev/null 2>&1 ) || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid request ID, printer name, or user name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_request_printer_user () {
+# oneof: request-id printer-name user-name    
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!request-printer-user!}" \
+		$4 \
+		'.*' ''`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; return 0; fi
+	echo "${RESP}" | ( flags="-m1"; chk_name >/dev/null 2>&1 ) && return 0
+	echo "${RESP}" | ( flags="-m1"; chk_user_name >/dev/null 2>&1 ) && return 0
+	echo "${RESP}" | ( flags="-m1"; chk_request_id >/dev/null 2>&1 ) && return 0
+	echo '	You did not give a valid request ID, printer name, or user name.
+\c'
+    done
+}
+##--- (functions)
+
+while true
+do
+##+++ (line 1)
+echo \
+"
+Enter the IDs of the print requests you would like to see.
+Enter the names of printers or printer classes
+to see all requests queued for them.
+Enter the names of users to see all their requests.
+(Prepend an ambiguous printer or class name with lp/ to
+distinguish it from a user name).
+Separate multiple IDs and/or names with a space or comma:"
+##--- (line 7)
+
+DEF=
+##+++ (2.21.8)
+chk_request_printer_user_list \
+	"" \
+	"${DEF}" \
+	"\
+        You are expected to enter a print request ID, the name of  a
+        printer or class of printers,  or the name of a user (his or
+        her login name, not proper name).  You can enter  a list  of
+        IDs  or names by separating them with a space or comma.  You
+        will be shown the  status  of  the  requests  you  identify,
+        including the request IDs, total file sizes (in bytes), when
+        submitted, and whether printing.
+
+        Note that the LP  Print  Service  will  try  to  distinguish
+        between  printer or class names and user names by  examining
+        the  password  file  or similar file on the system.  If your
+        system  happens to have a user with the same login name as a
+        printer or class,  you should prepend the printer  or  class
+        name with \"lp/\" to distinguish it.  \
+"
+OPT=${RESP}
+##--- (2.21.8)
+
+	IFS=", "; set -- ${OPT}
+	IFS="
+ 	"
+	users= rpc=
+	repeat=no
+	while [ $# -ge 1 ]
+	do
+		if dest=`expr "$1" : 'lp/\(.*\)'`
+		then
+			if [ \
+				-f /usr/spool/lp/admins/lp/classes/${dest} \
+			     -o -d /usr/spool/lp/admins/lp/printers/${dest} \
+			]
+			then
+				rpc="${rpc} ${dest}"
+			else
+				echo \
+"\"${dest}\" is not a printer or class"
+				repeat=yes
+			fi
+		elif egrep "^$1:" /etc/passwd >/dev/null 2>&1
+		then
+			users="${users} $1"
+		elif [ -f /usr/spool/lp/admins/lp/classes/$1 ]
+		then
+			rpc="${rpc} $1"
+		elif [ -d /usr/spool/lp/admins/lp/printers/$1 ]
+		then
+			rpc="${rpc} $1"
+		elif expr "$1" : '.*-.*' >/dev/null 2>&1
+		then
+			rpc="${rpc} $1"
+		else
+			echo \
+"\"$1\" is not a request id, printer, class or user name"
+			repeat=yes
+		fi
+		shift
+	done
+
+	if [ -n "${rpc}" ]
+	then
+		lpstat -o "${rpc}" || repeat=yes
+	fi
+	if [ -n "${users}" ]
+	then
+		lpstat -u "${users}" || repeat=yes
+	fi
+	if [ "no" = "${repeat}" ]
+	then
+		break
+	fi
+done

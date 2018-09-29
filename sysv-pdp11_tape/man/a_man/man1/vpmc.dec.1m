@@ -1,0 +1,1243 @@
+'\" e
+.hw other-wise
+.EQ
+delim @@
+.EN
+.if t .ds ^ \s+4\v'.3m'^\v'-.3m'\s-4
+.if t .ds ~ \s+4\v'.3m'~\v'-.3m'\s-4
+.if n .ds ^ ^
+.if n .ds ~ ~
+.TH VPMC 1M "DEC only"
+.SH NAME
+vpmc \- compiler for the virtual protocol machine
+.SH SYNOPSIS
+.B vpmc
+.RB [ \-mrcx ]
+.RB [ \-s " sfile]"
+.RB [ \-l " lfile]"
+.RB [ \-i " ifile]"
+.RB [ \-o " ofile]"
+file
+.SH DESCRIPTION
+.I Vpmc\^
+is the compiler for a
+language that is used to describe communications link protocols.
+The output of
+.I vpmc\^
+is a load module for the virtual protocol machine
+(\s-1VPM\s+1),
+which is a software construct for implementing communications link
+protocols
+(e.g.,
+.SM BISYNC\*S)
+on the
+.SM DEC
+.SM KMC11-B
+microprocessor.
+.SM VPM
+is implemented by an interpreter in the
+.SM KMC
+which cooperates with a driver in the
+.SM UNIX
+System host computer to transfer data over a communications link
+in accordance with a specified link protocol.
+The
+.SM UNIX
+System user processes transfer data to or from a remote terminal or computer
+system
+through
+.SM VPM
+using normal
+.SM UNIX
+System
+.IR open ,
+.IR read ,
+.IR write ,
+and
+.I close\^
+operations.
+The
+.SM VPM
+program in the
+.SM KMC
+provides error control and flow control using the conventions
+specified in the protocol.
+.PP
+The language accepted by
+.I vpmc\^
+is
+essentially
+a subset of C;
+the implementation of
+.I vpmc\^
+uses the
+.SM RATFOR
+preprocessor
+.RI ( ratfor (1))
+as a front end;
+this leads to a few minor differences,
+mostly syntactic.
+.PP
+There are two versions of the interpreter.
+The appropriate version for a particular application
+is selected by means of the
+.B \-i
+option.
+The
+.SM BISYNC
+version
+.RB ( \-i
+.BR bisync )
+supports half-duplex, character-oriented protocols
+such as the various forms of
+.SM BISYNC\*S.
+The
+.SM HDLC
+version
+.RB ( \-i
+.BR hdlc )
+supports full-duplex, bit-oriented protocols
+such as
+.SM HDLC\*S.
+There is a separate \s-1HDLC\s+1 interpreter for the
+.SM KMS11
+eight-line multiplexor;
+this version is selected by
+.B \-i
+.BR hdlc/kms .
+The communications primitives
+used with the
+.SM BISYNC
+version
+are character-oriented and blocking;
+the primitives used with the
+.SM HDLC
+versions
+are frame-oriented and non-blocking.
+.SS Options
+.PP
+The meanings of the command-line options are:
+.PP
+.PD 0
+.TP 10
+.B \-m
+Use
+.IR m4 (1)
+instead of
+.I cpp\^
+as the macro preprocessor.
+.TP
+.B \-r
+Produce
+.SM RATFOR
+output on the standard output and
+suppress the remaining compiler phases.
+.TP
+.B \-c
+Compile only (suppress the assembly and linking phases).
+.TP
+.B \-x
+Retain the intermediate files used for communication between passes.
+.TP
+.BI \-s " sfile\^"
+Save the generated
+.SM VPM
+assembly language on file
+.IR sfile .
+.TP
+.BI \-l " lfile\^"
+Produce a
+.SM VPM
+assembly-language listing on file
+.IR lfile .
+.TP
+.BI \-i " ifile\^"
+Use the interpreter version specified by
+.I ifile\^
+(default
+.BR bisync ).
+.TP
+.BI \-o " ofile\^"
+Write the executable object file on file
+.I ofile\^
+(default
+.BR a.out ).
+.PD
+.PP
+These options may be given in any order.
+.SS Programs
+.PP
+Input to
+.I vpmc\^
+consists of a
+(possibly null) sequence of array declarations,
+followed by one or more
+function definitions.
+The first defined function is invoked
+(on command from the
+.SM UNIX
+System
+.SM VPM
+driver)
+to begin
+program execution.
+.SS Functions
+.PP
+A function definition has the following form:
+.PP
+.RS
+function
+.IR name (\|)
+.br
+.I statement_list\^
+.br
+end
+.RE
+.PP
+Function arguments (formal parameters)
+are not allowed.
+The effect of a function call with arguments
+can be obtained by invoking the function via a macro that first assigns
+the value of each argument to a global variable
+reserved for that purpose.
+See
+.SM
+.I EXAMPLES\^
+below.
+.PP
+A
+.I statement_list\^
+is a (possibly null) sequence of
+labeled statements.
+A
+.I labeled_statement\^
+is a
+statement
+preceded by a
+(possibly null) sequence of labels.
+A
+.I label\^
+is either a name followed by a colon
+.RB ( : )
+or a decimal integer optionally followed by a colon.
+.PP
+The statements that make up a
+statement list
+must be separated by semicolons
+.RB ( ; ).
+(A semicolon at the end of a line can usually be omitted;
+refer to the description of
+.SM RATFOR
+for details.)\ 
+Null statements are allowed.
+.br
+.ne 4v
+.SS Statement Syntax
+.PP
+The following types of statements are allowed:
+.PP
+.RS
+.I expression\^
+.br
+.IR lvalue = expression
+.br
+.IR lvalue += expression
+.br
+.IR lvalue \-= expression
+.br
+.IR lvalue \|\(bv= expression
+.br
+.IR lvalue &= expression
+.br
+.IR lvalue \*^= expression
+.br
+.IR lvalue <\h'-.3m'<= expression
+.br
+.IR lvalue >\h'-.3m'>= expression
+.br
+.RI if( expression ) statement\^
+.br
+.RI if( expression ) statement\^
+else
+.I statement\^
+.br
+.RI while( expression ) statement\^
+.br
+.RI for( statement ;
+.IR expression ;
+.IR statement ) statement
+.br
+repeat
+.I statement\^
+.br
+repeat
+.I statement\^
+until
+.I expression\^
+.br
+break
+.br
+next
+.br
+.RI switch( expression ){ case_list }\^
+.br
+.RI return( expression )
+.br
+return
+.br
+goto
+.I name\^
+.br
+goto
+.I decimal_constant\^
+.br
+.RI { statement_list }\^
+.RE
+.PP
+.B repeat
+is equivalent to the
+.B do
+keyword in C;
+.B next
+is equivalent to
+.BR continue .
+.PP
+A
+.I case_list\^
+is a sequence of statement lists, each of which is preceded by
+a label of the form:
+.PP
+.RS
+case
+.IR constant :
+.RE
+.PP
+The label for the last
+.I statement_list\^
+in a
+.I case_list\^
+may be of the form:
+.PP
+.RS
+default:
+.RE
+.PP
+Unlike C,
+.SM RATFOR
+supplies an automatic
+.B break
+preceding each new
+case
+label.
+.SS Expression Syntax
+.PP
+A
+.I primary_expression\^
+(abbreviated
+.IR primary )
+is an lvalue or a constant.
+An
+.I lvalue\^
+is one of the following:
+.PP
+.RS
+.I name\^
+.br
+.IR name [ constant ]
+.RE
+.PP
+A
+.I unary_expression\^
+(abbreviated
+.IR unary )
+is one of the following:
+.PP
+.RS
+.I primary\^
+.br
+.IR name (\|)
+.br
+.I system_call\^
+.br
+.RI ++ lvalue\^
+.br
+.RI \-\- lvalue\^
+.br
+.RI ( expression )
+.br
+.RI ! unary\^
+.br
+.RI \*~ unary\^
+.RE
+.ne 4v
+.PP
+The following types of expressions are allowed:
+.PP
+.RS
+.I unary\^
+.br
+.IR unary + primary
+.br
+.IR unary \- primary
+.br
+.IR unary \|\(bv primary
+.br
+.IR unary & primary
+.br
+.IR unary &\*~ primary
+.br
+.IR unary \*^ primary
+.br
+.IR unary <\h'-.3m'< primary
+.br
+.IR unary >\h'-.3m'> primary
+.br
+.IR unary == primary
+.br
+.IR unary != primary
+.br
+.IR unary > primary
+.br
+.IR unary < primary
+.br
+.IR unary >= primary
+.br
+.IR unary <= primary
+.RE
+.PP
+Note that the right operand of a binary operator
+can only be a constant, a name, or a name with a
+constant subscript.
+.SS System Calls
+.PP
+A
+.SM VPM
+program interacts with a communications device
+and a driver in the host computer
+by means of system calls (primitives).
+.PP
+The following primitives are available only in the
+.SM BISYNC
+version of the interpreter:
+.TP
+.BI atoe( primary )
+Translate ASCII to EBCDIC.
+The returned value is the EBCDIC character that corresponds to
+the ASCII character represented by the value of the primary expression.
+The translation tables
+reflect the prejudices of a particular installation.
+.TP
+.BI crc16( primary )
+The value of the primary expression is combined with
+the cyclic redundancy check-sum at the location passed
+by a previous
+.B crcloc
+system call.
+The
+.SM CRC\*S-16
+polynomial
+@(x sup 16 + x sup 15 + x sup 2 + 1)@
+is used for the check-sum calculation.
+.TP
+.BI crcloc( name )
+The two-byte array
+starting at the location specified by
+.I name\^
+is cleared.
+The address of the array is recorded as the location
+to be updated by subsequent
+.B crc16
+system calls.
+.TP
+.BI etoa( primary )
+Translate EBCDIC to ASCII.
+The returned value is the ASCII character that corresponds to
+the EBCDIC character represented by the value of the primary expression.
+The translation tables
+reflect the prejudices of a particular installation.
+.TP
+.BI get( lvalue )
+.br
+Get a byte from the current
+.I transmit\^
+buffer.
+The next available byte, if any, is copied into the location
+specified by
+.IR lvalue .
+The returned value is zero if a byte was obtained,
+otherwise it is non-zero.
+.TP
+.BI getrbuf( name )
+Get (open) a
+.I receive\^
+buffer.
+The returned value is zero
+if a buffer is available, otherwise it is non-zero.
+If a buffer is obtained, the buffer parameters are copied
+into the array specified by
+.IR name .
+The array should be large enough to hold at least three bytes.
+The meaning of the buffer parameters is driver-dependent.
+If a receive buffer has previously been opened via a
+.B getrbuf
+call but has not yet been closed via a call to
+.BR rtnrbuf ,
+that buffer is reinitialized and remains the current buffer.
+.TP
+.BI getxbuf( name )
+Get (open) a
+.I transmit\^
+buffer.
+The returned value is zero
+if a buffer is available, otherwise it is non-zero.
+If a buffer is obtained, the buffer parameters are copied
+into the array specified by
+.IR name .
+The array should be large enough to hold at least three bytes.
+The meaning of the buffer parameters is driver-dependent.
+If a transmit buffer has previously been opened via a
+.B getxbuf
+call but has not yet been closed via a call to
+.BR rtnxbuf ,
+that buffer is reinitialized and remains the current buffer.
+.TP
+.BI put( primary )
+.br
+Put a byte into the current
+.I receive\^
+buffer.
+The value of the primary expression is inserted into the next
+available position, if any, in the current receive buffer.
+The returned value is zero if a byte was transferred,
+otherwise it is non-zero.
+.TP
+.BI rcv( lvalue )
+.I Receive\^
+a character.
+The process delays until a character is available
+in the input silo.
+The character is then moved to the location
+specified by
+.I lvalue\^
+and the process is reactivated.
+.TP
+.BI rsom( constant )
+Skip to the beginning of a new
+.I receive\^
+frame.
+The receiver hardware is cleared and the value of
+.I constant\^
+is stored as the receive sync character.
+This call is used to synchronize the local receiver
+and remote transmitter when the process is ready to accept
+a new receive frame.
+.TP
+.BI rtnrbuf( name )
+Return a
+.I receive\^
+buffer.
+The original values of the buffer parameters for the current
+receive buffer
+are replaced with values from the array specified by
+.IR name .
+The current receive buffer is then released to the driver.
+.TP
+.BI rtnxbuf( name )
+Return a
+.I transmit\^
+buffer.
+The original values of the buffer parameters for the current
+transmit buffer
+are replaced with values from the array specified by
+.IR name .
+The current transmit buffer is then released to the driver.
+.TP
+.BI xeom( constant )
+Transmit end-of-message.
+The value of the constant is transmitted,
+then the transmitter is shut down.
+.TP
+.BI xmt( primary )
+Transmit a character.
+The value of the primary expression is transmitted over the communications
+line.
+If the output silo is full, the process waits until there is room
+in the silo.
+.TP
+.BI xsom( constant )
+Transmit start-of-message.
+The transmitter is cleared, then the value of
+.I constant\^
+is transmitted six times.
+This call is used to synchronize the local transmitter
+and the remote receiver at the beginning of a frame.
+.PP
+The following primitives are available only with the
+.SM HDLC
+version of the interpreter:
+.TP
+.B abtxfrm(\|)
+The current transmission, if any, is aborted, if possible, by sending
+a frame-abort sequence
+(seven one bits, followed immediately by a terminating flag).
+This operation is not feasible with some hardware interfaces,
+in which case this primitive is a no-operation.
+.TP
+.BI getxfrm( primary )
+Get a transmit buffer.
+If the transmit-buffer queue is
+.I not\^
+empty,
+the buffer at the head of the queue
+is removed from the queue
+and attached to the sequence number
+specified by the value of the
+primary expression
+If the sequence number is greater than seven
+or the sequence number already has a buffer attached,
+the process is terminated in error.
+The returned value is zero if a buffer was obtained,
+otherwise non-zero.
+.TP
+.B norbuf()
+Test for the availability of an empty receive buffer.
+The returned value is
+.B true
+(non-zero)
+if the queue of empty receive buffers is currently empty;
+otherwise the returned value is
+.B false
+(zero).
+.TP
+.BI rcvfrm( name )
+Get a completed receive frame.
+If the queue of completed receive frames is non-empty,
+the frame at the head of the queue is removed
+and becomes the current receive frame.
+If a frame is obtained,
+the first five bytes of the frame are copied into the array specified by
+.IR name .
+The returned value is
+.B true
+(non-zero)
+if a frame was obtained;
+otherwise, it is
+.B false
+(zero).
+The rightmost four bits of the returned value indicate the
+frame length as follows:
+if the value of the rightmost four bits is equal to fifteen,
+the frame length is greater than or equal to 15;
+otherwise the frame length is equal to the value of the rightmost
+four bits.
+The frame length includes the two
+.SM CRC
+bytes at the end of
+the frame and any control information at the beginning of the frame.
+Bytes following the first two bytes of the frame, but not including
+the two
+.SM CRC
+bytes,
+are copied into a receive buffer,
+if one is available at the time the frame is received.
+Bit 020 of the returned value is zero if a receive buffer
+was available, otherwise non-zero.
+The values of the leftmost three bits of the returned value are
+currently unspecified.
+If a frame was obtained, the first five bytes of the frame are
+copied into the array specified by
+.IR name .
+Frames with errors are discarded;
+a count is kept for each type of error.
+Frames may be discarded for any of the following reasons:
+(1)
+.SM CRC
+error,
+(2) frame too short (less than four bytes),
+(3) frame too long (buffer size exceeded),
+or
+(4) no receive buffer available.
+If a frame with a buffer attached was previously obtained with
+.BR rcvfrm ,
+but the buffer has not been released to the driver with
+.BR rtnrfrm ,
+that buffer is returned to the queue of empty receive buffers.
+At most one receive frame with no buffer attached is retained by
+the interpreter;
+if a new frame arrives before the frame with no buffer attached
+has been obtained with
+.BR rcvfrm ,
+the new frame is discarded.
+.TP
+.B rtnrfrm(\|)
+Return a receive buffer.
+The current receive buffer
+(the one obtained by the most recent
+.B rcvfrm
+primitive)
+is returned to the driver.
+If there is no current receive buffer,
+the process is terminated in error.
+.TP
+.B rsxmtq(\|)
+Reset the transmit-buffer queue.
+The sequence number assignment is removed from all transmit
+buffers.
+If a transmission is currently in progress, the transmission
+is aborted, if possible.
+.TP
+.BI rtnxfrm( primary )
+Return a transmit buffer.
+The transmit buffer currently attached to the sequence number specified
+by the value of the
+primary expression
+is returned to the driver
+and the sequence number assignment is removed
+from that buffer.
+If the specified sequence number does not have a buffer attached,
+the process is terminated in error.
+Transmit buffers must be returned in the same sequence in which they were obtained,
+otherwise the process is terminated in error.
+.TP
+.BI setctl( name ,\^ primary )
+Specify transmit-control information.
+The number of bytes specified by the
+primary expression
+are copied from the array specified by
+.I name\^
+and saved for use with subsequent
+.B xmtfrm
+or
+.B xmtctl
+primitives.
+If the transmitter is currently busy,
+the process is terminated in error.
+.TP
+.B xmtbusy(\|)
+Test for transmitter busy.
+If a frame is currently being transmitted,
+the returned value is
+.B true
+(non-zero);
+otherwise the returned value is
+.B false
+(zero).
+.TP
+.B xmtctl(\|)
+Transmit a control frame.
+If a transmission is not already in progress,
+a new transmission is initiated.
+The transmitted frame will contain the control information specified
+by the most recent
+.B setctl
+primitive,
+followed by a two-byte
+.SM CRC\*S.
+The
+.SM CRC-CCITT
+polynomial
+@(x sup 16 + x sup 12 + x sup 5 + 1)@
+is used for the
+.SM CRC
+calculation.
+The returned value is zero if a new transmission was initiated,
+otherwise non-zero.
+.TP
+.BI xmtfrm( primary )
+Transmit an information frame.
+If a transmission is not already in progress,
+a new transmission is initiated.
+The transmitted frame will contain the control information specified
+by the most recent
+.B setctl
+primitive,
+followed by the contents of the buffer which is currently attached to
+the sequence number specified by the value of the
+primary expression
+followed by a two-byte
+.SM CRC\*S.
+The
+.SM CRC-CCITT
+polynomial
+@(x sup 16 + x sup 12 + x sup 5 + 1)@
+is used for the
+.SM CRC
+calculation.
+The returned value is zero if a new transmission was initiated,
+otherwise non-zero.
+If the sequence number is greater than seven
+or the sequence number does not have a buffer attached,
+the process is terminated in error.
+.PP
+The following primitives are available with all versions of the interpreter:
+.TP
+.B dsrwait(\|)
+Wait for modem-ready and then set modem-ready mode.
+The process delays until the modem-ready signal from the modem
+interface is asserted.
+If the modem-ready signal subsequently drops,
+the process is terminated.
+If
+.B dsrwait
+is never invoked, the modem-ready signal is ignored.
+.TP
+.BI exit( primary )
+Terminate execution.
+The process is halted
+and the value of the primary expression
+is passed to the driver.
+.TP
+.BI getcmd( name )
+Get a command from the driver.
+If a command has been received from the driver since the last
+call to
+.BR getcmd ,
+four bytes of command information are copied into the array specified by
+.I name\^
+and a value of
+.B true
+(non-zero)
+is returned.
+If no command is available,
+the returned value is
+.B false
+(zero).
+.TP
+.BI getopt(\|)
+Get the script options.
+Script options are passed from the protocol driver
+to the
+.SM VPM
+interpreter by means of the common synchronous interface
+(CSI).
+These bits are recorded by CSI;
+the most recent value is passed to the
+.SM VPM
+interpreter each time the protocol script is started.
+This value is saved by the interpreter
+and can be retrieved as many times as desired using the
+.I getopt
+primitive.
+The low-order bit of this value is used by the
+.SM BX.25
+level 2 script
+(cslapb.r)
+to determine whether to use address A or address B.
+.TP
+.B pause(\|)
+Return control to the dispatcher.
+This primitive
+informs the dispatcher that the virtual process may be suspended
+until the next occurrence of an event that might affect the state of
+the protocol for this line.
+Examples of such events are:
+(1) completion of an output transfer,
+(2) completion of an input transfer,
+(3) timer expiration,
+and
+(4) a buffer-in command from the driver.
+In a multi-line implementation,
+the
+.B pause
+primitive allows the process for a given line to give up control
+to allow the processor to service another line.
+In a single-line implementation
+this primitive has no effect.
+.TP
+.BI snap( name )
+Create a
+.I snap
+event record.
+Four bytes from the array specified by
+.I name
+are passed to the driver,
+which prefixes a time stamp and sequence number
+and creates a trace event record
+containing the data.
+If minor device 1 of the trace driver is currently open,
+the record is placed on the read queue for that device;
+otherwise the event record is discarded.
+The information passed via the
+.I snap
+primitive can be displayed using
+the
+.I vpmsave
+and
+.I vpmfmt
+commands
+(see
+.IR vpmsave (1M)).
+.TP
+.BI rtnrpt( name )
+Return a report to the driver.
+Four bytes from the array specified by
+.I name\^
+are transferred to the driver.
+The process delays until the transfer is complete.
+.TP
+.BI testop( primary )
+Test for odd parity.
+The returned value is
+.B true
+(non-zero)
+if the value of the primary expression has odd parity,
+otherwise the returned value is
+.B false
+(zero).
+.TP
+.BI timeout( primary )
+Schedule or cancel a timer interrupt.
+If the value of the
+primary expression
+is non-zero,
+the current values of
+the program counter and stack pointer are saved
+and a timer is loaded with the value of
+the primary expression.
+The system call then returns immediately
+with a value of
+.B false
+(zero)
+as the returned value.
+The timer is decremented
+each tenth of a second thereafter.
+If the timer is decremented to zero,
+the saved values of the program counter and stack pointer are restored
+and the system call returns with a value of
+.B true
+(non-zero).
+The effect of the timer interrupt is to return control
+to the code immediately following the
+.B timeout
+system call,
+at which point a non-zero return value
+indicates that the timer has expired.
+The
+.B timeout
+system call with a non-zero argument is normally written as
+the condition part of an
+.B if
+statement.
+A
+.B timeout
+system call with a zero argument value
+cancels all previous
+.B timeout
+requests,
+as does a
+.B return
+from the function in which the
+.B timeout
+system call was made.
+A
+.B timeout
+system call with a non-zero argument value
+overrides all previous
+.B timeout
+requests.
+The maximum permissible value for the argument is 255,
+which gives a timeout period of 25.5 seconds.
+.br
+.ne 4v
+.TP
+.BI timer( primary )
+Start a timer or test for timer expiration.
+If the value of the
+primary expression
+is non-zero,
+a software timer is loaded with the value of the
+primary expression
+and a value of
+.B true
+(non-zero)
+is returned.
+The timer is decremented each tenth of a second thereafter
+until it reaches zero.
+If the value of the
+primary expression
+is zero,
+the returned value is
+the current value of the timer;
+this will be
+.B true
+(non-zero)
+if the value of the timer is currently non-zero,
+otherwise
+.B false
+(zero).
+The timer used by this primitive is different from the timer used by the
+.B timeout
+primitive.
+.TP
+.BI trace( primary [,\^ primary ])
+The values of the two primary expressions
+and the current value of the script location counter
+are passed to the driver,
+which prefixes a sequence number
+and creates a trace event record
+containing the data.
+If minor device 0 of the trace driver is currently open,
+the record is placed on the read queue for that device;
+otherwise the event record is discarded.
+The information passed via the
+.I trace
+primitive can be displayed using the
+.I vpmsave
+and
+.I vpmfmt
+commands
+(see
+.IR vpmsave (1M)).
+If the second
+argument
+is omitted,
+a zero is used instead.
+The process delays until the values have been accepted by the host computer.
+.br
+.ne 3v
+.RE
+.SS Constants
+.PP
+A
+.I constant\^
+is a decimal, octal, or hexadecimal integer,
+or a single character enclosed in single quotes.
+A token consisting of a string of digits
+is taken to be an octal integer
+if the first digit is a zero,
+otherwise the string is interpreted as a decimal integer.
+If a token begins with
+.B 0x
+or
+.BR 0X ,
+the remainder of the token is interpreted as a hexadecimal integer.
+The hexadecimal digits include
+.B a
+through
+.B f
+or, equivalently,
+.B A
+through
+.BR F .
+.SS Variables
+.PP
+Variable names may be used without having been previously declared.
+All names are global.
+All values are treated as 8-bit
+unsigned integers.
+.PP
+Arrays of contiguous storage may be allocated using the
+.B array
+declaration:
+.PP
+.RS
+array
+.IR name [ constant ]
+.RE
+.PP
+where
+.I constant\^
+is a decimal integer.
+Elements of arrays can be referenced using constant subscripts:
+.PP
+.RS
+.IR name [ constant ]
+.RE
+.PP
+Indexing of arrays
+assumes that the first element has an index of zero.
+.SS Names
+.PP
+A
+.I name\^
+is a sequence of letters and digits;
+the first character must be a letter.
+Upper- and lower-case letters are considered to be distinct.
+Names longer than 31 characters are truncated to 31 characters.
+The underscore
+.RB ( \|_\| )
+may be used within a name to improve
+readability, but is discarded
+by
+.SM RATFOR\*S.
+.SS Preprocessor Commands
+.PP
+If the
+.B \-m
+option is omitted,
+comments, macro definitions, and file inclusion statements
+are written as in C.
+Otherwise, the following rules apply:
+.TP 4
+1.
+If the character
+.B #
+appears in an input line,
+the remainder of the line is treated as a comment.
+.TP
+2.
+A statement of the form:
+.sp \n(PDu
+.ti +\n(INu
+.RI define( name , text )
+.sp \n(PDu
+causes every subsequent appearance
+of
+.I name\^
+to be replaced by
+.IR text .
+The defining text includes everything after
+the comma up to the balancing right parenthesis;
+multi-line definitions are allowed.
+Macros may have arguments.
+Any occurrence of
+.BI $ n\^
+within the replacement text for a macro
+will be replaced by the
+.IR n th
+actual argument when the macro is invoked.
+.TP
+3.
+A statement of the form:
+.sp \n(PDu
+.ti +\n(INu
+.RI include( file )
+.sp \n(PDu
+inserts the contents of
+.I file\^
+in place of the
+.B include
+command.
+The contents of the included file is often a set of definitions.
+.br
+.ne 4v
+.SH EXAMPLES
+.PP
+These examples require the use of the
+.B \-m
+option.
+.PP
+.nf
+# The function defined below transmits a frame in transparent \s-1BISYNC\s+1.
+# A transmit buffer must be obtained with getxbuf before the function
+# is invoked.
+#
+# Define symbolic constants:
+#
+define(\s-1DLE\s0,0x10)
+define(\s-1ETB\s0,0x26)
+define(\s-1PAD\s0,0xff)
+define(\s-1STX\s0,0x02)
+define(\s-1SYNC\s0,0x32)
+#
+# Define a macro with an argument:
+#
+define(xmtcrc,{crc16($1); xmt($1);})
+#
+# Declare an array:
+#
+array crc[2];
+#
+# Define the function:
+#
+function xmtblk(\|)
+	crcloc(crc);
+	xsom(\s-1SYNC\s0);
+	xmt(\s-1DLE\s0);
+	xmt(\s-1STX\s0);
+	while(get(byte)==0){
+		if(byte == \s-1DLE\s0)
+			xmt(\s-1DLE\s0);
+		xmtcrc(byte);
+	}
+	xmt(\s-1DLE\s0);
+	xmtcrc(\s-1ETB\s0);
+	xmt(crc[0]);
+	xmt(crc[1]);
+	xeom(\s-1PAD\s0);
+end
+#
+# The following example illustrates the use of macros to simulate a
+# function call with arguments.
+#
+# The macro definition:
+#
+define(xmtctl,{c=$1;d=$2;xmtctl1(\|)})
+#
+# The function definition:
+#
+function xmtctl1(\|)
+	xsom(\s-1SYNC\s0);
+	xmt(c);
+	if(d!=0)
+		xmt(d);
+	xeom(\s-1PAD\s0);
+end
+#
+# Sample invocation:
+#
+function test(\|)
+	xmtctl(\s-1DLE\s0,0x70);
+end
+.fi
+.ne 3v
+.SH FILES
+.PD 0
+.TP "\w'/usr/lib/vpm/bisync/\(**      'u"
+sas_temp\(**
+temporaries
+.TP
+/tmp/sas_ta??
+temporary
+.TP
+/tmp/sas_tb??
+temporary
+.TP
+/usr/lib/vpm/pass\(**
+compiler phases
+.TP
+/usr/lib/vpm/pl
+compiler phase
+.TP
+/usr/lib/vpm/vratfor
+compiler phase
+.TP
+/lib/cpp
+preprocessor
+.TP
+/usr/bin/m4
+preprocessor
+.TP
+/bin/kasb
+.SM KMC\*S11-B
+assembler
+.TP
+/usr/lib/vpm/bisync/\(**
+interpreter source for the
+.SM BISYNC
+interpreter
+.TP
+/usr/lib/vpm/hdlc/\(**
+interpreter source for the
+.SM HDLC
+interpreter
+.PD
+.SH SEE ALSO
+m4(1),
+ratfor(1),
+vpmsave(1M),
+vpm(7).
+.br
+.I "C Reference Manual\^"
+by D. M. Ritchie.
+.br
+.I "\s-1RATFOR\s+1\-A Preprocessor for a Rational Fortran\^"
+by B. W. Kernighan.
+.br
+.I "The M4 Macro Processor\^"
+by B. W. Kernighan and D. M. Ritchie.
+.br
+.I "Software Tools\^"
+by B. W. Kernighan and P. J. Plauger
+(pp. 28-30).
+.\"	@(#)vpmc.dec.1m	5.2 of 5/18/82

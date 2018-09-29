@@ -1,0 +1,22 @@
+                       INTRODUCTION TO MUSE
+ The key components of MUSE are menus, command forms, and a popup menu.  
+ Use MUSE menus to find a command that you want to execute.  Select a 
+ command and fill in the fields of the command form to build a command line.
+ To fill in fields, simply type your input.  Backspace to correct typos.
+ The popup menu gives you access to other MUSE facilities.
+
+                   SPECIAL COMMANDS USED IN MUSE
+ ^P   stands for control-p.  Strike lower case p and press the control key.
+ f8   stands for function key 8.  Strike the key marked f8 on your keyboard.
+ UP   stands for the up arrow key.  Strike the key marked with the up arrow.
+ RETURN stands for carriage return.  Strike the key marked RETURN.
+
+                     SOME BASIC MUSE COMMANDS
+ Print a list of all MUSE commands:   ^A or f8
+ Move the cursor:                     ^P or UP arrow, RETURN or DOWN arrow
+ Enter the popup menu:                ^F or f5
+ Select a menu item or 
+   execute a command form:            ^G or f1
+
+ Select the MUSE and UNIX walkthrus from the popup menu for more information.
+                   >TYPE RETURN TO CLEAR THIS MESSAGE

@@ -1,0 +1,41 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/esg/Rlist.esg
+	INSTALL		---555 2 2	./install/esg/INSTALL
+	UNINSTALL	---555 2 2	./install/esg/UNINSTALL
+$
+new	d--775 0 3
+	bin	d--775 2 2
+		make	---555 2 2	../bin/make
+	$
+	etc	d--775 0 3
+		install	---555 2 2	../etc/install
+	$
+	usr	d--775 0 3
+		bin	d--775 2 2
+			lex		---555 2 2	../usr/bin/lex
+			mcs		---555 2 2	../usr/bin/mcs
+			prof		---555 2 2	../usr/bin/prof
+			sdb		---775 2 2	../usr/bin/sdb
+			yacc		---555 2 2	../usr/bin/yacc
+		$
+		lib	d--775 0 3
+			libg.a		---444 2 2 	../usr/lib/libg.a
+			libl.a		---444 2 2	../usr/lib/libl.a
+			liby.a		---444 2 2	../usr/lib/liby.a
+			sdbp		---775 2 2	../usr/lib/sdbp
+			sdbs		---775 2 2	../usr/lib/sdbs
+			yaccpar		---444 0 0	../usr/lib/yaccpar
+			lex	d--775 2 2
+				ncform	---444 2 2	../usr/lib/lex/ncform
+				nrform	---444 2 2	../usr/lib/lex/nrform
+			$
+		$
+		options	d--775 0 3
+			esg.name	---555 2 2	./install/esg/esg.name
+		$
+	$
+$
+$

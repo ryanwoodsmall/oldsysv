@@ -1,0 +1,56 @@
+#
+#			@(#)magic	1.1
+#
+#		file cmd's magic file
+#
+#
+#	Basically, the fields of this file are as follows:
+#	byte offset, value type, optional operator (= by default), value
+#	to match (numeric or string), and string to be printed.  Numeric
+#	values may be decimal, octal, or hex.  Also note that the last
+#	string may have 1 printf format spec.
+#	The '>' in occassional column 1's is magic: it forces file to
+#	continue scanning and matching additional lines.  The first line
+#	afterwards not so marked terminates the search.
+#
+0	short		070707		cpio archive
+0	string		070707		ASCII cpio archive
+0	long		0177555		old archive
+0	long		0177545		4.0 archive
+0	long		0100554		apl workspace
+0	short		017037		packed text
+0	string		<ar>		5.0 archive
+0	short		0407		4.0 executable
+>16	long		>0		not stripped
+>2	short		>0		- version %ld
+0	short		0401		unix-rt ldp
+0	short		0405		old overlay
+0	short		0410		4.0 pure executable
+>16	long		>0		not stripped
+>2	short		>0		- version %ld
+0	short		0411		4.0 separate I&D
+>16	long		>0		not stripped
+>2	short		>0		- version %ld
+0	short		0437		pdp11 kernel overlay
+0	short		0570		5.0 executable
+>12	long		>0		not stripped
+>22	short		>0		- version %ld
+0	short		0575		5.0 pure executable
+>12	long		>0		not stripped
+>22	short		>0		- version %ld
+0	short		0502		basic-16 executable
+>12	long		>0		not stripped
+0	short		0503		basic-16 executable (TV)
+>12	long		>0		not stripped
+0	short		0510		x86 executable
+>12	long		>0		not stripped
+0	short		0511		x86 executable (TV)
+>12	long		>0		not stripped
+0	short		0550		3b20d executable
+>12	long		>0		not stripped
+0	short		0551		3b20d executable (TV)
+>12	long		>0		not stripped
+0	short		0560		3b5 executable
+>12	long		>0		not stripped
+0	short		0561		3b5 executable (TV)
+>12	long		>0		not stripped

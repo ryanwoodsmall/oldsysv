@@ -1,0 +1,253 @@
+.TH FCNTL 2
+.SH NAME
+fcntl \- file control
+.SH SYNOPSIS
+.B #include <fcntl.h>
+.PP
+.B int fcntl (fildes, cmd, arg)
+.br
+.B int fildes, cmd, arg;
+.SH DESCRIPTION
+.I Fcntl\^
+provides for control over open files.
+.I Fildes\^
+is an open
+file descriptor
+obtained from a
+.IR creat ,
+.IR open ,
+.IR dup ,
+.IR fcntl ,
+or
+.I pipe\^
+system call.
+.PP
+The
+.IR command s
+available are:
+.TP 1.0i
+.SM F_DUPFD
+Return a new
+file descriptor
+as follows:
+.IP
+Lowest numbered available
+file descriptor
+greater than or equal to
+.IR arg .
+.IP
+Same open file (or pipe) as the original file.
+.IP
+Same file pointer as the original file
+(i.e., both file descriptors share one
+file pointer).
+.IP
+Same access mode (read, write, or read/write).
+.IP
+Same file status flags (i.e., both file descriptors share the same
+file status flags).
+.IP
+The close-on-exec flag associated with the new file descriptor is set to
+remain open across
+.IR exec (2)
+system calls.
+.TP
+.SM F_GETFD
+Get the close-on-exec flag associated with the file descriptor
+.IR fildes .
+If the low-order bit is
+.B 0
+the file will remain open across
+.IR exec ,
+otherwise
+the file will be closed upon execution of
+.IR exec .
+.TP
+.SM F_SETFD
+Set the close-on-exec flag associated with
+.I fildes\^
+to the low-order bit of
+.I arg\^
+.RB ( 0
+or
+.B 1
+as above).
+.TP
+.SM F_GETFL
+Get
+.I file\^
+status flags.
+.TP
+.SM F_SETFL
+Set
+.I file\^
+status flags to
+.IR arg .
+Only certain flags can be set;
+see
+.IR fcntl (5).
+.TP
+.SM F_GETLK
+Get the first lock which blocks the lock description given by
+the variable of type \f2struct flock\fR pointed to by \f2arg\fR.
+The information retrieved overwrites the information passed to
+\f2fcntl\fR in the \f2flock\fR structure.
+If no lock is found that would prevent this lock from being created,
+then the structure is passed back unchanged except for the lock type
+which will be set to
+.SM F_UNLCK.
+.TP
+.SM F_SETLK
+Set or clear a file segment lock according to the variable of type \f2struct flock\fR
+pointed to by \f2arg\fR [see \f2fcntl\fR(5)].
+The \f2cmd\fR
+.SM F_SETLK
+is used to establish read (\s-1F_RDLCK\s+1) and write (\s-1F_WRLCK\s+1) locks,
+as well as remove either type of lock (\s-1F_UNLCK\s+1).
+If a read or write lock cannot be set, \f2fcntl\fR will return immediately with an
+error value of \-1.
+.TP
+.SM F_SETLKW
+This \f2cmd\fR is the same as
+.SM F_SETLK
+except that if a read or write lock is blocked by other locks,
+the process will sleep until the segment is free to be locked.
+.PP
+A read lock prevents any process from write locking the protected area.
+More than one read lock may exist for a given segment of a file at a given time.
+The file descriptor on which a read lock is being placed must have been opened with read access.
+.PP
+A write lock
+prevents any process from read locking or write locking the protected area.
+Only one write lock may exist for a given segment of a file at a given time.
+The file descriptor on which a write lock is being placed must have been opened
+with write access.
+.PP
+The structure \f2flock\fR describes the type
+(\f2l_type\fR),
+starting offset (\f2l_whence\fR), relative offset (\f21_start\fR),
+size (\f2l_len\fR), and process id (\f21_pid\fR) of the segment of the file
+to be affected.
+The process id field is only used with the
+.SM F_GETLK
+\f2cmd\fR to return the value for a block in lock.
+Locks may start and extend beyond the current end of a file,
+but may not be negative relative to the beginning of the file.
+A lock may be set to always extend to the end of file by
+setting \f2l_len\fR to zero (0).
+If such a lock also has \f2l_start\fR set to zero (0),
+the whole file will be locked.
+Changing or unlocking a segment from the middle of a larger locked segment leaves two smaller segments for either end.
+Locking a segment that is already locked by the calling process causes the old lock type to be removed
+and the new lock type to take affect.
+All locks associated with a file for a given process are removed when a file descriptor for
+that file is closed by that process or the process holding that file descriptor
+terminates.
+Locks are not inherited by a child process in a \f2fork\fR(2) system call.
+.PP
+\f2Fcntl\fR will fail if one or more of the following are true:
+.sp
+.TP 15
+\s-1\%[EBADF]\s+1
+.I Fildes\^
+is not a valid open
+file descriptor.
+.TP
+\s-1\%[EMFILE]\s+1
+.I Cmd\^
+is
+.SM F_DUPFD
+and 20 file descriptors are currently open.
+.TP
+\s-1\%[EINFILE]\s+1
+.I Cmd\^
+is
+.SM F_DUPFD
+and
+.I arg\^
+is negative or greater than 20.
+.TP
+.SM [EINVAL]
+\f2Cmd\fR is
+.SM F_GETLK,
+.SM F_SETLK,
+or
+.SM SETLKW
+and \f2arg\fR or the data it points to is not valid.
+.TP
+.SM [EACCESS]
+\f2Cmd\fR is
+.SM F_SETLK
+the type of lock (\f2l_type\fR)
+is a read
+(\s-1F_RDLCK\s+1) or write (\s-1F_WRLCK\s+1) lock and the segment
+of a file to be locked is already write locked by another process
+or the type is a write lock and the segment of a file to be locked is already read or write
+locked by another process.
+.TP
+.SM [EMFILE]
+\f2Cmd\fR is
+.SM F_SETLK
+or
+.SM F_SETLKW,
+the type of lock is a read or write lock and there are no more file locking headers available
+(too many files have segments locked).
+.TP
+.SM [ENOSPC]
+\f2Cmd\fR is
+.SM F_SETLK
+or
+.SM F_SETLKW,
+the type of lock is a read or write lock and there are no more file locking headers available
+(too many files have segments locked) or there are no more record locks available
+(too many file segments locked).
+.TP
+\s-1\%[EDEADLK]\s+1
+.I Cmd\^
+is
+.SM F_SETLK,
+when the lock is blocked by some lock from another process
+and sleeping (waiting) for that lock to become free, this
+causes a deadlock situation.
+.SH "RETURN VALUE"
+Upon successful completion,
+the value returned depends on
+.I cmd\^
+as follows:
+.PD 0
+.RS
+.TP 1.0i
+.SM F_DUPFD
+A new file descriptor.
+.TP
+.SM F_GETFD
+Value of flag (only the low-order
+bit is defined).
+.TP
+.SM F_SETFD
+Value other than \-1.
+.TP
+.SM F_GETFL
+Value of file flags.
+.TP
+.SM F_SETFL
+Value other than \-1.
+.TP
+.SM F_GETLK
+Value other that \-1.
+.bp
+.TP
+.SM F_SETLK
+Value other than \-1.
+.TP
+.SM F_SETLKW
+Value other than \-1.
+.RE
+.PP
+.PD
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+close(2), exec(2), open(2), fcntl(5).
+.\"	@(#)fcntl.2	6.2 of 9/6/83

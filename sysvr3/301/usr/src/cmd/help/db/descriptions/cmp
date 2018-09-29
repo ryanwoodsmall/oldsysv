@@ -1,0 +1,21 @@
+
+\Scmp\S:  Description
+
+Syntax Summary:  cmp [-l] [-s] file_name1 file_name2
+
+         where:  file_names  are names of files.
+
+Description:
+     \Scmp\S is short for "compare." The primary use of \Scmp\S is to compare
+     two files that contain characters that are represented in octal.
+     Executable files contain characters that are represented in octal, but
+     \Scmp\S can also compare text files where the characters are represented
+     as ASCII characters.  Without any options, \Scmp\S reports the line number
+     and the number of the byte where the first difference between the files
+     occurs.  \Scmp\S can also list all the differences between the files, or
+     just changes the exit status to show that the files are different. 
+
+
+     If you replace <file_name1> with "-", \Scmp\S will accept standard input.
+     See also: bdiff(1), comm(1), diff(1), diff3(1), dircmp(1), and sdiff(1)
+     for commands with functions similar to \Scmp\S.

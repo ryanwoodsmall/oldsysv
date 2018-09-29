@@ -1,0 +1,437 @@
+300(1) 300, 300s: handle special functions of DASI 300 and 300s terminals.
+4014(1) 4014: paginator for the TEKTRONIX 4014 terminal.
+450(1) 450: handle special functions of the DASI 450 terminal.
+acctcom(1) acctcom: search and print process accounting file(s).
+adb(1) adb: absolute debugger.
+admin(1) admin: create and administer SCCS files.
+ar(1) ar: archive and library maintainer for portable archives.
+as(1) as: common assembler.
+asa(1) asa: interpret ASA carriage control characters.
+at(1) at, batch: execute commands at a later time.
+awk(1) awk: pattern scanning and processing language.
+banner(1) banner: make posters.
+basename(1) basename, dirname: deliver portions of path names.
+bc(1) bc: arbitrary-precision arithmetic language.
+bdiff(1) bdiff: big diff.
+bfs(1) bfs: big file scanner.
+bs(1) bs: a compiler/interpreter for modest-sized programs.
+cal(1) cal: print calendar.
+calendar(1) calendar: reminder service.
+cat(1) cat: concatenate and print files.
+cb(1) cb: C program beautifier.
+cc(1) cc, pcc: C compiler.
+cd(1) cd: change working directory.
+cdc(1) cdc: change the delta commentary of an SCCS delta.
+cflow(1) cflow\- generate C flow graph.
+chmod(1) chmod: change mode.
+chown(1) chown, chgrp: change owner or group.
+cmp(1) cmp: compare two files.
+col(1) col: filter reverse line-feeds.
+comb(1) comb: combine SCCS deltas.
+comm(1) comm: select or reject lines common to two sorted files.
+cp(1) cp, ln, mv: copy, link or move files.
+cpio(1) cpio: copy file archives in and out.
+cpp(1) cpp: the C language preprocessor.
+crontab(1) crontab - user crontab file.
+csplit(1) csplit: context split.
+ct(1C) ct: spawn getty to a remote terminal.
+ctrace(1) ctrace: C program debugger.
+cu(1C) cu: call another UNIX system.
+cut(1) cut: cut out selected fields of each line of a file.
+cxref(1) cxref: generate C program cross-reference.
+date(1) date: print and set the date.
+dc(1) dc: desk calculator.
+dd(1) dd: convert and copy a file.
+delta(1) delta: make a delta (change) to an SCCS file.
+diff(1) diff: differential file comparator.
+diff3(1) diff3: 3-way differential file comparison.
+diffmk(1) diffmk: mark differences between files.
+dircmp(1) dircmp: directory comparison.
+du(1) du: summarize disk usage.
+dump(1) dump: dump selected parts of an object file.
+echo(1) echo: echo arguments.
+ed(1) ed, red: text editor.
+edit(1) edit: text editor (variant of ex for casual users).
+efl(1) ef\&l: Extended Fortran Language.
+enable(1) enable, disable: enable/disable LP printers.
+env(1) env: set environment for command execution.
+ex(1) ex: text editor.
+expr(1) expr: evaluate arguments as an expression.
+f77(1) f77: Fortran 77 compiler.
+factor(1) factor: factor a number.
+file(1) file: determine file type.
+find(1) find: find files.
+fsplit(1) fsplit: split f77, ratfor, or ef\&l files.
+gdev(1G) hpd, erase, hardcopy, tekset, td: graphical device routines and filters.
+ged(1G) ged: graphical editor.
+get(1) get: get a version of an SCCS file.
+getopt(1) getopt: parse command options.
+graph(1G) graph: draw a graph.
+graphics(1G) graphics: access graphical and numerical commands.
+greek(1) greek: select terminal filter.
+grep(1) grep, egrep, fgrep: search a file for a pattern.
+gutil(1G) gutil: graphical utilities.
+help(1) help: ask for help.
+hp(1) hp: handle special functions of HP 2640 and 2621-series terminals.
+hpio(1) hpio: HP 2645A terminal tape file archiver.
+hyphen(1) hyphen: find hyphenated words.
+id(1) id: print user and group IDs and names.
+intro(1) intro: introduction to commands and application programs.
+ipcrm(1) ipcrm: remove a message queue, semaphore set or shared memory id.
+ipcs(1) ipcs: report inter-process communication facilities status.
+join(1) join: relational database operator.
+kill(1) kill: terminate a process.
+ld(1) ld: link editor for common object files.
+lex(1) lex: generate programs for simple lexical tasks.
+line(1) line: read one line.
+lint(1) lint: a C program checker.
+login(1) login: sign on.
+logname(1) logname: get login name.
+lorder(1) lorder: find ordering relation for an object library.
+lp(1) lp, cancel: send/cancel requests to an LP line printer.
+lpstat(1) lpstat: print LP status information.
+ls(1) ls: list contents of directory.
+m4(1) m4: macro processor.
+machid(1) ns16000, pdp11, u3b, u3b5, vax: provide truth value about your processor type.
+mail(1) mail, rmail: send mail to users or read mail.
+mailx(1) mailx: interactive message processing system.
+make(1) make: maintain, update, and regenerate groups of programs.
+makekey(1) makekey: generate encryption key.
+man(1) man: print entries in this manual.
+mesg(1) mesg: permit or deny messages.
+mkdir(1) mkdir: make a directory.
+newform(1) newform: change the format of a text file.
+newgrp(1) newgrp: log in to a new group.
+news(1) news: print news items.
+nice(1) nice: run a command at low priority.
+nl(1) nl: line numbering filter.
+nm(1) nm: print name list of common object file.
+nohup(1) nohup: run a command immune to hangups and quits.
+od(1) od: octal dump.
+pack(1) pack, pcat, unpack: compress and expand files.
+passwd(1) passwd: change login password.
+paste(1) paste: merge same lines of several files or subsequent lines of one file.
+pg(1) pg: file perusal filter for soft-copy terminals.
+pr(1) pr: print files.
+prof(1) prof: display profile data.
+prs(1) prs: print an SCCS file.
+ps(1) ps: report process status.
+ptx(1) ptx: permuted index.
+pwd(1) pwd: working directory name.
+ratfor(1) ratfor: rational Fortran dialect.
+regcmp(1) regcmp: regular expression compile.
+rjestat(1C) rjestat: RJE status report and interactive status console.
+rm(1) rm, rmdir: remove files or directories.
+rmdel(1) rmdel: remove a delta from an SCCS file.
+sact(1) sact: print current SCCS file editing activity.
+sag(1G) sag: system activity graph.
+sar(1) sar: system activity reporter.
+scc(1) scc: C compiler for stand-alone programs.
+sccsdiff(1) sccsdiff: compare two versions of an SCCS file.
+sdb(1) sdb: symbolic debugger.
+sdiff(1) sdiff: side-by-side difference program.
+sed(1) sed: stream editor.
+send(1C) send, gath: gather files and/or submit RJE jobs.
+sh(1) sh, rsh: shell, the standard/restricted command programming language.
+shl(1) shl: shell layer manager.
+size(1) size: print section sizes of common object files.
+sleep(1) sleep: suspend execution for an interval.
+sno(1) sno: SNOBOL interpreter.
+sort(1) sort: sort and/or merge files.
+spell(1) spell, hashmake, spellin, hashcheck: find spelling errors.
+spline(1G) spline: interpolate smooth curve.
+split(1) split: split a file into pieces.
+stat(1G) stat: statistical network useful with graphical commands.
+strip(1) strip: strip symbol and line number information from a common object file.
+stty(1) stty: set the options for a terminal.
+su(1) su: become super-user or another user.
+sum(1) sum: print checksum and block count of a file.
+sync(1) sync: update the super block.
+tabs(1) tabs: set tabs on a terminal.
+tail(1) tail: deliver the last part of a file.
+tar(1) tar: tape file archiver.
+tee(1) tee: pipe fitting.
+test(1) test: condition evaluation command.
+time(1) time: time a command.
+timex(1) timex: time a command; report process data and system activity.
+toc(1G) toc: graphical table of contents routines.
+touch(1) touch: update access and modification times of a file.
+tplot(1G) tplot: graphics filters.
+tput(1) tput: query terminfo database.
+tr(1) tr: translate characters.
+true(1) true, false: provide truth values.
+tsort(1) tsort: topological sort.
+tty(1) tty: get the name of the terminal.
+umask(1) umask: set file-creation mode mask.
+uname(1) uname: print name of current UNIX system.
+unget(1) unget: undo a previous get of an SCCS file.
+uniq(1) uniq: report repeated lines in a file.
+units(1) units: conversion program.
+uucp(1C) uucp, uulog, uuname: UNIX system to UNIX system copy.
+uustat(1C) uustat: uucp status inquiry and job control.
+uuto(1C) uuto, uupick: public UNIX-to-UNIX system file copy.
+uux(1C) uux: UNIX-to-UNIX system command execution.
+val(1) val: validate SCCS file.
+vc(1) vc: version control.
+vi(1) vi: screen-oriented (visual) display editor based on ex.
+wait(1) wait: await completion of process.
+wc(1) wc: word count.
+what(1) what: identify SCCS files.
+who(1) who: who is on the system.
+write(1) write: write to another user.
+xargs(1) xargs: construct argument list(s) and execute command.
+yacc(1) yacc: yet another compiler-compiler.
+arithmetic(6) arithmetic: provide drill in number facts.
+back(6) back: the game of backgammon.
+bj(6) bj: the game of black jack.
+craps(6) craps: the game of craps.
+hangman(6) hangman: guess the word.
+intro(6) intro: introduction to games.
+jotto(6) jotto: secret word game.
+maze(6) maze: generate a maze.
+moo(6) moo: guessing game.
+quiz(6) quiz: test your knowledge.
+ttt(6) ttt, cubic: tic-tac-toe.
+wump(6) wump: the game of hunt-the-wumpus.
+access(2) access: determine accessibility of a file.
+acct(2) acct: enable or disable process accounting.
+alarm(2) alarm: set a process alarm clock.
+brk(2) brk, sbrk: change data segment space allocation.
+chdir(2) chdir: change working directory.
+chmod(2) chmod: change mode of file.
+chown(2) chown: change owner and group of a file.
+chroot(2) chroot: change root directory.
+close(2) close: close a file descriptor.
+creat(2) creat: create a new file or rewrite an existing one.
+dup(2) dup: duplicate an open file descriptor.
+exec(2) execl, execv, execle, execve, execlp, execvp: execute a file.
+exit(2) exit, _exit: terminate process.
+fcntl(2) fcntl: file control.
+fork(2) fork: create a new process.
+getpid(2) getpid, getpgrp, getppid: get process, process group, and parent process IDs.
+getuid(2) getuid, geteuid, getgid, getegid: get real user, effective user, real group, and effective group IDs.
+intro(2) intro: introduction to system calls and error numbers.
+ioctl(2) ioctl: control device.
+kill(2) kill: send a signal to a process or a group of processes.
+link(2) link: link to a file.
+lseek(2) lseek: move read/write file pointer.
+mknod(2) mknod: make a directory, or a special or ordinary file.
+mount(2) mount: mount a file system.
+msgctl(2) msgctl: message control operations.
+msgget(2) msgget: get message queue.
+msgop(2) msgop: message operations.
+nice(2) nice: change priority of a process.
+open(2) open: open for reading or writing.
+pause(2) pause: suspend process until signal.
+pipe(2) pipe: create an interprocess channel.
+plock(2) plock: lock process, text, or data in memory.
+profil(2) profil: execution time profile.
+ptrace(2) ptrace: process trace.
+read(2) read: read from file.
+semctl(2) semctl: semaphore control operations.
+semget(2) semget: get set of semaphores.
+semop(2) semop: semaphore operations.
+setpgrp(2) setpgrp: set process group ID.
+setuid(2) setuid, setgid: set user and group IDs.
+shmctl(2) shmctl: shared memory control operations.
+shmget(2) shmget: get shared memory segment.
+shmop(2) shmop: shared memory operations.
+signal(2) signal: specify what to do upon receipt of a signal.
+stat(2) stat, fstat: get file status.
+stime(2) stime: set time.
+sync(2) sync: update super-block.
+time(2) time: get time.
+times(2) times: get process and child process times.
+ulimit(2) ulimit: get and set user limits.
+umask(2) umask: set and get file creation mask.
+umount(2) umount: unmount a file system.
+uname(2) uname: get name of current UNIX system.
+unlink(2) unlink: remove directory entry.
+ustat(2) ustat: get file system statistics.
+utime(2) utime: set file access and modification times.
+wait(2) wait: wait for child process to stop or terminate.
+write(2) write: write on a file.
+a64l(3C) a64l, l64a: convert between long integer and base-64 ASCII string.
+abort(3C) abort: generate an IOT fault.
+abort(3F) abort: terminate Fortran program.
+abs(3C) abs: return integer absolute value.
+abs(3F) abs, iabs, dabs, cabs, zabs: Fortran absolute value.
+acos(3F) acos, dacos: Fortran arccosine intrinsic function.
+aimag(3F) aimag, dimag: Fortran imaginary part of complex argument.
+aint(3F) aint, dint: Fortran integer part intrinsic function.
+asin(3F) asin, dasin: Fortran arcsine intrinsic function.
+assert(3X) assert: verify program assertion.
+atan(3F) atan, datan: Fortran arctangent intrinsic function.
+atan2(3F) atan2, datan2: Fortran arctangent intrinsic function.
+bessel(3M) j0, j1, jn, y0, y1, yn: Bessel functions.
+bool(3F) and, or, xor, not, lshift, rshift: Fortran bitwise boolean functions.
+bsearch(3C) bsearch: binary search a sorted table.
+clock(3C) clock: report CPU time used.
+conjg(3F) conjg, dconjg: Fortran complex conjugate intrinsic function.
+conv(3C) toupper, tolower, _toupper, _tolower, toascii: translate characters.
+cos(3F) cos, dcos, ccos: Fortran cosine intrinsic function.
+cosh(3F) cosh, dcosh: Fortran hyperbolic cosine intrinsic function.
+crypt(3C) crypt, encrypt: a one way hashing encryption algorithm.
+ctermid(3S) ctermid: generate file name for terminal.
+ctime(3C) ctime, localtime, gmtime, asctime, tzset: convert date and time to string.
+ctype(3C) isalpha, isupper, islower, isdigit, isxdigit, isalnum, isspace, ispunct, isprint, isgraph, iscntrl, isascii: classify characters.
+curses(3X) curses: CRT screen handling and optimization package.
+cuserid(3S) cuserid: get character login name of the user.
+dial(3C) dial: establish an out-going terminal line connection.
+dim(3F) dim, ddim, idim: positive difference intrinsic functions.
+dprod(3F) dprod: double precision product intrinsic function.
+drand48(3C) drand48, erand48, lrand48, nrand48, mrand48, jrand48, srand48, seed48, lcong48: generate uniformly distributed pseudo-random numbers.
+ecvt(3C) ecvt, fcvt, gcvt: convert floating-point number to string.
+end(3C) end, etext, edata: last locations in program.
+erf(3M) erf, erfc: error function and complementary error function.
+exp(3F) exp, dexp, cexp: Fortran exponential intrinsic function.
+exp(3M) exp, log, log10, pow, sqrt: exponential, logarithm, power, square root functions.
+fclose(3S) fclose, fflush: close or flush a stream.
+ferror(3S) ferror, feof, clearerr, fileno: stream status inquiries.
+floor(3M) floor, ceil, fmod, fabs: floor, ceiling, remainder, absolute value functions.
+fopen(3S) fopen, freopen, fdopen: open a stream.
+fread(3S) fread, fwrite: binary input/output.
+frexp(3C) frexp, ldexp, modf: manipulate parts of floating-point numbers.
+fseek(3S) fseek, rewind, ftell: reposition a file pointer in a stream.
+ftw(3C) ftw: walk a file tree.
+ftype(3F) int, ifix, idint, real, float, sngl, dble, cmplx, dcmplx, ichar, char: explicit Fortran type conversion.
+gamma(3M) gamma: log gamma function.
+getarg(3F) getarg: return Fortran command-line argument.
+getc(3S) getc, getchar, fgetc, getw: get character or word from a stream.
+getcwd(3C) getcwd: get path-name of current working directory.
+getenv(3C) getenv: return value for environment name.
+getenv(3F) getenv: return Fortran environment variable.
+getgrent(3C) getgrent, getgrgid, getgrnam, setgrent, endgrent, fgetgrent: get group file entry.
+getlogin(3C) getlogin: get login name.
+getopt(3C) getopt: get option letter from argument vector.
+getpass(3C) getpass: read a password.
+getpw(3C) getpw: get name from UID.
+getpwent(3C) getpwent, getpwuid, getpwnam, setpwent, endpwent, fgetpwent: get password file entry.
+gets(3S) gets, fgets: get a string from a stream.
+getut(3C) getutent, getutid, getutline, pututline, setutent, endutent, utmpname: access utmp file entry.
+hsearch(3C) hsearch, hcreate, hdestroy: manage hash search tables.
+hypot(3M) hypot: Euclidean distance function.
+iargc(3F) iargc: return the number of command line arguments.
+index(3F) index: return location of Fortran substring.
+intro(3) intro: introduction to subroutines and libraries.
+l3tol(3C) l3tol, ltol3: convert between 3-byte integers and long integers.
+ldahread(3X) ldahread: read the archive header of a member of an archive file.
+ldclose(3X) ldclose, ldaclose: close a common object file.
+ldfhread(3X) ldfhread: read the file header of a common object file.
+ldgetname(3X) ldgetname: retrieve symbol name for common object file symbol table entry.
+ldlread(3X) ldlread, ldlinit, ldlitem: manipulate line number entries of a common object file function.
+ldlseek(3X) ldlseek, ldnlseek: seek to line number entries of a section of a common object file.
+ldohseek(3X) ldohseek: seek to the optional file header of a common object file.
+ldopen(3X) ldopen, ldaopen: open a common object file for reading.
+ldrseek(3X) ldrseek, ldnrseek: seek to relocation entries of a section of a common object file.
+ldshread(3X) ldshread, ldnshread: read an indexed\/named section header of a common object file.
+ldsseek(3X) ldsseek, ldnsseek: seek to an indexed\/named section of a common object file.
+ldtbindex(3X) ldtbindex: compute the index of a symbol table entry of a common object file.
+ldtbread(3X) ldtbread: read an indexed symbol table entry of a common object file.
+ldtbseek(3X) ldtbseek: seek to the symbol table of a common object file.
+len(3F) len: return length of Fortran string.
+log(3F) log, alog, dlog, clog: Fortran natural logarithm intrinsic function.
+log10(3F) log10, alog10, dlog10: Fortran common logarithm intrinsic function.
+logname(3X) logname: return login name of user.
+lsearch(3C) lsearch, lfind: linear search and update.
+malloc(3C) malloc, free, realloc, calloc: main memory allocator.
+malloc(3X) malloc, free, realloc, calloc, mallopt, mallinfo: fast main memory allocator.
+matherr(3M) matherr: error-handling function.
+max(3F) max, max0, amax0, max1, amax1, dmax1: Fortran maximum-value functions.
+mclock(3F) mclock: return Fortran time accounting.
+memory(3C) memccpy, memchr, memcmp, memcpy, memset: memory operations.
+min(3F) min, min0, amin0, min1, amin1, dmin1: Fortran minimum-value functions.
+mktemp(3C) mktemp: make a unique file name.
+mod(3F) mod, amod, dmod: Fortran remaindering intrinsic functions.
+monitor(3C) monitor: prepare execution profile.
+nlist(3C) nlist: get entries from name list.
+perror(3C) perror, errno, sys_errlist, sys_nerr: system error messages.
+plot(3X) plot: graphics interface subroutines.
+popen(3S) popen, pclose: initiate pipe to/from a process.
+printf(3S) printf, fprintf, sprintf: print formatted output.
+putc(3S) putc, putchar, fputc, putw: put character or word on a stream.
+putenv(3C) putenv: change or add value to environment.
+putpwent(3C) putpwent: write password file entry.
+puts(3S) puts, fputs: put a string on a stream.
+qsort(3C) qsort: quicker sort.
+rand(3C) rand, srand: simple random-number generator.
+rand(3F) irand, rand, srand: random number generator.
+regcmp(3X) regcmp, regex: compile and execute regular expression.
+round(3F) anint, dnint, nint, idnint: Fortran nearest integer functions.
+scanf(3S) scanf, fscanf, sscanf: convert formatted input.
+setbuf(3S) setbuf, setvbuf: assign buffering to a stream.
+setjmp(3C) setjmp, longjmp: non-local goto.
+sign(3F) sign, isign, dsign: Fortran transfer-of-sign intrinsic function.
+signal(3F) signal: specify Fortran action on receipt of a system signal.
+sin(3F) sin, dsin, csin: Fortran sine intrinsic function.
+sinh(3F) sinh, dsinh: Fortran hyperbolic sine intrinsic function.
+sinh(3M) sinh, cosh, tanh: hyperbolic functions.
+sleep(3C) sleep: suspend execution for interval.
+sputl(3X) sputl, sgetl: access long integer data in a machine-independent fashion..
+sqrt(3F) sqrt, dsqrt, csqrt: Fortran square root intrinsic function.
+ssignal(3C) ssignal, gsignal: software signals.
+stdio(3S) stdio: standard buffered input/output package.
+stdipc(3C) ftok: standard interprocess communication package.
+strcmp(3F) lge, lgt, lle, llt: string comparison intrinsic functions.
+string(3C) strcat, strncat, strcmp, strncmp, strcpy, strncpy, strlen, strchr, strrchr, strpbrk, strspn, strcspn, strtok: string operations.
+strtod(3C) strtod, atof: convert string to double-precision number.
+strtol(3C) strtol, atol, atoi: convert string to integer.
+swab(3C) swab: swap bytes.
+system(3F) system: issue a shell command from Fortran.
+system(3S) system: issue a shell command.
+tan(3F) tan, dtan: Fortran tangent intrinsic function.
+tanh(3F) tanh, dtanh: Fortran hyperbolic tangent intrinsic function.
+tmpfile(3S) tmpfile: create a temporary file.
+tmpnam(3S) tmpnam, tempnam: create a name for a temporary file.
+trig(3M) sin, cos, tan, asin, acos, atan, atan2: trigonometric functions.
+tsearch(3C) tsearch, tfind, tdelete, twalk: manage binary search trees.
+ttyname(3C) ttyname, isatty: find name of a terminal.
+ttyslot(3C) ttyslot: find the slot in the utmp file of the current user.
+ungetc(3S) ungetc: push character back into input stream.
+vprintf(3S) vprintf, vfprintf, vsprintf: print formatted output of a varargs argument list.
+vprintf(3X) vprintf, vfprintf, vsprintf: print formatted output of a varargs argument list.
+a.out(4) a.out: common assembler and link editor output.
+acct(4) acct: per-process accounting file format.
+ar(4) ar: common archive file format.
+checklist(4) checklist: list of file systems processed by fsck.
+core(4) core: format of core image file.
+cpio(4) cpio: format of cpio archive.
+dir(4) dir: format of directories.
+errfile(4) errfile: error-log file format.
+filehdr(4) filehdr: file header for common object files.
+fs(4) file system: format of system volume.
+fspec(4) fspec: format specification in text files.
+gettydefs(4) gettydefs: speed and terminal settings used by getty.
+gps(4) gps: graphical primitive string, format of graphical files.
+group(4) group: group file.
+inittab(4) inittab: script for the init process.
+inode(4) inode: format of an i-node.
+intro(4) intro: introduction to file formats.
+issue(4) issue: issue identification file.
+ldfcn(4) ldfcn: common object file access routines.
+linenum(4) linenum: line number entries in a common object file.
+master(4) master: master device information table.
+mnttab(4) mnttab: mounted file system table.
+passwd(4) passwd: password file.
+plot(4) plot: graphics interface.
+pnch(4) pnch: file format for card images.
+profile(4) profile: setting up an environment at login time.
+reloc(4) reloc: relocation information for a common object file.
+sccsfile(4) sccsfile: format of SCCS file.
+scnhdr(4) scnhdr: section header for a common object file.
+syms(4) syms: common object file symbol table format.
+term(4) term: format of compiled term file..
+terminfo(4) terminfo: terminal capability data base.
+utmp(4) utmp, wtmp: utmp and wtmp entry formats.
+ascii(5) ascii: map of ASCII character set.
+environ(5) environ: user environment.
+fcntl(5) fcntl: file control options.
+intro(5) intro: introduction to miscellany.
+math(5) math: math functions and constants.
+prof(5) prof: profile within a function.
+regexp(5) regexp: regular expression compile and match routines.
+stat(5) stat: data returned by stat system call.
+term(5) term: conventional names for terminals.
+types(5) types: primitive system data types.
+values(5) values: machine-dependent values.
+varargs(5) varargs: handle variable argument list.

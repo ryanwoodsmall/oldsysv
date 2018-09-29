@@ -1,0 +1,177 @@
+/dev/null
+1422 160
+d--775 0 3
+install		d--775 0 3
+	INSTALL 	---755 2 2	./install/lp/INSTALL
+	ORDER		---444 2 2	./install/lp/ORDER3
+	Rlist		---555 2 2	./install/lp/Rlist.lp
+	UNINSTALL	---555 2 2	./install/lp/UNINSTALL
+	postinstall	---755 2 2	./install/lp/postinstall
+	preinstall	---755 2 2	./install/lp/preinstall
+	uninstall	---755 2 2	./install/lp/uninstall
+$
+new		d--775 0 3
+	usr		d--775 0 3
+		lib		d--775 0 3
+			lpsched		---555  0 2	../usr/lib/lpsched
+			dumpolp		---555 71 2	../usr/lib/dumpolp
+			5310		---755 71 2	../usr/lib/5310
+			hp2631a		---755 71 2	../usr/lib/hp2631a
+			pprx		---755 71 2	../usr/lib/pprx
+			prx		---755 71 2	../usr/lib/prx
+			terminfo	d--775 2 2
+				4		d--775 2 2
+					40-132col-6lpi	---444 2 2	../usr/lib/terminfo/4/40-132col-6lpi
+					40-132col-8lpi	---444 2 2	../usr/lib/terminfo/4/40-132col-8lpi
+					40-80col-6lpi	---444 2 2	../usr/lib/terminfo/4/40-80col-6lpi
+					40-80col-8lpi	---444 2 2	../usr/lib/terminfo/4/40-80col-8lpi
+					435		---444 2 2	../usr/lib/terminfo/4/435
+					43ro		---444 2 2	../usr/lib/terminfo/4/43ro
+					442		---444 2 2	../usr/lib/terminfo/4/442
+					444		---444 2 2	../usr/lib/terminfo/4/444
+					446		---444 2 2	../usr/lib/terminfo/4/446
+					447		---444 2 2	../usr/lib/terminfo/4/447
+					455		---444 2 2	../usr/lib/terminfo/4/455
+					457		---444 2 2	../usr/lib/terminfo/4/457
+					458		---444 2 2	../usr/lib/terminfo/4/458
+					470		---444 2 2	../usr/lib/terminfo/4/470
+					471		---444 2 2	../usr/lib/terminfo/4/471
+					473		---444 2 2	../usr/lib/terminfo/4/473
+					474		---444 2 2	../usr/lib/terminfo/4/474
+					475		---444 2 2	../usr/lib/terminfo/4/475
+					476		---444 2 2	../usr/lib/terminfo/4/476
+					477		---444 2 2	../usr/lib/terminfo/4/477
+					477-470		---444 2 2	../usr/lib/terminfo/4/477-470
+					477ibmc		---444 2 2	../usr/lib/terminfo/4/477ibmc
+					477ibmg		---444 2 2	../usr/lib/terminfo/4/477ibmg
+					477qume		---444 2 2	../usr/lib/terminfo/4/477qume
+					478		---444 2 2	../usr/lib/terminfo/4/478
+					479		---444 2 2	../usr/lib/terminfo/4/479
+					495hp		---444 2 2	../usr/lib/terminfo/4/495hp
+					495ibm		---444 2 2	../usr/lib/terminfo/4/495ibm
+					495qume		---444 2 2	../usr/lib/terminfo/4/495qume
+				$
+				5		d--775 2 2
+					5310		---444 2 2	../usr/lib/terminfo/5/5310
+					5320		---444 2 2	../usr/lib/terminfo/5/5320
+				$
+				7		d--775 2 2
+					7475		---444 2 2	../usr/lib/terminfo/7/7475
+				$
+				a		d--775 2 2
+					att435		---444 2 2	../usr/lib/terminfo/a/att435
+					att442		---444 2 2	../usr/lib/terminfo/a/att442
+					att444		---444 2 2	../usr/lib/terminfo/a/att444
+					att446		---444 2 2	../usr/lib/terminfo/a/att446
+					att447		---444 2 2	../usr/lib/terminfo/a/att447
+					att455		---444 2 2	../usr/lib/terminfo/a/att455
+					att457		---444 2 2	../usr/lib/terminfo/a/att457
+					att458		---444 2 2	../usr/lib/terminfo/a/att458
+					att470		---444 2 2	../usr/lib/terminfo/a/att470
+					att471		---444 2 2	../usr/lib/terminfo/a/att471
+					att473		---444 2 2	../usr/lib/terminfo/a/att473
+					att474		---444 2 2	../usr/lib/terminfo/a/att474
+					att475		---444 2 2	../usr/lib/terminfo/a/att475
+					att476		---444 2 2	../usr/lib/terminfo/a/att476
+					att477		---444 2 2	../usr/lib/terminfo/a/att477
+					att477-470	---444 2 2	../usr/lib/terminfo/a/att477-470
+					att477ibmc	---444 2 2	../usr/lib/terminfo/a/att477ibmc
+					att477ibmg	---444 2 2	../usr/lib/terminfo/a/att477ibmg
+					att477qume	---444 2 2	../usr/lib/terminfo/a/att477qume
+					att478		---444 2 2	../usr/lib/terminfo/a/att478
+					att479		---444 2 2	../usr/lib/terminfo/a/att479
+					att495hp	---444 2 2	../usr/lib/terminfo/a/att495hp
+					att495ibm	---444 2 2	../usr/lib/terminfo/a/att495ibm
+					att495qume	---444 2 2	../usr/lib/terminfo/a/att495qume
+					att5310		---444 2 2	../usr/lib/terminfo/a/att5310
+					att5320		---444 2 2	../usr/lib/terminfo/a/att5320
+				$
+				d		d--775 2 2
+					daisy		---444 2 2	../usr/lib/terminfo/d/daisy
+				$
+				h		d--775 2 2
+					hp7475		---444 2 2	../usr/lib/terminfo/h/hp7475
+					hplaser		---444 2 2	../usr/lib/terminfo/h/hplaser
+					hplaserjet	---444 2 2	../usr/lib/terminfo/h/hplaserjet
+				$
+				i		d--775 2 2
+					ibmgraphics	---444 2 2	../usr/lib/terminfo/i/ibmgraphics
+					ibmproprinter	---444 2 2	../usr/lib/terminfo/i/ibmproprinter
+				$
+				q		d--775 2 2
+					qume		---444 2 2	../usr/lib/terminfo/q/qume
+				$
+				s		d--775 2 2
+					sprint11	---444 2 2	../usr/lib/terminfo/s/sprint11
+				$
+				u		d--775 2 2
+					unknown		---444 2 2	../usr/lib/terminfo/u/unknown
+				$
+			$
+		$
+		admin		d--755 0 3
+			menu		d--755 0 3
+				packagemgmt	d--755 0 3
+					lpmgmt		d--755 5 3
+						DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/DESC
+						_S2.18		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/_S2.18
+						_S2.25		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/_S2.25
+						_S2.38		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/_S2.38
+						_S2.43		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/_S2.43
+						filters		d--755 5 3
+							DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/filters/DESC
+							add_f		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/filters/add_f
+							change_f	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/filters/change_f
+							delete_f	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/filters/delete_f
+							list_f		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/filters/list_f
+						$
+						forms		d--755 5 3
+							DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/forms/DESC
+							add_f		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/forms/add_f
+							change_f	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/forms/change_f
+							delete_f	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/forms/delete_f
+							list_f		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/forms/list_f
+							status_f	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/forms/status_f
+						$
+						printers	d--755 5 3
+							DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/DESC
+							accept_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/accept_p
+							add_p		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/add_p
+							change_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/change_p
+							delete_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/delete_p
+							disable_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/disable_p
+							enable_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/enable_p
+							list_p		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/list_p
+							mount_p		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/mount_p
+							unmount_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/unmount_p
+							reject_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/reject_p
+							status_p	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/printers/status_p
+						$
+						service		d--755 5 3
+							DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/service/DESC
+							start		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/service/start
+							stop		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/service/stop
+							default		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/service/default
+						$
+						status		d--755 5 3
+							DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/status/DESC
+							fonts		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/status/fonts
+							requests	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/status/requests
+							service		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/status/service
+						$
+						users		d--755 5 3
+							DESC		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/users/DESC
+							list_u		---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/users/list_u
+							priority_u	---444 5 3	../usr/admin/menu/packagemgmt/lpmgmt/users/priority_u
+						$
+					$
+				$
+			$
+		$
+		options		d--775 0 3
+			lp.name		---555 2 2	./install/lp/lp.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.nlp:lp/proto3	1.9"

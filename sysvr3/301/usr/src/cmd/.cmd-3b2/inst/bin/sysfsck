@@ -1,0 +1,88 @@
+#ident	"@(#)cmd-3b2:inst/bin/sysfsck	1.7"
+
+#
+# sysfsck
+#
+# Check integral file systems as specified by arguments
+#
+
+set -ue
+myname=${0}
+args="${*:-}"
+mountflag=n
+usrflag=n
+
+while [ $# -ne 0 ]
+do
+	case "${1}" in
+	-m)
+		mountflag=y ; shift ;;
+	-r)
+		HARD=${2} ; shift 2 ;;
+	-u)
+		usrflag=y ; shift ;;
+	-*)
+		echo "${myname}: \"${1}\": Unknown option" >&2 ; exit 1 ;;
+	esac
+done 
+
+if [ -z "${HARD:-}" ]
+then
+	echo "\
+Usage:	${myname} [ -m -u ] -r (root directory)" >&2
+	exit 1
+fi
+
+echo "\nChecking the hard disk file systems." >&2
+if fsck -y -D ${ROOT_0}
+then
+	:
+elif fsck -n -D ${ROOT_0}
+then
+	echo "
+The root (\"${ROOT_0}\") file system has been repaired." >&2
+else
+	echo "
+The root (\"${ROOT_0}\") file system is significantly damaged." >&2
+	exit 1
+fi
+fsys -m ${HARD} ${ROOT_0}
+
+if [ ! -f ${HARD}/etc/fstab ]
+then
+	if [ "${usrflag}" = y ]
+	then
+		echo "
+There is no /etc/fstab in your root file system. This is a required core file.
+The installation cannot be performed without it.\n" >&2
+		fsys -u ${ROOT_0}
+		exit 1
+	else
+		exit 0
+	fi
+fi
+
+fstab < ${HARD}/etc/fstab | while read dev dir ronly junk
+do
+	ignore fsck -y -D ${dev}
+	if fsinfo -s ${dev}
+	then
+		if [ "${mountflag}" = y ]
+		then
+			fsys -m ${HARD}/${dir} ${dev}
+		fi
+	else 
+		echo "
+The ${dir} (\"${dev}\") file system is significantly damaged." >&2
+		if [ "${usrflag}" = y -a "'${dir}'" = "'/usr'" ]
+		then
+			# unmount all mounted file systems
+			fstabmnt -u < ${HARD}/etc/fstab
+			fsys -u ${ROOT_0}
+			exit 1
+		else
+			continue
+		fi
+	fi
+done
+exit 0

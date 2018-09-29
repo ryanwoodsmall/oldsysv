@@ -1,0 +1,86 @@
+#ident "@(#)pkg.assist:3b2.pkg/preinstall	1.0"
+#######################################################################
+#
+#         Preinstall Script
+#
+#	ASSIST 1.0   March 1986	
+#
+#
+###############################################################
+#
+
+PKGNAME="ASSIST"
+PATH=":.:$PATH:"
+CURDIR1=`pwd`
+
+# parameters passed are:
+mntdir=$1	# system mount directory
+mntdev=$2	# system mount device
+unixvers=$3	# unix version 1 (1.1) or 2 (2.x)
+
+# check prerequisites
+
+ok=yes
+missing=""
+present=""
+
+if [ ! -f /usr/options/dfm.name ]
+then
+	missing="$missing
+	Directory and File Management"
+	ok=absent
+fi
+
+if [ ! -f /usr/options/terminf.name ]
+then
+	missing="$missing
+	Terminal Information Utilities"
+	ok=absent
+fi
+
+if [ ! -f /usr/options/usrenv.name ]
+then
+	missing="$missing
+	User Environment Utilities"
+	ok=absent
+fi
+
+case $ok in
+ absent)
+	echo "\nThe following packages must be installed before"
+	echo "${PKGNAME} can be installed."
+	echo "\n$missing\n"
+	echo "Type <return> to continue: \c"
+	read answer
+	exit 1
+	;;
+ present)
+	echo "\nThe following packages must be removed before"
+	echo "${PKGNAME} can be installed."
+	echo "\n$present\n"
+	echo "Type <return> to continue: \c"
+	read answer
+	exit 2
+	;;
+ both)
+	echo "\nThe following packages must be installed before"
+	echo "${PKGNAME} can be installed."
+	echo "\n$missing\n"
+	echo "The following packages must be removed before"
+	echo "${PKGNAME} can be installed."
+	echo "\n$present\n"
+	echo "Type <return> to continue: \c"
+	read answer
+	exit 3
+	;;
+ *)	;;
+esac
+
+
+###############################################################
+#
+#	end of preinstall
+#
+
+cd $CURDIR1
+exit $exitcode

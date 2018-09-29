@@ -1,0 +1,68 @@
+.TH STRTOD 3C 
+.SH NAME
+strtod, atof \- convert string to double-precision number
+.SH SYNOPSIS
+.nf
+.B double strtod (str, ptr)
+.B char \(**str, \(**\(**ptr;
+.PP
+.B double atof (str)
+.B char \(**str;
+.SH DESCRIPTION
+.I Strtod\^
+returns as a double-precision floating-point number
+the value represented by the character string pointed to by
+.IR str .
+The string is scanned up to the first unrecognized character.
+.PP
+.I Strtod\^
+recognizes an optional string of ``white-space'' characters
+[as defined by
+.I isspace\^
+in 
+.IR ctype (3C)],
+then an optional sign, then
+a string of digits optionally containing a decimal
+point, then an optional
+.BR e " or " E
+followed by an optional sign or space, followed by an integer.
+.PP
+If the value of
+.I ptr\^
+is not (char \(**\(**)\s-1NULL\s+1,
+a pointer to the character terminating the scan is returned in
+the location pointed to by
+.IR ptr .
+If no number can be formed,
+.I \(**ptr\^
+is set to
+.IR str ,
+and zero is returned.
+.PP
+.I Atof(str)\^
+is equivalent to
+.IR "strtod(str, (char \(**\(**)\s-1NULL\s+1)" .
+.SH SEE ALSO
+ctype(3C), scanf(3S), strtol(3C).
+.SH DIAGNOSTICS
+If the correct value
+would cause overflow,
+.SM
+.B \(+-\s-1HUGE\s+1
+is returned
+(according to the sign of the value),
+and
+.I errno\^
+is set to
+.SM
+.BR \s-1ERANGE\s+1\*S .
+.br
+If the correct value would cause underflow,
+zero
+is returned
+and
+.I errno\^
+is set to
+.SM
+.BR \s-1ERANGE\s+1\*S .
+'\"	%W% of %G%

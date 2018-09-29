@@ -1,0 +1,12 @@
+
+\Smesg\S:  Description
+
+Syntax Summary:  mesg [n] [y]
+
+Description:
+     \Smesg\S stands for "message".  Use \Smesg\S to allow or prevent other
+     users to write to your terminal.  \Smesg\S with the argument "n" prevents
+     other users to write to your terminal. With the argument "y" \Smesg\S
+     allows other users to write to your terminal.  \Smesg\S by itself prints
+     the current permissions for your terminal.  See also:  write(1) for a
+     command that might be used with \Smesg\S.

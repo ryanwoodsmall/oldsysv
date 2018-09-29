@@ -1,0 +1,10 @@
+*#ident	"@(#)kern-port:master.d/sxt	10.3"
+*
+* SXT
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ocs	-	sxt	-	6
+						sxtin(){}
+						sxtout(){}
+						sxt_cnt(%i) ={#D}
+

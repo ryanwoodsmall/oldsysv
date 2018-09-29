@@ -1,0 +1,254 @@
+#ident	"@(#)pkg.nlp:lp/INSTALL	1.6"
+#
+# Multi-Floppy INSTALL Script
+#
+
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/lp.name`
+LAST=3
+
+#
+#	find mount device
+#
+if	test -b "$1"
+then
+	mntdev=$1
+elif	test -b /dev/diskette
+then
+	mntdev=/dev/diskette
+elif	test -b /dev/install
+then
+	mntdev=/dev/install
+else
+	echo "**ERROR**	Can't find mount device"
+	exit
+fi
+mntname="${2:-/install}"
+
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1985 AT&T"
+echo "All Rights Reserved"
+
+export SPOOLDIR
+SPOOLDIR=/usr/spool/lp
+
+export CHECKYN flags
+CHECKYN="/usr/lbin/checkyn"
+flags="-qq -k$$"
+
+
+#
+# Check that the necessary packages have already been installed.
+#
+
+OPTDIR=/usr/options
+
+set -- \
+	ipc.name 	"Inter-Process Communication Utilities" \
+	dfm.name	"Directory and File Management Utilities" \
+	usrenv.name	"User Environment Utilities"
+
+header="
+The following package(s) are missing on your system:
+"
+while [ $# -gt 0 ]
+do
+	if [ ! -s ${OPTDIR}/$1 ]
+	then
+		echo "${header}\c"
+		header=""
+		echo "	"$2
+	fi
+	shift 2
+done
+if [ -z "${header}" ]
+then
+	echo "
+ ERROR: the ${PKGNAME} cannot be installed
+TO FIX: first install the packages listed above"
+	exit 1
+fi
+
+if [ ! -s ${OPTDIR}/terminf.name ]
+then
+	echo "
+The Terminal Information Utilties are missing on your system.
+The ${PKGNAME} will work only if you
+provide your own printer interface programs or models.
+"
+
+
+	if ${CHECKYN} ${flags} -f -Dn -H "
+        If you answer \"n\" (or \"no\") installation will  stop  to  let
+        you  install  the  Terminal  Information  Utilities.  If you
+        answer \"y\"  (or  \"yes\")  installation  will  continue.   You
+        should  not  use  the  ${PKGNAME}  without  the
+        Terminal Information Utilities unless you are providing your
+        own printer interface programs or models." \
+	"Should installation continue?"
+	then
+		:
+	else
+		exit 1
+	fi
+fi
+
+
+#
+# Make sure we won't destroy anything important when we
+# install the new software. (This must run in the current
+# shell.)
+#
+. /install/install/preinstall
+
+
+expect=1
+while [ "${expect}" -le "${LAST}" ]
+do
+
+	if [ "${expect}" -gt "1" ]
+	then
+		cd /
+		/etc/umount ${mntdev} 2>/dev/null
+		echo "Remove floppy and insert floppy number ${expect}"
+		echo "Type <return> when ready: \c"
+		read answer
+		/etc/mount ${mntdev} ${mntname} -r 2>/dev/null
+	fi
+
+	#
+	# Check to make sure that this floppy belongs to the package
+	#
+	while [ ! -s ${INSPATH}/usr/options/lp.name -o "${PKGNAME}" != "`cat ${INSPATH}/usr/options/lp.name`" ]
+	do
+		cd /
+		/etc/umount ${mntdev} 2>/dev/null
+		echo "
+ ERROR: floppy does not belong to the ${PKGNAME}
+TO FIX: remove floppy and insert correct floppy"
+		echo "Type <return> when ready: \c"
+		read answer
+		/etc/mount ${mntdev} ${mntname} -r 2>/dev/null
+	done
+
+	#
+	# Check to make sure this is the correct floppy of the set
+	#
+	while [ "`cat /install/install/ORDER`" != "${expect}" ]
+	do
+		echo "
+WARNING: floppy out of sequence,
+         expecting floppy diskette number ${expect}"
+
+		echo "
+If you want, installation can continue with the floppy you have in the
+drive. However, it is recommended that you install the floppies in the
+correct order.
+"
+
+		if ${CHECKYN} ${flags} -f -Dn -H "
+        If you answer \"n\" (or \"no\") installation will continue  with
+        the  floppy  you  have  in  the  drive. HOWEVER, you will be
+        responsible for inserting the skipped floppy  (or  floppies)
+        later.  If  you  answer  \"y\" (or \"yes\") installation will be
+        suspended until you put the correct floppy in.  (The correct
+        floppy should be number ${expect}.)" \
+	"Should installation continue with this floppy?"
+		then
+			expect=`cat /install/install/ORDER`
+			break
+		else
+			cd /
+			/etc/umount ${mntdev} 2>/dev/null
+			echo "
+Remove the floppy and insert floppy ${expect}.
+Type <return> when ready: \c"
+			read answer
+			/etc/mount ${mntdev} ${mntname} -r 2>/dev/null
+		fi
+	done
+
+
+	#
+	# How much space is needed by this floppy?
+	#
+	USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+	ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+	ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+
+	#
+	# Double the space taken up by the /usr/lib/accept command,
+	# because it will be copied to make the disable/enable
+	# commands (which will be linked).
+	#
+	a=/install/new/usr/lib/accept
+	if [ -r ${a} ]
+	then
+		more=`expr "\`ls -ls ${a}\`" : ' *\([0-9]*\) '`
+		USRneeds=`expr "${USRneeds}" + 2 \* "${more}"`
+	fi
+
+	#
+	# How much space is available in the necessary filesystems?
+	#
+	USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+	ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+	#
+	# Now see if the package fits!
+	# Inform the user and exit immediately, if not.
+	#
+	set -- \
+		"/ (root)" ${ROOTneeds} ${ROOTspace} \
+		"/usr    " ${USRneeds}  ${USRspace}
+
+	header="
+The following filesystems haven't enough free space:
+    Filesystem		Need	Available
+"
+	while [ $# -gt 0 ]
+	do
+		if [ "$3" -lt "$2" ]
+		then
+			echo "${header}\c"
+			header=""
+			echo "     $1		$2	  $3	(blocks)"
+		fi		
+		shift 3
+	done
+	if [ -z "${header}" ]
+	then
+		echo "
+ ERROR: the ${PKGNAME} cannot be installed
+TO FIX: you will need to free up enough space to meet
+        the needs shown above"
+		exit
+	fi
+
+	#
+	# Install the files from this floppy.
+	#
+	cd ${INSPATH}
+	echo "The following files are being installed: "
+	find . -print | cpio -pduvm /
+
+
+	echo "Floppy diskette number $expect is complete."
+	expect=`expr $expect + 1`
+
+done
+
+#
+# Restore the configuration. (This also must run in the current
+# shell.)
+#
+. /install/install/postinstall
+
+
+echo "Installation of the ${PKGNAME} is complete."
+exit 0

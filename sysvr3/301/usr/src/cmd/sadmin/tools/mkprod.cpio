@@ -1,0 +1,42 @@
+#ident	"@(#)sadmin:tools/mkprod.cpio	2.1"
+#	Given that a  make -f sadmin.mk install  has been done, this routine
+#	creates a product.cpio file suitable for shipping to a remote machine
+#	for installation.
+
+#!	chmod +x ${file}
+
+#  Cautions:
+#	Must be run in directory containing file sadmin.mk.
+#	ROOT environment variable must be same as when
+#	  make -f sadmin.mk install  was done.
+
+makefile=sadmin.mk
+case $1 in
+-f )
+	shift
+	makefile=${1:?'Missing makefile argument.'}
+	shift
+	;;
+-* )
+	echo >&2 "$0:  Illegal option: $1"
+	exit 1
+esac
+
+if [ $# -gt 0 ]
+then
+	echo >&2 "Usage:  $0 [ -f makefile ]"
+	exit 1
+fi
+
+ROOT=${ROOT:-/}
+
+make -f ${makefile} ROOT=${ROOT} product productdir  |
+	sed "	/^[^/]/d
+		s;^//*;/;
+		s;^${ROOT}/*;;
+		s/	.*//
+	"  |
+	(
+		cd ${ROOT}
+		cpio -ocv
+	) >product.cpio

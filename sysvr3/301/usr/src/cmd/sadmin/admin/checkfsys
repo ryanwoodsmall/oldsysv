@@ -1,0 +1,130 @@
+#ident	"@(#)sadmin:admin/checkfsys	2.7"
+#	Copyright (c) 1984 AT&T.  All Rights Reserved.
+#	THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T.
+#	The copyright notice above does not evidence any actual
+#	or intended publication of such source code.
+
+#	Check a removable medium file system for errors.
+#help# 
+#help#	Checkfsys checks a file system on a removable medium for errors.
+#help#	If there are errors, this procedure attempts to repair them.
+
+#!	chmod +x ${file}
+
+flags="-qq -k$$"	# flags for checkyn to implement [q] (quit)
+
+trap 'exit 0' 1 2 15
+
+usage () {
+	echo >&2 "Usage:  `basename $0` [ -p pattern ]"
+	exit 1
+}
+
+patterns=
+case $# in
+0 )
+	;;
+2 )
+	if [ $1 = -p ]
+	then
+		patterns=$2
+		shift 2
+	else
+		usage
+	fi
+	;;
+* )
+	usage
+esac
+
+dir=${0}.d
+if [ -z "${patterns}"  -a  -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+l=`disklabel -n "${ndrive}" $$ ${ddrive}`
+eval `labelfsname "${l}"`
+
+if [ -z "${fsname}" ]
+then
+	echo '	This medium was not properly initialized as a file system.
+	It will not be checked.
+You may remove the medium.'
+	exit 0
+fi
+
+checktype=`checklist ${flags} -fep -H '
+	The "check" looks for file system damage but does not attempt to
+	fix it.  The "interactive repair" asks you to decide what should be
+	done for each error.  The "automatic repair" makes standard repairs
+	when it finds errors.  "automatic" generally safe, although there are
+	some problems it cannot handle.  In those cases you need a file system
+	repair expert to fix things.
+	     Most users will be satisfied using "automatic".  For particularly
+	sensitive or unreproducible data we recommend that you use "check"
+	first and then use either "interactive" or "automatic" repair.' \
+	"Disk '${label}', file system '/${fsname}'.
+Select:
+	check (no repairs attempted)
+	interactive repair
+	automatic repair
+[c, i, a, ?, q]:" check interactive automatic`
+
+#	Interrupting an fsck can be dangerous and cause strange messages,
+#	therefore, they are ignored.
+trap '' 2
+case "${checktype}" in
+check )
+	/etc/fsck -n -D ${ddrive}
+	;;
+interactive )
+	/etc/fsck -D ${ddrive}
+	;;
+automatic )
+	/etc/fsck -y -D ${ddrive}
+	;;
+* )
+	admerr $0 Invalid checktype "'${checktype}'"
+	exit 1
+esac
+exit=$?
+
+trap 'exit 0' 2
+
+if [ ${exit} -ne 0 ]
+then
+	echo "
+	File system check did not finish successfully.
+	Either the removable medium is damaged beyond this procedure's ability
+	to repair it or there is some other problem.  Please call your service
+	representative if you think there is a machine problem.
+You may now remove the medium."
+else
+	trap "	trap '' 1 2
+		diskumount -n '${ndrive}' ${ddrive}" 0
+	/etc/mount ${ddrive} /${fsname} -r
+	if [ ! -d /${fsname}/lost+found ]
+	then
+		exit 0
+	fi
+	cd /${fsname}/lost+found
+	if [ -n "`ls`" ]
+	then
+		echo "
+	There some files in the /${fsname}/lost+found directory.
+	These are files that belong in the file system somewhere, but whose
+	names have been lost, but whose contents is still intact.
+	You should mount this file system, look at each file and if you
+	recognize it, move it to the proper directory and name."
+	fi
+	cd /
+fi

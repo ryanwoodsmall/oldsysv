@@ -1,0 +1,18 @@
+
+.ident	"@(#)libc-m32:mcount.def	1.2"
+_m4_dnl_
+_m4_dnl_   This file is to be run through the m4 macro processor along with
+_m4_dnl_   a 3b assembly language program in the C library to generate a
+_m4_dnl_   profiled version of the C library function.
+_m4_dnl_
+_m4_define_(`UNIQ', 0)_m4_dnl_
+_m4_define_(`MCOUNT', ` #  Code to keep track of call-counts for profiling
+	.data
+	.align	4
+.M.UNIQ:
+	.word	0
+	.text
+	movw	&.M.UNIQ,%r0
+	jsb	_mcount
+	 `#' _m4_define_(`UNIQ', _m4_incr_(UNIQ))_m4_dnl_      # Bump UNIQ
+')_m4_dnl_

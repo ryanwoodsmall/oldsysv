@@ -1,0 +1,59 @@
+/dev/null
+1400 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/help/Rlist.help
+	UNINSTALL	---555 2 2	./install/help/UNINSTALL
+	INSTALL		---555 2 2	./install/help/INSTALL
+$
+new	d--775 0 3
+	etc	d--775 0 3
+		helpadm		---754 2 2	../etc/helpadm
+	$
+	usr	d--775 0 3
+		bin	d--775 2 2
+			help		---755 2 2	../usr/bin/help
+			glossary	---755 2 2	../usr/bin/glossary
+			locate		---755 2 2	../usr/bin/locate
+			starter		---755 2 2	../usr/bin/starter
+			usage		---755 2 2	../usr/bin/usage
+		$
+		lib	d--775 0 3
+			help	d--775 0 3
+				interact	---755 2 2	../usr/lib/help/interact
+				fetch		---755 2 2	../usr/lib/help/fetch
+				extract		---755 2 2	../usr/lib/help/extract
+				list		---755 2 2	../usr/lib/help/list
+				delete		---755 2 2	../usr/lib/help/delete
+				replace		---755 2 2	../usr/lib/help/replace
+				keysrch		---755 2 2	../usr/lib/help/keysrch
+				admstart	---754 2 2	../usr/lib/help/admstart
+				admgloss	---754 2 2	../usr/lib/help/admgloss
+				editcmd		---754 2 2	../usr/lib/help/editcmd
+				HELPLOG		---555 2 2	../usr/lib/help/HELPLOG
+				helpclean	---755 2 2	../usr/lib/help/helpclean
+				defnlen		---754 2 2	../usr/lib/help/defnlen
+				glossary	---755 2 2	../usr/lib/help/glossary
+				checklen	---754 2 2	../usr/lib/help/checklen
+				locking		---754 2 2	../usr/lib/help/locking
+				db	d--775 0 2
+					descriptions.a	---664 0 2	../usr/lib/help/db/descriptions.a
+					examples.a	---664 0 2	../usr/lib/help/db/examples.a
+					options.a	---664 0 2	../usr/lib/help/db/options.a
+					glossary.a	---664 0 2	../usr/lib/help/db/glossary.a
+					screens.a	---664 0 2	../usr/lib/help/db/screens.a
+					tables	d--775 0 2
+						display		---664 0 2	../usr/lib/help/db/tables/display
+						keywords	---664 0 2	../usr/lib/help/db/tables/keywords
+						responses	---664 0 2	../usr/lib/help/db/tables/responses
+					$
+				$
+			$
+		$
+		options	d--775 0 3
+			help.name	---555 2 2	./install/help/help.name
+		$
+	$
+$
+$
+@(#)pkg.help:help/proto	1.3.1.1

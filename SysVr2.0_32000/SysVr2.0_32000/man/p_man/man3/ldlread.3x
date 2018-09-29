@@ -1,0 +1,122 @@
+.TH LDLREAD 3X
+.SH NAME
+ldlread, ldlinit, ldlitem \- manipulate line number entries of a common object file function
+.SH SYNOPSIS
+.nf
+.ft B
+#include <stdio.h>
+.ie '\*p'' \{\
+#include <filehdr.h>
+#include <linenum.h>
+#include <ldfcn.h>
+\}
+.el \{\
+#include "\s-1INCDIR\s+1\/filehdr.h"
+#include "\s-1INCDIR\s+1\/linenum.h"
+#include "\s-1INCDIR\s+1\/ldfcn.h"
+\}
+.PP
+.B int ldlread(ldptr, fcnindx, linenum, linent)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B long fcnindx;
+.B unsigned short linenum;
+.B \s-1LINENO\s+1 linent;
+.PP
+.B int ldlinit(ldptr, fcnindx)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B long fcnindx;
+.PP
+.B int ldlitem(ldptr, linenum, linent)
+.B \s-1LDFILE\s+1 \(**ldptr;
+.B unsigned short linenum;
+.B \s-1LINENO\s+1 linent;
+.fi
+.ft R
+.DT
+.SH DESCRIPTION
+.I Ldlread
+searches the line number entries of the common object file currently
+associated with 
+.IR ldptr .
+.I Ldlread
+begins its search with the line number entry for the beginning of a function
+and confines its search to the line numbers associated with a single function.
+The function is identified by
+.IR fcnindx ,
+the index of its entry in the object file symbol table.
+.IR Ldlread
+reads the entry with the smallest line number equal to or greater
+than
+.I linenum
+into
+.IR linent .
+.PP
+.IR Ldlinit
+and 
+.IR ldlitem
+together perform exactly the same function as
+.I ldlread.
+After an initial call to
+.I ldlread
+or
+.I ldlinit,
+.I ldlitem
+may be used to retrieve a series of line number entries associated with a
+single function.
+.I Ldlinit
+simply locates the line number entries for the function identified by
+.I fcnindx.
+.I Ldlitem
+finds and reads the entry with the smallest line number equal to or greater
+than
+.I linenum
+into
+.IR linent .
+.PP
+.IR Ldlread ,
+.IR ldlinit ,
+and
+.I ldlitem
+each return either 
+.B \s-1SUCCESS\s+1
+or
+.BR \s-1FAILURE\s+1 .
+.I Ldlread
+will fail if there are no line number entries in the object file,
+if
+.I fcnindx
+does not index a function entry in the symbol table, or if
+it finds no line number equal to or greater than
+.IR linenum .
+.L
+.I Ldlinit
+will fail if there are no line number entries in the object file or if
+.I fcnindx
+does not index a function entry in the symbol table.
+.I Ldlitem
+will fail if it finds no line number equal to or greater than
+.IR linenum .
+.PP
+The programs must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+ldclose(3X),
+ldopen(3X),
+ldtbindex(3X),
+ldfcn(4).
+\}
+.el \{\
+ldclose(3X),
+ldopen(3X),
+ldtbindex(3X),
+intro(4),
+ldfcn(4),
+paths.h(4).
+\}
+.\"	%W% of %G%

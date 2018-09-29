@@ -1,0 +1,32 @@
+.TH RAND 3F
+.SH NAME
+irand, rand, srand \- random number generator
+.SH SYNOPSIS
+.B integer iseed, i, irand
+.br
+.B double precision x, rand
+.br
+.sp
+.B "call srand(iseed)
+.P
+.B "i = irand( )"
+.P
+.B "x = rand( )"
+.SH DESCRIPTION
+.I Irand\^
+generates successive pseudo-random
+integers in the range
+from 0 to 2**15\-1.
+\f2Rand\fR generates pseudo-random
+numbers distributed in [0, 1.0].
+.IR Srand
+uses its integer
+argument to re-initialize
+the seed for successive
+invocations of
+.IR irand
+and
+.IR rand .
+.SH SEE ALSO
+rand(3C).
+.\"	@(#)rand.3f	6.2 of 10/20/83

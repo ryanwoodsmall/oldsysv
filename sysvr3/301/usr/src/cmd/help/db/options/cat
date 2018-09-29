@@ -1,0 +1,15 @@
+
+\Scat\S:  Options
+
+     -s   suppresses messages about non-existent files.
+
+     -u   does not place output in a buffer before it prints it.
+
+     -v   prints characters that are normally non-printing characters (e.g.,
+          "^G" is printed for the bell character).  (Does not print tabs, new
+          lines or form-feeds.)
+
+     -e   prints a "$" character at the end of each line.  Only useful with the
+          "v" option.
+
+     -t   prints tabs as "^I". Only useful with the "v" option.

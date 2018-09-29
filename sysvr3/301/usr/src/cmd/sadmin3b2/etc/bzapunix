@@ -1,0 +1,14 @@
+#ident	"@(#)sadmin3b2:etc/bzapunix	1.1"
+#
+# If a self-configuration occurred during the boot sequence
+# and "/unix" exists, change its timestamp to the beginning
+# of time. This forces another self-configuration bootstrap
+# after a (possible) reboot by fsck (after fixing root).
+
+#!	chmod +x ${file}
+
+/etc/ckauto
+if [ $? -eq 1 -a -f /unix ]
+then
+	TZ=GMT0 touch -am 0101000070 /unix
+fi

@@ -1,0 +1,17 @@
+0
+The screen name is the string that will appear in the upper left
+corner of the menu when it is displayed to the user.  You may
+specify or edit this name by typing ^G or f1.  This will delete 
+any current value, and allow you to enter a new one.  You may
+use ^E to edit this name, in which case you will be placed in 
+the editor, with the current value preserved.  The screen name 
+should not contain control characters and has a maximum length 
+of 17 characters.
+
+WARNING: Command lines are not allowed to exceed 17 characters.
+1
+This line tells you how many lines of the menu help message have
+been written for the current menu.  The menu help message will
+be presented to the user when ^O or f7 has been entered.  You
+may write or edit the menu help message by entering ^G or f1
+here.  You will then be placed in the editor.

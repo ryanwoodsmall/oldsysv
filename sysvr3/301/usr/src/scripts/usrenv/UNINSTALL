@@ -1,0 +1,30 @@
+#ident	"@(#)pkg.usrenv:usrenv/UNINSTALL	1.8"
+#
+# UNINSTALL the User Environment Utilities
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/usrenv.name`
+SUBPKG1=`cat ${INSPATH}/usr/options/calc.name`
+SUBPKG2=`cat ${INSPATH}/usr/options/shell.name`
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+echo "The ${SUBPKG1} and ${SUBPKG2} are parts"
+echo "of this package, and will be removed along with this package."
+echo "The following files are being removed:"
+/install/install/unsetup
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -fr $i
+done
+echo "The ${PKGNAME} has been removed."
+echo
+echo 'Execute "shutdown -i6 -g0 -y" and'
+echo 'wait for the "Console Login:" prompt.'

@@ -1,0 +1,183 @@
+#ident	"@(#)pkg.nsu:INSTALL	1.4.1.2"
+#
+#	Installation script for AT&T NSU Package for AT&T 3B2 Computer.
+#
+
+#
+# Set up variables here
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/nsu.name`
+PKGNAME1=/usr/options/nsu.name #the name on the machine
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1984 AT&T"
+echo "All Rights Reserved"
+
+#
+# Check that an old Release and Version of the package will not accidentally
+#	 install over a later Release and Version
+#
+
+if
+	test -r ${PKGNAME1}
+then		 #package is already on machine - check for Release and Version
+	REL=`expr "\`cat ${PKGNAME1}\`" : '.*Release[ 	]*\([^ 	]\).*'`
+	VER=`expr "\`cat ${PKGNAME1}\`" : '.*Version[ 	]*\([^ 	]\).*'`
+	if
+		test -n "$REL"
+	then
+		FREL=`expr "${PKGNAME}" : '.*Release[ 	]*\([^ 	]\).*'`
+		FVER=`expr "${PKGNAME}" : '.*Version[ 	]*\([^ 	]\).*'`
+
+		if
+			test $REL -gt $FREL
+		then
+			echo "**WARNING**  This will install an older"
+			echo "Release.Version ($FREL.$FVER) over the current Release.Version ($REL.$VER)"
+			answer=""
+			while 
+				[ "$answer" != y -a "$answer" != n ]
+			do
+				echo "Type 'y' to install over current Release or\c"
+				echo " 'n' to stop installation:  \c"
+				read answer
+				case $answer in
+					n)	exit
+						;;
+				
+					y)	;; #continue installation
+				esac
+			done
+		elif
+			test $REL -eq $FREL
+		then
+			if
+				test $VER -gt $FVER
+			then
+				echo "**WARNING**  This will install an older"
+				echo "Release.Version ($FREL.$FVER) over the current Release.Version ($REL.$VER)"
+				answer=""
+				while 
+					[ "$answer" != y -a "$answer" != n ]
+				do
+					echo "Type 'y' to install over current Release or\c"
+					echo " 'n' to stop installation:  \c"
+					read answer
+					case $answer in
+						n)	exit
+							;;
+					
+						y)	;; #continue installation
+					esac
+				done
+			fi
+		fi
+	fi
+fi
+
+
+#
+# Verify that the system has at least 2 Mb of mainstore
+#
+
+MEG=`expr "\`/etc/prtconf\`" : ".*Memory size: \([0-9]*\).*"`
+if 
+	test "$MEG" = ""
+then
+	MEG=1
+fi
+if 
+	test $MEG -lt 2
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "At least 2 Megabytes of memory must be available."
+	exit
+fi
+
+#
+# Verify that no listeners are running - cannot install pkg
+#	if 'listen' text file is busy.
+#
+if
+	test -r ${PKGNAME1}
+then		 #package is installed on machine - check for active listener
+	if nlsadmin -x | grep '[ 	]ACTIVE' >/dev/null
+	then
+		echo "**ERROR**  ${PKGNAME} cannot be installed --"
+		echo "All active listeners must first be killed."
+		echo "Execute 'nlsadmin -x' to find active listener(s)."
+		echo "Execute 'nlsadmin -k net_spec' to kill each active listener."
+		exit
+	fi
+fi
+
+#
+# Verify that there is space for the ${PKGNAME}.
+# NOTE: Since a mkboot is done in thhe setup script, enough space
+#	must be available for an extra copy of /boot/KERNEL.
+#	Also, another 100 blocks are added to account for differences
+#	in block sizes.
+#
+
+	USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+	ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+	ROOTextra=`expr "\`ls -s /boot/KERNEL\`" : " *\([0-9]*\).*"`
+	ROOTneeds=`expr ${ROOTneeds} + ${ROOTextra}`
+	ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+	ROOTneeds=`expr ${ROOTneeds} + 100`
+	USRneeds=`expr ${USRneeds} + 100`
+
+#
+# How much space is available in the necessary filesystems?
+#
+
+	USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+	ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+#
+# Now see if the package fits!
+#
+
+	if [ "${USRspace}" -lt "${USRneeds}" ]
+  	then
+		echo "**ERROR** ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are $USRspace blocks available"
+		echo "on the /usr file system --"
+		echo "$USRneeds blocks are needed."
+		exit
+	elif [ "${ROOTspace}" -lt "${ROOTneeds}" ]  
+	then
+		echo "**ERROR** ${PKGNAME} cannot be installed --"
+		echo "Not enough space on the hard disk."
+		echo "There are $ROOTspace blocks available"
+		echo "on the / (root) file system --"
+		echo "$ROOTneeds blocks are needed."
+		exit
+	fi
+
+#
+# cpio in the required NSU files
+#
+
+cd ${INSPATH}
+echo "The following files are being installed:"
+
+find . -print | cpio -pvdum /
+
+#
+# Invoke Setup script
+#
+
+/install/install/setup
+
+#
+# Closing message installation complete
+#
+
+echo "Installation of ${PKGNAME} is completed.\n"
+echo 'Execute "shutdown -i6 -g0 -y" and'
+echo 'wait for the "Console Login:" prompt.'
+exit

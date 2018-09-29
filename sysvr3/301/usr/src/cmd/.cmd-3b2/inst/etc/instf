@@ -1,0 +1,534 @@
+#ident	"@(#)cmd-3b2:inst/etc/instf	1.22"
+#
+# instf
+#
+# Installs a basic UNIX system on the hard disk from a booted
+# floppy. The resultant hard disk system will install the remainder
+# of the core system from other floppies.
+#
+
+. /inst/etc/define
+
+HARD=/inst/root			# Hard disk root fs mountpoint
+
+HELPFULL="\
+The \"Full Restore\" replaces everything on the integral hard disk(s) with
+a ${TM} core UNIX  system.  Nothing is assumed to be on the hard
+disk(s) and  nothing is retained.  Choose this option only if you have a
+brand-new system or are  willing to  DESTROY the files now on  your hard
+disk(s)."
+
+PARTIALMSG="\
+The \"Partial Restore\" replaces the core files with ${TM} files on 
+the integral hard disk(s).  Other files are not affected.  This will UNDO 
+your terminal and user login configuration."
+
+HELPPARTIAL="\
+The \"Partial Restore\" replaces the core files with ${TM} files. 
+It does not destroy user-created files. Note that this RESETS the basic 
+configuration (terminals, logins, etc.) to those of a brand-new system. 
+This procedure may be useful to  restore a severely damaged system to a 
+usable state, or to remove a forgotten \"root\" password."
+
+DUALMSG="\
+The \"Dual Disk Upgrade\"  converts an existing  single-disk  system to a dual 
+integral disk configuration. It may only be run on a ${OLDTM} system or 
+subsequent releases.  Any files already on disk 2 will be LOST. It is highly 
+recommended that you have CURRENT  backups of EVERY disk 1  partition BEFORE 
+running this procedure."
+
+HELPDUAL="\
+The \"Dual Disk Upgrade\" converts an  existing 3B2  single-disk  system to a 
+dual integral disk configuration. Existing files on disk 1 are not damaged.
+Disk 2 is assumed to be empty; any data on it will be DESTROYED. The \"/usr\"
+file system may be moved to disk 2.  Vacated and  new disk space (on disk 1 
+and disk 2, respectively) is allocated to one or more additional partitions."
+
+RELEASEMSG="\
+The \"Release Upgrade\" option replaces most of the core system files on the
+integral hard disk(s) with ${TM} files. The system configuration,
+and user files are not affected."
+
+FEATURES="\
+	o Floating Boot
+	o Floating Point Assist software support
+	o XM (expansion module) software support"
+
+HELPRELEASE="\
+The \"Release Upgrade\" replaces most of the core system files with those
+distributed in ${TM}. User files and most configuration files
+are   retained.   Kernel  and  device driver  tunable
+parameters in  /etc/master.d  are set to ${TM} default  values.
+Optional  packages  must  be reinstalled.
+Replaced  configuration files are saved in /usr/old.  Upgrade features 
+include:
+${FEATURES}"
+
+
+export DRIVEID_0 DRIVEID_1 CYLSIZE_0 CYLSIZE_1 NSECTOR_0 NSECTOR_1
+eval `pdinfo /dev/rdsk/c1d?s6`
+
+#
+# Check for a dual-disk system
+#
+if [ -n "${DRIVEID_1:-}" ]
+then
+	PARTITIONMSG="\
+The hard disks are divided into several logical partitions.  Those named 
+\"root\", \"swap\" and \"usr\" are needed by the system.  Default partitioning
+will place \"root\" and \"swap\" on disk 1 and \"usr\" on disk 2.  Their sizes 
+cannot be adjusted once the system is active.  Additional partitions may 
+also be created at your discretion.  See the \"3B2 Computer System Admin-
+istration  Utilities  Guide\"   for more information regarding hard disk
+partitioning."
+	FULLMSG="\
+The \"Full Restore\" will destroy EVERYTHING on both hard disks and install a 
+${TM} core UNIX system." 
+
+else
+	PARTITIONMSG="\
+The hard disk is divided into  several logical  partitions.  Those named 
+\"root\", \"swap\" and \"usr\" are needed by the system. Their sizes cannot be 
+adjusted once the  system is active.  Additional  partitions may also be 
+created at your discretion.  See the \"3B2 Computer System Administration
+Utilities Guide\" for more information about hard disk partitioning."
+	FULLMSG="\
+The \"Full Restore\" will destroy EVERYTHING on the hard disk and install a 
+${TM} core UNIX system." 
+	USRMSG="\
+Several configurations are available for the hard disk system.  The \"swap\" 
+and \"root\" partitions must always be on disk 1. The \"usr\" partition may be
+placed on either disk.   System performance will typically be greater with
+the \"usr\" partition on disk 2."
+
+fi
+
+
+while true
+do
+	case `askx -H copy -H shell -m "
+${TM} Installation
+
+	1)  Full Restore
+	2)  Partial Restore
+	3)  Dual-Disk Upgrade
+	4)  Release Upgrade
+
+When responding to a question, you may use the \"backspace\" key
+to erase the last character  typed or the \"@\" key to erase the
+the entire line. Enter \"help\" for additional information." \
+	    -q "Selection?" -h "\
+
+${FULLMSG}
+
+${PARTIALMSG}
+
+${DUALMSG}
+
+${RELEASEMSG}" \
+	    -c 1 -c 2 -c 3 -c 4 -c quit` in
+	1)
+		TYPE=full
+		case `askx -H trace -c y -c n -m "
+-- Full Restore --
+
+${FULLMSG}" \
+		    -q "Continue?" -h "${HELPFULL}" ` in
+		y)
+			;;
+		n)
+			continue ;;
+		trace)
+			set -x ;;
+		esac
+		#
+		# Enable swapping with a minimal swap area. Assumes that
+		# the base of the swap area is constant across drive IDs.
+		# Fmthard -t writes a VTOC with the smallest supported
+		# required partition sizes.
+		#
+		fmthard -t ${RSIX_0} > /dev/null
+		dswap ${RSIX_0}
+		rm -f /.profile /bin/-sh
+		FILES="`find / -print`"
+		case `askx -c y -c n -c quit \
+			-q "Use the default hard disk partitioning?" \
+			-h "${PARTITIONMSG}"` in
+		n)
+			while true
+			do
+				FSTAB="`partition`" 
+				fsys -m ${HARD} ${ROOT_0}
+				mklost+found ${HARD} ${ROOT_0}
+				(
+					umask 022
+					mkdir ${HARD}/etc
+					echo "${FSTAB}" > ${HARD}/etc/fstab
+				)
+				fstab < ${HARD}/etc/fstab |
+				while read dev dir ronly junk
+				do
+					rmkdir ${HARD}/${dir}
+					fsys -m ${HARD}/${dir} ${dev}
+					mklost+found ${HARD}/${dir} ${dev}
+				done
+				for drive in 0 ${DRIVEID_1:+1}
+				do
+					eval cylsize=\${CYLSIZE_${drive}}
+					eval rall=\${RALL_${drive}}
+					optpart -c ${cylsize} \
+					    -d `ignore expr ${drive} + 1` \
+					    -g ${REL} -r ${HARD} ${rall} \
+					    >> ${HARD}/etc/fstab
+				done
+				echo "\nDisk${DRIVEID_1:+ 1} partitioning:" >&2
+				prtvtoc -s -t ${HARD}/etc/fstab ${RSIX_0}
+				if [ -n "${DRIVEID_1:-}" ]
+				then
+					echo "\nDisk 2 partitioning:" >&2
+					prtvtoc -s -t ${HARD}/etc/fstab ${RSIX_1}
+				fi
+				case `askx -m "\
+This completes the interactive partitioning of your disk${DRIVEID_1:+s}. Enter
+\"go\" if you are ready to proceed. Enter \"again\" to specify
+different partitioning${DRIVEID_1:+ for both disks}." \
+				    -q "\
+Type \"go\" to proceed, \"again\" to start over" \
+				    -c go -c again -c quit` in
+				go)
+					break ;;
+				again)
+					fstabmnt -u < ${HARD}/etc/fstab
+					fsys -u ${ROOT_0}
+					;;
+				quit)
+					exit 1 ;;
+				esac
+			done
+			;;
+		y)
+			echo "
+Setting up the initial system with default partition sizes; this should
+take no more than twenty-five minutes." >&2
+			if [ -n "${DRIVEID_1:-}" ]
+			then
+				fmthard -c1 ${RSIX_0} > /dev/null
+				fmthard -c2 ${RSIX_1} > /dev/null
+				vmkfs ${RALL_0}* ${RALL_1}* > /dev/null
+				FSTAB="/dev/dsk/c1d0s8	/usr2\n/dev/dsk/c1d1s2	/usr"
+			else
+				fmthard -c0 ${RSIX_0} > /dev/null
+				vmkfs ${RALL_0}* > /dev/null
+				FSTAB="/dev/dsk/c1d0s2	/usr"
+			fi
+			dlabelit ${ROOT_0} root ${REL} > /dev/null
+			fsys -m ${HARD} ${ROOT_0}
+			mklost+found ${HARD} ${ROOT_0}
+			(
+				umask 022
+				mkdir ${HARD}/etc
+				echo "${FSTAB}" > ${HARD}/etc/fstab
+			)
+			fstab < ${HARD}/etc/fstab |
+			while read dev dir ronly junk
+			do
+				dlabelit ${dev} `ignore expr ${dir} : '.*/\(.*\)$' \| unk'` ${REL} > /dev/null
+				rmkdir ${HARD}/${dir}
+				fsys -m ${HARD}/${dir} ${dev}
+				mklost+found ${HARD}/${dir} ${dev}
+			done
+			;;
+		quit)
+			exit 0 ;;
+		esac
+		;;
+	2)
+		TYPE=part
+		case `askx -H trace -c y -c n -m "\
+-- Partial Restore --
+
+${PARTIALMSG}" \
+		    -q "Continue?" -h "${HELPPARTIAL}" ` in
+		y)
+			;;
+		n)
+			continue
+			;;
+		trace)
+			set -x
+			;;
+		esac
+		dswap ${RSIX_0}
+		rm -f /.profile /bin/-sh
+		FILES="`find / -print`"
+		if sysfsck -m -r ${HARD}
+		then
+			:
+		else
+			echo "
+A \"Partial Restore\" is not possible." >&2
+			exit 1
+		fi
+		;;
+	3)
+		if [ -z "${DRIVEID_1:-}" ]
+		then
+			echo "
+This machine is not equipped with a second hard disk on its integral
+controller. A \"Dual Disk Upgrade\" is not possible." >&2
+			continue
+		fi
+		case `askx -H trace -c y -c n -m "\
+-- Dual Disk Upgrade --
+
+${DUALMSG}" \
+		    -q "Continue?" -h "${HELPDUAL}" ` in
+		y)
+			;;
+		n)
+			continue ;;
+		trace)
+			set -x ;;
+		esac
+		dswap ${RROOT_0}
+		if sysfsck -u -r ${HARD}
+		then
+			:
+		else
+			echo "
+A \"Dual Disk Upgrade\" is not possible." >&2
+			exit 1
+		fi
+		usr=
+		eval `fstab < ${HARD}/etc/fstab | while read dev dir ronly
+			do
+				case "${dev}" in
+				${ALL_1}*)
+					echo "
+Your system is already configured with the ${dir} partition on disk 2
+(\"${dev}\")." >&2
+					exit 1 ;;
+				esac
+				if [ "'${dir}'" = "'/usr'" ]
+				then
+					echo usr="\"${dev}\""
+				fi
+			done`
+		if [ "'${usr}'" = "''" ]
+		then
+			echo "
+There is no \"usr\" file system in your /etc/fstab. This is a required core
+file system. The \"Dual Disk Upgrade\" cannot be performed without it." >&2
+			exit 1
+		elif [ "'${usr}'" != "'${USR_0}'" ]
+		then
+			echo "
+Your \"usr\" file system is configured on \"${usr}\". This is not a
+user-configurable partition; it must be on \"${USR_0}\". The dual-
+disk upgrade cannot be performed." >&2
+			exit 1
+		fi
+		upgrade -g ${REL} -r ${HARD}
+		FILES=`find /dev/dsk/c1d1s? /dev/rdsk/c1d1s? -print`
+		echo "${FILES}" | cpio -pdmu ${HARD}
+		# Link /dev entries of second integral disk for Simple Admin
+		ln ${HARD}/dev/dsk/c1d1s6 ${HARD}/dev/SA/disk2
+		ln ${HARD}/dev/rdsk/c1d1s6 ${HARD}/dev/rSA/disk2
+		cd /inst/final
+		FILES=`find usr/lbin -print`
+		echo "${FILES}" | cpio -pdmu ${HARD}
+		cd /
+		echo "
+The \"Dual Disk Upgrade\" is complete. The system will now restart itself from
+the hard disk. It will be ready to use when you receive the \"Console Login\"
+prompt. This should take no more than five minutes. You may then remove the
+floppy diskette." >&2
+		${HARD}/bin/sleep 5 # uadmin doesn't wait for terminal output
+		fstabmnt -u < ${HARD}/etc/fstab
+		fsys -u ${ROOT_0}
+		exec uadmin 2 1
+		;;
+	4)
+		TYPE=upgrade
+		case `askx -H trace -c y -c n -m "\
+-- Release Upgrade --
+
+${RELEASEMSG}" \
+		    -q "Continue?" -h "${HELPRELEASE}"` in
+		y)
+			;;
+		n)
+			continue ;;
+		trace)
+			set -x ;;
+		esac
+		dswap ${RROOT_0}
+		rm -f /.profile /bin/-sh
+		FILES="`find / -print`"
+		if sysfsck -m -u -r ${HARD}
+		then
+			:
+		else
+			echo "
+A \"Release Upgrade\" is not possible." >&2
+			exit 1
+		fi
+		;;
+	quit)
+		exit 0
+		;;
+	copy)
+		exec copy HARD="${HARD}" REL="${REL}"
+		;;
+	shell)
+		trap ":" 2 3
+		rm -f /.profile /bin/-sh
+		echo '
+			mount() {
+				fsys -m $2 $1
+			}
+			umount() {
+				fsys -u $1
+			}
+			cat() {
+				scat $*
+			}
+			labelit() {
+				dlabelit $*
+			}
+			newboot() {
+				pnewboot $*
+			}
+			ck() {
+				fsck $ROOT_0
+			}
+			mnt() {
+				fsys -m $HARD $ROOT_0
+				PATH=$PATH:$HARD/bin:$HARD/etc:$HARD/usr/bin
+			}
+			umnt() {
+				fsys -u $ROOT_0
+			}
+			chg() {
+				if [ -x $HARD/etc/chroot ]
+				then
+					$HARD/etc/chroot $HARD /bin/sh
+				else
+					echo $ROOT_0 not mounted
+					echo or $HARD/etc/chroot does not exist
+				fi
+			}
+		' > /.profile
+		ln /bin/sh /bin/-sh
+		if /bin/-sh
+		then :
+		else :
+		fi
+		trap '' 2 3
+		rm -f /.profile /bin/-sh
+		continue
+		;;
+	esac
+	break
+done
+
+if [ ${TYPE} = upgrade -o ${TYPE} = part ]
+then
+	ckdf ${HARD}
+fi
+
+pnewboot /lib/olboot /lib/mboot ${BOOT_0} > /dev/null 
+ignore rm -f ${HARD}/lib/lboot < /dev/null
+
+# Use $HARD/inst as a lock file;  if you are doing an upgrade or partial
+# and this directory is present, that means you were doing an upgrade
+# and it failed for some reason, so don't save the files again
+
+if [ \( ${TYPE} = upgrade -o ${TYPE} = part \) -a ! -d ${HARD}/inst/LOCK ]
+then	
+	(
+	umask 022
+	echo "\nSaving system configuration files in /usr/old." >&2
+	ignore mkdir ${HARD}/usr/tmp 2>/dev/null
+	ignore mkdir ${HARD}/usr/old ${HARD}/usr/tmp/move 2>/dev/null
+	cd ${HARD}
+	if [ ${TYPE} = part ]
+	then
+		cpio -pdum usr/old < /inst/bin/movefiles 2> /dev/null
+		ignore rm -f ${HARD}/dev/tty[0-9]? < /dev/null
+	else
+		cpio -pdum usr/tmp/move	< /inst/bin/movefiles 2> /dev/null
+		echo "\nThe /etc/system file is saved in /usr/old/etc." >&2
+	fi
+	cpio -pdum usr/old	< /inst/bin/savefiles 2> /dev/null
+	# save all the init stuff 
+	find etc/init.d etc/rc*.d etc/shutdown.d -print 2> /dev/null | 
+		cpio -pdum usr/old	2> /dev/null
+	# ignore rm -rf etc/init.d etc/rc?.d  < /dev/null
+	cd /
+	# TTY driver renamed to GENTTY - remove old entries
+	ignore rm -f ${HARD}/etc/master.d/tty
+	ignore rm -f ${HARD}/boot/TTY
+	ignore rm -f ${HARD}/etc/master.d/sys
+	ignore rm -f ${HARD}/boot/SYS
+	)
+fi
+
+rm -f ${HARD}/etc/system < /dev/null
+
+sync;sync;sync
+# Make lock directory now.
+ignore mkdir ${HARD}/inst ${HARD}/inst/LOCK 2> /dev/null
+sync;sync;sync
+
+echo "
+Installing the initial core system files. This should take 
+no more than ten minutes." >&2
+echo "${FILES}" | cpio -pdmu ${HARD}
+
+cd ${HARD}/inst/hard
+FILES="`find . -print`"
+echo "${FILES}" | cpio -pdmu ${HARD}
+cd /
+
+ignore rm -f ${HARD}/dev/SA/diskette  ${HARD}/dev/rSA/diskette < /dev/null
+
+if [ -z "${DRIVEID_1:-}" ]
+then
+	cd ${HARD}/dev
+	ignore rm -f ridsk1? idsk1? < /dev/null	### Release 1.1 leftovers
+	ignore rm rdsk/c1d1s? dsk/c1d1s? rSA/disk2 SA/disk2 < /dev/null
+	cd /
+fi
+
+echo "${TYPE}" > ${HARD}/inst/etc/type
+echo "1" > ${HARD}/inst/etc/last
+sync
+
+fstabmnt -u < ${HARD}/etc/fstab
+
+if [ ${TYPE} = upgrade ]
+then
+	while read dev dir ronly junk
+	do
+		if [ "'${dir}'" = "'/usr'" ]
+		then
+			dlabelit ${dev} usr ${REL} > /dev/null
+			break
+		fi
+	done < ${HARD}/etc/fstab
+fi
+
+fsys -u ${ROOT_0}
+
+if [ ${TYPE} = upgrade ]
+then
+	dlabelit ${ROOT_0} root ${REL} > /dev/null
+fi
+echo "\
+The system is restarting itself from the hard disk. This should
+take no more than five minutes. The installation procedure will
+then continue automatically." >&2
+
+sync;sync;sync
+exec uadmin 2 1

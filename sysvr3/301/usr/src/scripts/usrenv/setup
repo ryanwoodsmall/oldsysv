@@ -1,0 +1,49 @@
+#ident	"@(#)pkg.usrenv:usrenv/setup	1.6"
+ln /bin/true /bin/u3b2 2>/dev/null
+ln /bin/false /bin/u3b 2>/dev/null
+ln /bin/false /bin/u3b5 2>/dev/null
+ln /bin/false /bin/vax 2>/dev/null
+ln /bin/false /bin/pdp11 2>/dev/null
+#
+# Install SXT driver (job control)
+#
+DRVPATH=/boot
+MAJOR=`/etc/drvinstall -d $DRVPATH/sxt.o -v 1.0`
+rm -f $DRVPATH/sxt.o
+#
+# Create the nodes
+#
+# CRITICAL: The number of DEVICES and the number of LAYERS per DEVICE is
+# hard coded here.  The number of DEVICES must agree with the corresponding
+# number in the master directory entry for sxt.
+# The number of devices is 6 and each device has 8 layers (0-7).
+#
+mkdir /dev/sxt 2>/dev/null
+if
+	test ! -d /dev/sxt
+then
+	echo "ERROR: mkdir /dev/sxt failed"
+	exit
+fi
+chmod 775 /dev/sxt
+MINOR=0
+for i in 00 01 02 03 04 05
+do
+	for j in 0 1 2 3 4 5 6 7
+	do
+		/etc/mknod /dev/sxt/$i$j c $MAJOR $MINOR 2>/dev/null
+		if
+			test ! -c /dev/sxt/$i$j
+		then
+			echo "ERROR: mknod /dev/sxt/$i$j failed"
+		fi
+		chmod 622 /dev/sxt/$i$j
+		ln /dev/sxt/$i$j /dev/sxt$i$j 2>/dev/null
+		if
+			test ! -c /dev/sxt$i$j
+		then
+			echo "ERROR: ln /dev/sxt/$i$j /dev/sxt$i$j failed"
+		fi
+		MINOR=`expr $MINOR + 1`
+	done
+done

@@ -1,0 +1,49 @@
+#ident	"@(#)nlp:terminfo/455.ti	1.5"
+#01-06-88
+
+455|att455|daisy|qume|AT&T 455; qume; sprint 11,
+
+	daisy,
+
+	bufsz#500,
+	cols#132,
+	lines#66,
+	orc#12,
+	orhi#120,
+	orl#8,
+	orvi#48,
+	cps#55,
+
+	cr=^M,
+	chr=%?%p1%{100}%<%t\EE%p1%02d%e%p1%{110}%<%t\EEA%p1%{100}%-%d%e%p1%{120}%<%t\EEB%p1%{110}%-%d%e%p1%{130}%<%t\EEC%p1%{120}%-%d%e%p1%{140}%<%t\EED%p1%{130}%-%d%e%p1%{150}%<%t\EEE%p1%{140}%-%d%e%p1%{160}%<%t\EEF%p1%{150}%-%d%;,
+	cvr=%?%p1%{100}%<%t\EL%p1%02d%e%p1%{110}%<%t\ELA%p1%{100}%-%d%e%p1%{120}%<%t\ELB%p1%{110}%-%d%e%p1%{130}%<%t\ELC%p1%{120}%-%d%e%p1%{140}%<%t\ELD%p1%{130}%-%d%e%p1%{150}%<%t\ELE%p1%{140}%-%d%e%p1%{160}%<%t\ELF%p1%{150}%-%d%;,
+	cud1=^J,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+	hpa=%?%p1%{100}%<%t\EC%p1%02d%e%p1%{110}%<%t\ECA%p1%{100}%-%d%e%p1%{120}%<%t\ECB%p1%{110}%-%d%e%p1%{130}%<%t\ECC%p1%{120}%-%d%e%p1%{140}%<%t\ECD%p1%{130}%-%d%e%p1%{150}%<%t\ECE%p1%{140}%-%d%e%p1%{160}%<%t\ECF%p1%{150}%-%d%;,
+
+# Remote Reset; Auto CR/LF off; Auto LF off; Clear tabs; Right Margin Control on
+	is2=\E\015P\EZ\E.\E2\EO,
+	lpi=%?%p1%{2}%=%t\EL24%e%p1%{3}%=%t\EL16%e%p1%{4}%=%t\EL12%e%p1%{6}%=%t\EL08%e%p1%{8}%=%t\EL06%e%p1%{12}%=%t\EL04%;,
+	rmul=\EJ,
+	smul=\EI,
+	smgb=\E-,
+	smgl=\E9,
+	smgr=\E0,
+	smgt=\E+,
+#Set form length
+	u9=\EF%p1%02d,
+	vpa=%?%p1%{100}%<%t\EP%p1%02d%e%p1%{110}%<%t\EPA%p1%{100}%-%d%e%p1%{120}%<%t\EPB%p1%{110}%-%d%e%p1%{130}%<%t\EPC%p1%{120}%-%d%e%p1%{140}%<%t\EPD%p1%{130}%-%d%e%p1%{150}%<%t\EPE%p1%{140}%-%d%e%p1%{160}%<%t\EPF%p1%{150}%-%d%;,
+
+sprint11,
+
+	use=455,
+
+458|att458|AT&T 458; Daisy printer serial,
+	bufsz#1024,
+	is2=\E\015P\EW\E.\E2\EY\E<,
+	use=455,
+
+457|att457|AT&T 457; Daisy printer parallel,
+	use=458,

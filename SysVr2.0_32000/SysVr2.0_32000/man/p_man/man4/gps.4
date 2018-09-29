@@ -1,0 +1,161 @@
+.TH GPS 4
+.SH NAME
+gps \- graphical primitive string, format of graphical files
+.SH DESCRIPTION
+\s-1GPS\s+1 is a format used to store graphical data.
+Several routines have been developed to edit and display \s-1GPS\s+1
+files on various devices.  Also,
+higher level graphics programs such as \fIplot\fR [in \fIstat\|\fR(1G)\^]
+and \fIvtoc\fR [in \fItoc\^\fR(1G)\^]
+produce \s-1GPS\s+1 format output files.
+.PP
+A \s-1GPS\s+1 is composed of five types of graphical data 
+or primitives.
+.SS \fB\s-1GPS PRIMITIVES\s+1\fP
+.TP 10
+\fBlines\f
+The \fIlines\fR primitive has a variable
+number of points from which zero or more connected line segments are produced.
+The first point given produces a \fImove\fR to that
+location.
+(A \fImove\fR is
+a relocation of the graphic cursor without drawing.)
+Successive points produce line segments from
+the previous point.
+Parameters are available to
+set \fIcolor\fR, \fIweight\fR, and \fIstyle\fR (see below).
+.s1
+.TP 10
+\fBarc\fR
+The
+\fIarc\fR primitive has a variable number of points 
+to which a curve is fit.
+The first point
+produces a \fImove\fR to that point.  If only
+two points are included, a line connecting the points will result; if three points a circular
+arc through the points is drawn; 
+and if more than three, lines connect the points.
+(In the future, a spline will be fit to the points if they number greater than three.)
+Parameters are available to set \fIcolor, weight,\fR and \fIstyle\fR.
+.s1
+.TP 10
+\fBtext\fR
+The
+\fItext\fR primitive draws characters.  It requires a single 
+point which locates the center of the first character to be drawn.
+Parameters are \fIcolor\fR, \fIfont\fR, \fItextsize\fR, and
+\fItextangle\fR.
+.s1
+.TP 10
+\fBhardware\fR
+The \fIhardware\fR primitive draws hardware
+characters or gives control commands to a hardware device.  A single 
+point locates the beginning location of the 
+\fIhardware\fR string.
+.TP 10
+\fBcomment\fR
+A \fIcomment\fR is
+an integer string that is included in a \s-1GPS\s+1 file but
+causes nothing to be displayed.  All \s-1GPS\s+1 files begin with
+a comment of zero length.
+.RE
+.SS \fB\s-1GPS PARAMETERS\s+1\fP
+.TP 10
+\fBcolor\fR
+\fIColor\fR is an integer value set for
+\fIarc, lines,\fR and \fItext\fR primitives.
+.TP 10
+\fBweight\fR
+\fIWeight\fR is an integer value set for
+\fIarc\fR and \fIlines\fR primitives to indicate line thickness.
+The value \fB0\fR is  narrow weight, \fB1\fR is bold, and \fB2\fR
+is medium weight.
+.TP 10
+\fBstyle\fR
+\fIStyle\fR is an integer value set for
+\fIlines\fR and \fIarc\fR primitives to give one of the five
+different line styles that can be drawn on \s-1TEKTRONIX\s+1 4010 series storage tubes.  They are:
+.br
+	\fB0\fR     solid
+.br
+	\fB1\fR     dotted
+.br
+	\fB2\fR     dot dashed
+.br
+	\fB3\fR     dashed
+.br
+	\fB4\fR     long dashed
+.br
+.TP 10
+\fBfont\fR
+An integer value set for
+\fItext\fR primitives to designate the text font to be used in
+drawing a character string.  (Currently \fIfont\fR
+is expressed as a four-bit \fIweight\fR value
+followed by a four-bit \fIstyle\fR value.)
+.TP 10
+\fBtextsize\fR
+\fITextsize\fR is an integer value used in 
+\fItext\fR primitives to express the size of the characters to
+be drawn.  \fITextsize\fR represents the height of characters
+in absolute \fIuniverse-units\fR
+and is stored at one-fifth this value in the size-orientation (\fIso\fR) word (see below).
+.TP 10
+\fBtextangle\fR
+\fITextangle\fR is a signed integer value used in 
+\fItext\fR primitives to express rotation of the character string
+around the beginning point.  \fITextangle\fR is expressed in degrees from the positive x-axis and can be
+a positive or negative value.
+It is stored in the size-orientation (\fIso\fR) word as a value 256/360 of it's absolute value.
+.RE
+.SS \fB\s-1ORGANIZATION\s+1\fP
+\s-1GPS\s+1 primitives are organized internally as follows:
+.PP
+\fBlines\fR		\fIcw\fR  \fIpoints\fR  \fIsw\fR
+.br
+\fBarc\fR			\fIcw\fR  \fIpoints\fR  \fIsw\fR
+.br
+\fBtext\fR			\fIcw\fR  \fIpoint\fR  \fIsw\fR  \fIso\fR  [\fIstring\|\fR]
+.br
+\fBhardware\fR		\fIcw\fR  \fIpoint\fR  [\fIstring\|\fR]
+.br
+\fBcomment\fR		\fIcw\fR  [\fIstring\|\fR]
+.TP 10
+\fBcw\fR
+\fICw\fR is the control word
+and begins all primitives.  It consists of four bits that contain
+a primitive-type code and twelve bits that contain the
+word-count for that primitive.
+.TP 10
+\fBpoint\fR(\fBs\fR)
+\fIPoint\fR(\fIs\fR\|)\fR is one or more
+pairs of integer coordinates.
+\fIText\fR and \fIhardware\fR primitives only 
+require a single \fIpoint\fR.  \fIPoint\fR(\fIs\fR\|) are 
+values within a Cartesian plane or \fIuniverse\fR
+having 64K (\-32K to +32K) points on each axis.
+.TP 10
+\fBsw\fR
+\fISw\fR is the style-word and is used in
+\fIlines, arc,\fR and \fItext\fR primitives.
+For all three, eight bits contain \fIcolor\fR information.  In \fIarc\fR and
+\fIlines\fR eight bits are divided as
+four bits \fIweight\fR and four bits \fIstyle\fR.  In the
+\fItext\fR primitive eight bits of \fIsw\fR contain the \fIfont\fR.
+.TP 10
+\fBso\fR
+\fISo\fR is the size-orientation word used in
+\fItext\fR primitives.  Eight bits contain text size
+and eight bits contain text rotation.
+.TP 10
+\fBstring\fR
+\fIString\fR is a null-terminated character string.
+If the string does not end on a word boundary, an
+additional null is added to the \s-1GPS\s+1 file to insure
+word-boundary alignment.
+.SH "SEE ALSO"
+graphics(1G),
+stat(1G),
+toc(1G) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	%W% of %G%

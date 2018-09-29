@@ -1,0 +1,151 @@
+#ident	"@(#)sadmin:shell/agefile	1.4"
+#	age files by moving to older and older names (agefile)
+
+#!	chmod +x ${file}
+
+cmd=$0
+defaultcycles=4
+header=
+pack=	
+
+{ exitcode_=0
+while getopts c:fhp c
+do
+	case $c in
+	\?)
+		exitcode_=1
+		break;;
+	*)	if [ "$OPTARG" ]
+		then
+			arg="$arg -$c '$OPTARG'"
+		else
+			arg="$arg -$c"
+		fi;;
+	esac
+done
+shift `expr $OPTIND - 1`
+arg="$arg --"
+for i in "$@"
+do
+	arg="$arg '$i'"
+done
+eval set -- "$arg"
+test  $exitcode_ = 0 ;} || exec ${cmd}
+
+while [ -n "$1" ]
+do
+	case $1 in
+	-c )
+		shift
+		defaultcycles=$1
+		shift
+		;;
+	-f )	# Take arguments from file name.
+		# Lines that start with  #  are comments.
+		shift
+		shift	#  get rid of -- introduced by getopt
+		cat $*  |  grep -v '^#'  |
+			xargs ${cmd} -c${defaultcycles} ${headflag} ${packflag} --
+		exit
+		;;
+	-h )
+		header=all
+		headflag=$1
+		shift
+		;;
+	-p )
+		pack=all
+		packflag=$1
+		shift
+		;;
+	-- )
+		shift
+		break
+	esac
+done
+
+if [ $# = 0 ]
+then
+	echo >&2 "Usage:  ${cmd} [ -c <cycles> ] [ -p ] [ -h ] file ...
+	${cmd} [ -c <cycles> ] [ -p ] [ -h ] -f file ..."
+	exit 1
+fi
+
+umask 000
+for file
+do
+	if [ -n "${headflag}" ]
+	then
+		header=yes
+	fi
+	if [ -n "${packflag}" ]
+	then
+		pack=.z
+	fi
+	case ${file} in
+	-c[0-9]* )
+		nextcycle=`expr ${file} : '-c\(.*\)'`
+		continue
+		;;
+	-p )
+		pack=.z
+		continue
+		;;
+	-h )
+		header=yes
+		continue
+	esac
+	if [ -n "${nextcycle}" ]
+	then
+		cycles=${nextcycle}
+		lastcycle=${nextcycle}
+		nextcycle=
+	else
+		cycles=${defaultcycles}
+		lastcycle=${defaultcycles}
+	fi
+
+	if [ ! -f ${file} ]
+	then
+		echo >&2 "${cmd}:  No file '${file}'"
+		continue
+	fi
+
+	basename=`basename ${file}`
+	while [ ${cycles} -gt 1 ]
+	do
+		prev=`expr ${cycles} - 1`
+		if [ `expr ${basename}-${cycles}${pack} : '.*'` -gt 14 ]
+		then
+			echo >&2 "${cmd}:  filename too long '${file}-${cycles}${pack}'"
+			cycles=${prev}
+			continue
+		fi
+		if [ ${cycles} = ${lastcycle} ]
+		then
+			rm -f ${file}-${cycles} ${file}-${cycles}.z
+		fi
+		if [ -f ${file}-${prev}.z ]
+		then
+			mv -f ${file}-${prev}.z ${file}-${cycles}.z
+		elif [ -f ${file}-${prev} ]
+		then
+			mv -f ${file}-${prev} ${file}-${cycles}
+		fi
+		cycles=${prev}
+	done
+	mv -f ${file} ${file}-1
+
+	if [ -n "${pack}" ]
+	then
+		pack ${file}-1 >/dev/null 2>&1
+		pack=
+	fi
+
+	>> ${file}
+	if [ ${header} ]
+	then
+		(date; echo ============================) >> ${file}
+		header=
+	fi
+done

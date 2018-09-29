@@ -1,0 +1,61 @@
+.TH IPCRM 1
+.SH NAME
+ipcrm \- remove a message queue, semaphore set or shared memory id
+.SH SYNOPSIS
+.B ipcrm
+[
+\fIoptions\fR
+]
+.SH DESCRIPTION
+.I Ipcrm\^
+will remove one or more specified messages, semaphore or shared
+memory identifiers.  The identifiers are specified
+by the following \fIoptions\fR:
+.TP 12
+\fB\-q\fI msqid\fR
+removes the message queue identifier \fImsqid\fR
+from the system and destroys the message queue
+and data structure associated with it.
+.TP
+\fB\-m\fI shmid\fR
+removes the shared memory identifier \fIshmid\fR
+from the system.  The shared memory segment and data
+structure associated with it are destroyed after
+the last detach.
+.TP
+\fB\-s\fI semid\fR
+removes the semaphore identifier \fIsemid\fR
+from the system and destroys the set of semaphores and
+data structure associated with it.
+.TP 12
+\fB\-Q\fI msgkey\fR
+removes the message queue identifier, created with key \fImsgkey\fR,
+from the system and destroys the message queue
+and data structure associated with it.
+.TP
+\fB\-M\fI shmkey\fR
+removes the shared memory identifier, created with key \fIshmkey\fR,
+from the system.  The shared memory segment and data
+structure associated with it are destroyed after
+the last detach.
+.TP
+\fB\-S\fI semkey\fR
+removes the semaphore identifier, created with key \fIsemkey\fR,
+from the system and destroys the set of semaphores and
+data structure associated with it.
+.PP
+The details of the removes are described in \fImsgctl\fR(2),
+\fIshmctl\fR(2), and \fIsemctl\fR(2).
+The identifiers and keys may be found by using \fIipcs\fR(1).
+.SH "SEE ALSO"
+ipcs(1).
+.br
+msgctl(2),
+msgget(2),
+msgop(2),
+semctl(2),
+semget(2),
+semop(2),
+shmctl(2), shmget(2), shmop(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)ipcrm.1	6.2 of 9/2/83

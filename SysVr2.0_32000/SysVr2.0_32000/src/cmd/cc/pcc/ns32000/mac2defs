@@ -1,0 +1,54 @@
+/*	@(#)mac2defs	1.2	*/
+/*	VAX-11/780 Registers */
+
+	/* scratch registers */
+# define R0 0
+# define R1 1
+# define R2 2
+# define R3 3
+
+	/* register variables */
+# define R4 4
+# define R5 5
+# define R6 6
+# define R7 7
+
+	/* special purpose */
+# define AP 8 		/* argument pointer */
+# define FP 9 		/* frame pointer */
+# define SP 10	/* stack pointer */
+# define PC 11	/* program counter */
+
+	/* floating registers */
+
+	/* there are no floating point registers on the VAX */
+
+extern int fregs;
+extern int maxargs;
+
+# define BYTEOFF(x) ((x)&03)
+# define wdal(k) (BYTEOFF(k)==0)
+# define BITOOR(x) ((x)>>3)  /* bit offset to oreg offset */
+
+# define REGSZ 12
+
+# define TMPREG FP
+
+/* # define R2REGS		/* permit double indexing */
+# define R2FLAGS 07	/* on a 16 bit host 03 is best you can do */
+
+# define STOARG(p)     /* just evaluate the arguments, and be done with it... */
+# define STOFARG(p)
+# define STOSTARG(p)
+# define genfcall(a,b) gencall(a,b)
+
+# define NEWZZZ
+# define FIELDOPS
+# define NESTCALLS
+
+# define MYREADER(p) myreader(p)
+int optim2();
+
+# define SCCON (SPECIAL|3)	/* -256 <= constant < 256 */
+# define SSCON (SPECIAL|4)	/* -32768 <= constant < 32768 */
+# define SSOREG (SPECIAL|5)	/* non-indexed OREG */

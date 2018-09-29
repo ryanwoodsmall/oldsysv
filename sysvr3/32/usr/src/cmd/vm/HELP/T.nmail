@@ -1,0 +1,7 @@
+
+   Selecting New Mail brings up a menu of mail messages.
+   Use  the New Mail menu to read , delete, reply and save new
+   mail messages.  Invokes mailx(1) in full screen.
+   Refer to mailx(1) command in your UNIX User 
+   Reference Manual.
+

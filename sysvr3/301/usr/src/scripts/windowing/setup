@@ -1,0 +1,62 @@
+# @(#)setup.core	1.8
+#	setup for core package of AT&T Windowing Terminal Support
+#
+
+chown root /usr/bin/layers
+chmod 4555 /usr/bin/layers
+chown root /usr/lib/layersys/relogin
+chmod 4555 /usr/lib/layersys/relogin
+
+
+while  true
+do
+echo "Enter number of Windowing Terminals on your system (must be between 1 and 8):\\c"
+read b
+case $b in
+[12345678])
+		echo " "
+#
+#
+# Set up proto file so drvinstall can give us a major number.
+#
+	MAJNO=`/etc/drvinstall  -m /etc/master.d/xt -d /boot/xt.o -v1.0`
+	rm /boot/xt.o
+	break;;
+*)
+		echo "Must be between 1 and 8!"
+esac
+done
+
+cd /dev
+rm -f xt???
+rm -fr xt
+mkdir xt
+cd xt
+i=0
+while
+	[ $i !=  $b ]
+do
+	for j in 0 1 2 3 4 5 6 7
+		do
+			/etc/mknod 0$i$j c $MAJNO  `expr $i \* 8 + $j` 
+			ln 0$i$j ../xt0$i$j
+		done
+	i=`expr $i + 1`
+done
+
+echo '
+NOTE:
+You will have to reboot your system to get the new
+"xt" driver installed before using AT&T Windowing.
+This can be accomplished by using the simple
+administration command "shutdown -g0 -y -i6".
+
+If you have DMD software installed already you should
+have /usr/bin before $DMD/bin in your path. This 
+will allow you to use either AT&T Windowing or DMD layers.
+To use DMD software you should have your DMD variable
+set appropriately.
+ 
+The AT&T Windowing Package has been installed in
+/usr/bin /usr/lib and /usr/include . 
+'

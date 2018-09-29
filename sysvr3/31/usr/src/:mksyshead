@@ -1,0 +1,56 @@
+#ident	"@(#)mk::mksyshead	1.17"
+#
+#	Install UNIX System 'sys' header files
+#
+SRCDIR=${SRC:-$ROOT/usr/src}/uts
+TARGDIR=$ROOT/usr/include/sys
+trap "rm -fr $TARGDIR/[a-m]* ; rm -fr $TARGDIR/* ; exit 1" 1 2 3 15
+if vax
+then
+	MACH=vax/sys
+elif pdp11
+then
+	MACH=pdp11/sys
+elif u3b
+then
+	MACH=3b/sys
+elif u3b2
+then
+	MACH=3b2/sys
+elif u3b15
+then
+	MACH=3b15/sys
+fi
+#
+rm -fr $TARGDIR/[a-m]* ; rm -fr $TARGDIR/*
+for DIR in sys $MACH
+do
+	if [ -d $SRCDIR/$DIR ]
+	then (
+		cd $SRCDIR/$DIR
+		echo "Installing $SRCDIR/$DIR into $TARGDIR:"; ls -Rx
+		find ./ -type f -print | cpio -pdu $TARGDIR
+	) fi
+done
+#	Set file and directory permissions
+DIRS=`find $TARGDIR -type d -print`
+
+for MODE in $DIRS
+do	chmod 755 $MODE
+done
+
+FILES=`find $TARGDIR -type f -print`
+
+for MODE in $FILES
+do	chmod 664 $MODE
+done
+
+#	If native build then set owner and group
+if [ "$ROOT" = "" ]
+then
+	for OWN_GRP in $FILES $DIRS
+	do	chown bin $OWN_GRP
+		chgrp bin $OWN_GRP
+	done
+fi
+exit 0

@@ -1,0 +1,51 @@
+
+\Sfind\S:  Options
+
+     \Sfind\S does not have any options.
+
+     \Sfind\S does use logical expressions for arguments.  Logical expressions
+     can be used alone or in combination with one another.  Two logical
+     expressions separated by a blank space are related by logical "and".  Two
+     logical expressions separated by "-o" are related by logical "or".  A "!"
+     preceding a logical expression is a logical negation of the expression.
+     \Sfind\S also enables you to group expressions using parenthesis, (), but
+     you must precede each parenthesis with a "\".  The following is a list of
+     the possible logical expressions:
+
+
+     -name file_name   searches for file named <file_name>.
+
+     -perm octal_code  searches for files with <octal_code> permissions.
+ 
+     -type file_type   searches for files of type <file_type>, where
+                       <file_type> is one of the following:  b for block
+                       special; c for character special; d for directory; p
+                       for named pipe; or f for ordinary file.
+     -links n    searches for files with <n> links.
+     -user userID    searches for files that are owned by the user with
+                     <userID> which is a login name or numeric user ID.
+     -group groupID  searches for files belonging to a group where <groupID>
+                     is a group name or numeric group ID.
+     -size n [c]    searches for files of size <n> blocks long, or <n>
+                    characters if you include "c".
+     -atime n   searches for files that have been accessed within <n>
+                days.
+     -mtime n   searches for files whose contents have been modified
+                within <n> days.
+     -ctime n   searches for files whose modes have been changed within
+                <n> days.
+
+
+     -exec command    executes <command>.  The argument {} means that the
+                      path name that is matched by find is replaced by the
+                      current path name.
+     -ok command      like "-exec", but prints <command> and executes it only
+                      if user responds with "y" for yes.
+     -print         prints path names of files that it identifies.
+     -cpio device     copies files to <device>.
+     -newer file_name   searches for files whose data has been modified more
+                        recently than <file_name>.
+     -depth         acts upon all entries of a directory before the
+                    directory itself.
+
+

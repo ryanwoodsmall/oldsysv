@@ -1,0 +1,142 @@
+.TH SHMOP 2
+.SH NAME
+shmop \- shared memory operations
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B #include <sys/ipc.h>
+.br
+.B #include <sys/shm.h>
+.PP
+.nf
+.B char \(**shmat (shmid, shmaddr, shmflg)
+.B int shmid;
+.B char \(**shmaddr
+.B int shmflg;
+.PP
+.B int shmdt (shmaddr)
+.B char \(**shmaddr
+.fi
+.SH DESCRIPTION
+.I Shmat
+attaches the shared memory segment associated with the shared memory identifier
+specified by
+.I shmid
+to the data segment of the calling process.
+The segment is attached at the address specified by one of the following
+criteria:
+.IP
+If
+.I shmaddr
+is equal to zero, the segment is attached at the first available address as
+selected by the system.
+.IP
+If
+.I shmaddr
+is not equal to zero and
+.RI ( shmflg " &"
+.SM
+.B SHM_RND\*S)
+is ``true'', the segment is attached at the address given by
+.RI ( shmaddr " -" 
+.RI [ shmaddr " modulus"
+.SM
+.BR SHMLBA\*S ")]."
+.IP
+If
+.I shmaddr
+is not equal to zero and
+.RI ( shmflg " &"
+.SM
+.B SHM_RND\*S)
+is ``false'', the segment is attached at the address given by
+.IR shmaddr .
+.PP
+The segment is attached for reading if
+.RI ( shmflg " &"
+.SM
+.B SHM_RDONLY\*S)
+is ``true''
+.SM
+\%{READ}\*S,
+otherwise it is attached for reading and writing
+.SM
+\%{READ/WRITE}\*S.
+.PP
+.I Shmat
+will fail and not attach the shared memory segment if one or more of the
+following are true:
+.TP 15
+.SM
+\%[EINVAL]
+.I Shmid
+is not a valid shared memory identifier.
+.TP
+.SM
+\% [EACCES]
+Operation permission is denied to the calling process [see
+.IR intro (2)].
+.TP
+.SM
+\%[ENOMEM]
+The available data space 
+is not large enough to accommodate the shared memory segment.
+.TP
+.SM
+\%[EINVAL]
+.I Shmaddr
+is not equal to zero, and the value of
+.RI ( shmaddr " -" 
+.RI [ shmaddr " modulus"
+.SM
+.BR SHMLBA\*S ")]"
+is an illegal address.
+.TP
+.SM
+\%[EINVAL]
+.I Shmaddr
+is not equal to zero,
+.RI ( shmflg " &"
+.SM
+.B SHM_RND\*S)
+is ``false'', and the value of
+.I shmaddr
+is an illegal address.
+.TP
+.SM
+\%[EMFILE]
+The number of shared memory segments attached to the calling process would
+exceed the system-imposed limit.
+.PP
+.TP 15
+.SM
+\%[EINVAL]
+.I Shmdt
+detaches from the calling process's data segment
+the shared memory segment located at the address specified by
+.IR shmaddr.
+.PP
+.TP 15
+.SM
+\%[EINVAL]
+.I Shmdt
+will fail and not detach the shared memory segment if
+.I shmaddr
+is not the data segment start address of a shared memory segment.
+.SH RETURN VALUES
+Upon successful completion, the return value is as follows:
+.br
+.ne 8v
+.IP
+.I Shmat
+returns the data segment start address of the attached shared memory segment.
+.IP
+.I Shmdt
+returns a value of 0.
+.PP
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH SEE ALSO
+exec(2), exit(2), fork(2), intro(2), shmctl(2), shmget(2).
+.\"	@(#)shmop.2	6.2 of 9/6/83

@@ -1,0 +1,7 @@
+*#ident	"@(#)kern-port:master.d/prf	10.3"
+*
+* PRF
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+ocs	-     	  prf	-
+						prfintr(){}

@@ -1,0 +1,89 @@
+.tr ~
+.nr )s 0
+.if t .if \ns .nr )s 1\"register )s=1 iff troff & small format; 0 otherwise
+.nr )t 0
+.if t .if !\ns .nr )t 1\"register )t=1 iff troff & large format; 0 otherwise
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 9
+.	     vs 10p \}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 10
+.	     vs 12p \}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .5i \}
+.ds ET\"
+.de HD
+.if t \{.po 0
+.	 lt 7.5i
+.	 if \\n()s .tl @\l@0.25i@@@\l@0.25i@\h@1i@\l@0.25i@@
+.	 if \\n()t .tl @\l@0.25i@@@\l@0.25i@@
+.	 lt
+.	 po
+'	 br \}
+.ie \\n()s 'sp 2v
+.el 'sp 3v
+.if e .tl @\s9\\*(ET\s0@@@
+.if o .tl @@@\s9\\*(ET\s0@
+.ie \\n()s 'sp 1v
+.el 'sp 3v
+.ns
+..
+.de FO
+.if \\n()s 'sp |\\n(.pu-1v-1p
+.if \\n()t 'sp |\\n(.pu-3v
+.if n 'sp |\\n(.pu-4v
+.if e .tl @\s9\\*(Dt@- % -@\\*(Ed\s0@
+.if o .tl @\s9\\*(Ed@- % -@\\*(Dt\s0@
+'bp
+..
+.wh 0 HD
+.if \n()s .wh -3.5v FO
+.if \n()t .wh -6v FO
+.if n .wh -7v FO
+.if \n(nl .bp
+.br
+.nr % 1
+.ds ET \f2Table \|of \|Contents\^\fP
+.if !\n()s .ds Ed UNIX \|System V Release \|2.0
+.if !\n()s .ds Dt June \|1984
+.ce
+\f3TABLE \|OF \|CONTENTS\fP
+.nr )x .5i
+.if \n()s .nr )x .25i
+.in +\n()xu
+.ta \n(.lu-\n()xuR
+.nf
+.de xx
+\\$1\f3\a\fP\\$2
+..
+.nr )a 0 1
+.de t
+.sp 1v
+.ne 3v
+.nr )a \\$1
+.ti -\n()xu
+.ss 18
+\f3\s9\\n()a.~\|\\$2\s0\fP
+.ss 12
+.if t .sp .5v
+.cs 3 36
+.so ./toc\\n()a
+.br
+.cs 3
+..
+.t 2 "System Calls"
+.t 3 "Subroutines"
+.t 4 "File Formats"
+.t 5 "Miscellaneous Facilities"
+.in -\n()xu
+.if n .ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 80n
+.if t .ta 3.6m 7.2m 10.8m 14.4m 18m 21.6m 25.2m 28.8m 32.4m 36m 39.6m 43.2m 46.8m
+.\"	@(#)tocin	5.2 of 5/18/82

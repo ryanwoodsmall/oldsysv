@@ -1,0 +1,188 @@
+#ident	"@(#)sadmin:admin/mountfsys	2.16"
+#	Mount a removable medium file system.
+#help# 
+#help#	Mountfsys mounts a file system, found on a removable medium, making
+#help#	it available to the user.  The file system is unmounted with the
+#help#	"umountfsys" command.  THE MEDIUM MUST NOT BE REMOVED WHILE THE
+#help#	FILE SYSTEM IS STILL MOUNTED.
+
+#!	chmod +x ${file}
+rc=2
+flags="-qq -k$$"	# flags for checkyn to implement [q] (quit)
+trap 'exit $rc' 1 2 15
+
+unset disklabelarg makedir mountit readonly patterns
+
+while getopts p:ry c 
+do
+	case "$c" in
+	p )
+		patterns=$OPTARG
+		;;
+	y )
+		disklabelarg=-y
+		mountit=yes
+		;;
+	r )
+		readonly=-r
+		;;
+	\? )
+		echo >&2 "Usage:  `basename $0` [ -p pattern ] [ -r ] [ -y ]
+-r	mount the removable medium file system read-only
+-y	mount the removable medium file system without asking any questions"
+		rc=1
+		exit $rc
+		;;
+	esac
+done
+
+if [ ${READ:=0} -eq 1 ]
+then readonly=-r
+fi
+
+shift `expr $OPTIND - 1`
+if [ $# != 0 ]
+then
+	echo >&2 "Usage:  `basename $0` [ -p pattern ] [ -r ] [ -y ]
+-r	mount the removable medium file system read-only
+-y	mount the removable medium file system without asking any questions"
+	rc=1
+	exit $rc
+fi
+
+dir=${0}.d
+if [ -z "${patterns}"  -a  -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+: ${disklabelarg:="-n${ndrive}"}
+l=`disklabel "${disklabelarg}" $$ ${ddrive}`
+trap "	trap '' 1 2
+	echo You may remove the medium from the ${ndrive}." 0
+eval `labelfsname "${l}"`
+
+if [ -z "${fsname}" ]
+then
+	echo '	This medium was not properly initialized as a file system.
+	It may not be mountable.
+	Suggestions:  1)  check to see if this medium has been used for a 
+			  backup or some other purpose.
+		      2)  use "makefsys" to create a file system on this
+			  medium.
+		      3)  this may be an unlabeled medium with a valid file 
+			  system on it.'
+	fsname=`checkre ${flags} -H'
+	The file system name is the name of the directory where you want the
+	file system mounted.  It determines the first name in the full path
+	names of the files it contains.  Thus if you specify "ray" as the
+	file system name, the file system will be mounted on directory "/ray"
+	and all file names will begin with "/ray/".' -fe \
+	"To try and mount this medium, enter the file system name [?, q]" \
+	'^/\{0,1\}.\{1,6\}$' 'Must be at least one and no more than 6 characters.' \
+	'^/\{0,1\}[a-zA-Z0-9]*$' 'Must be letters and numbers only.'`
+fsname=`expr ${fsname} : '/*\(.*\)'`
+fi
+while true
+do
+ERR=0
+if [ -f /${fsname} ]
+then
+	echo "\tA file by that name already exists in the root directory."
+	ERR=1
+elif [ -d /${fsname} ]
+      then
+	mounted=`/etc/mount | sed 's; .*;;'`
+	if echo "$mounted" | grep "/${fsname}\$"
+	then
+		echo "\tA file system with that name is already mounted."
+		ERR=1
+	else
+		echo "\tWARNING: A directory of that name already exists."
+		echo "\t         Once this medium is mounted, it will overlay"
+		echo "\t         all files and directories in the original"
+		echo "\t         directory (making them inaccessible) until"
+		echo "\t         this medium is unmounted."
+		break
+	fi
+else
+makedir=
+if [ ! -d /${fsname} ]
+then
+	makedir="
+(There is not currently a /${fsname} directory,
+but this procedure will make one.)
+"
+break
+fi
+fi
+
+if [ $ERR -eq 1 ]
+then
+	echo "\tPlease choose another file system name."
+	fsname=`checkre ${flags} -H'
+	The file system name is the name of the directory where you want the
+	file system mounted.  It determines the first name in the full path
+	names of the files it contains.  Thus if you specify "ray" as the
+	file system name, the file system will be mounted on directory "/ray"
+	and all file names will begin with "/ray/".' -fe \
+	"Enter the file system name [?, q]" \
+	'^/\{0,1\}.\{1,6\}$' 'Must be at least one and no more than 6 characters.' \
+	'^/\{0,1\}[a-zA-Z0-9]*$' 'Must be letters and numbers only.'`
+fsname=`expr ${fsname} : '/*\(.*\)'`
+fi
+done
+
+while true
+do
+	trap "" 0 1 2 15
+	if [ ! -d /${fsname} ]
+	then
+		mkdir /${fsname}
+		madedir=yes
+	fi
+	if  mountmsg=`/etc/mount ${ddrive} /${fsname} ${readonly} 2>&1`
+	then
+		echo "Disk '${label}', file system '/${fsname}' mounted. ${makedir}"
+		echo " DO NOT REMOVE THE MEDIUM UNTIL IT IS UNMOUNTED!"
+		rc=0
+		exit $rc
+	fi
+	if [ ${madedir} ]
+	then
+		rmdir /${fsname}
+	fi
+	echo '\tThe mount failed.'
+	case "${mountmsg}" in
+	*'needs checking'* )
+		echo '\tThe file system on this medium needs to be checked.
+	Suggestion:  use "checkfsys" to look for and repair file system damage.'
+		rc=1
+		break	;;
+	*write-protected* )
+		echo '\tThe medium is write protected and cannot be mounted for update.
+	Suggestions:  1)  remove the write protection.
+		      2)  mount it for reading only.\n'
+	if checkyn -f 'Do you want to mount the file system for reading only?'
+	then	readonly=-r
+	else
+		rc=1
+		break
+	fi
+	;;
+	* )
+		echo "\\t${mountmsg}"
+		rc=1
+		break
+	esac
+done
+	echo You may remove the medium from the ${ndrive}.
+exit $rc

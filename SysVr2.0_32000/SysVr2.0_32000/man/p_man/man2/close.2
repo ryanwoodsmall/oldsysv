@@ -1,0 +1,42 @@
+.TH CLOSE 2 
+.SH NAME
+close \- close a file descriptor
+.SH SYNOPSIS
+.B int close (fildes)
+.br
+.B int fildes;
+.SH DESCRIPTION
+.PP
+.I Fildes\^
+is a
+file descriptor
+obtained from a
+.IR creat ,
+.IR open ,
+.IR dup ,
+.IR fcntl ,
+or
+.I pipe\^
+system call.
+.I Close\^
+closes the file descriptor indicated by
+.IR fildes .
+All outstanding record locks owned by the process (on the file indicated by
+\f2fildes\fR) are removed.
+.PP
+.TP \w'[\s-1EBADF\s+1]\ \ 'u
+.TP
+\%[EBADF]
+.I Close\^
+will fail if
+.I fildes\^
+is not a valid open
+file descriptor.
+.SH "RETURN VALUE"
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+creat(2), dup(2), exec(2), fcntl(2), open(2), pipe(2).
+.\"	@(#)close.2	6.2 of 9/6/83

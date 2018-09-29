@@ -1,0 +1,11 @@
+
+\Sfalse\S:  Description
+
+Syntax Summary:  false
+
+Description:
+     The primary use for \Sfalse\S is to create an infinite loop in a shell
+     program.  \Sfalse\S does this by setting the exit status to a non-zero
+     number.  The loop in the program continues until it encounters "break" or
+     "exit" in the loop.  See glossary(1) for a description of exit status.
+     See also: true(1) for a command with a function similar to false(1).

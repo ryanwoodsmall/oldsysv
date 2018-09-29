@@ -1,0 +1,18 @@
+# Xerox 9700 typesetter simulator. SCCS @(#)DESC	1.1
+# Times style, basic size=10 point, portrait mode
+fonts 5 R I B S CW
+sizes 7 10 15 0
+res 300
+hor 1
+vert 1
+unitwidth 10
+paperlength 3300
+paperwidth 2550
+charset
+!= ** *C *D *F *G *H *L *P *Q *S *W *a *b *c *d *e *f *g *h 
+*i *k *l *m *n *o *p *q *r *s *t *u *w *x *y *z +- -> .. 12 
+14 34 <- <= == >= L. Sl \- \^ \_ \| aa al ap b0 b9 br bs bu 
+bv bx ca cd ci co ct cu da dd de dg di em en eq es fa fe fm 
+ga gr hc hy ib if ip is l. lb lc lf lh lk lt ma mi mo mu no 
+ob or pd pl pp pt rb rc rf rg rh rk rn rt ru sb sc sl sp sq 
+sr ss te tm tp ts ua ul vr ~= ~~ 

@@ -1,0 +1,45 @@
+menu="Help Facility: Table of Contents"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=13
+begcol=26
+
+name="command menu"
+description=
+action=OPEN TEXT OBJECTS/Text.help T.h7.cmd 'command menu'
+
+name="commands overview"
+description
+action=OPEN MENU OBJECTS/Menu.h6.list
+
+name="frames overview"
+description
+action=OPEN TEXT OBJECTS/Text.help T.h3.frames 'frames overview'
+
+name="help facility overview"
+description
+action=OPEN TEXT OBJECTS/Text.help T.h1.help 'help facility overview'
+
+name="installed applications"
+description
+action=OPEN TEXT OBJECTS/Text.help T.instal 'installed applications'
+
+name="objects overview"
+description
+action=OPEN MENU OBJECTS/Menu.h4.obj
+
+name="office overview"
+description
+action=OPEN MENU OBJECTS/Menu.h5.off
+
+name="print options"
+action=OPEN MENU OBJECTS/Menu.h9.prt
+description
+
+name="FACE overview"
+description
+action=OPEN TEXT OBJECTS/Text.help T.h2.system 'FACE overview'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

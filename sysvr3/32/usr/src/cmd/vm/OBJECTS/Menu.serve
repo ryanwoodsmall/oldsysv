@@ -1,0 +1,12 @@
+menu=Services
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.h54.serve Services
+
+name=Mail Services
+action=OPEN MENU $VMSYS/OBJECTS/Menu.mail
+
+`readfile $HOME/pref/services`
+
+name=UPDATE
+button=8
+action=return update

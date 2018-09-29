@@ -1,0 +1,1126 @@
+.\"	@(#)errmess3	5.3 of 6/18/82
+.NM "panic: uba, zero entry \*(Vo"
+.Ds
+While trying to perform physical I/O,  an attempt to map to a
+UNIBUS address referenced a corrupted area in memory
+(should not have been zero).
+.Ac
+Take a dump and reboot the system.
+The \fIcrash\fP(1M) command can be used to gather more information
+from the dump about the nature of the problem.
+See the \fIcrash\fP(1M) manual page in
+the \*(Am.
+Probable causes include both software and hardware problems.
+Check any new device drivers which have not been completely
+debugged or any UNIX System device driver which has been modified
+without authorization.
+Also, check that the configuration information in the system
+description file is correct.
+If none of the above apply, suspect bad hardware and contact
+your support organization.
+.Rf
+io/uba.c
+.LE
+.NM "panic: unknown segment type in procdup \*(Bo"
+.Ds
+The system found an unrecognized segment type in a process's
+segment table during a fork.
+.Ac
+Take a dump and reboot the system.
+The \fIcrash\fP(1M) command can be used to gather more information from
+the dump about the nature of the problem.
+See the \fIcrash\fP(1M) manual page in
+the \*(Am.
+If the delivered UNIX System operating system has not been altered,
+suspect hardware problems and
+contact your support organization.
+.Rf
+os/machdep.c
+.LE
+.NM "panic: x25buffers \*(Do"
+.Ds
+Sufficient memory could not be obtained to allocate x25's external buffers.
+This error occurs during system startup only.
+.Ac
+Boot a different system.
+Reevaluate the number of entries allocated for the x25 external buffers
+(x25bufs) in the offending system description file.
+Decrease the size of the system by modifying this parameter or modifying
+the entries in the description file in a way acceptable to you.
+Regenerate and boot the new system.
+If decreasing system parameters is unacceptable, memory should be added
+to the machine.
+.Rf
+io/x25b.c
+.LE
+.NM "Panicked \*(Do"
+.Ds
+Printed after a power fail condition if a panic occurred
+before or during recovery.
+Prior to this message, a system panic message \fBpanic: \fIpanicstr\fR
+should appear on the console.
+.Ac
+This message indicates two problems, the power failure and
+the panic.
+The first concern is the power failure.
+Refer to the action section for the message \fBPower fail \fI#\fR
+for details.
+To correct the panic condition, refer to the action section
+for the specified panic.
+Although it is possible that the power failure may have caused
+the panic, it is best to investigate each condition separately.
+.Rf
+io/pwr.c
+.LE
+.NM "parity \*(Po"
+.Ds
+A system memory error has occurred.
+If the processor is an 11/70, this message is followed by:
+.DS
+	\fI# # # #\fP
+.DE
+which indicate the contents of the Low Error Address Register,
+the High Error Address Register, the Memory System Error Register,
+and the Control Register.
+See chapter 7 in the \fIPDP-11/70 Processor Handbook\fP,
+Digital Equipment Corporation, 1977-78.
+If this condition occurred while in User Mode, the process is
+terminated without a panic, otherwise a \fBpanic: parity\fP
+condition will follow.
+.Ac
+This message indicates a hardware memory problem.
+Contact your support organization.
+.Rf
+os/trap.c
+.LE
+.NM "pcl[\fI#\fP] bad hdr: \fI#\fP \*(Do"
+.Ds
+A bad message header was received from a remote system.
+The [\fI#\fP] indicates the PCL11B device number (0 or 1), while
+the other number is the value of the header in error.
+.Ac
+This message indicates a PCL11B hardware problem with the remote machine.
+It is printed for your information.
+.Rf
+pwb/pcl.c
+.LE
+.NM "pcl[\fI#\fP] recv err \*(Do"
+.Ds
+A receiver error interrupt occurred while no channel was open.
+The [\fI#\fP] indicates the PCL11B device number (0 or 1).
+.Ac
+This message indicates a hardware problem with the PCL11B.
+Contact your support organization.
+.Rf
+pwb/pcl.c
+.LE
+.NM "pcl[\fI#\fP] rsr err \fI#\fP \*(Do"
+.Ds
+An unrecognized receiver interrupt occurred.
+The [\fI#\fP] indicates the PCL11B device number (0 or 1) while the
+rsr err \fI#\fP is the contents of the receiver status register.
+.Ac
+This message indicates a hardware problem with the PCL11B.
+Contact your support organization.
+.Rf
+pwb/pcl.c
+.LE
+.NM "pcl[\fI#\fP] tsr err \fI#\fP \*(Do"
+.Ds
+An unrecognized transmitter interrupt occurred.
+The [\fI#\fP] indicates the PCL11B device number (0 or 1), while the
+tsr number is the contents of the transmitter status register.
+.Ac
+This message indicates a hardware problem with the PCL11B.
+Contact your support organization.
+.Rf
+pwb/pcl.c
+.LE
+.NM "pcl[\fI#\fP] xmit int \fI#\fP \*(Do"
+.Ds
+A transmit interrupt occurred while no transmission was in progress.
+The [\fI#\fP] indicates the PCL11B device number (0 or 1), while the
+xmit int \fI#\fP is the contents of the transmitter status register.
+.Ac
+This message indicates a hardware problem with the PCL11B.
+Contact your support organization.
+.Rf
+pwb/pcl.c
+.LE
+.NM "pid \fI#\fP killed due to non-existent memory \*(Bo"
+.Ds
+A non-existent memory trap occurred when the designated process was
+running.
+Pid is the process id.
+.Ac
+Provided that the delivered UNIX System operating system has not been
+altered, suspect hardware problems, and contact your support organization.
+.Rf
+os/trap.c
+.LE
+.NM "pid \fI#\fP killed due to non-resident page \*(Bo"
+.Ds
+A non-resident page trap occurred when the designated process was running.
+Pid is the process id.
+.Ac
+Provided that the delivered UNIX System operating system has not been altered,
+suspect hardware problems, and contact your support organization.
+.Rf
+os/trap.c
+.LE
+.NM "pid \fI#\fP killed due to parity error \*(Bo"
+.Ds
+A non-correctable memory parity error occurred in a process's
+memory space.
+The designated process was terminated.
+.Ac
+The page of memory where the error occurred will be queued for
+removal and then removed from the system's memory free list.
+.Rf
+os/trap.c
+.LE
+.NM "POWER ALARM EXISTS IN MACHINE \*(Bo"
+.Ds
+A power loss has been detected in the machine.
+.Ac
+The system may crash or remain running in a degraded mode.
+If it crashes, determine whether the power loss is
+external or internal.
+If external, have the power restored if possible.
+If internal, contact your support organization.
+If the machine continues to run, this message will be
+followed by out-of-service messages for
+those devices that are associated with the affected power supply.
+In this case, contact your support organization.
+.Rf
+io/pwr.c
+.LE
+.NM "Power fail \fI#\fP \*(Do"
+.Ds
+A power fail condition has been detected.
+If power fail recovery has been specified in the system configuration,
+the initialization process will be informed.
+The \fI#\fP is incremented each time a power fail
+occurs and the recovery is successful.
+It is reset to zero at each system reboot.
+.Ac
+If the power parameter in the system configuration file has a value
+of 1, power fail restart is initiated.
+Otherwise, if its value is 0 (default), automatic restart is inhibited.
+If power fail restart was enabled and the system continued to run,
+recovery was successful and all \fIshould\fP be fine.
+Do not halt the system as this would be counter-productive
+to the idea of power fail recovery.
+Determine the cause of the power failure and take the
+appropriate steps to see that it is corrected.
+If power fail restart was enabled and the system failed to recover,
+determine the cause of the problem, see that it is corrected, and
+then reboot the system.
+If power fail restart was disabled, the message \fBStopped\fP will
+appear on the console.
+Again, determine the cause of the failure, correct it, and reboot
+the system.
+.Rf
+io/pwr.c
+.LE
+.NM "POWER FAIL IMMINENT \*(Bo"
+.Ds
+This message will appear after the processor has been running on
+battery backup for approximately ten minutes.
+At this time, the signal SIGPWR will be sent to all processes and
+the processor will no longer be able to access the disk drives.
+Battery backup will last for approximately five minutes more.
+.Ac
+Wait until power is restored and then boot the machine.
+.Rf
+io/pwr.c
+.LE
+.NM "proc on q"
+.Ds
+When making a process runnable, after the occurrence of a wakeup event,
+it was found that the process was already on the system run queue.
+.Ac
+Provided that the delivered UNIX System operating system has not been altered,
+contact your support organization.
+.Rf
+os/slp.c
+.LE
+.NM "programmed interrupt - level \fI#\fP  \*(Bo"
+.Ds
+A programmed interrupt with the designated level has occurred.
+.Ac
+This should not occur since this feature is unused on the 3B20 Simplex.
+If it occurs, contact your support organization.
+.Rf
+ml/pirq.c
+.LE
+.NM "RDS \fI#\fP: er \fI#\fP, ma \fI#\fP  \*(Xo"
+.Ds
+A memory read error has occurred through the Synchronous Backplane
+Interconnect (SBI).
+A Read Data Substitute (RDS) error indicates that the data was
+badly scrambled and that zero was substituted in.
+The first number given is the number of times this error has occurred
+since the last reboot.
+The ``er'' is the contents of the Synchronous Backplane Interconnect (SBI)
+error register and ``ma'' is the contents of memory configuration
+register C.
+When this error appears on the console, a more detailed version
+is put into the error log, \fB/usr/adm/errfile\fP.
+For more details, see pp. 311-324 in the
+\fIVAX Hardware Handbook\fP, Digital Equipment Corporation, 1980-81.
+.Ac
+An RDS error indicates severe hardware problems
+which may cause the system
+to crash.
+Contact your support organization.
+.Rf
+os/macherr.c
+.LE
+.NM "RM05 drive \fI#\fP not available  \*(Xo"
+.Ds
+The designated drive is no longer accessible.
+.Ac
+Check that the drive number specified is the number of a powered up,
+online disk drive.
+If so, check that the drive number plug, known as the Logical Address Plug (LAP),
+is fully inserted.
+If a dual ported drive is involved, be sure that it is currently
+residing on your system.
+If none of the above apply, contact your support organization.
+.Rf
+io/hm.c
+.LE
+.NM "RP04/5/6 drive \fI#\fP not available  \*(Do"
+.Ds
+The designated drive is no longer accessible.
+.Ac
+Check that the drive number specified is the number of a powered up,
+online disk drive.
+If so, check that the drive number plug, known as the Logical Address Plug (LAP),
+is fully inserted.
+If a dual ported drive is involved, be sure that it is currently
+residing on your system.
+If none of the above apply, contact your support organization.
+.Rf
+io/hp.c
+.LE
+.NM "RS03/4 not available \*(Po"
+.Ds
+An RS03 or RS04 disk drive is no longer accessible.
+.Ac
+Check that the drive number specified is the number of a powered up,
+online disk drive.
+If so, check that the drive number plug, known as the Logical Address Plug (LAP),
+is fully inserted.
+If a dual ported drive is involved, be sure that it is currently
+residing on your system.
+If none of the above apply, contact your support organization.
+.Rf
+io/hs.c
+.LE
+.NM "running low on page tables \*(Bo"
+.Ds
+During a process fork, the number of available page tables was
+found to be less than twice the maximum required per process.
+The fork failed.
+.Ac
+If this condition persists, increase the number entries allocated for page tables (ptbls) in your
+system description file and generate a new system.
+Boot the new system.
+.Rf
+os/sys1.c
+.LE
+.NM "SBI \fIstring\fP, cnt \fI#\fP, pc \fI#\fP, ps \fI#\fP  \*(Xo" "fs \fI#\fP, er \fI#\fP, ta \fI#\fP, mt \fI#\fP[, sc \fI#\fP]"
+.Ds
+A Synchronous Backplane Interconnect (SBI) fault has occurred.
+The \fIstring\fP will be one of the following:
+.DS
+	silo compare
+	alert
+	fault
+	CPU timeout
+.DE
+.P
+The remaining fields are described below.
+.TS
+l lw(4i).
+cnt	T{
+the number of SBI messages of the current type that have occurred since the last reboot
+T}
+pc	T{
+the contents of the program counter
+T}
+ps	T{
+the contents of the program status word
+T}
+fs	T{
+the contents of the SBI fault status register
+T}
+er	T{
+the contents of the SBI error register
+T}
+ta	T{
+the value of the SBI timeout address
+T}
+mt	T{
+the contents of the SBI maintenance register
+T}
+sc	T{
+the contents of the Silo compare register
+T}
+.TE
+.P
+If the error was ``silo compare'' or ``fault'',
+this message will be followed by a dump of the SBI history
+silo:
+.DS
+	Silo: \fI# # # # # # # #\fP
+	      \fI# # # # # # # #\fP
+.DE
+The silo contains information on the last 16 bus activities.
+.P
+For further details,
+see chapter 16 in the \fIVAX Hardware Handbook\fP, Digital Equipment
+Corporation, 1980-81.
+.Ac
+Contact your support organization.
+.Rf
+os/macherr.c
+.LE
+.NM "st: can't allocate I/O buffers \*(Mo"
+.Ds
+At system initialization time, it was found that there was not
+enough memory available to allocate for synchronous terminal (ST) buffers.
+.Ac
+This message indicates that synchronous terminals are currently unusable
+due to insufficient memory.
+Either the sizes specified for the STIBSZ and/or STOBSZ parameters in the 
+system description file must be decreased, or by other means, the system
+size must be reduced.
+If the above solutions are not acceptable, more memory must be added
+to the machine.
+For more information on ST configuration parameters,
+see the section on synchronous terminals in
+in the \*(Sb section of the \*(Ag.
+.Rf
+io/st1.c (PDP-11), io/st.c (3B20S)
+.LE
+.NM "st: dev \fIcontroller #\fP, \fIdevice #\fP, XMT fail \fI#\fP"
+.Ds
+The specified device associated with the specified controller
+returned a failure code for a transmit block.
+The failure codes, in hexadecimal, are:
+.VL 5 "" 1
+.LI 2
+not acknowledged (NAK) response to a transmitted block
+.LI 8
+response to a transmitted block was not received
+in the allotted time (timeout)
+.LI 10
+garbage response to a transmitted block or select
+.LI 20
+end-of-transmission (EOT) response to a transmitted block.
+.LE
+.Ac
+All of these failure codes can be attributed to a problem
+with the communications line.
+Contact your support organization.
+Failure code 2 can also be caused by user level programs
+that are not completely debugged.
+.Rf
+io/st1.c (PDP-11), io/st.c (VAX-11 & 3B20S)
+.LE
+.NM "st: line \fI#\fP ERRTERM reason \fI#\fP"
+.Ds
+On the specified line, an error was received from the KMC11B (DEC)
+or the UN53 (3B20S).
+The second number is the error code.
+.Ac
+All error codes are listed and explained on the \fIvpm\fP(7) manual page
+in the \*(Am.
+.Rf
+io/st1.c (PDP-11), io/st.c (VAX-11 & 3B20S)
+.LE
+.NM "st: line \fI#\fP restart failed (\fI#\fP)"
+.Ds
+After the interpreter detected loss of the modem-ready (MR) signal on the
+specified line, a restart was attempted.
+This restart failed.
+The last number is the termination code.
+.Ac
+See the explanation of the termination code(s) on the \fIvpm\fP(7)
+manual page in the \*(Am.
+.Rf
+io/st1.c (PDP-11), io/st.c (VAX-11 & 3B20S)
+.LE
+.NM "stinit: # of printers reduced to \fI#\fP"
+.Ds
+The number of synchronous printers (stnprnt) specified in the system
+description file is greater than the number of
+synchronous terminal devices (printers + terminals) configured.
+Because of this conflict, the actual number of synchronous printers
+will be assigned a default value -  one quarter of all
+synchronous terminal devices.
+The specified number represents this default value.
+.Ac
+This message indicates a problem with the synchronous printer
+(stnprnt) entry in the system description file.
+Check that the number of synchronous printers (last field of stnprnt line)
+does not exceed the total number of synchronous terminal devices
+(last field of st line).
+.Rf
+io/st1.c (PDP-11), io/st.c (VAX-11 & 3B20S)
+.LE
+.NM "Stopped \*(Do"
+.Ds
+Printed after a power fail condition if power fail recovery has not been specified.
+The system is halted.
+.Ac
+Determine the cause of the power failure and take 
+the appropriate steps to correct the problem.
+Reboot the system.
+.Rf
+io/pwr.c
+.LE
+.NM "stray interrupt at \fI#\fP  \*(Do"
+.Ds
+A device has interrupted through an unexpected vector on the UNIBUS
+(MASSBUS for VAX).
+The vector will be printed in hexadecimal on a VAX, otherwise in octal.
+The vector printed is usually the correct value for the device,
+unless \fI#\fP is \fB0\fP which is a reserved location.
+.Ac
+This error can be caused by a device specified at an incorrect vector
+in the system description file.
+If this is the case, make the necessary corrections, and remake and
+boot a new system.
+If the above does not apply or the vector was \fB0\fP, suspect
+hardware problems and
+contact your support organization.
+.Rf
+os/trap.c
+.LE
+.NM "stray interrupt - channel \fI#\fP  \*(Bo"
+.Ds
+A stray interrupt has been received from an unused channel.
+.Ac
+If the problem persists,
+suspect hardware problems in the I/O subsystem and
+contact your support organization.
+.Rf
+io/intrmsg.c
+.LE
+.NM "stray interrupt - channel: \fI#\fP, device: \fI#\fP  \*(Bo"
+.Ds
+A stray interrupt has been received from the specified device
+and channel.
+The device number is a number in the range 0-15 indicating
+one of the 16 ports on the channel.
+The UNIX System believes that this port is unassigned, although some controller may be
+physically connected to it.
+.Ac
+If the problem persists,
+suspect hardware problems in the I/O subsystem and
+contact your support organization.
+.Rf
+io/intrmsg.c
+.LE
+.NM "stray interrupt - source \fI#\fP  \*(Bo"
+.Ds
+A stray interrupt has been received from an unassigned
+source.
+The \fI#\fP identifies which interrupt source it was and is of use
+only to a trained field service representative.
+.Ac
+If the problem persists, contact your support organization.
+.Rf
+ml/intrmsg.c
+.LE
+.NM "stray UBA interrupt at \fI#\fP \*(Vo"
+.Ds
+A device has interrupt through an unexpected vector on the UNIBUS.
+The vector will be printed in octal.
+The vector printed is usually the correct value for a device,
+unless \fI#\fP is \fB0\fP which is a reserved location.
+.Ac
+This error can be caused by a device specified at an incorrect vector
+in the system description file.
+If this is the case, make the necessary corrections, and remake and boot
+a new system.
+If the above does not apply or the vector was \fB0\fP, suspect
+hardware problems and
+contact your support organization.
+.Rf
+io/uba.c
+.LE
+.NM "Tape Dump \*(Vo" "\fI#\fP memory blocks" "\fI#\fP blocks per record" "1600 bpi"
+.Ds
+The above messages will appear on the console after requesting
+that a dump be taken.
+The first number is the size in blocks of the memory
+on your machine.
+The second number is the block size of the dump.
+.Ac
+For information only.
+After the dump is completed, the processor may be rebooted.
+The tape dump can be loaded onto disk using the following sequence:
+.DS
+	umask 8192 (if more than one megabyte of memory)
+	dd if=/dev/rmt1 of=\fIfile-name\fP bs=\fIblocks-per-record\fP
+.DE
+The 8192 is the factor times 512 that ulimit uses to increase
+the maximum file size to 4 megabytes.
+This factor can be adjusted according to the amount of memory
+on your processor.
+One megabyte (2048) is used if you do not change the ulimit.
+.P
+The core dump can be perused by the \fIcrash\fP(1M) command.
+For more information of this command, see the \fIcrash\fP(1M)
+manual page in the \*(Am.
+.Rf
+ml/gtdump.c, ml/htdump.c, ml/hudump.c, ml/tsdump.c
+.LE
+.NM "Tape error, tssr \fI#\fP(16).  \*(Co" "Error writing buffer at \fI#\fP(16)."
+.Ds
+While attempting to dump to a tape mounted on a TS11 tape drive,
+an error occurred.
+The address of the block being transmitted at the time of the error is given.
+The ``tssr'' is the contents of the TS11 status register.
+All numbers are given in hexadecimal.
+For more details on TS11 registers, see pp. 371-387 in the
+\fIPeripherals Handbook\fP, Digital Equipment Corporation, 1981-82.
+.Ac
+Depending on the number of and the extent of the error(s), the dump
+may or may not continue.
+If it does continue, there is still a chance that the data might be worthless.
+Therefore, if the dump stopped prematurely or
+to be sure that the dump contains accurate data,
+attempt to take another dump BEFORE booting the system.
+If this is a recurring problem, suspect hardware problems with the TS11 and contact your
+support organization.
+.Rf
+ml/tsdump.c
+.LE
+.NM "Tape needs a ring  \*(Co"
+.Ds
+While attempting to write to a tape loaded on a TS11 tape drive,
+lack of a write ring was detected.
+.Ac
+Unload the tape and insert a write ring in the tape reel.
+Reload the tape and try again.
+If this does not clear the error, suspect hardware problems with the TS11 and
+contact your support organization.
+.Rf
+io/ts.c
+.LE
+.NM "Tape offline \*(Co"
+.Ds
+While attempting to access a tape loaded on a TS11 tape drive,
+it was detected that the drive was offline.
+.Ac
+Depress the ONLINE switch.
+The blue light indicator on the front panel should light.
+Try to access the tape again.
+If this does not clear the error, or if the indicator light did not
+come on, suspect hardware problems with the TS11.
+Contact your support organization.
+.Rf
+io/ts.c
+.LE
+.NM "text table overflow \*(Bo"
+.Ds
+The system shared text program control table has overflowed.
+An attempt to execute a currently unused shared text program
+has failed.
+.Ac
+If this condition persists, increase the number of entries currently allocated for the text
+table (texts) in your system description file and generate a
+new system.
+Boot the new system.
+.Rf
+os/text.c
+.LE
+.NM "tn[7]4 \fIunit-num\fP error \fI# #\fP  \*(Bo"
+.Ds
+An error has been detected on the designated tn74 or tn4.
+Two error numbers are given.
+The first number is important, while the
+second number should be ignored.
+For a tn74 the first number is in the form:
+.DS
+	9E\fIaab\fP00\fIc\fP
+.DE
+where:
+.DS
+	\fIaa\fP = peripheral controller (pc) slot number
+		   of the tn74
+
+	 \fIb\fP = port of the tn74
+	     4 for port 0
+	     C for port 1
+
+	 \fIc\fP = actual error code
+	     5 for a receiver overrun
+	     6 for a pc buffer overflow
+.DE
+
+For a tn4, the first number is in the form:
+.DS
+	9E\fIaabc\fP0\fId\fP
+.DE
+where:
+.DS
+	\fIaa\fP = peripheral controller (pc) slot number
+		   of the tn4
+
+	 \fIb\fP = unused
+
+	 \fIc\fP = port number of the tn4
+	     (0-7)
+
+	 \fId\fP = actual error code
+	     5 for a receiver overrun
+	     6 for a pc buffer overflow
+.DE
+.Ac
+The receiver overrun error indicates that the pc lost a 
+received character due to
+insufficient real time.
+The affected tty l;ine (port) will be left in an unusable state until
+a ``stty'' operation is performed.
+This condition should not happen on a tn74.
+On the tn4, it indicates that the pc is being overloaded.
+The load on the tn4 should therefore be reevaluated.
+The chart below shows the maximum tn4 loading as a function of
+baud rate:
+.DS
+	baud rate	maximum # of channels			
+	  9600			  2
+	  4800			  3
+	  2400			  5
+	  1200			  8
+.DE
+
+The pc buffer overflow error indicates that the UNIX System could not read data from
+the pc fast enough.
+Therefore, the pc has discarded a block of 255 bytes of data.
+This error may result from an improperly terminated hardwired line.
+Check all hardwired lines attached to the processor.
+.Rf
+io/tn74.c, io/tn4.c
+.LE
+.NM "tn75 \fIunit-num\fP can't send rcv buf \*(Bo"
+.Ds
+A receive buffer could not be sent to the designated device
+due to the unavailability of receive buffers or
+a hardware failure.
+.Ac
+First, the number of x25 buffers should be increased.
+If it has been increased to the maximum and this message still appears,
+contact your support organization.
+For more information on X25 buffer needs, see the section on X25 devices in
+the \*(Sb section of the \*(Ag.
+.Rf
+io/tn75.c
+.LE
+.NM "tn75: Bad unit \fIunit-num\fP \*(Bo"
+.Ds
+An unexpected interrupt was received from the designated tn75.
+.Ac
+This message indicates a probable hardware problem with the tn75.
+If the problem persists, contact your support organization.
+.Rf
+io/tn75.c
+.LE
+.NM "tn82 \fIunit-num\fP: can't send rcv buf \*(Bo"
+.Ds
+A receive buffer could not be sent to the designated device due
+to the unavailability of receive buffers or a hardware problem.
+.Ac
+First, the number of X25 buffers should be increased.
+If it has been increased to the maximum and this message still appears,
+contact your support organization.
+For more information on X25 buffer needs, see the section on X25 devices
+in the \*(Sb section of the \*(Ag.
+.Rf
+io/tn82.c
+.LE
+.NM "tn82: Bad unit \fIunit-num\fP \*(Bo"
+.Ds
+An unexpected interrupt was received from the designated tn82.
+.Ac
+This message indicates a probable hardware problem with the tn82.
+If the problem persists, contact your support organization.
+.Rf
+io/tn82.c
+.LE
+.NM "tn83 \fIunit-num\fP rop off-line \*(Bo"
+.Ds
+The read-only printer is offline.
+.Ac
+For information only.
+Depressing the ONLINE button on the unit should bring it back online.
+If not, contact your support organization.
+.Rf
+io/tn83.c
+.LE
+.NM "tn85 \fIunit-num\fP printer \fI#\fP offline  \*(Bo"
+.Ds
+The designated printer has been taken offline.
+The printer number may be 0 or 1 and indicates which of the two
+possible printers on the tn85 controller is in question.
+.Ac
+For information only.
+If you wish to bring the printer online, depress the ONLINE button.
+If this does not work, contact your support organization.
+.Rf
+io/tn85.c
+.LE
+.NM "tn85 \fIunit-num\fP unexpected interrupt | unrecognized response \fI# #\fP \*(Bo"
+.Ds
+An unexpected interrupt or an unrecognized response has been received
+by the designated tn85.
+Two error numbers are given.
+The first number is important, while the second number
+should be ignored.
+The first number is in the form:
+.DS
+	\fIaabbcddd\fP
+.DE
+where:
+.DS
+	 \fIaa\fP = operation code
+	      9F for print
+	      FA for asynchronous report
+
+	 \fIbb\fP = peripheral controller (pc) slot
+	      number of the tn85
+
+	  \fIc\fP = port number of the tn85
+	      8 for printer 0 (subdevice 2)
+	      C for printer 1 (subdevice 3)
+
+	\fIddd\fP = unused
+.DE
+.Ac
+This message, whether generated by an unexpected interrupt or an
+unrecognized response, may indicate either a software or hardware
+problem.
+First, check to see whether any unauthorized changes have been made
+to the standard UNIX System tn85 device driver.
+If so, this may be the problem and the driver should be restored
+to its original source version.
+If not, suspect hardware problems with the tn85 and contact your
+support organization.
+.Rf
+io/tn85.c
+.LE
+.NM "UBA: csr \fI#\fP, sr \fI#\fP  \*(Xo" ": fubar \fI#\fP, fmer \fI#\fP"
+.Ds
+A UNIBUS interrupt has occurred.
+.P
+The fields are described below.
+.TS
+l lw(4i).
+csr	T{
+the contents of the configuration/status register
+T}
+sr	T{
+the value of the UBA status register which indicates the reason for the interrupt
+T}
+fubar	T{
+the failed UNIBUS address register which contains the address of the UNIBUS register
+T}
+fmer	T{
+the failed mapped error register which contains the address of the UNIBUS map
+T}
+.TE
+The values of the first two fields are given in hexadecimal,
+while the last two are in octal.
+.P
+For further details, see pp. 337-339 in the
+\fIVAX Hardware Handbook\fP, Digital Equipment Corporation, 1980-81.
+.Ac
+This error is usually caused by a device specified
+at an incorrect, unused address in the system description file.
+If this is the case, make the necessary corrections, and remake
+and boot a new system.
+If the above does not apply, suspect hardware problems and
+contact your support organization.
+.Rf
+io/uba.c
+.LE
+.NM "UNIX System/\fIrelease\fP: \fIsysver\fP \*(Do" "real mem = \fI#\fP bytes" "avail mem = \fI#\fP bytes"
+.Ds
+The above messages are printed on the system console during the startup
+procedure when booting the UNIX System.
+The value for real mem represents
+the actual size in bytes of the memory on your machine.
+The value for avail mem represents
+the amount of memory available for user programs after the UNIX System has been
+loaded.
+.Ac
+For information only.
+No action is  necessary unless the number of bytes of memory mysteriously
+drops from a previous boot.
+If this occurs, some of the memory may have become inaccessible and
+should be investigated.
+.Rf
+os/machdep.c, os/main.c (PDP-11 only)
+.LE
+.NM "UNIX System/\fIrelease\fP: \fIsysver\fP \*(Bo" "total memory: \fI#\fP bytes" "available memory: \fI#\fP bytes"
+.Ds
+The above messages are printed on the system console during
+the startup procedure when booting the UNIX System.
+The value for total memory represents the actual size in
+bytes of the memory on your machine.
+The value for available memory represents the amount of memory
+available for user processes after the UNIX System has been loaded.
+.Ac
+For information only.
+No action is  necessary unless the number of bytes of memory mysteriously
+drops from a previous boot.
+If this occurs, some of the memory may have become inaccessible and
+should be investigated.
+.Rf
+os/machdep.c, ml/mmgt.c, os/main.c
+.LE
+.NM "unknown tape type \fImaj/min\fP  \*(Vo"
+.Ds
+The general tape driver has attempted to access a tape drive whose type
+it does not understand.
+.Ac
+Contact your support organization.
+.Rf
+io/gt.c
+.LE
+.NM "unkseg of unallocated segment \*(Bo"
+.Ds
+The system attempted to free an unallocated kernel segment.
+.Ac
+This message indicates a software problem.
+It may be generated by new device drivers which have not been completely
+debugged or by unauthorized changes to the existing UNIX System device
+drivers.
+Check any new drivers or any driver which has been recently modified.
+If not the above, contact your support organization.
+.Rf
+m/mmgt.c
+.LE
+.NM "un32 \fIunit-num\fP error \fI# #\fP  \*(Bo"
+.Ds
+An error has been detected on the designated un32.
+Two error numbers are given.
+The first number is in the form:
+.DS
+	9\fIabbcdee\fP
+.DE
+where:
+.DS
+	 \fIa\fP = the operation
+		4  open
+		5  write
+		6  read
+		7  write file marks
+		8  close
+		9  seek
+
+	\fIbb\fP = peripheral controller (pc) slot (0-F)
+
+	 \fIc\fP = xxyy (bits); xx = the subdevice
+		00 subdevice 0
+		01 subdevice 1
+		10 subdevice 2
+		11 subdevice 3
+
+	 \fId\fP = the error code
+		1  tape is write protected
+		2  end of tape
+		3  drive offline
+		4  timeout
+		5  file mark during seek
+
+	\fIee\fP = the job status
+		00 job normal
+		01 job completed with retry
+		02 job failed
+		10 underflow (record too small)
+		11 overflow (record too large)
+.DE
+
+Interpretation of the second error number is dependent upon the operation
+taking place at the time of the error. The first digit in the first error
+number, \fIa\fP, indicates the operation.
+
+The second number is in the form:
+.DS
+	\fIaaaa bbbb\fP
+.DE
+where:
+.DS
+	for read/write:
+		\fIaaaa\fP = the byte count
+		\fIbbbb\fP = the segment offset >>2
+
+	for seek:
+		\fIaaaa\fP = the record count
+		\fIbbbb\fP =
+			0100 for seek backward
+			0000 for seek forward
+
+	for open:
+		\fIaaaa\fP =
+			0100 for open read-only
+			0300 for open read-write
+
+	for close:
+		\fIaaaa\fP =
+			0100 for rewind
+			0000 for no rewind
+
+	for write file marks:
+		\fIaaaa\fP =
+			0100 for rewind
+			0000 for backspace
+.DE
+.Ac
+This message indicates a problem with the magnetic tape and/or the
+tape drive.
+First, check the tape currently mounted or try a new tape.
+If the error still exists, suspect hardware problems with the
+tape drive and contact your support organization.
+.Rf
+io/un32.c
+.LE
+.NM "using backup root \*(Bo"
+.Ds
+The system was booted with the \fBBACKUP-ROOT EAI\fP option set.
+The root file system has been changed from section 0 to section 7.
+.Ac
+For information only.
+For further details, see the \fB3B20S CONSOLE OPERATIONS\fP
+and the \fBBOOT PROCEDURES\fP sections in the
+\*(Og.
+.Rf
+os/machdep.c
+.LE
+.NM "using secondary disk \*(Bo"
+.Ds
+The system was booted with the \fBSEC-DISK EAI\fP option set.
+The root file system has been changed to be on disk drive (mhd) 1 of DFC 0.
+.Ac
+For information only.
+For further details, see the \fB3B20S CONSOLE OPERATIONS\fP
+and the \fBBOOT PROCEDURES\fP sections of the
+\*(Og.
+.Rf
+os/machdep.c
+.LE
+.NM "utility circuit interrupt \*(Bo"
+.Ds
+A utility circuit interrupt has been detected.
+.Ac
+This should not occur since this feature is unused on the 3B20 Simplex.
+Contact your support organization.
+.Rf
+ml/utilckt.c
+.LE
+.NM "WARNING: data/bss area too big for unibus map  \*(Vo" "\fI#\fP pages truncated to 495 pages"
+.Ds
+The combined size of the kernel data and bss segments of the running
+system is too large.
+This error occurs during system startup only.
+.Ac
+The size of the offending system must be decreased.
+Reevaluate all entries in the offending system description file.
+Make necessary modifications and remake the system.
+Boot the new system.
+.Rf
+io/uba.c
+.LE
+.NM "WARNING: swap space running out, needed \fI#\fP blocks"
+.Ds
+Insufficient space was found on the swap device when attempting to
+swap out a given process or a copy of a pure text image.
+The number of blocks requested is given.
+After the warning is given, an attempt will be made to clean up
+the swap area.
+If this is unsuccessful, the message \fBDanger: out of swap\fP\fI....\fP
+will appear.
+The system may hang, crash, or it may recover
+and resume normal operation if and when swap space becomes available.
+.Ac
+If the system hangs or crashes, reboot.
+This error may be caused by an operating system and/or user program
+that has not been completely debugged.
+Check any such programs.
+It can also be caused by an excessive user load on the system.
+If this is the case, increase the amount of swap space specified
+in your system description file and generate a new system.
+Boot the new system.
+.Rf
+os/text.c
+.LE
+.NM "Write lock error on \fIdevice-type\fP drive \fI#\fP, [ctl \fI#\fP] slice \fI#\fP \*(Do"
+.Ds
+An attempt was made to write on a file system mounted on a disk drive
+that is write protected.
+\fIDrive-type\fP may be \fBRP04/5/6\fP, \fBRP07\fP, \fBRM05\fP, \fBRM80\fP, or \fBML11\fP.
+A controller (ctl) number will only appear if you are using the general disk
+driver and you have more than one controller generated in your system.
+.Ac
+For information only.
+The write protect feature has been enabled on the designated disk drive.
+To disable, either flip the toggle switch labeled ``write protect'' to
+its alternate position if the drive is of RP04/5/6 or RP07 type,
+or depress the switch labeled ``protect'' on an RM05 or ``write prot''
+on an RM80 which will cause the associated
+indicator light to go out.
+.Rf
+io/gd.c,
+io/hp.c,
+io/hm.c
+.LE
+.NM "Write lock error on dev\fI#\fP(8), type unknown  \*(Do"
+.Ds
+An attempt was made to write on a file system mounted on a disk drive
+that is write protected and whose type is unknown to the general disk (gd) driver.
+.Ac
+The main concern is that the gd driver does not recognize the drive type.
+Check that the offending disk drive is of a type supported
+by the gd driver.
+The drive types supported are RP04/5/6, RM05, RM80, RP07, and ML11.
+If the drive is of a type listed above, suspect hardware problems
+with the disk drive and/or controller and contact your support
+organization.
+Refer to the message:
+.DS
+	Write lock error in \fIdevice-type\fP drive \fI#\fP, [ctl \fI#\fP] slice \fI#\fP
+.DE
+for instructions on how to disable the write protect feature.
+.Rf
+io/gd.c,
+.LE
+.NM "xswap \fI#\fP \*(Vo"
+.Ds
+An attempt was made to free the core and swap out the currently
+running process.
+The \fI#\fP is the process number.
+.Ac
+This message indicates software and/or hardware problems.
+Check any new device drivers which have not been completely
+debugged or any UNIX System device driver which has been modified
+without authorization.
+Also, check that the configuration information in the system
+description file is correct.
+If none of the above apply, suspect bad hardware and contact
+your support organization.
+.Rf
+os/text.c
+.LE
+.de TY
+.ce
+TABLE OF CONTENTS
+..
+.TC

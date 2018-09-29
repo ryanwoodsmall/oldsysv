@@ -1,0 +1,104 @@
+#	vpmc 1.2 of 9/14/81
+#	@(#)vpmc	1.2
+set -- `getopt mrcxs:l:i:o: $*`
+if [ $? != 0 ]
+then
+	echo "vpmc: usage" >&2
+	exit 2
+fi
+echo $* >&2
+ofile="a.out"
+intfile="bisync"
+pp=/lib/cpp
+for i in $*
+do
+case $i in
+-m)
+pp=m4
+shift
+;;
+-r)
+ropt=true
+shift
+;;
+-c)
+copt=true
+shift
+;;
+-x)
+xopt=true
+shift
+;;
+-i)
+intfile=$2
+shift
+shift
+;;
+-l)
+lfile=$2
+shift
+shift
+;;
+-o)
+ofile=$2
+shift
+shift
+;;
+-s)
+sfile=$2
+shift
+shift
+;;
+--)
+shift
+break
+;;
+esac
+done
+if
+test -z "$1"
+then
+echo "vpmc: no source file" >&2
+exit 3
+fi
+infile=$1
+v=/usr/lib/vpm
+if
+test -n "$ropt"
+then
+$pp $infile| $v/vratfor
+else
+>sas_tempb
+$pp $infile | $v/vratfor | $v/pl | $v/pss0 > /tmp/sas_ta$$
+cat sas_tempb /tmp/sas_ta$$  |  /lib/cpp > /tmp/sas_tb$$
+if
+test -n "$sfile"
+then
+cp /tmp/sas_tb$$ $sfile
+fi
+if
+test -n "$lfile"
+then
+$v/plistg < /tmp/sas_tb$$ > $lfile
+fi
+if
+test -z "$copt"
+then
+$v/pss12 < /tmp/sas_tb$$ > sas_tempc
+/lib/cpp -I. -DCFILE=\"sas_tempc\" $v/$intfile/main.s|kasb -o $ofile
+if
+test -z "$xopt"
+then
+rm sas_tempc
+fi
+fi
+if
+test -z "$xopt"
+then
+rm sas_tempb
+else
+cp /tmp/sas_ta$$ sas_tempa
+cp /tmp/sas_tb$$ sas_tempd
+fi
+rm /tmp/sas_ta$$ /tmp/sas_tb$$
+fi

@@ -1,0 +1,51 @@
+
+\Swait\S:  Examples
+
+     This is an example of a shell program that uses \Swait\S.
+
+
+         mm def > def.m &
+         mm def2 > def2m &
+         wait
+         cat def.m def2.m > def all
+
+  
+     This shell program formats "def" and "def2", and stores the formatted
+     files in "def.m" and "def2.m".  \Swait\S delays the execution of the
+     cat(1) command until "def" and "def2" are finished formatting.
+
+
+     
+     -------------------------------------------------------------------------
+
+     This example shows you how you use \Swait\S outside of a shell program.
+     You execute a command to format the file "book.1" in the background.  You
+     store the formatted file in "book.1.m".
+
+         \S mm book.1 >  book.1.m & \S
+
+     After the command is executed, the system prints the process ID of the
+     background process.  For example, the process ID is any integer between 0
+     and 32000, and it might be:
+
+         2146
+
+     You also want to format several other files.  You execute them in the
+     background and redirect their output.  The shell returns a process ID for
+     each of these also.
+
+         \S mm thesis > thesis.m & \S
+         2710
+         \S mm fiction > fiction.m & \S
+         2794
+  
+     You type \Swait\S followed by the "2146" so that the system does not
+     return a prompt until "book.1" is finished formatting.
+
+         wait 2146
+
+     When the system prints a prompt, you know "book.1" is finished formatting
+     and you can type a command line that compares an old file "book.m" to the
+     newly formatted file, "book.1.m".
+
+         \S comm book.m book.1.m > changes & \S

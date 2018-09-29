@@ -1,0 +1,49 @@
+.TH SINH 3M
+.SH NAME
+sinh, cosh, tanh \- hyperbolic functions
+.SH SYNOPSIS
+.B #include <math.h>
+.PP
+.B double sinh (x)
+.br
+.B double x;
+.PP
+.B double cosh (x)
+.br
+.B double x;
+.PP
+.B double tanh (x)
+.br
+.B double x;
+.SH DESCRIPTION
+.IR Sinh ,
+.IR cosh ,
+and
+.I tanh\^
+return, respectively, the hyberbolic sine, cosine and tangent
+of their argument.
+.SH DIAGNOSTICS
+.I Sinh\^
+and
+.I cosh\^
+return
+.SM
+.B HUGE
+(and
+.I sinh\^
+may return
+.SM
+.B \-HUGE
+for negative
+.IR x )
+when the correct value would overflow and set
+.I errno\^
+to
+.SM
+.B ERANGE.
+.PP
+These error-handling procedures may be changed with the function
+.IR matherr (3M).
+.SH SEE ALSO
+matherr(3M).
+.\"	%W% of %G%

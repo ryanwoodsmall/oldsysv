@@ -1,0 +1,18 @@
+
+\Sbasename\S:  Description
+
+Syntax Summary:  basename name [suffix]
+
+         where:  name  is a file or directory name.
+
+                 suffix  is a sequence of alphanumeric or special characters.
+Description:
+     \Sbasename\S identifies the last name in a relative path name or full
+     path name and prints it on standard output.  Use \Sbasename\S in a shell
+     program to identify the last file name or directory name in a path name.
+     If <name> is a path name, \Sbasename\S prints the final directory or file
+     name.  If <name> is a simple file name or a directory name, \Sbasename\S
+     prints that file or directory name on standard output.  You can remove a
+     string that is a suffix at the end of a file name by including it as an
+     argument. See also:  dirname(1) for a command with a function similar to
+     \Sbasename\S.

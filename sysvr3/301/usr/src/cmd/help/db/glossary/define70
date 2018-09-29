@@ -1,0 +1,18 @@
+
+\S  archive:  archive file:  header:  symbol table:  file format \S
+
+An archive or archive file is a file that contains the contents of many
+files.  Each of the files within an archive is called a member.  You can
+archive files to organize files that have related contents.  You can also
+archive files of "object code"\S*\S to create a "library"\S*\S and save computer
+memory space.  When you create a file whose members contain object code, the 
+command you use creates a symbol table. The symbol table is a file at the 
+beginning of the archive.  The symbol table holds information on the 
+variables in each member of the archive.  You cannot access the file that 
+contains the symbol table.  When you create an archive, the command also 
+creates a header at the beginning of each member.  The header has information
+about the size, name, permissions, and date and time of last modification 
+of the file. This information marks where one member ends and another 
+member begins.  You can create an archive using ar(1), tar(1), or cpio(1).
+
+\S*\S defined in the \Sglossary\S

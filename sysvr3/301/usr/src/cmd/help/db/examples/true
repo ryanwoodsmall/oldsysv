@@ -1,0 +1,24 @@
+
+\Strue\S:  Examples
+
+This is an example of a use of \Strue\S.  It illustrates a loop that you might
+use in a shell program.
+                           count=0
+                           while  \Strue\S
+                           do
+                                 count=`expr "$count" + 1`
+                                 echo "HELLO WORLD"
+                                 if
+                                       test "$count" -gt 59
+                                 then
+                                       break
+                                 else
+                                       sleep 10
+                                 fi
+                           done
+    
+The loop begins with "while \Strue\S".  The value of "count" increases by one
+with every pass through the loop.  The program prints "HELLO WORLD" and tests
+the value of the variable "count".  If "count" is less than 60, then the
+program waits 10 seconds and prints "HELLO WORLD" again.  If "count" is greater
+than 59, the inner loop ends, and the outer loop ends when it executes break.

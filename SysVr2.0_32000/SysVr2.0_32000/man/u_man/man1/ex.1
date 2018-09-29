@@ -1,0 +1,365 @@
+'\" t
+.TH EX 1
+.SH NAME
+ex \- text editor
+.SH SYNOPSIS
+.B ex
+[
+.B \-
+] [
+.B \-v
+] [
+.B \-t 
+.I tag\^
+] [
+.B \-r
+] [
+.B \-R
+] [
+\fB\+\fIcommand\fR
+]
+name ...
+.SH DESCRIPTION
+.I Ex\^
+is the root of a family of editors:
+.I ex\^
+and
+.I vi.\^
+.I Ex\^
+is a superset of
+.I ed\^,
+with the most notable extension being a display editing facility.
+Display based editing is the focus of
+.I vi\^.
+.PP
+If you have a \s-2CRT\s0 terminal, you may wish to use a display
+based editor; in this case
+see
+.IR vi\^ (1),
+which is a command which focuses on the display editing portion of
+.I ex\^.
+.SH FOR ED USERS
+If you have used
+.I ed\^
+you will find that
+.I ex\^
+has a number of new features useful on CRT terminals.
+Intelligent terminals and high speed terminals are very pleasant to  use
+with
+.I vi\^.
+Generally, the editor uses far more of the capabilities of terminals than
+.I ed\^
+does, and uses the terminal capability data base.
+and the type of the terminal you are using from the variable
+TERM in the environment to determine how to drive your terminal efficiently.
+The editor makes use of features such as insert and delete character and line
+in its
+.B visual
+command
+(which can be abbreviated \fBvi\fR)
+and which is the central mode of editing when using
+.IR vi\^ (1).
+.\" There is also an interline editing
+.\" .B open
+.\" (\fBo\fR)
+.\" command which works on all terminals.
+.PP
+.I Ex\^
+contains a number of new features for easily viewing the text of the file.
+The
+.B z
+command gives easy access to windows of text.
+Hitting ^D causes the editor to scroll a half-window of text
+and is more useful for quickly stepping through a file than just hitting
+return.
+Of course, the screen-oriented
+.B visual
+mode gives constant access to editing context.
+.PP
+.I Ex\^
+gives you more help when you make mistakes.
+The
+.B undo
+(\fBu\fR)
+command allows you to reverse any single change which goes astray.
+.I Ex\^
+gives you a lot of feedback, normally printing changed lines,
+and indicates when more than a few lines are affected by a command
+so that it is easy to detect when a command has affected more lines
+than it should have.
+.PP
+The editor also normally prevents overwriting existing files unless you 
+edited them so that you do not accidentally clobber
+with a
+.I write\^
+a file other than the one you are editing.
+If the system (or editor) crashes, or you accidentally hang up the telephone,
+you can use the editor
+.B recover
+command to retrieve your work.
+This will get you back to within a few lines of where you left off.
+.PP
+.I Ex\^
+has several features for dealing with more than one file at a time.
+You can give it a list of files on the command line
+and use the
+.B next
+(\fBn\fR) command to deal with each in turn.
+The
+.B next
+command can also be given a list of file names, or a pattern
+as used by the shell to specify a new set of files to be dealt with.
+In general, file names in the editor may be formed with full shell
+metasyntax.
+The metacharacter `%' is also available in forming file names and is replaced
+by the name of the current file.
+.\" For editing large groups of related files you can use
+.\" .I ex's\^
+.\" .B tag
+.\" command to quickly locate functions and other important points in 
+.\" any of the files.
+.\" This is useful when working on a large program when you want to quickly
+.\" find the definition of a particular function.
+.\" The command
+.\" .IR ctags
+.\" builds a
+.\" .I tags\^
+.\" file or a group of C programs.
+.PP
+For moving text between files and within a file the editor has a group
+of buffers, named
+.I a\^
+through
+.I z.\^
+You can place text in these
+named buffers and carry it over when you edit another file.
+.PP
+There is a command
+.B &
+in
+.I ex\^
+which repeats the last
+.B substitute
+command.
+In addition there is a
+confirmed substitute command.
+You give a range of substitutions to be done and the editor interactively
+asks whether each substitution is desired.
+.PP
+It is possible to ignore case
+of letters in searches and substitutions.
+.I Ex\^
+also allows regular expressions which match words to be constructed.
+This is convenient, for example, in searching for the word
+``edit'' if your document also contains the word ``editor.''
+.PP
+.I Ex\^
+has a set of
+.I options\^
+which you can set to tailor it to your liking.
+One option which is very useful is the
+.I autoindent\^
+option which allows the editor to automatically supply leading white
+space to align text.  You can then use the ^D key as a backtab
+and space and tab forward to align new code easily.
+.PP
+Miscellaneous new useful features include an intelligent
+.B join
+(\fBj\fR) command which supplies white space between joined lines
+automatically,
+commands < and > which shift groups of lines, and the ability to filter
+portions of the buffer through commands such as
+.I sort\^.
+.SH " INVOCATION OPTIONS"
+The following invocation options are interpreted by
+.IR ex\^ :
+.TP 15
+.B \-
+Suppress all interactive-user feedback.
+This is useful in processing editor scripts.
+.TP
+.B \-v
+Invokes 
+.I vi\^
+.TP
+\f3\-t\f2 tag\^fR
+Edit the file containing the 
+.I tag\^
+and position the editor at its definition.
+.TP
+\f3\-r\f2 file\^\fR
+Recover
+.I file\^
+after an editor or system crash.
+If
+.I file\^ 
+is not specified a list of all 
+saved files will be printed.
+.TP
+.BR \-R
+\f2Readonly\fR mode set, prevents accidentally overwriting the file.
+.TP
+.BI \+ command
+Begin editing by executing the specified editor
+search or positioning
+.I command\^.
+.PP
+The 
+.I name\^
+argument indicates files to be edited.
+.SS "Ex States"
+.TP 15
+Command
+Normal and initial state.  Input prompted for by \fB:\fP.
+Your kill character cancels partial command.
+.TP
+Insert
+Entered by \fBa\fP \fBi\fP and \fBc\fP.
+Arbitrary text may be entered.
+Insert is  normally terminated by line having only \fB.\fP
+on it,
+or abnormally with an interrupt.
+.TP
+.\" Open/visual
+.\" Entered by \fBopen\fP or \fBvi\fP, terminates with \fBQ\fP
+Visual
+Entered by \fBvi\fP, terminates with \fBQ\fP
+or ^\e.
+.bp
+.SS "Ex command names and abbreviations"
+.TS
+lw(.45i) lw(.08i)b lw(.45i) lw(.08i)b lw(.45i) lw(.08i)b.
+abbrev	ab	next	n	unabbrev	una
+append	a	number	nu	undo	u
+args	ar	    	 	unmap	unm
+change	c	preserve	pre	version	ve
+copy	co	print	p	visual	vi
+delete	d	put	pu	write	w
+edit	e	quit	q	xit	x
+file	f	read	re	yank	ya
+global	g	recover	rec	window	z
+insert	i	rewind	rew	escape	!
+join	j	set	se	lshift	<
+list	l	shell	sh	print next	\fRCR\fP
+map		source	so	resubst	&
+mark	ma	stop	st	rshift	>
+move	m	substitute	s	scroll	^D
+.TE
+.SS "Ex Command Addresses"
+.TS
+lw(.3i)b lw(0.8i) lw(.3i)b lw(0.8i).
+\fIn\fP	line \fIn\fP	/\fIpat\fP	next with \fIpat\fP
+\&.	current	?\fIpat\fP	previous with \fIpat\fP
+$	last	\fIx\fP-\fIn\fP	\fIn\fP before \fIx\fP
++	next	\fIx\fP,\fIy\fP	\fIx\fP through \fIy\fP
+\-	previous	\(aa\fIx\fP	marked with \fIx\fP
++\fIn\fP	\fIn\fP forward	\(aa\(aa	previous context
+%	1,$
+.TE
+.SS "Initializing options"
+.TS
+lw(.9i)b aw(1.5i).
+EXINIT	place \fBset\fP's here in environment var.
+$HOME/.exrc	editor initialization file
+\&./.exrc  	editor initialization file
+set \fIx\fP	enable option
+set no\fIx\fP	disable option
+set \fIx\fP=\fIval\fP	give value \fIval\fP
+set	show changed options
+set all	show all options
+set \fIx\fP?	show value of option \fIx\fP
+.TE
+.SS "Most useful options"
+.TS
+lw(.9i)b lw(.3i) lw(1.0i).
+autoindent	ai	supply indent
+autowrite	aw	write before changing files
+ignorecase	ic	in scanning
+list		print ^I for tab, $ at end
+magic		\fB. [ *\fP special in patterns
+number	nu	number lines
+paragraphs	para	macro names which start ...
+redraw		simulate smart terminal
+scroll		command mode lines
+sections	sect	macro names ...
+shiftwidth	sw	for \fB< >\fP, and input \fB^D\fP
+showmatch	sm	to \fB)\fP and \fB}\fP as typed
+showmode	smd	show insert mode in \f2vi\fR
+slowopen	slow	stop updates during insert
+window		visual mode lines
+wrapscan	ws	around end of buffer?
+wrapmargin	wm	automatic line splitting
+.TE
+.bp
+.SS "Scanning pattern formation"
+.TS
+aw(.9i)b aw(1.0i).
+^	beginning of line
+$	end of line
+\fB.\fR	any character
+\e<	beginning of word
+\e>	end of word
+[\fIstr\fP]	any char in \fIstr\fP
+[\(ua\fIstr\fP]	... not in \fIstr\fP
+[\fIx\-y\fP]	... between \fIx\fP and \fIy\fP
+*	any number of preceding
+.TE
+.SH AUTHOR
+.I Vi
+and
+.I ex
+are based on software developed by
+The University of California,
+Berkeley California,
+Computer Science Division,
+Department of Electrical Engineering and Computer Science.
+.SH FILES
+.TS
+lw(.9i) aw(1.5i).
+/usr/lib/ex?.?strings	error messages
+/usr/lib/ex?.?recover	recover command
+/usr/lib/ex?.?preserve	preserve command
+/usr/lib/*/*	describes capabilities of terminals
+$HOME/.exrc	editor startup file
+\&./.exrc  	editor startup file
+/tmp/Ex\fInnnnn\fR	editor temporary
+/tmp/Rx\fInnnnn\fR	named buffer temporary
+/usr/preserve	preservation directory
+.TE
+.SH SEE ALSO
+awk(1),
+ed(1),
+edit(1),
+grep(1),
+sed(1),
+vi(1).
+.br
+curses(3X),
+term(4),
+terminfo(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH "BUGS"
+The
+.I undo\^
+command causes all marks to be lost on lines changed and then restored
+if the marked lines were changed.
+.PP
+.I Undo\^
+never clears the buffer modified condition.
+.PP
+The
+.I z\^
+command prints a number of logical rather than physical lines.
+More than a screen full of output may result if long lines are present.
+.PP
+File input/output errors do not print a name
+if the command line \fB`\-'\fR option is used.
+.PP
+There is no easy way to do a single scan ignoring case.
+.PP
+The editor does not warn if text is placed in named buffers
+and not used before exiting the editor.
+.PP
+Null characters are discarded in input files
+and cannot appear in resultant files.
+.\"	@(#)ex.1	6.2 of 9/2/83

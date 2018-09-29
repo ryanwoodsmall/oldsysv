@@ -1,0 +1,18 @@
+#ident	"@(#)core:setup.core5	1.4"
+#
+#	Sets up "3B2 Core UNIX Part 5" file system on floppy 
+#
+
+echo "Setting up the \"3B2 Core UNIX Part 5\" floppy."
+
+set -u
+export PATH
+PATH=/bin:/usr/bin:/etc
+ROOT=/install
+
+ln ${ROOT}/usr/admin/unixadmin ${ROOT}/usr/bin/setup
+ln ${ROOT}/usr/admin/unixadmin ${ROOT}/usr/bin/powerdown
+ln ${ROOT}/usr/admin/unixadmin ${ROOT}/usr/bin/sysadm
+mv ${ROOT}/usr/mail/saved ${ROOT}/usr/mail/:saved
+
+rm ${ROOT}/setup

@@ -1,0 +1,22 @@
+
+   The Objects Found menu lists all the matches found for the criteria
+   specified during a FIND command search.  Each object in the menu is
+   specified in its "path name" format so you will  know  what  folder
+   actually contains the object.
+
+   This menu  frame operates like  any other  folder  frame,  allowing
+   you  to  open,  copy, move, rename, etc. any of the objects listed.
+   You cannot CREATE an object and store it in this menu frame.
+
+   Note that performing any action on an object in this menu  is  like
+   operating  on  it  in  the  folder  that actually contains it.  For
+   example, if you MOVE an object in this menu it will be  moved  from
+   the folder which actually contains it.
+
+   When you move, delete, or rename an object in this frame you  will
+   not see the object name removed or changed until you type or select
+   the UPDATE command.  This occurs because this is not an actual file
+   folder.
+
+   To remove this menu frame from the screen you must use either  the
+   CANCEL or CLEANUP command.

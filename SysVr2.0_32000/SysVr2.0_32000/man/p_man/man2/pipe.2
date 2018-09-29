@@ -1,0 +1,51 @@
+.TH PIPE 2 
+.SH NAME
+pipe \- create an interprocess channel
+.SH SYNOPSIS
+.B int pipe (fildes)
+.br
+.B int fildes[2];
+.SH DESCRIPTION
+.I Pipe\^
+creates an I/O mechanism called a pipe and returns two file descriptors,
+.IR fildes [0]
+and
+.IR fildes [1].
+.IR Fildes [0]
+is opened for reading and
+.IR fildes [1]
+is opened for writing.
+.PP
+Up to
+5120
+bytes
+of data are buffered by the pipe before the writing process is blocked.
+A read only file descriptor
+.IR fildes [0]
+accesses the data written to
+.IR fildes [1]
+on a first-in-first-out (\s-1FIFO\s+1) basis.
+.sp
+.TP 15
+\s-1\%[EMFILE]\s+1
+.I Pipe\^
+will fail if
+19
+or more
+file descriptors are currently open.
+.TP
+\s-1\%[ENFILE]\s+1
+The system file table is full.
+.SH "RETURN VALUE"
+Upon successful completion,
+a value of 0
+is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+read(2), write(2).
+.br
+sh(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	@(#)pipe.2	6.2 of 9/6/83

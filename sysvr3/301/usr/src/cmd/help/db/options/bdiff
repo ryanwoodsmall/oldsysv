@@ -1,0 +1,7 @@
+
+\Sbdiff\S:  Options
+
+     -s   suppresses the printing of diagnostics for \Sbdiff\S.
+
+     lines   changes the number of lines per segment from 3500 to <lines>.
+

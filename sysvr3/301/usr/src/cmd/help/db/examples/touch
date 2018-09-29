@@ -1,0 +1,26 @@
+
+\S touch \S:  Examples
+
+       touch memo
+
+    Sets the access and modification time of the file "memo" to the current
+    time.
+
+    ----------------------------------------------------------------------
+
+       touch -m 07040900 foo
+
+    Sets the modification time of the file "foo" to July 4 at 9:00 in the
+    morning.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       touch .news_time
+
+    Sets the access and modification time of the file ".news_time" to the
+    current time.  You would include this command line in your .profile if you
+    wanted to restrict the printing of news items to those which have been
+    posted since the last time your .profile was executed.

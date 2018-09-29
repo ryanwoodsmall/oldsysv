@@ -1,0 +1,12 @@
+
+\S shell script : shell program \S
+
+A shell script or program is a series of commands written in "shell
+language"\S*\S  and stored in a file. If the file is executable (see
+"mode"\S*\S), you can have the shell execute the program by typing the 
+"file name"\S*\S, the necessary "arguments"\S*\S, and a carriage
+return. 
+
+(see also:  shell, shell language, and shell variable)
+
+\S*\S defined in the \Sglossary\S

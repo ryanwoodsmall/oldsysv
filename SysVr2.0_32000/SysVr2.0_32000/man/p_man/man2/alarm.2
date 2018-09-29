@@ -1,0 +1,31 @@
+.TH ALARM 2 
+.SH NAME
+alarm \- set a process alarm clock
+.SH SYNOPSIS
+.B unsigned alarm (sec)
+.br
+.B unsigned sec;
+.SH DESCRIPTION
+.I Alarm\^
+instructs the alarm clock of the calling process to send the signal
+.B
+.SM SIGALRM
+to the calling process after the number of real time seconds specified by
+.I sec\^
+have elapsed;
+see 
+.IR signal (2).
+.PP
+Alarm requests are not stacked;
+successive calls reset the alarm clock of the calling process.
+.PP
+If
+.I sec\^
+is 0, any previously made alarm request is canceled.
+.SH RETURN VALUE
+.I Alarm\^
+returns the amount of time
+previously remaining in the alarm clock of the calling process.
+.SH "SEE ALSO"
+pause(2), signal(2).
+.\"	@(#)alarm.2	6.2 of 9/6/83

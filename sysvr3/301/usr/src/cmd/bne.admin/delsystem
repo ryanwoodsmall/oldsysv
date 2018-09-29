@@ -1,0 +1,96 @@
+#ident	"@(#)bne.admin:delsystem	2.2"
+#	This shell is used to delete system names from /usr/lib/uucp/Systems
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+FIRST=true
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+if [ -f "$SYSTEMS" -a \( ! -w "$SYSTEMS" -o ! -r "$SYSTEMS" \) ]; then
+	admerr $0 "Can't write and read '$SYSTEMS'\nCan't do delete operation!\n"
+	exit
+fi
+
+if [ ! -r $SYSTEMS ]; then
+	echo "There are no entries in the '$SYSTEMS' file
+Use systemsmgmt to add entries.\n"
+	exit
+fi
+
+echo "
+This procedure is used to delete entries in the
+$PACKAGE '$SYSTEMS' file.
+This file contains information on how this machine, '`uname`',
+contacts remote systems.
+"
+
+while $FIRST || chkyn -f ${flags} '
+Any other deletions?'  || exit
+do
+FIRST=false
+
+syslist=`grep '^[^#]' $SYSTEMS  2>/dev/null | cut -d' ' -f1 $SYSTEMS \
+	|  sort -u  |	grep '^[A-Za-z0-9]'`
+
+if [ $? -ne 0 ]; then
+	echo "There are no entries in the '$SYSTEMS' file
+None can be deleted!\n"
+	exit
+fi
+
+echo "\nThis is the current list of systems known to the $PACKAGE:\n"
+echo "${syslist}"  |  pr -t -w80 -6
+
+systemname=`chkyn ${flags} -fer '
+Which system name do you want to delete? [q]' \
+	'.' 'You must enter at least one character.' \
+	'^[a-zA-Z0-9]' 'First character must be a letter or number.'`
+
+idline=`grep "^${systemname}[ 	]" $SYSTEMS`
+if [ $? -eq 0 ]
+then
+	echo "\nHere is the Systems file entry(ies) for machine '${systemname}'."
+	cat <<-! |while read a; do /bin/sh _systemprint $a; done
+		${idline}
+	!
+
+	if  chkyn ${flags} -h'?' -H"
+	If you answer  y  '${systemname}' will no longer be known to the $PACKAGE." \
+		-f "Do you want to delete the system named '${systemname}'?"
+	then
+		ed - $SYSTEMS <<-! > /dev/null 2>&1
+			H
+			g/^${systemname}[ 	]/d
+			w
+			q
+		!
+
+		ed - $DEVICES <<-! > /dev/null 2>&1
+			H
+			g/^${systemname}[ 	]/d
+			w
+			q
+		!
+
+		if [ $? != 0 ]
+		then
+			admerr $0 Could not edit $SYSTEMS
+			exit 1
+		fi
+
+		echo "\n **** System '${systemname}' has been deleted from '$SYSTEMS' ****\n"
+	fi
+
+else
+echo "\n\\t'${systemname}' does not exist in '$SYSTEMS'.\n"
+fi
+
+done

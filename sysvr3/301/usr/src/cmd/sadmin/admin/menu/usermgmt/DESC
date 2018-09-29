@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/DESC	1.2"
+#menu# user management menu
+
+#head# 			USER MANAGEMENT
+#help# 
+#help#	These subcommands allow you to add, modify and delete the list of users
+#help#	that have access to your machine.  You can also place them in separate
+#help#	groups so they can share access to files within the group but protect
+#help#	themselves from other groups.

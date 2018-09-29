@@ -1,0 +1,127 @@
+.TH CREAT 2 
+.SH NAME
+creat \- create a new file or rewrite an existing one
+.SH SYNOPSIS
+.B int creat (path, mode)
+.br
+.B char \(**path;
+.br
+.B int mode;
+.SH DESCRIPTION
+.I Creat\^
+creates a new ordinary file or prepares to rewrite an existing file
+named by the
+path name
+pointed to by
+.IR path .
+.PP
+If the file exists, the length is truncated to 0 and the mode
+and owner are unchanged.
+Otherwise,
+the file's owner
+.SM ID
+is set to the effective
+user
+.SM ID\*S,
+of the process
+the group
+.SM ID
+of the process
+is set to the effective group
+.SM ID\*S,
+of the process
+and
+the low-order 12 bits of the file mode are set to the value of
+.I mode\^
+modified as follows:
+.IP
+All bits set in the process's file mode creation mask are cleared.
+See
+.IR umask (2).
+.IP
+The ``save text image after execution bit'' of the mode is cleared.
+See
+.IR chmod (2).
+.PP
+Upon successful completion, 
+the file descriptor
+is returned and the file is open for writing,
+even if the mode does not permit writing.
+The file pointer is set to the beginning of the file.
+The file descriptor is set to remain open across
+.I exec\^
+system calls.
+See
+.IR fcntl (2).
+No process may have more than 20 files open simultaneously.
+A new file may be created with a mode that forbids writing.
+.PP
+.I Creat\^
+will fail if one or more of the following are true:
+.TP 15
+.SM
+\%[ENOTDIR]
+A component of the
+path prefix
+is not a directory.
+.TP
+.SM
+\%[ENOENT]
+A component of the
+path prefix
+does not exist.
+.TP
+.SM
+\%[EACCES]
+Search permission is denied on a component of the
+path prefix.
+.TP
+.SM
+\%[ENOENT]
+The path name is null.
+.TP
+.SM
+\%[EACCES]
+The file does not exist and the directory in which the file
+is to be created does not permit writing.
+.TP
+.SM
+\%[EROFS]
+The named file resides or would reside on a read-only file system.
+.TP
+.SM
+\%[ETXTBSY]
+The file is a pure procedure (shared text) file that is being executed.
+.TP
+.SM
+\%[EACCES]
+The file exists and write permission is denied.
+.TP
+.SM
+\%[EISDIR]
+The named file is an existing directory.
+.TP
+.SM
+\%[EMFILE]
+Twenty (20)
+file descriptors are currently open.
+.TP
+.SM
+\%[EFAULT]
+.I Path\^
+points outside the allocated address space of the process.
+.TP
+.SM
+\%[ENFILE]
+The system file table is full.
+.SH "RETURN VALUE"
+Upon successful completion,
+a non-negative integer,
+namely the file descriptor,
+is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+chmod(2), close(2), dup(2), fcntl(2), lseek(2), open(2), read(2), umask(2), write(2).
+.\"	@(#)creat.2	6.2 of 9/6/83

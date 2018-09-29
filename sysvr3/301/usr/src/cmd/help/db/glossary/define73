@@ -1,0 +1,18 @@
+
+\S byte order:  half word order \S
+
+Byte order and half word order refer to the order that data is stored in
+computer memory.  Some computers store data as we read in English, left to
+right.  Other computers have different methods of organizing the data.
+Byte order and half word order are important when you are transmitting
+information from one computer to another. If your computer has a different
+byte order or half word order than the computer you're transmitting to,
+your files will be scrambled.  For example, your computer stores the word
+HELP as HELP.  A computer you're transmitting HELP to has 4 "byte"\S*\S
+"words"\S*\S and stores data in units of "half words"\S*\S.  If you
+transmitted HELP to this computer, it would be stored as HE and LP.  But,
+if you transmitted HELP to a computer that reverses the half word order,
+you would be storing the letters incorrectly as LP and HE.  When you
+printed the stored data you would have LPHE.
+
+\S*\S defined in the \Sglossary\S

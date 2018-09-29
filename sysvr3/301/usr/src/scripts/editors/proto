@@ -1,0 +1,29 @@
+/dev/null
+1422 100
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/editors/Rlist.ed
+	UNINSTALL	---555 2 2	./install/editors/UNINSTALL
+	INSTALL 	---555 2 2	./install/editors/INSTALL
+	setup	 	---555 2 2	./install/editors/setup
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		bin	d--775 2 2
+			vi		---555 2 2	../usr/bin/vi
+			ctags		---555 2 2	../usr/bin/ctags
+		$
+		lib	d--775 0 3
+			expreserve	---555 2 2	../usr/lib/expreserve
+			exrecover	---555 2 2	../usr/lib/exrecover
+			exstrings	---444 2 2	../usr/lib/exstrings
+		$
+		options	d--775 0 3
+			ed.name		---444 2 2	./install/editors/ed.name
+		$
+		preserve d--777 2 2
+		$
+	$
+$
+$
+#ident	"@(#)pkg.editors:editors/proto	1.13"

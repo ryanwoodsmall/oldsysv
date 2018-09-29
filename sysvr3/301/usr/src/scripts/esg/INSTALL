@@ -1,0 +1,129 @@
+#ident	@(#)pkg.esg:esg/INSTALL	1.10
+#
+# Single Floppy INSTALL Script
+#
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#	Note that \fIpkg\fR should be replaced with the appropriate
+#	abbreviation for the package.
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/esg.name`
+
+echo "Installing the ${PKGNAME}."
+echo "Copyright (c) 1985 AT&T"
+echo "All Rights Reserved"
+
+# Check that an old Issue and Version of the package will not accidentally
+#	 install over a later Issue and Version
+#
+
+if
+	test -r /usr/options/esg.name
+then		 #package is already on machine - check for Issue and Version
+	ISS=`expr "\`cat /usr/options/esg.name\`" : '.*Issue[ 	]*\([^ 	]\).*'`
+	VER=`expr "\`cat /usr/options/esg.name\`" : '.*Version[ 	]*\([^ 	]\).*'`
+	if
+		test -n "$ISS"
+	then
+		FISS=`expr "\`cat $INSPATH/usr/options/esg.name\`" : '.*Issue[ 	]*\([^ 	]\).*'`
+		FVER=`expr "\`cat $INSPATH/usr/options/esg.name\`" : '.*Version[ 	]*\([^ 	]\).*'`
+
+		if
+			test $ISS -gt $FISS
+		then
+			echo "**WARNING**  This will install an older"
+			echo "Issue/Version ($FISS/$FVER) over the current Issue/Version ($ISS/$VER)"
+			answer=""
+			while 
+				[ "$answer" != y -a "$answer" != n ]
+			do
+				echo "Type 'y' to install over current Issue or\c"
+				echo " 'n' to stop installation:  \c"
+				read answer
+				case $answer in
+					n)	exit
+						;;
+				
+					y)	;; #continue installation
+				esac
+			done
+		elif
+			test $ISS -eq $FISS
+		then
+			if
+				test $VER -gt $FVER
+			then
+				echo "**WARNING**  This will install an older"
+				echo "Issue/Version ($FISS/$FVER) over the current Issue/Version ($ISS/$VER)"
+				answer=""
+				while 
+					[ "$answer" != y -a "$answer" != n ]
+				do
+					echo "Type 'y' to install over current Issue or\c"
+					echo " 'n' to stop installation:  \c"
+					read answer
+					case $answer in
+						n)	exit
+							;;
+					
+						y)	;; #continue installation
+					esac
+				done
+			fi
+		fi
+	fi
+fi
+
+#
+# How much space is needed by this floppy?
+#
+
+USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+
+#
+# How much space is available in the necessary filesystems?
+#
+
+USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+#
+# Now see if the package fits!
+# Inform the user and exit immediately, if not.
+#
+
+if
+	[ "$USRspace" -lt "$USRneeds" ]
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $USRspace blocks available"
+	echo "on the /usr file system --"
+	echo "$USRneeds blocks are needed."
+	exit
+elif
+	[ "$ROOTspace" -lt "$ROOTneeds" ]  
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $ROOTspace blocks available"
+	echo "on the / (root) file system --"
+	echo "$ROOTneeds blocks are needed."
+	exit
+fi
+
+cd ${INSPATH}
+echo "The following files are being installed:"
+find . -print | cpio -pduvm /
+
+
+#
+# Give user closing message
+#
+
+echo "Installation of the ${PKGNAME} is complete."
+exit

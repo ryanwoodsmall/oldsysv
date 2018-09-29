@@ -1,0 +1,9 @@
+
+\S []:  square brackets \S
+
+The help facility and the UNIX System User Reference Manual
+use square brackets in the syntax summary portion of the command
+description to show that the "arguments"\S*\S within the brackets
+are optional. 
+
+\S*\S defined in the \Sglossary\S

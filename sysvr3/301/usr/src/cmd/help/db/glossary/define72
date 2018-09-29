@@ -1,0 +1,16 @@
+
+\S buffer:  editor buffer \S
+
+A buffer is a space in the computer memory that saves information
+temporarily.  An editor buffer is an area where a "text editor"\S*\S
+keeps a copy of the file that you are editing.  You use editor commands to
+modify or display the text in the editor buffer.  If you want to make
+permanent changes to a file, you must use the appropriate "editor
+command"\S*\S to save or write the file.  This replaces the contents of
+the file with the contents of the buffer. When you exit the "editor"\S*\S
+the text in the buffer is lost.  When you edit a long file its a good
+idea to write the file periodically to make sure the changes you have made
+are not lost when you exit the editor, if there is an "editor"\S*\S or
+"system crash"\S*\S.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,92 @@
+.TH "3B20 OPS" 8 "3B20S only"
+.SH NAME
+3B20ops \- 3B20S console operations
+.SH DESCRIPTION
+The daily procedures involved in running the \s-1UNIX\s+1 System on the 3B20S system
+are described here.
+.SS "Disk Boot"
+See
+.IR 3B20boot (8)
+for a complete description of how to boot the machine from disk.
+The
+.B #
+prompt indicates that
+the system has come up through
+.B "init S"
+(see
+.IR init (1M))
+and that
+the shell
+is ready to accept commands.
+.PP
+This is the appropriate time to do file system backups,
+and
+.IR fsck (1M)
+should be executed.
+One must never operate the system
+with a defective file system.
+.PP
+After successful completion of
+.IR fsck ,
+the operator can bring the system to multi-user
+operation by executing
+.BR "init 2" .
+.SS "Bringing the System Down"
+The shutdown procedure is designed
+to gracefully turn off all processes
+and bring the system back
+to single user state
+with all buffers flushed.
+To do this
+the operator can execute
+.IR shutdown (1M)
+or the following sequence of commands:
+.sp
+.RS
+.nf
+killall
+sync
+telinit 6
+fsck (optional)
+.fi
+.RE
+.sp
+The system may then be halted
+using the Emergency Action Interface
+(see
+.IR eai (8)).
+.SS "System Dumps"
+After a system crash the procedure outlined in
+.IR eai (8)
+should be followed to dump the contents of memory
+to the disk.
+Then the dump can be analyzed using
+.IR crash (1M)
+and the
+.BI /dev/dump ?
+file
+(see
+.IR dsk (7)).
+To save the dump for later examination,
+the dump may
+be copied
+to a file
+using the command:
+.PP
+.RS
+dd \|if=/dev/dump\fIU\fP \|of=savefile
+.RE
+.PP
+where \fIU\fP is the unit (drive) number
+of the disk containing the dump.
+.SH "SEE ALSO"
+crash(1M),
+date(1),
+filesave(1M),
+fsck(1M),
+init(1M),
+shutdown(1M),
+system(4),
+3B20boot(8),
+eai(8).
+.\"	@(#)3B20ops.8	5.2 of 5/18/82

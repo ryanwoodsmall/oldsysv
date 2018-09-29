@@ -1,0 +1,24 @@
+#ident	"@(#)core:setup.core2	1.6"
+#
+#	Sets up "3B2 Core UNIX Part 2" file system on floppy 
+#
+
+echo "Setting up the \"3B2 Core UNIX Part 2\" floppy"
+
+set -u
+export PATH
+PATH=/bin:/usr/bin:/etc
+ROOT=/install
+
+ln ${ROOT}/bin/df ${ROOT}/etc/devnm
+ln ${ROOT}/etc/init.d/ANNOUNCE 		${ROOT}/etc/rc0.d/K00ANNOUNCE
+ln ${ROOT}/etc/init.d/firstcheck 	${ROOT}/etc/rc2.d/S00firstcheck
+ln ${ROOT}/etc/init.d/MOUNTFSYS 	${ROOT}/etc/rc2.d/S01MOUNTFSYS
+ln ${ROOT}/etc/init.d/RMTMPFILES 	${ROOT}/etc/rc2.d/S05RMTMPFILES
+ln ${ROOT}/etc/init.d/disks 		${ROOT}/etc/rc2.d/S10disks
+ln ${ROOT}/etc/init.d/autoconfig 	${ROOT}/etc/rc2.d/S15autoconfig
+ln ${ROOT}/etc/init.d/sysetup 		${ROOT}/etc/rc2.d/S20sysetup
+ln ${ROOT}/etc/init.d/uucp 		${ROOT}/etc/rc2.d/S70uucp
+ln ${ROOT}/etc/init.d/cron 		${ROOT}/etc/rc2.d/S75cron
+ln ${ROOT}/etc/init.d/cron 		${ROOT}/etc/rc0.d/K70cron
+rm ${ROOT}/setup

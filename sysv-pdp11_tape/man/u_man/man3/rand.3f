@@ -1,0 +1,17 @@
+.TH RAND 3F
+.SH NAME
+srand, rand \- Fortran uniform random-number generator
+.SH SYNOPSIS
+.nf
+.B "integer i, j"
+.P
+.B "call srand(i)"
+.B "j = rand( )"
+.SH DESCRIPTION
+.I Srand\^
+takes its integer argument as the seed of a random-number generator, the
+values of which are returned through successive invocations of
+.IR rand .
+.SH SEE ALSO
+rand(3C).
+.\"	@(#)rand.3f	5.2 of 5/18/82

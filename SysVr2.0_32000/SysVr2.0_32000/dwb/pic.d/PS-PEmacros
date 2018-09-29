@@ -1,0 +1,10 @@
+.de PS	\" start picture (bwk)
+.	\" $1 is height, $2 is width in units
+.if t .sp .3
+.in (\\n(.lu-\\$2u)/2u
+.ne \\$1u
+..
+.de PE	\" end of picture
+.in
+.if t .sp .6
+..

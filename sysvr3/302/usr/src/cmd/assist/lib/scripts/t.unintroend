@@ -1,0 +1,24 @@
+520 clearall
+705 0 0 69
+                     UNIX SYSTEM WALKTHRU SUMMARY
+
+     This walkthru has given you some important information about
+the UNIX System.  You have learned about files and directories,
+the concept of "standard input" and "standard output," and how to
+redirect input and output.
+
+     The UNIX System has many other features that will allow you
+even more flexibility and power.  You will discover more about
+these features as you continue to use ASSIST and the UNIX System.
+If you would like to read more about the UNIX System, you may
+find the following references helpful:
+
+Kernighan, B.W., & Pike, R. (1984).  The UNIX Programming Environment.
+   Englewood Cliffs, NJ:  Prentice-Hall.
+
+UNIX System V Release 3 User's Reference Manual (1986).
+
+UNIX System V Release 3 Programmer's Reference Manual (1986).
+706 
+520 arrow
+520 clearall

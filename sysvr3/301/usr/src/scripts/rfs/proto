@@ -1,0 +1,67 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/rfs/Rlist.rfs
+	UNINSTALL	---555 2 2	./install/rfs/UNINSTALL
+	INSTALL 	---555 2 2	./install/rfs/INSTALL
+	setup 		---555 2 2	./install/rfs/setup
+	unsetup 	---555 2 2	./install/rfs/unsetup
+$
+new	d--775 0 3
+	boot	d--775 0 3
+		du.o		---444 0 0	../usr/src/uts/3b2/nudnix/du.o
+		dufst.o		---444 0 0	../usr/src/uts/3b2/fs/du/dufst.o
+		sp.o		---444 0 0	../usr/src/uts/3b2/io/sp.o
+	$
+	etc	d--775 0 3
+		rmount		---544 0 3	../etc/rmount
+		rmountall	---544 0 3	../etc/rmountall
+		rumountall	---544 0 3	../etc/rumountall
+		master.d	d--775	0 3
+			du	---444  0 0	../usr/src/uts/3b2/master.d/du
+			dufst	---444  0 0	../usr/src/uts/3b2/master.d/dufst
+			sp	---444  0 0	../usr/src/uts/3b2/master.d/sp
+		$
+		init.d		d--775 0 3
+			adv		---444 0 3	../etc/init.d/adv
+			rfs		---444 0 3	../etc/init.d/rfs
+			fumounts	---444 0 3	../etc/init.d/fumounts
+			rumounts	---444 0 3	../etc/init.d/rumounts
+		$
+	$
+	usr	d--775 0 3
+		bin	d--775 2 2
+			adv		---555 2 2	../usr/bin/adv
+			rmntstat	---555 2 2	../usr/bin/rmntstat
+			rfpasswd	---555 2 2	../usr/bin/rfpasswd
+			rfstart		---555 2 2	../usr/bin/rfstart
+			rfstop		---555 2 2	../usr/bin/rfstop
+			rfuadmin	---554 2 2	../usr/bin/rfuadmin
+			rfudaemon	---550 2 2	../usr/bin/rfudaemon
+			fumount		---555 2 2	../usr/bin/fumount
+			fusage		---555 2 2	../usr/bin/fusage
+			idload		---555 2 2	../usr/bin/idload
+			dname		---555 2 2	../usr/bin/dname
+			rfadmin		---555 2 2	../usr/bin/rfadmin
+			nsquery		-u-555 0 0	../usr/bin/nsquery
+			unadv		---555 2 2	../usr/bin/unadv
+		$
+		nserve	d--775 0 3
+			nserve		---550 2 2	../usr/nserve/nserve
+			auth.info	d--775 0 3
+			$
+		$
+		net	d--775 0 3
+			servers	d--775 0 3
+				rfs	d--775 0 3
+					rfsetup		-u-550 0 4	../usr/net/servers/rfs/rfsetup
+				$
+			$
+		$
+		options	d--775 0 3
+			rfs.name	---555 2 2	./install/rfs/rfs.name
+		$
+	$
+$
+$

@@ -1,0 +1,19 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/DESC	1.3"
+## IDOC:   SCREEN 2.10: FORMS MANAGEMENT MENU
+#menu# Forms management menu
+
+#head#                   FORMS MANAGEMENT MENU
+
+#help#        The "forms" menu gives you several commands:  for adding new
+#help#        preprinted  forms  to  the  print service; for changing form
+#help#        definitions; for mounting forms on printers;  for  adjusting
+#help#        the alerting schedule for unmounted forms; and for examining
+#help#        the forms recognized by the print service.
+#help#
+#help#        Preprinted forms, by the way, include the various  kinds  of
+#help#        paper  stock  you  may want to use in your printers.  The LP
+#help#        Print Service lets you define enough of the form so that the
+#help#        print  service  can  prescreen users' requests, route users'
+#help#        print requests to the proper  destination,  caution  against
+#help#        using  a form with the wrong printer, and remind you that it
+#help#        is time to mount a new form.

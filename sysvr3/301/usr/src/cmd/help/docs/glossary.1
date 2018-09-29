@@ -1,0 +1,90 @@
+'\" t
+.TH GLOSSARY 1
+.SH NAME
+glossary \- definitions of common UNIX system terms and symbols
+.SH SYNOPSIS
+[
+.B help
+]
+.B glossary
+[
+.I term
+]
+.SH DESCRIPTION
+.PP
+The UNIX System \fIhelp\fP Facility command
+.I glossary
+provides definitions of common technical terms and symbols.
+.PP
+Without an argument,
+.I glossary
+displays a menu screen listing the terms and symbols that are currently 
+included in
+.IR glossary .
+A user may choose one of the terms or may exit to the shell by typing
+.B q
+(for ``quit'').
+When a term is selected, its definition is retrieved and displayed.
+By selecting the appropriate menu choice, the list of terms and symbols
+can be redisplayed.
+.PP
+A term's definition may also be requested directly from shell level (as shown above),
+causing a definition to be retrieved and the list of terms
+and symbols not to be displayed.
+Some of the symbols must be escaped if requested at shell level in order
+for the facility to understand the symbol.  The following is a table
+which list the symbols and their escape sequence.
+.sp 1
+.RS
+.TS
+l c
+c l.
+SYMBOL	ESCAPE SEQUENCE
+\&"\|"	\e"\e"
+\&'\|'	\e'\e'
+\&.	\e\e.
+\&[\|]	\e\e[\e\e]
+\&`\|`	\e`\e`
+\&#	\e#
+\&&	\e&
+\&\(**	\e\(**
+\&\e	\e\e\e\e
+\&|	\e|
+.TE
+.RE
+.PP
+From any screen in the facility, a user may execute a command via the
+shell (\fBsh(1)\fP) by typing a \fB!\fP and the command to be executed.
+The screen will be redrawn if the command that was executed
+was entered at a first level prompt.
+If entered at any other prompt level, only the prompt will be redrawn.
+.PP
+By default, the \fIhelp\fP facility scrolls the data that is
+presented to the user.  If a user prefers to have
+the screen clear before printing the data (non-scrolling), 
+a variable must be defined in the user's \fB.profile\fP file called
+\fBSCROLL\fP.  The variable \fBSCROLL\fP must be set to \fBno\fP and exported
+for non-scrolling to occur.
+If the user later decides that scrolling is desired, the variable \fBSCROLL\fP
+must be set to \fByes\fP or deleted from the user's \fB.profile\fP file.
+.PP
+Further information on the UNIX System \fIhelp\fP Facility can be found on
+the
+.IR help (1),
+.IR usage (1),
+.IR starter (1),
+and
+.IR locate (1)
+manual pages.
+.SH SEE ALSO
+help(1),
+locate(1),
+usage(1),
+starter(1).
+.SH WARNINGS
+.PP
+If the \fBTERM\fP variable is not set in the user's \fB.profile\fP file,
+then \fBTERM\fP will default to the terminal value type \fB450\fP 
+( a hardcopy terminal ).  For a list of valid terminal types, refer to
+\fIterm(5)\fP in the UNIX Programmer's Manual.
+The \fIhelp\fP facility assumes that tabs are set on the user's terminal.

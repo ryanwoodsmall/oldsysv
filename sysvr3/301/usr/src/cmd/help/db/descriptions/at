@@ -1,0 +1,35 @@
+
+\Sat\S:  Description
+
+Syntax Summary:  at time [future] [date]
+                 at -l [job ...]
+                 at -r job ...
+
+         where:  time  is the time on a 12 or 24 hour clock,
+                       or "noon", "midnight", "now", or "next".
+
+                 future  is an integer that indicates a duration of time
+                         and a measure of time stated as "minutes,"
+                         "hours," "days," "weeks," "months," or "years."
+
+                 job  is a job number.
+
+Description:
+     \Sat\S executes commands at a time in the future.  Use \Sat\S to read
+     commands from standard input and execute them at the date and time you
+     specify on the \Sat\S command line.  <time> is specified as 1:00 p.m.,
+     13:00, or in words like noon or midnight. <future> specifies an amount of
+     time and unit of time that \Sat\S should wait to execute the commands.
+     <date> is assumed to be the current date unless another date is specified,
+     or unless <time> has already passed for today.  \Sat\S assigns a job
+     number to the commands and it prints the job number and the date and time
+     that it will execute the job.  You receive the output of the commands
+     through mail(1) unless you redirect it.  \Sat\S can also remove a
+     previously scheduled job, or list the job numbers and times for jobs that
+     you scheduled using \Sat\S or batch(1). You cannot use \Sat\S unless
+     your login name appears in the file /usr/lib/cron/at.allow. If your 
+     system does not have an "at.allow" file, then your login name must 
+     not appear in the file /usr/lib/cron/at.deny.  Details for using \Sat\S
+     are available on the manual page.  See also:  batch(1) and kill(1) 
+     for commands with functions similar to \Sat\S, and nice(1) and ps(1) 
+     for commands that might be used with \Sat\S.

@@ -1,0 +1,110 @@
+.TH SETBUF 3S 
+.SH NAME
+setbuf, setvbuf \- assign buffering to a stream
+.SH SYNOPSIS
+.B #include <stdio.h>
+.PP
+.B void setbuf (stream, buf)
+.br
+.SM
+.B FILE
+.B \(**stream;
+.br
+.B char \(**buf;
+.PP
+.B int setvbuf (stream, buf, type, size)
+.br
+.SM
+.B FILE
+.B \(**stream;
+.br
+.B char \(**buf;
+.br
+.B int type, size;
+.SH DESCRIPTION
+.I Setbuf\^
+may be used after a stream has been opened but before it
+is read or written.
+It causes the array pointed to by
+.I buf\^
+to be used instead of an automatically allocated buffer.
+If
+.I buf\^
+is the
+.SM NULL
+pointer input/output will be completely unbuffered.
+.PP
+A constant 
+.SM
+.B BUFSIZ,
+defined in the
+.B <stdio.h>
+header file,
+tells how big an array is needed:
+.PP
+.RS
+char buf[\s-1BUFSIZ\s0];
+.RE
+.P
+.I Setvbuf\^
+may be used after a stream has been opened 
+but before it is read or written.
+.I Type\^
+determines how 
+.I stream\^
+will be buffered.
+Legal values for 
+.I type\^
+(defined in stdio.h) are:
+.TP .85i
+.SM     _IOFBF
+causes input/output to be fully buffered.
+.TP
+.SM     _IOLBF
+causes output to be line buffered; 
+the buffer will be flushed when a newline
+is written, the buffer is full, or input is requested.
+.TP
+.SM     _IONBF
+causes input/output to be completely unbuffered.
+.P
+If
+.I buf\^
+is not the 
+.SM
+.B NULL
+pointer, the array it points to
+will be used for buffering, instead of an automatically allocated
+buffer.
+.I Size\^
+specifies the size of the buffer to be used.
+The constant
+.SM
+.B BUFSIZ 
+in
+.B <stdio.h>
+is suggested as a good buffer size.
+If input/output is unbuffered, 
+.I buf
+and 
+.I size
+are ignored.
+.P
+By default, output to a terminal is line buffered and
+all other input/output is fully buffered.
+.SH "SEE ALSO"
+fopen(3S), getc(3S), malloc(3C), putc(3S), stdio(3S).
+.SH "DIAGNOSTICS"
+If an illegal value for 
+.I type\^
+or
+.I size\^
+is provided,
+.I setvbuf\^
+returns a non-zero value.  
+Otherwise, the value returned will be zero.
+.SH NOTE
+A common source of error is allocating buffer space
+as an ``automatic'' variable in a code block, and then
+failing to close the stream in the same block.
+.\"     %W% of %G%

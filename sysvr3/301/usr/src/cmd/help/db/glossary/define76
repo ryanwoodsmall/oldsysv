@@ -1,0 +1,13 @@
+
+\S central processing unit:  CPU: CPU priority: \S
+
+The central processing unit or CPU controls everything that the computer
+does.  It interprets the "machine language"\S*\S instructions created by
+the "compiler"\S*\S or "interpreter"\S*\S.  These machine language
+instructions are 0's and 1's that are transmitted to the CPU as electric
+pulses.  The electric pulses affect the chips and transistors of the CPU.
+CPU priority refers to the order that programs reach the CPU.  Most times
+the first programs executed by the user will be the first executed by the
+CPU.  The first command waiting to be executed has the highest priority.
+
+\S*\S defined in the \Sglossary\S

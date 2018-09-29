@@ -1,0 +1,82 @@
+'\" t
+.TH RM80 7 "DEC only"
+.SH NAME
+rm80 \- \s-1RM\s+1\&80 moving-head disk
+.SH DESCRIPTION
+The files
+.BR rp0 ", " ... ", " rp7
+refer to sections of the
+\s-1RM\s+1\&80 disk drive 0.
+The files
+.BR rp10 ", " ... ", " rp17
+refer to drive 1, etc.
+This slicing allows the pack
+to be broken up
+into more manageable pieces.
+.PP
+The origin and size of the sections on each drive are
+as follows:
+.PP
+.RS
+.TS
+cI cI cI
+c n n.
+section	start	length
+0	0	18228
+1	42	224378
+2	194	158410
+3	346	92442
+4	498	26474
+5	\-	\-
+6	\-	\-
+7	0	242606
+.TE
+.RE
+.PP
+The start address is a cylinder address,
+with each cylinder containing 434 blocks.
+It is extremely unwise for all of these files to be present in one installation,
+since there is overlap in addresses and protection becomes
+a sticky matter.
+.PP
+The
+.B rp
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly
+one
+I/O
+operation
+and therefore raw
+I/O
+is considerably more efficient when
+many words are transmitted.
+The names of the raw
+.SM RM
+files
+begin with
+.B rrp
+and end with a number which selects the same disk
+section as the corresponding
+.B rp
+file.
+.PP
+In raw
+I/O
+the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)\^
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/rp\(**, /dev/rrp\(**
+.SH SEE ALSO
+gd(7), hm(7), hp(7), rp(7), rp07(7).
+.\"	@(#)rm80.7	5.2 of 5/18/82

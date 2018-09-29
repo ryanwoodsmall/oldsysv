@@ -1,0 +1,60 @@
+#ident	"@(#)nlp:terminfo/470.ti	1.7"
+#01-09-88
+
+470|att470|AT&T 470; C.Itoh 8510; parallel matrix printer,
+
+	bufsz#4096,
+	cols#80,
+	it#8,
+	lines#66,
+	orc#1,
+	orhi#10,
+	orl#24,
+	orvi#144,
+	cps#120,
+
+	cr=^M,
+	cpi=%?%p1%{10}%=%t\EN%e%p1%{12}%=%t\EE%e%p1%{17}%=%O%t\EQ%;,
+	csnm=%?%p1%{0}%=%tamerican%e%p1%{1}%=%tbritish%e%p1%{2}%=%tdanish%e%p1%{3}%=%tjapanese%e%p1%{4}%=%tnorwegian%e%p1%{5}%=%tswedish%e%p1%{6}%=%tgerman%e%p1%{7}%=%tfrench%e%p1%{8}%=%tfrench2%e%p1%{9}%=%titalian%e%p1%{10}%=%tspanish%e%p1%{11}%=%tnetherlandish%e%p1%{12}%=%tafrikaans%e%p1%{13}%=%tbritish2%;,
+	cvr=%?%p1%{0}%>%p1%{100}%<%&%t\ET%p1%02d%;,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+
+#DC1 printer ready;CAN cancels print data received prior to this code
+	is1=^Q^X,
+	is2=\Ec1,
+	lpi=%?%p1%{6}%=%t\EA%e%p1%{8}%=%t\EB%;,
+	rep=\ER%p2%03d%p1%c,
+	rmul=\EY,
+	rwidm=\017,
+	scs=%?%p1%{0}%=%t\EZ\017\100\ED\02\100%e%p1%{1}%=%t\EZ\017\100\ED\03\100%e%p1%{2}%=%t\EZ\017\100\ED\010\100%e%p1%{3}%=%t\EZ\017\100%e%p1%{4}%=%t\EZ\017\100\ED\011\100%e%p1%{5}%=%t\EZ\017\100\ED\05\100%e%p1%{6}%=%t\EZ\017\100\ED\04\100%e%p1%{7}%=%t\EZ\017\100\ED\01\100%e%p1%{8}%=%t\EZ\017\100\ED\016\100%e%p1%{9}%=%t\EZ\017\100\ED\06\100%e%p1%{10}%=%t\EZ\017\100\ED\07\100%e%p1%{11}%=%t\EZ\017\100\ED\012\100%e%p1%{12}%=%t\EZ\017\100\ED\013\100%e%p1%{13}%=%t\ED\017\100%;,
+	swidm=\016,
+	smul=\EX,
+	smglp=\EL%p1%03d,
+	smgrp=\E/%{1}%p1%+%03d,
+
+471|att471|AT&T 471; C.Itoh 1550; 14"; parallel matrix printer,
+
+	cols#136,
+	use=470,
+
+475|att475|AT&T 475; C.Itoh 8510; 8"; serial matrix printer,
+
+	use=470,
+
+476|att476|AT&T 476; C.Itoh 1550; 14"; serial matrix printer,
+
+	cols#136,
+	use=475,
+
+477-470|att477-470|AT&T 477; 470 emulation,
+
+	orl#30,
+	orvi#180,
+	orc#10,
+	orhi#100,
+	cols#136,
+	csnm=%?%p1%{0}%=%tamerican%e%p1%{1}%=%tbritish%e%p1%{2}%=%tswedish%e%p1%{3}%=%tgerman%e%p1%{4}%=%tfrench%e%p1%{5}%=%titalian%e%p1%{6}%=%tspanish%;,
+	scs=%?%p1%{0}%=%t\EZ\017\100\ED\02\100%e%p1%{1}%=%t\EZ\017\100\ED\03\100%e%p1%{2}%=%t\EZ\017\100\ED\05\100%e%p1%{3}%=%t\EZ\017\100\ED\04\100%e%p1%{4}%=%t\EZ\017\100\ED\01\100%e%p1%{5}%=%t\EZ\017\100\ED\06\100%e%p1%{6}%=%t\EZ\017\100\ED\07\100%;,
+	use=470,

@@ -1,0 +1,104 @@
+/* #ident	"@(#)kern-port:vuifile	10.5" */
+
+MEMORY	{
+	KP_boot:	origin	= 0x2004000,	length	=   0x80000
+
+	KV_gate:	origin	=         0,	length	=     0x800
+	KV_demot:	origin	=   0x20000,	length  =   0x20000
+	KV_sbdint:	origin  =   0x40000,	length	=   0x20000
+	KV_text:	origin	= 0x40000000,	length	=   0x60000
+	KV_data:	origin	= 0x40060000,	length	=   0x20000
+	KV_bss:		origin	= 0x40080000,	length	=  0x160000
+	KV_sysseg:	origin  = 0x401e0000,	length 	=  0x1e0000
+	KV_windows:	origin	= 0x403c0000,	length  =   0x40000
+
+	UV_ublock:	origin  =0xc0000000,	length =    0x20000
+	UV_stack:	origin  =0xc0020000,	length =    0xe0000
+	}
+
+SECTIONS {
+
+	/* sections whose names do not begin with a period are physical */
+	boott:	{
+		sboot = .;
+		start.o(.text) 
+		} > KP_boot
+	bootd:	{
+		start.o(.data,.bss) 
+		bootsize = . - sboot;
+		} > KP_boot
+
+	/* sections whose names begin with a period are virtual */
+	.gate:	{
+		sgate = . ;
+		gate.o(.data)
+		} > KV_gate
+
+	/* sections .text, .data and .bss are given special handling by lboot */
+	.text:	{
+		stext = .;
+		locore.o(.text)
+		} > KV_text
+
+	.data:	{
+		sdata = .;
+		locore.o(.data)
+		} > KV_data
+
+	.bss:	{
+		sbss = .;
+		locore.o(.bss)
+		} > KV_bss
+
+	kv_sbdint (NOLOAD):
+		{
+		unxsbdst	=	. ;
+		mmusdc1		=	. ;
+		mmusdc2		=	. + 0x100;
+		mmupdc1r	=	. + 0x200;
+		mmupdc2r	=	. + 0x300;
+		mmupdc1l	=	. + 0x400;
+		mmupdc2l	=	. + 0x500;
+		mmusrama	=	. + 0x600;
+		mmusramb	=	. + 0x700;
+		mmufltcr	=	. + 0x800;
+		mmufltar	=	. + 0x900;
+		mmucr		=	. + 0xa00;
+		mmuvar		=	. + 0xb00;
+		sbdpit		=	. + 0x2000;
+		clrclkint	=	. + 0x2013;
+		sbdnvram	=	. + 0x3000;
+		sbdrcsr		=	. + 0x4000;
+		sbdwcsr		=	. + 0x4000;
+		dmaid		=	. + 0x5000;
+		dmaiuA		=	. + 0x6000;
+		dmaiuB		=	. + 0x7000;
+		dmac		=	. + 0x8000;
+		duart		=	. + 0x9000;
+		idisk		=	. + 0xa000;
+		ifloppy		=	. + 0xd000;
+		dmaif		=	. + 0xe000;
+		} > KV_sbdint
+
+	kv_sysseg (NOLOAD):
+		{
+		syssegs		=	.;
+		} > KV_sysseg
+
+	kv_windows (NOLOAD):
+		{
+		win_ublk	=	.;
+		} > KV_windows
+
+
+	uv_stack (NOLOAD):
+		{
+		userstack	=	.;
+		} > UV_stack
+
+	uv_ublock (NOLOAD):
+		{
+		u		=	.;
+		} > UV_ublock
+
+	}

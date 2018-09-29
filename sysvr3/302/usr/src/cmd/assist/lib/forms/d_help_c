@@ -1,0 +1,8 @@
+NAVIGATING, EXECUTING     CURSOR POSITIONING        MISCELLANEOUS
+^G Execute command line     <CR>,^N Next item       ^L Redraw screen
+^V Clear help or prompt          ^P Previous item   ^Y Current item help
+^R Previous menu or form         ^W Next word       ^O Current form help
+^F Popup menu                    ^B Previous word   ^A ASSIST help
+^T Top menu                      ^U Next Page       ^K Store command line
+^D Exit ASSIST                                      ^C Character quote
+^E Shell escape

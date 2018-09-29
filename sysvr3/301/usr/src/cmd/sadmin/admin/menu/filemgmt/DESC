@@ -1,0 +1,10 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/DESC	2.3"
+#menu# file management menu
+
+#help#
+#help#	The subcommands in this menu allow you to protect files on the
+#help#	built-in disk file systems by copying them onto removable media and
+#help#	later restoring them to the file systems by copying them back.
+#help#	Subcommands are also provided to determine which files might
+#help#	best be kept on removable media based on age or size.
+#head#			FILE MANAGEMENT

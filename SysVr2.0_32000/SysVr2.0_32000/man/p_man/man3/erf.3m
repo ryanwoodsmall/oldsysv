@@ -1,0 +1,38 @@
+'\" e
+.TH ERF 3M
+.SH NAME
+erf, erfc \- error function and complementary error function
+.SH SYNOPSIS
+.B #include <math.h>
+.PP
+.B double erf (x)
+.br
+.B double x;
+.PP
+.B double erfc (x)
+.br
+.B double x;
+.SH DESCRIPTION
+.I Erf\^
+returns the error function of
+.IR x ,
+defined as
+.EQ
+{2 over sqrt pi} int from 0 to x e sup {- t sup 2} dt .
+.EN
+.PP
+.IR Erfc ,
+which returns 1.0 \-
+.IR erf(x) ,
+is provided because of the
+extreme loss of relative accuracy if
+.I erf(x)
+is called for large
+.I x
+and the result subtracted
+from 1.0 (e.g., for
+.I x
+= 5, 12 places are lost).
+.SH "SEE ALSO"
+exp(3M).
+.\"	%W% of %G%

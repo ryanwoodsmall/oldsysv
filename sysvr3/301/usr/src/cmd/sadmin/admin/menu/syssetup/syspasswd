@@ -1,0 +1,54 @@
+#ident	"@(#)sadmin:admin/menu/syssetup/syspasswd	2.2"
+#menu# assign system passwords
+#help# 
+#help#	Syspasswd lets you set system passwords normally reserved for the
+#help#	very knowledgeable user.  For this reason, this procedure may assign
+#help#	those passwords, but may not change or clear them.  Once set, they
+#help#	may only be changed by the specific login or the "root" login, using
+#help#	the passwd command to change the password.  Therefore, set them with
+#help#	care!
+
+#	system logins are those in the /etc/passwd file with user ID < 100
+#	and that are not Simple Administration logins.
+admlogins=`ls -p ${MENUTOP:?}`
+syslogins=`sed -n '/^[^:]*::.\{1,2\}:/s/:.*//p' /etc/passwd  |
+		fgrep -vx "${admlogins}"`
+
+flags="-f -qq -k$$"
+trap 'exit 0' 1 2 15
+
+if [ -z "${syslogins}" ]
+then
+	echo >&2 '
+	All the system logins on this machine have passwords.
+To change the password of one of those logins, you must either login as
+that ID, which means you must know the current password, or as "root",
+which means you must know the root password.  Use the passwd command to
+change the password.
+'
+	exit 0
+fi
+
+if  checkyn ${flags} -H "!sed -n '/^#help#/s///p' $0" \
+	'Do you want to give passwords to system logins?'
+then
+	for login in ${syslogins}
+	{
+		if  checkyn ${flags} \
+			-H "!echo 'This login is identified in the password file as:\\n\\t\\c'
+			grep '^${login}:' /etc/passwd  |  cut -d: -f5" \
+			"Do you want to give the '${login}' login a password?"
+		then
+			/bin/passwd ${login}
+		fi
+	}
+fi
+sed -n '/^[^:]*::.\{1,2\}:/s/:.*//p' /etc/passwd  |
+	fgrep -vx "${admlogins}"  |  sort  |
+	sed '1i\
+echo "The following system logins still do not have passwords:"\
+pr -t -5 -o5 -w75 <<!
+	$a\
+!
+	'  |
+	sh

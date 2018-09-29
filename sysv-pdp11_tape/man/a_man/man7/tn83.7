@@ -1,0 +1,54 @@
+.TH TN83 7 "3B20S only"
+.SH NAME
+tn83 \- console/printer interface
+.SH DESCRIPTION
+The
+.SM TN\*S83
+is a specialized controller that provides
+the operator interface to the
+.SM 3B20S\*S.
+It supports the Emergency Action Interface. See
+.IR eai (8).
+.PP
+The files
+.B /dev/console
+and
+.B /dev/rop
+refer to the 
+system console and the receive-only printer.
+These special files implement a subset of those
+features described in
+.IR termio (7).
+Among the differences are:
+.IP "" 5
+Hardware options such as line speed are not selectable.
+The console runs at 9600 baud while the receive-only
+printer at 1200 baud.
+.IP ""
+The
+.SM ICANON
+option (raw mode) does not work.
+.IP ""
+The
+.SM START/STOP
+(control-s/control-q) characters only have a temporary affect.
+Use control-x/control-z instead.
+.PP
+Data read and/or written to/from
+.B /dev/console
+is automatically written to the receive-only printer.
+The command line
+.B "stty \-echo < /dev/rop"
+will turn off
+this feature while
+.B "stty echo < /dev/rop"
+will turn it on.
+.PP
+System messages are normally printed to the console
+and the receive-only printer.  These messages may be
+turned on or off by typing a control-o at the console.
+.SH FILES
+/dev/console, /dev/rop
+.SH "SEE ALSO"
+termio(7), eai(8).
+.\"	@(#)tn83.7	5.2 of 5/18/82

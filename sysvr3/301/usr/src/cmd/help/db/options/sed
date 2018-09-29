@@ -1,0 +1,13 @@
+
+\Ssed\S:  Options
+
+     -n   suppresses the printing of the modified file on your terminal.  Use
+          this option with pipes and in programs where the material will be
+          modified further.
+
+     -e script   edits the file according to the editing commands in the
+                 <script>.
+
+     -f script_file   edits the file according to the commands in the file
+                      <script_file>.
+

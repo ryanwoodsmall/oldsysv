@@ -1,0 +1,38 @@
+520 clearall #ident
+30 
+8 2 25 A FINAL WORD
+31 
+705 4 8 72
+This ends the ASSIST "sdb" walkthru.  Try using "sdb" on your own.  Use 
+the quick reference page for "sdb" in the appendix of the ASSIST User's 
+Manual to remind yourself of the "sdb" commands you have learned in 
+this walkthru.  
+
+In addition to this ASSIST walkthru, you can learn about command line 
+options for "sdb" from the ASSIST command form for "sdb."
+
+If you forget how to do something, you can repeat the part of the ASSIST 
+"sdb" walkthru that covers that subject.  When you feel comfortable 
+with the commands that you have learned here, you should try other 
+"sdb" commands that you can read about in the UNIX System V 
+Programmer's Reference Manual.  
+706 
+15 
+2 23 3
+30 
+3 -->
+31 
+8 1000 1001 Strike the RETURN key to end this walkthru. 
+25 
+15 
+20 
+256 13 32
+200 1
+245 10000
+32 
+20 
+250 
+2 0 0
+12 
+15 
+1000 

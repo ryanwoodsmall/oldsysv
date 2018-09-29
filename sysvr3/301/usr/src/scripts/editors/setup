@@ -1,0 +1,37 @@
+#ident	"@(#)pkg.editors:editors/setup	1.8"
+#
+#	Sets up Advanced Editing Utilities Package on hard disk 
+#	by linking ex, edit, vedit, view to vi
+#
+
+ln /usr/bin/vi /usr/bin/ex
+ln /usr/bin/vi /usr/bin/edit
+ln /usr/bin/vi /usr/bin/vedit
+ln /usr/bin/vi /usr/bin/view
+
+#	
+#	Create file which invokes expreserve in order to 
+#	effect file recovery when system is brought up.  
+#	NOTE: This file (PRESERVE) must be executed  before 
+#		/tmp is removed.
+#
+###..remove old PRESERVE file
+
+rm -f /etc/rc.d/PRESERVE
+
+###..create new /etc/init.d/PRESERVE
+
+cat <<- STOP > /etc/init.d/PRESERVE
+	if test -x /usr/lib/expreserve 
+	then /usr/lib/expreserve -
+	else
+		echo "File /usr/lib/expreserve not found"
+		echo "Unable to recover lost editing sessions."
+	fi
+STOP
+
+###..link new PRESERVE to new rc2.d entry
+
+chmod -w  /etc/init.d/PRESERVE
+chgrp sys /etc/init.d/PRESERVE
+ln /etc/init.d/PRESERVE /etc/rc2.d/S02PRESERVE

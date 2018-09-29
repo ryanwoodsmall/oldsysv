@@ -1,0 +1,86 @@
+.TH LP 7
+.SH NAME
+lp \- line printer
+.SH DESCRIPTION
+.I Lp\^
+provides the interface to the line printer
+port on a National Semiconductor Corporation SYS32 processor.
+When it is opened or closed, a suitable number
+of page ejects is generated.
+Bytes written are printed.
+.PP
+An internal parameter within the driver determines
+whether or not the device is treated as having
+a 96- or 64-character set.
+In half-\s-1ASCII\s+1 mode, lower case letters are turned
+into
+upper case,
+and certain characters are escaped according to
+the following table:
+.PP
+.RS
+.TP
+{
+\o@(\-@
+.TP
+}
+\o@)\-@
+.TP
+\*`
+.if n \o@\-\*'@
+.if t \-\h@-1.5n@\*'
+.TP
+\(bv
+\o@!\-@
+.TP
+~
+\o@^\-@
+.RE
+.PP
+The driver correctly interprets
+carriage returns, backspaces, tabs, and form-feeds.
+A new-line that extends over the end of
+a page is turned into a form-feed.
+The default line length is 132 characters,
+indent is 4 characters and lines per page is 66.
+Lines longer than the line length minus the
+indent (i.e., 128 characters, using the above defaults)
+are truncated.
+.PP
+Two
+.IR ioctl (2)
+system calls are available:
+.PP
+.RS
+#include <sys/lprio.h>
+.br
+ioctl \|(fildes, \|command, \|arg)
+.br
+struct \|lprio \|\(**arg;
+.RE
+.PP
+The
+.I commands
+are:
+.RS
+.TP "\w'LPRGET\ \ 'u"
+.SM LPRGET
+Get the current indent, columns per line, and lines per page
+and store in the
+.I lprio\^
+structure referenced by
+.BR arg .
+.TP
+.SM LPRSET
+Set the current indent, columns per line, and lines per page
+from the structure referenced by
+.BR arg .
+.RE
+.PP
+Thus, indent, page width and page length can
+be set with an external program.
+.SH FILES
+/dev/lp
+.SH SEE ALSO
+lpr(1), ioctl(2).
+.\"	@(#)lp.7	1.2 of 10/17/84

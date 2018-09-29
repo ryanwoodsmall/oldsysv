@@ -1,0 +1,104 @@
+#ident	"@(#)f77:u3b/pass1/machdefs	1.3"
+/*	@(#)f77:u3b/pass1/machdefs	1.3	*/
+#ifndef TARGET
+TARGET NOT DEFINED !!!
+#endif
+#if TARGET!=X3B
+Target= TARGET OUT OF RANGE!!
+#endif
+
+#ifndef FAMILY
+FAMILY NOT DEFINED!!!
+#endif
+#if FAMILY!=PCC && FAMILY!=DMR
+Family = FAMILY OUT OF RANGE
+#endif
+
+
+#define TYLENG	TYLONG
+
+#define TYINT	TYLONG
+#define SZADDR	4
+#define SZSHORT	2
+#define SZINT	4
+
+#define SZLONG	4
+#define SZLENG	SZLONG
+
+#define ALIADDR SZADDR
+#define ALISHORT SZSHORT
+#define ALILONG 4
+#define ALIDOUBLE 4
+#define ALIINT	ALILONG
+#define ALILENG	ALILONG
+
+#define AUTOREG 10
+#define ARGREG 9
+#define CARGREG 9
+#define ARGOFFSET 0
+#define SAVESPACE 40
+
+
+#define FUDGEOFFSET 1
+#define BITSPERCHAR 8
+#define XL 8
+
+#define USETEXT	"\t.text"
+#define USECONST	".data"
+#define USEBSS	".bss"
+#define USEINIT	".data"
+
+#define BLANKCOMMON "_BLNK_"
+
+#define LABELFMT "%s:\n"
+
+#define MAXREGVAR 4
+#define TYIREG TYLONG
+#define MSKIREG  (M(TYSHORT)|M(TYLONG))
+
+#define NPERLINE 16
+#define NO2PERLINE 8
+#define NO4PERLINE 4
+
+/* this stuff is from the old vax a.out.h to ease sdb transition */
+
+#define SDB 1
+
+
+#define	N_GSYM	0040	/* global sym: name,,type,0 */
+#define	N_FNAME 0042	/* procedure name (f77 kludge): name,,,0 */
+#define	N_FUN	0044	/* procedure: name,,linenumber,address */
+#define	N_STSYM 0046	/* static symbol: name,,type,address */
+#define	N_LCSYM 0050	/* .lcomm symbol: name,,type,address */
+#define	N_BSTR	0060	/* begin structure: name,,, */
+#define	N_RSYM	0100	/* register sym: name,,register,offset */
+#define	N_SLINE	0104	/* src line: ,,linenumber,address */
+#define	N_ESTR	0120	/* end structure: name,,, */
+#define	N_SSYM	0140	/* structure elt: name,,type,struct_offset */
+#define	N_SO	0144	/* source file name: name,,,address */
+#define	N_BENUM	0160	/* begin enum: name,,, */
+#define	N_LSYM	0200	/* local sym: name,,type,offset */
+#define	N_SOL	0204	/* #line source filename: name,,,address */
+#define	N_ENUM	0220	/* enum element: name,,,value */
+#define	N_PSYM	0240	/* parameter: name,,type,offset */
+#define	N_ENTRY	0244	/* alternate entry: name,,linenumber,address */
+#define	N_EENUM	0260	/* end enum: name,,, */
+#define	N_LBRAC	0300	/* left bracket: ,,nesting level,address */
+#define	N_RBRAC	0340	/* right bracket: ,,nesting level,address */
+#define	N_BCOMM	0342	/* begin common: name,,, */
+#define	N_ECOMM	0344	/* end common: name,,, */
+#define	N_ECOML	0350	/* end common (local name): ,,,address */
+#define	N_STRU	0374	/* 2nd entry for structure: str tag,,,length */
+#define	N_LENG	0376	/* second stab entry with length information */
+#define	N_EXT	01	/* external bit, or'ed in */
+
+#include <storclass.h>
+
+#define PS_FUN C_EXT
+#define PS_ENT C_EXT
+#define PS_PSYM C_ARG
+#define PS_LSYM C_STAT
+#define PS_LCSYM C_USTATIC
+#define PS_STSYM C_STAT
+#define PS_BCOMM 0
+#define PS_ECOMM 0

@@ -1,0 +1,14 @@
+
+\S HOME:  $HOME:  HOME directory \S
+
+When you log on to a UNIX system, a program assigns the pathname of your
+login directory to the "shell variable"\S*\S HOME.  For this reason, your
+login directory is also called your HOME directory.  HOME is a "shell"\S*\S
+variable that makes working with the pathname of your login directory
+easier by reducing the amount of typing that you have to do.  If you
+include $HOME in a pathname, the pathname for your login directory will
+be substituted for it.  HOME also makes it possible for different users to
+use a "program"\S*\S that refers to the user's login directory without
+editing the program to change every instance of the pathname.
+
+\S*\S defined in the \Sglossary\S

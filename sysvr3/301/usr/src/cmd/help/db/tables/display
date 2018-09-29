@@ -1,0 +1,75 @@
+name:define
+command:${FETCH} ${GLOSSARY} %r
+menu:Choices:  \S UNIX_term \S(from list), \S g \S(restart glossary), \S r \S(redirect)
+error:\S %r \S is not known. See list of known terms.
+
+name:keysrch
+command:${HELP}/%n %k
+menu:Choices:  \S UNIX_command \S, \S k \S(new keywords), \S r \S(redirect)
+error:\S %r \S is not known.  Enter legal command name.
+
+name:glossary
+command:${HELP}/%n
+menu:Choices:  \S UNIX_term \S(from list), \S r \S(redirect)
+error:\S %r \S is not known. See list of known terms.
+
+name:starter
+command:${FETCH} ${SCREENS} %n ${HELP_FILE}
+
+name:basiccmds
+command:${FETCH} ${SCREENS} %n
+menu:Choices:  \S s \S(restart starter), \S r \S(redirect)
+
+name:getdesc
+command:${FETCH} ${DESCRIPTIONS} %c
+menu:Choices:  \S o \S(options), \S e \S(examples), \S UNIX_command \S, \S p \S(print list), \S r \S(redirect)
+error:\S %r \S is not known.  Enter \S p \S for a list of known commands.
+
+name:getexample
+command:${FETCH} ${EXAMPLES} %c
+menu:Choices:  \S o \S(options), \S d \S(description), \S UNIX_command \S, \S p \S(print list), \S r \S(redirect)
+error:\S %r \S is not known.  Enter \S p \S for a list of known commands.
+
+name:getoption
+command:${FETCH} ${OPTIONS} %c
+menu:Choices:  \S e \S(examples), \S d \S(description), \S UNIX_command \S, \S p \S(print list), \S r \S(redirect)
+error:\S %r \S is not known.  Enter \S p \S for a list of known commands.
+
+name:getdoe
+filter:prompt
+prompt:Enter \S d \S(description), \S e \S(examples), or \S o \S(options) > 
+
+name:documents
+command:${FETCH} ${SCREENS} %n
+menu:Choices:  \S s \S(restart starter), \S r \S(redirect)
+
+name:education
+command:${FETCH} ${SCREENS} %n
+menu:Choices:  \S s \S(restart starter), \S r \S(redirect)
+
+name:local
+command:${FETCH} ${SCREENS} %n
+menu:Choices:  \S s \S(restart starter), \S r \S(redirect)
+
+name:help
+command:${FETCH} ${SCREENS} %n
+
+name:locate
+command:${FETCH} ${SCREENS} %n ${HELP_FILE}
+
+name:usage
+command:${FETCH} ${SCREENS} %n ${HELP_FILE}
+error:\S %r \S is not known.  Enter \S p \S for a list of known commands.
+
+name:getkey
+filter:prompt
+prompt:Enter keywords separated by blanks > 
+
+name:teach
+command:${FETCH} ${SCREENS} %n
+menu:Choices:  \S s \S(restart starter), \S r \S(redirect)
+
+name:listcmds
+command:echo "\n\\Susage\\S:  Information about Commands\n\nThe following commands are currently included in \\Shelp\\S:\n" ; ${LIST} ${DESCRIPTIONS} | pr -a -t -6 -w79 - | pr -e -t
+menu:Choices:  \S UNIX_command \S, \S r \S(redirect)
+error:\S %r \S is not known.  Enter legal command name.

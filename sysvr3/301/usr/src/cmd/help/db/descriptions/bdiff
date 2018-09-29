@@ -1,0 +1,18 @@
+
+\Sbdiff\S:  Description
+
+Syntax Summary:  bdiff file_name1 file_name2 [lines] [-s]
+
+         where:  file_names  are names of files.
+
+                 lines is an integer.
+
+Description:
+     \Sbdiff\Sstands for "big difference."  \Sbdiff\S compares the contents
+     of two files.  Use \Sbdiff\S to compare two files that are too big for
+     diff(1).  \Sbdiff\S divides big files into segments of 3500 lines per
+     segment and compares the segments from the two files using diff(1).  You
+     can change the number of <lines> per segment by specifying an integer on
+     the command line. \Sbdiff\S lists the type of changes that are necessary
+     to make the files identical. See also: cmp(1), comm(1), diff(1), diff3(1),
+     dircmp(1), and sdiff(1) for commands with functions similar to \Sbdiff\S.

@@ -1,0 +1,26 @@
+
+\S ps \S:  Examples
+
+       ps
+
+    Prints information about active processes associated with the current
+    terminal. Lists the process ID, the tty number of the controlling terminal,
+    the amount of time the command took to execute, and the command.
+
+    ----------------------------------------------------------------------
+
+       ps -u xyz,abc
+
+    Prints information about active processes belonging to the login names 
+    "xyz" and "abc". Lists the process ID, tty number, time the process took
+    to execute, and the command.
+
+
+    ----------------------------------------------------------------------
+
+       ps -af
+    
+    Prints information on all active processes.  Lists the user ID, process ID,
+    process ID of the parent process, scheduling information, process starting
+    time, tty number, execution time for the process, and the command and its
+    options.

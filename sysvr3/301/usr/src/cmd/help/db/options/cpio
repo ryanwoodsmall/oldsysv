@@ -1,0 +1,62 @@
+
+\Scpio\S:  Options
+
+     -i   extracts archived files from <archive_file> and unarchives them into
+          the current directory.
+
+     -o   copies files out of a directory, archives them, and sends the archive
+          to standard output.
+
+     -p   passes files to <dir_name>.  It does this by copying, archiving,
+          moving, and unarchiving them.  This option never produces a permanent
+          archive file.
+
+Either "o", "i", or "p" must be present to use the following:
+
+     B   blocks input or output in 5,120 byte records.
+
+
+
+     S   swaps the half words order.  Different computers access and store
+         non-character data differently.  Use this option when the computer
+         <archive_file> was created on has a different half word order than the
+         computer you are unarchiving it on.
+     
+     s   swaps the byte order.  See the "S" option.
+
+     a   resets the access times for input files.
+
+     b   swaps both the byte order and half word order.  Different computers
+         access and store non-character data differently.  Use this option when
+         the computer <archive_file> was created on has a different byte order
+         and half word order than the computer you are unarchiving it on.
+
+     c   creates header information in ASCII codes for portability.
+
+
+
+     d   creates directories and subdirectories as necessary. Normally,
+         \Scpio\S does not archive files that are in subdirectories of the
+         directory you are archiving.
+
+     f   copies all files except those specified by <pattern>.
+
+     l   links files in the new directory to those in the old directory rather
+         than making copies for the new directory.
+
+     m   retains the file modification time from when \Scpio\S created the
+         archive.  Normally, the modification time for a file changes when you
+         unarchive it or pass it to another system.
+
+     r   renames files interactively. If the user does not type a new file
+         name, it uses the current file name.
+
+     t   prints a table of contents without unarchiving the files.
+
+     u   unconditionally replaces a new file with an older file when both files
+         have the same name.
+
+     v   prints a verbose list of file names in <archive_file>.  When used with
+         "t" it resembles the output of "ls -l".
+
+

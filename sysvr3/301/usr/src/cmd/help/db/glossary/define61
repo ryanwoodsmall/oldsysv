@@ -1,0 +1,9 @@
+
+\S system name \S
+
+The system name is a string used to identify a UNIX system. The
+names of systems are important for communication between users on
+different systems. The system name must be used on the command line
+when you send mail(1) to a user who is on another system. Your
+system name is printed when you log in, and you can see it again by
+executing the UNIX name command, uname(1).

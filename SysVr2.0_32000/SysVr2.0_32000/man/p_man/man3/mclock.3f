@@ -1,0 +1,16 @@
+.TH MCLOCK 3F
+.SH NAME
+mclock \- return \s-1FORTRAN\s+1 time accounting
+.SH SYNOPSIS
+.B "integer i"
+.P
+.B "i = mclock( )"
+.SH DESCRIPTION
+.I Mclock\^
+returns time accounting information about the current process and
+its child processes. The value returned is the sum
+of the current process's user time and the user and system times
+of all child processes.
+.SH SEE ALSO
+times(2), clock(3C), system(3F).
+.\"	%W% of %G%

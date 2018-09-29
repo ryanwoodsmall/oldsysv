@@ -1,0 +1,72 @@
+#ident	"@(#)pkg.nsu:setup	1.4"
+#
+#	Setup script for AT&T NSU Package for AT&T 3B2 Computer.
+#
+
+#
+# Install the CLONE driver
+#
+CMAJOR=`/etc/drvinstall -d /boot/clone.o -v 1.0`
+
+#
+# Install the LOG driver.
+#
+
+MAJOR=`/etc/drvinstall -d /boot/log.o -v 1.0`
+rm -rf /dev/log
+/etc/mknod /dev/log c $CMAJOR $MAJOR
+
+#
+# Install the TIMOD module
+#
+
+/etc/drvinstall -d /boot/timod.o -v 1.0 -c 16
+
+#
+# Install the TIRDWR module
+#
+
+/etc/drvinstall -d /boot/tirdwr.o -v 1.0 -c 16
+
+rm -f /boot/log.o
+rm -f /boot/clone.o
+rm -f /boot/timod.o
+rm -f /boot/tirdwr.o
+touch /etc/system
+
+ed - /etc/master.d/kernel <<!
+/^NCALL/s/= [0-9][0-9]*$/= 60/
+/^NSTREAM/s/= [0-9][0-9]*$/= 32/
+/^NQUEUE/s/= [0-9][0-9]*$/= 256/
+/^NMUXLINK/s/= [0-9][0-9]*$/= 32/
+/^NSTREVENT/s/= [0-9][0-9]*$/= 256/
+/^MAXSEPGCNT/s/= [0-9][0-9]*$/= 1/
+/^NBLK4096/s/= [0-9][0-9]*$/= 0/
+/^NBLK2048/s/= [0-9][0-9]*$/= 20/
+/^NBLK1024/s/= [0-9][0-9]*$/= 12/
+/^NBLK512/s/= [0-9][0-9]*$/= 8/
+/^NBLK256/s/= [0-9][0-9]*$/= 16/
+/^NBLK128/s/= [0-9][0-9]*$/= 64/
+/^NBLK64/s/= [0-9][0-9]*$/= 256/
+/^NBLK16/s/= [0-9][0-9]*$/= 128/
+/^NBLK4/s/= [0-9][0-9]*$/= 128/
+w
+q
+!
+
+/etc/mkboot -k /boot/KERNEL
+
+if [ ! -d /usr/adm/streams ] 
+	then
+	mkdir /usr/adm/streams
+	chown adm /usr/adm/streams
+	chgrp adm /usr/adm/streams
+	chmod 775 /usr/adm/streams
+fi
+
+if  grep listen /etc/passwd
+	then
+	echo "listen user already defined in /etc/passwd"
+	else
+	echo "listen:np:37:4:Network Admin:/usr/net/nls" >>/etc/passwd
+fi

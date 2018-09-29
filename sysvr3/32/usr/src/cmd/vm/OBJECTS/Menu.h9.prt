@@ -1,0 +1,12 @@
+menu="Help Facility: Print Job Options"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=current
+begcol=current
+
+name="issuing a print job"
+action=OPEN TEXT OBJECTS/Text.help T.h94.issue 'issuing a print job'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

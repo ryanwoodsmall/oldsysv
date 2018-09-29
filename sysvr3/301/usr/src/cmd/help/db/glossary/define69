@@ -1,0 +1,12 @@
+
+\S abnormal termination \S
+
+When a command does not finish executing normally, it terminates
+abnormally.  When abnormal termination occurs, the command started to
+execute then something went wrong to make it stop before it finished.  For
+example, if you use names of non existent files as input to a command, the
+command terminates abnormally because it will not have any input. You can
+cause a command to terminate abnormally using the kill(1) command, or by
+hitting the delete or break key while it is executing.
+(see also:  exit status)
+

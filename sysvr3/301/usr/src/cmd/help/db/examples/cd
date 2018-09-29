@@ -1,0 +1,24 @@
+
+\S cd  \S: Examples
+
+       cd
+
+    Changes the current working directory to the user's "HOME" directory.
+
+    ----------------------------------------------------------------------
+       
+       cd docdir
+
+    Changes the current working directory to the subdirectory "docdir" in the
+    current working directory.
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+       cd ../srcdir
+
+    Changes the current working directory to the directory named "srcdir" which
+    is under the parent directory of the current working directory.

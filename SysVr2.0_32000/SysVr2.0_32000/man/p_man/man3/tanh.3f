@@ -1,0 +1,24 @@
+.TH TANH 3F
+.SH NAME
+tanh, dtanh \- \s-1FORTRAN\s+1 hyperbolic tangent intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = tanh(r1)"
+.P
+.B "dp2 = dtanh(dp1)"
+.B "dp2 = tanh(dp1)"
+.SH DESCRIPTION
+.I Tanh\^
+returns the real hyperbolic tangent of its real argument.
+.I Dtanh\^
+returns the double-precision hyperbolic tangent of its double-precision argument.
+The generic form
+.I tanh\^
+may be used to return a double-precision value given
+a double-precision argument.
+.SH SEE ALSO
+sinh(3M).
+.\"	%W% of %G%

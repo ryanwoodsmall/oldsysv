@@ -1,0 +1,49 @@
+.TH NSCTORJE 1C
+.SH NAME
+nsctorje \- re-route jobs from the \s-1NSC\s+1 network to \s-1RJE\s+1
+.SH SYNOPSIS
+.B nsctorje
+.RB [ \-d " names]"
+.SH DESCRIPTION
+.I Nsctorje
+will resubmit jobs queued on the \s-1NSC\s+1 local network (via
+.IR nusend (1C)
+across the \s-1RJE\s+1 link (if it exists).
+.I Nsctorje
+submits a
+.IR nusend (1C)
+command to re-route each queued job.
+By default, jobs will be re-routed if either the remote
+host is marked down locally or if the
+\s-1NSC\s+1 network on the local host is inactive.
+.I Nsctorje
+recognizes the following options:
+.TP "\w'\fB\-d\fP names\ \ 'u"
+.BR \-d " names"
+re-route all jobs queued only to the remote machine
+.IR name .
+.SH "SEE ALSO"
+nusend(1C).
+.br
+nscmon(1M),
+rje(8) in the
+.IR "\s-1UNIX\s+1 System Administrator's Manual" .
+.SH FILES
+.PD 0
+.TP "\w'/usr/nsc/cons/\s-1ACTIVE\s+1\ \ 'u"
+/usr/nsc/\s-1NORJE\s+1
+file indicating that no \s-1RJE\s+1 connection exists on this machine
+.TP
+/usr/nsc/rvchan
+.IR nusend (1C)
+network configuration file
+.TP
+/usr/asp/udest
+nodes accessible through \s-1RJE\s+1
+.PD
+.SH BUGS
+Any file larger than 190,000 bytes will not be re-routed
+across the \s-1RJE\s+1 link.
+It will remain queued on the
+\s-1NSC\s+1 network until the remote node becomes available.
+.\"	@(#)nsctorje.1c	5.2 of 5/18/82

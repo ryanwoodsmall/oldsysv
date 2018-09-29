@@ -1,0 +1,547 @@
+.tr ~ 
+.TH RJE 8
+.SH NAME
+rje \- \s-1RJE\s+1 (Remote Job Entry) to \s-1IBM\s+1
+.SH SYNOPSIS
+.B /usr/rje/rjeinit
+.br
+.B /usr/rje/rjehalt
+.SH DESCRIPTION
+.SM RJE
+is the communal name for a collection of programs and a file
+organization that allows a \s-1UNIX\s0 System,
+equipped with the appropriate hardware and associated
+Virtual Protocol Machine (\s-1VPM\s0)
+software,
+to communicate with \s-1IBM\s0's Job Entry Subsystems
+by mimicking an \s-1IBM\s0 360 remote multileaving work station.
+.SS Implementation.
+.PP
+.SM RJE
+is initiated by the command
+.I rjeinit\^
+and is terminated gracefully by the command
+.IR rjehalt .
+While active,
+.SM RJE
+runs in the background and
+requires no human supervision.
+It quietly transmits, to the \s-1IBM\s0 system, jobs that have been queued by the
+.IR send (1C)
+command,
+and operator requests that have been entered by the
+.IR rjestat (1C)
+command.
+It receives, from the \s-1IBM\s0 system, print and punch data sets and
+message output.
+It enters the data sets into the proper \s-1UNIX\s0 System directory
+and notifies the appropriate user of their arrival.
+It scans the message output to maintain a record on
+each of its jobs.
+It also makes these messages available
+for public inspection,
+so that
+.IR rjestat (1C),
+in particular,
+may extract responses.
+.PP
+Unless otherwise specified, all files and commands described below
+reside in directory
+.B /usr/rje
+(first exceptions:
+.I send\^
+and
+.IR rjestat ).
+.PP
+There are two sources of
+data to be transmitted by
+.SM RJE
+from the \s-1UNIX\s0 System
+to an \s-1IBM\s0 System/370.
+In both cases, the data is organized as files in
+the
+.B /usr/rje/squeue
+directory.
+The first are files named
+.B co\(**
+which are created by the enquiry command
+.IR rjestat (1C).
+The second source, containing the bulk of the
+data, are files named
+.B rd\(**
+or
+.B sq\(**
+which have been created by
+.I send\^
+and queued by the program
+.IR rjeqer .
+On completion of processing
+.I send\^
+invokes
+.IR rjeqer .
+.I Rjeqer\^
+and
+.I rjestat\^
+inform the program
+.I rjexmit\^
+that a file has been queued via the file
+.BR joblog .
+Upon successful transmission of the data to the
+.SM IBM
+machine,
+.I rjexmit\^
+removes the queued file.
+As files are transmitted and received, the program
+.I rjedisp\^
+writes an entry containing the date, time, file name, logname, and number of
+records in the file
+.BR acctlog ,
+if it exists.
+This file can be used for local logging or accounting information,
+but is not used elsewhere by
+.SM RJE.
+The use of this information is up to the
+.SM RJE
+administrator.
+.PP
+Each time
+.I rjeinit\^
+is invoked, the
+.B joblog
+file is truncated and recreated from the contents of the
+.B /usr/rje/squeue
+directory.
+During this time,
+.I rjeinit\^
+prevents simultaneous updating of the
+.B joblog
+file.
+.PP
+Output from the \s-1IBM\s0 system is
+classified as either a print data set, a punch data set,
+or message output.
+Print output is converted to an \s-1ASCII\s0 text file,
+with standard tabs.
+Form feeds are suppressed, but the last line of each page
+is distinguished by the presence of an extraneous
+trailing space.
+Punch output is converted to
+.IR pnch (4)
+format.
+This classification and
+both conversions
+occur as
+the output is received.
+Files are
+moved or copied
+into the appropriate user's directory and assigned the name
+.B prnt\(**
+or
+.BR pnch\(** ,
+respectively,
+or
+placed into user directories under user-specified names,
+or used as input to
+programs to be automatically executed,
+as specified by the user.
+This process is driven by the ``usr=...'' specification.
+.SM RJE
+retains ownership of these files and permits read-only access
+to them.
+Message output is digested by
+.SM RJE
+immediately and is not retained.
+.PP
+A record is maintained for each job that passes through
+.SM RJE.
+Identifying information is extracted contextually
+from files transmitted to and received from the \s-1IBM\s0 system.
+This information is stored and used by the
+.I rjedisp\^
+program for \s-1IBM\s0 job acknowledgements and delivery of output files.
+.PP
+The
+\s-1IBM\s0 system automatically returns
+an acknowledgement message for each job it receives.
+Other status messages are returned in response to enquiries
+entered by users.
+All messages received by
+.SM RJE
+are appended to the
+.B resp
+file.
+The
+.B resp
+file is automatically truncated when it reaches 70,000 bytes.
+Each enquiry is preceded and followed by an identification card image
+of the form ``$\s-1UX\s+1<\fIprocess id\fP>''.
+The
+\s-1IBM\s0 system will echo this back
+as an illegal command.
+The appearance of process ids in the response stream
+permits responses to be passed on to the proper users.
+.PP
+While it is active,
+.SM RJE
+occupies at least the three process slots that are appropriated by
+.IR rjeinit .
+These slots are used to run
+.IR rjexmit ,
+the transmitter,
+.IR rjerecv ,
+the receiver,
+and
+.IR rjedisp ,
+the dispatcher.
+These three processes are connected by pipes.
+The function of each is as follows:
+.TP
+.I rjexmit\^
+Cycles repetitively, looking for data to
+transmit to the \s-1IBM\s0 system.
+After transmission,
+.I rjexmit\^
+passes an event notice to
+.IR rjedisp .
+If
+.I rjexmit\^
+encounters a
+.B stop
+file, (created by
+.IR rjehalt ),
+it exits normally.
+In the case of error termination,
+.I rjexmit\^
+reboots \s-1RJE\s0 by executing
+.IR rjeinit .
+.TP
+.I rjerecv\^
+Cycles repetitively, looking for data returning
+from the \s-1IBM\s0 machine.
+Upon receipt of data,
+.I rjerecv\^
+notifies either
+.I rjexmit\^
+or
+.I rjedisp\^
+of the event (transfer information is sometimes passed to
+.IR rjexmit ).
+.I Rjerecv\^
+exits normally at the first appropriate moment when it encounters
+the file
+.BR stop ,
+or exits reluctantly when it encounters a run of errors.
+.TP
+.I rjedisp\^
+Follows up event notices by directing output files,
+updating records, and notifying users.
+.I Rjedisp\^
+references the system files
+.B /etc/passwd
+and
+.B /etc/utmp
+to correlate user names, numeric ids, and terminals.
+Termination of
+.I rjerecv\^
+causes
+.I rjedisp\^
+to exit also.
+.PP
+.I Rjeinit\^
+has the capability of \fIdialing\fP any remote \s-1IBM\s0 system
+with the proper hardware and software configuration.
+.PP
+Most
+.SM RJE
+files and directories are protected
+from unauthorized tampering.
+The exception is the
+.B spool
+directory.
+It is used by
+.IR send (1C)
+to create temporary files in the correct file system.
+.I Rjeqer\^
+and
+.IR rjestat (1C),
+the user's interfaces to
+.SM RJE,
+operate in \fIsetuid\fP mode to contribute the necessary permission modes.
+.SS Administration.
+.PP
+Some minimal oversight of each
+.SM RJE
+subsystem is required.
+The
+.SM RJE
+mailbox should be inspected and cleaned out periodically.
+The
+.B job
+directory should also be checked.
+The only files placed there are output files whose
+destination file systems are out of space.
+Users should be given a short period of time (say, a day or two),
+and then these files should be removed.
+.PP
+The configuration table
+.B /usr/rje/lines
+is accessed by all components of \s-1RJE\s0.
+Each line of the table (maximum of 8) defines an \s-1RJE\s0 connection.
+Its seven columns may be labeled
+.IR host ,
+.IR system ,
+.IR directory ,
+.IR prefix ,
+.IR device ,
+.I peripherals\^
+and
+.IR parameters .
+These columns are described as follows:
+.TP
+.B "host~~~~~"
+The name of a remote \s-1IBM\s0 computer (e.g.,
+.B A
+.B B
+.BR C ).
+This string can be up to 5 characters.
+.TP
+.B "system~~~"
+The name of a \s-1UNIX\s0 system.
+This name should be the same as the
+system name from
+.IR uname (1).
+.TP
+.B directory
+This is the directory name of the servicing \s-1RJE\s0 subsystem
+(e.g.,
+.BR /usr/rje1 ).
+.TP
+.B "prefix~~~"
+This is the string prefixed (redundantly) to several crucial
+files and programs in
+.B directory
+(e.g.,
+.BR rje1 ,
+.BR rje2 ,
+.BR rje3 ).
+.TP
+.B "device~~~"
+This is the name of the controlling \s-1VPM\s0 device, with
+.B /dev/
+excised.
+.TP
+.B peripherals
+This field contains information on the logical devices (readers,
+printers, punches) used by \s-1RJE\s0.
+Each subfield is separated by
+.BR : ,
+and is described as follows:
+.br
+.sp
+(1) Number of logical readers.
+.br
+(2) Number of logical printers.
+.br
+(3) Number of logical punches.
+.sp
+Note: the number of peripherals specified for an \s-1RJE\s0 subsystem
+.B must
+agree with the number of peripherals which have been described
+on the remote machine for that line.
+.TP
+.B parameters
+This field contains information on the type of connection to make.
+Each subfield is separated by
+.BR : .
+Any or all fields may be omitted; however, the fields are positional.
+All but trailing delimiters must be present.
+For example, in
+.br
+.ce 1
+1200:512:::9-555-1212
+.br
+subfields 3 and 4 are missing, but the delimiters are present.
+Each subfield is defined as follows:
+.RS 7
+.TP
+.RB (1) ~space
+This subfield specifies
+the amount of space
+.RI ( \s-1S\s+1 )
+in blocks that \s-1RJE\s0 tries to maintain on
+file systems it touches.
+The default is 0 blocks.
+.I Send\^
+will not submit jobs and
+.I rjeinit\^
+issues a warning when less than
+.RI 1.5 \s-1S\s+1
+blocks are available;
+.I rjerecv\^
+stops accepting output from the host when the capacity
+falls to
+.I \s-1S\s+1\^
+blocks;
+.SM RJE
+becomes dormant, until conditions improve.
+If the space on the file system specified by the user
+on the ``usr='' card would be depleted to a point
+below
+.IR \s-1S\s+1 ,
+the
+file will be put in the
+.B job
+subdirectory
+of the connection's home directory,
+rather than in the place that the user requested.
+.TP
+.RB (2) ~size
+This subfield specifies the size in blocks of the largest
+file that can be accepted from the host without
+truncation taking place.
+The default is no truncation.
+.TP
+.RB (3) ~badjobs
+This subfield specifies what to do with undeliverable returning
+jobs.
+If an output file is undeliverable for any reason other than file system space limitations (e.g., missing or
+invalid ``usr='' card)
+and this subfield contains the letter
+\fBy\fP,
+the output will be retained in the
+.B job
+subdirectory of the
+home directory,
+and login
+.B rje
+is notified.
+If this subfield contains an
+.B n
+or has any other value,
+undeliverable output will be discarded.
+The default is \fBn\fP.
+.TP
+.RB (4) ~console
+This subfield specifies the status of the
+interactive status terminal for this line.
+If the subfield contains an \fBi\fP,
+all console status facilities are inhibited
+(e.g.,
+.IR rjestat (1C)
+will not behave like a status terminal).
+In all cases, the normal non-interactive uses of
+.IR rjestat (1C)
+will
+continue to function.
+The default is \fBy\fP.
+.TP
+.RB (5) ~dial-up
+This subfield contains a telephone number to be used to call a host machine.
+The telephone number may contain the digits 0 thru 9 and the
+character
+.B \-
+which denotes a pause.
+If the telephone number is not present, no dialing is attempted and
+a leased line is assumed.
+.RE
+Sign-on is controlled by the existence of a
+.B signon
+file in the
+home directory.
+If this file is present, its contents are sent as
+a sign-on message to the host system.
+If this file does not exist, a blank card is sent.
+Sign-off is controlled in the same way, except that the
+.B signoff
+file
+is sent by
+.I rjehalt\^
+if it exists.
+If the
+.B signoff
+file does not exist, a
+.RB `` /\(**signoff ''
+card is sent.
+These files should be \s-1ASCII\s0 text and no more than 80 characters.
+.PP
+.IR Send (1C)
+and
+.IR rjestat (1C)
+select an available connection by indexing on the
+.B host
+field
+of the configuration table.
+.SM RJE
+programs index on the
+.B prefix
+field.
+A subordinate directory,
+.BR sque ,
+exists in
+.B /usr/rje
+for use by
+.I rjedisp\^
+and
+.I shqer\^
+programs.
+This directory holds those output files that
+have been designated as standard input to some executable
+file.
+This designation is done via the ``usr=\f3...\fP'' specification.
+.I Rjedisp\^
+places the output files here and updates the file
+.B log
+to specify the order of execution, arguments to be passed, etc.
+.I Shqer\^
+executes the appropriate files.
+.PP
+All \s-1RJE\s0 programs are shared text; therefore,
+if more than one \s-1RJE\s0 is to be run on a given
+\s-1UNIX\s0 system,
+simply link
+(via
+.IR ln )
+\s-1RJE2\s0
+program names to \s-1RJE\s0 names in
+\fB/usr\fP.
+.ne 10
+.SH "SEE ALSO"
+cp(1),
+rjestat(1C),
+send(1C),
+pnch(4),
+un53(7),
+vpm(7),
+mk(8).
+.br
+.IR "\s-1UNIX\s+1 System User's Guide" .
+.br
+\s-1UNIX\s+1 System Remote Job Entry Administrator's Guide
+in the
+.IR "\s-1UNIX\s+1 System Administrator's Guide" .
+.br
+Setting up the \s-1UNIX\s+1 System in the
+.IR "\s-1UNIX\s+1 System Administrator's Guide" .
+.SH DIAGNOSTICS
+.I Rjeinit\^
+provides brief error messages describing obstacles
+encountered while bringing up
+.SM RJE.
+They can best be understood in the context of the \s-1RJE\s0 source code.
+The most frequently occurring one is ``cannot open /dev/vpm?''.
+This may occur if the \s-1VPM\s0 script has not been started,
+or if another process already has the \s-1VPM\s0 device open.
+.PP
+Once
+.SM RJE
+has been started, users should assist in monitoring its performance,
+and should notify operations personnel
+of any perceived need for remedial action.
+.IR Rjestat (1C)
+will aid in diagnosing the current state of \s-1RJE\s0.
+It can detect, with some reliability,
+when the far end of the communications line has gone dead,
+and will report in this case that the host computer
+is not responding to \s-1RJE\s0.
+.tr ~~
+.\"	@(#)rje.8	5.2 of 5/18/82

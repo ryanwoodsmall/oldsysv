@@ -1,0 +1,22 @@
+
+\Snice\S:  Description
+
+Syntax Summary:  nice [-increment] command
+
+         where:  increment  is an integer from 1 to 19
+                            that changes the level of priority.
+
+                 command  is a UNIX system command, a shell program,
+                          or an executable file and any arguments
+                          it might take.
+
+Description:
+     \Snice\S executes a command with a lower CPU priority than normal.  This
+     allows the system to execute other commands first.  The <increment>     
+     changes the level of priority; the higher the increment, the lower the
+     priority.  If you don't give an increment, 10 is used.  You should execute
+     \Snice\S in the background using an "&" so that you can work while
+     \Snice\S in the background to execute the command. Otherwise, you will 
+     not be able to execute any other commands until \Snice\S is finished.
+     See also:  nohup(1) for information on a command that might be used with
+     \Snice\S.

@@ -1,0 +1,57 @@
+
+   The SECURITY  command  allows  you  to  modify  the  ownership  and
+   permissions  of an  existing  object. You  indicate  who  may READ,
+   WRITE,  and RUN/SEARCH  each object.  Search  permission  refers to
+   folders.  Run permission refers  to executable objects. You can set
+   permissions for any object that you own from the preferences menu.
+
+
+     1.  Use one of the options below to change the security  features
+         of  an  object.  If no object name is used the current object
+         is assumed.
+
+            - Function Key - Press SECURITY
+
+            - Command menu - Select SECURITY + RETURN
+
+            - COMMAND LINE - Type security [object_name] + RETURN
+
+     2.  After  initiating  the  SECURITY  command,  a  form  will  be
+         displayed. Edit the form to show the permissions you want.
+
+         In the OWNER field, select or type the login ID  (user  name)
+         of  the  user  who  will  "own"  the object. Press CHOICES to
+         display  a  list  of  owners.  Normally  all  objects in your
+         filecabinet are owned by you.
+
+         For each permission field specify your preference by pressing
+         the CHOICES Function Key or by typing "yes" or "no".  You may
+         set   permissions  to   Read,  Write,  and   Run/Search   for
+         yourself,   for   your   group  ( check   with  your   system
+         administrator), and for anyone with access  to  your  system.
+         READ  PERMISSIONS  determine  who can view the contents of an
+         object owned by you.  WRITE  PERMISSIONS  determine  who  can
+         edit/change  an  object owned by you.  RUN/SEARCH PERMISSIONS
+         determine who can run your executable objects or search  your
+         file folders.
+
+         Function  Keys  active  for   this  form  (in   addition   to
+         PREV-FRM, NEXT-FRM, CMD-MENU, and HELP) are:
+
+            - CANCEL -- Cancels  the form without saving the new field
+              values  entered  in  the  form,  closes  the  frame, and
+              returns you to the point in the interface that you  were
+              at prior to acccessing the form.
+
+            - CHOICES  --  pressing  CHOICES  either  toggles  between
+              available values or displays a pop-up menu of values for
+              the current field.
+
+            - SAVE -- Saves all the field values entered in the  form,
+              closes  the  frame,  and returns you to the point in the
+              interface that you were at prior to accessing the form.
+
+            - RESET - resets the current field back to  the  value  in
+              effect at the beginning of the current editing session.
+
+     3.  When you have made all changes to the form press SAVE.

@@ -1,0 +1,146 @@
+400 0 13
+2 0 0 #ident
+12 
+15 
+705 3 6 57
+            Undoing Commands
+
+
+There may be some times when you will want to undo the
+last change you made.  You can do that with vi's
+"undo" command.
+
+For example, suppose you have just deleted a word and then
+you realize that you've deleted the wrong word.  You can
+706 
+8 12 6 use the undo command 
+30 
+3 u
+31 
+7 32 1
+3 to undo the word deletion you just did.
+520 arrow
+520 redraw
+705 0 0 31
+Happy birthday to you
+Yes indeed Happy birthday to you
+Happy birthday dear Annie
+Happy birthday to you
+706 
+8 16 7 First let's make a mistake.
+520 instruct
+3 Delete the word "birthday"
+2 0 6
+18 
+253 dw
+15 
+520 ansloopstr
+10 9
+15 
+520 clear1
+8 16 7 Oops! That was a mistake!
+520 instruct
+3 Use the undo command 
+30 
+3 u
+31 
+8 1000 1001 to undo the deletion.
+2 2000 2000
+253 u
+15 
+520 ansloopstr
+5 birthday 
+2 0 6
+15 
+18 
+520 clear1
+256 106 258 14 13
+254 j to move down a line
+8 16 7 Let's try another example 
+520 instruct
+3 Move the cursor to the second line and delete the line.
+2 0 6
+25 
+15 
+520 ansloop
+271 13
+2 1 0
+272 
+2 2001 2000
+280 
+18 
+253 dd
+520 ansloopstr
+2 1 0
+15 
+27 
+2 13 0
+28 
+8 13 0 ~
+2 1 0
+15 
+1 2
+520 clear1
+253 u
+520 instruct
+3 Bring back the line you just deleted
+2 1 0
+18 
+15 
+520 ansloopstr
+2 1 0
+28 
+8 1 0 Yes indeed Happy birthday to you
+2 1 0
+2 13 0
+27 
+2 1 0
+15 
+400 0 23
+1 2
+520 clear1
+8 16 7 Sometimes you may undo something and then realize that you
+8 17 7 don't want to undo it.  This is not a problem because you
+8 18 7 can undo an undo by just entering the command u again.
+15 
+520 arrow
+520 clear1
+253 2dw
+520 instruct
+3 Delete the words "Yes indeed"
+2 1 0
+18 
+15 
+520 ansloopstr
+10 11
+15 
+1 2
+520 clear1
+253 u
+520 instruct 
+3 Undo the deletion of the words "Yes indeed"
+2 1 0
+18 
+520 ansloopstr
+5 Yes indeed 
+2 1000 0
+15 
+1 2
+520 clear1
+520 instruct
+3 Undo your undo 
+2 1 0
+520 ansloopstr
+10 11
+15 
+1 2
+520 clear1
+520 arrow
+2 0 0
+12 
+30 
+8 3 20 SUMMARY OF THE UNDO COMMAND
+31 
+8 6 18 u .... undo the last text modification
+8 1002 18 u .... redo (undo the last undo)
+15 

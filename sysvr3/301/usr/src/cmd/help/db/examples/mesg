@@ -1,0 +1,15 @@
+
+\S mesg \S:  Examples
+
+       mesg
+
+    Informs you whether or not other users are allowed to write to your
+    terminal.
+
+    ----------------------------------------------------------------------
+
+       mesg y
+
+    Changes the current permission to "y" which allows users to write to your
+    terminal.
+

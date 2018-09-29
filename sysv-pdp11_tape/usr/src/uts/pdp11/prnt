@@ -1,0 +1,5 @@
+set -v
+print sys/*.h os/*.c io/bio.c io/sys.c io/tt0.c io/tty.c io/dz.c io/gd*.c\
+ io/kl.c io/mem.c io/partab.c io/pwr.c io/tm.c cf/conf.c cf/linesw.c\
+ ml/mch_id/mch.h ml/mch_id/*.s vt/vt100.c
+

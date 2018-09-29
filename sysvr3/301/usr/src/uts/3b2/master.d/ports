@@ -1,0 +1,20 @@
+*#ident	"@(#)kern-port:master.d/ports	10.4"
+*
+* PORTS
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+act	1       pp	-	 5      10  
+						pp_tty[#C*#D] (%0x58)
+						ppcbid[#C*#D] (%s)
+						ppcpid[#C*#D] (%s)
+						pp_cnt(%i) ={#C*#D}
+						hangup[#C*#D] (%c)
+						dstat[#C*#D] (%c)
+						ppisopen[#C*#D] (%c)
+						pp_board[#C] (%0x6fc)
+						savee[#C*SAVEXP] (%0xc)
+						maxsavexp(%i) ={#C*SAVEXP}
+						csbit[#C] (%i)
+$$$
+
+SAVEXP =	5

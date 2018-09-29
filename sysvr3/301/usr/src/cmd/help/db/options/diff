@@ -1,0 +1,17 @@
+
+\Sdiff\S:  Options
+
+     -b   ignores trailing blanks, and treats other strings of blanks as if
+          they were equal in length.
+
+     -e   produces scripts for ed(1) that change <file_name1> into <file_name2>.
+
+     -f   produces a script that is the inverse of the "e" option.  It lists
+          changes that would make <file_name2> identical to <file_name1>.
+          (This script can not be used by ed(1).)
+
+     -h   works quickly and on big files.  If the differences are only
+          separated by a few lines, this option lists the lines that are
+          different and the lines that separate them.  If the differences are
+          well separated, the output is the same as it is for \Sdiff\S without
+          options.

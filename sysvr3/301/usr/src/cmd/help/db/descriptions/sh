@@ -1,0 +1,24 @@
+
+\Ssh\S:  Description
+
+Syntax Summary:  sh [-aefhiknrtuvx] file_name [argument ...]
+                 sh [-aefhiknrtuvx] [-c command ...]
+                 sh [-aefhiknrtuvx] [-s] [argument ...]
+
+         where:  file_name  is the name of a file.
+
+                 argument  is a string that is an argument to a command.
+
+                 command   is a UNIX system command, a shell program,
+                           or an executable file and any arguments
+                           it might take.
+
+Description:
+     \Ssh\S stands for "shell", which is the standard command programming
+     language  of UNIX systems.  Use \Ssh\S as a command to execute other UNIX
+     system commands.  You can execute commands from a file, the command line,
+     or from standard input. Unless otherwise specified, the system expects the
+     first argument on the \Ssh\S command line to be the name of a file that
+     contains commands.  A detailed explanation is available on the manual 
+     pages for \Ssh\S.  See also:  rsh(1) for a command with a function 
+     similar to \Ssh\S.

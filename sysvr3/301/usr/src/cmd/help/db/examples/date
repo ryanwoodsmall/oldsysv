@@ -1,0 +1,16 @@
+
+\Sdate\S:  Examples
+
+            date
+
+    Prints the current day, date and time on the standard output.  On Tuesday,
+    March 5, 1985 at 4:16 PM, the output would be "Tue Mar 5 16:15:00 EST 1985.
+
+    ----------------------------------------------------------------------
+
+            date '+%m/%d/%y %H:%M'
+
+    Reformats the information that is printed for \Sdate\S.  When the date is
+    February 28, 1985 and the time is 3:50 PM, this command line prints
+    02/28/85 15:50.
+

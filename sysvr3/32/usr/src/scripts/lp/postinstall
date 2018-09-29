@@ -1,0 +1,484 @@
+#ident	"@(#)pkg.nlp:lp/postinstall	1.10"
+
+
+##########
+#
+# Make the /usr/lib/lpsched program setuid-root, so that the
+# user "lp" can run it.
+##########
+chown root /usr/lib/lpsched
+chmod u+s /usr/lib/lpsched
+
+
+##########
+#
+# Link the enable/disable and accept/reject pairs together.
+# This has to be done early, since we may be using them below.
+##########
+ln /usr/lib/accept /usr/lib/reject 2>/dev/null
+cp /usr/lib/accept /usr/bin/disable
+ln /usr/bin/disable /usr/bin/enable 2>/dev/null
+
+
+##########
+#
+# Convert old configuration?
+##########
+if [ -s "${SPOOLDIR}/pstatus" ]
+then
+
+	echo "
+Setting up the new LP Print Service configuration to look like the old
+configuration.
+
+This may take a few minutes."
+
+
+	rm -fr \
+		${SPOOLDIR}/log \
+		${SPOOLDIR}/logs/* \
+		${SPOOLDIR}/oldlog \
+		${SPOOLDIR}/outputq \
+		${SPOOLDIR}/request
+
+
+	##########
+	#
+	# Restore the print job sequence number.
+	##########
+	if [ -r "${SPOOLDIR}/seqfile" ]
+	then
+		curseq=`line <${SPOOLDIR}/seqfile`
+	else
+		curseq=1
+	fi
+	echo "1:9999:1:${curseq}" >${SPOOLDIR}/temp/.SEQF
+	rm -f ${SPOOLDIR}/seqfile
+
+	##########
+	#
+	# Restore the printer/class configuration.
+	##########
+
+	dump=`/usr/lib/dumpolp`
+
+	##########
+	#
+	# Printers (Pass 1):
+	##########
+	plist=
+	for p in `ls ${SPOOLDIR}/interface 2>/dev/null`
+	do
+
+		v=`line 2>/dev/null <${SPOOLDIR}/member/${p}` || continue
+		i=${SPOOLDIR}/admins/lp/interfaces/${p}
+		mv ${SPOOLDIR}/interface/${p} ${i}
+		chown lp ${i}
+		chgrp bin ${i}
+		chmod 0755 ${i}
+
+		/usr/lib/lpadmin -p ${p} -v ${v} -i ${i} 2>/dev/null || {
+
+			echo \
+"Could not restore the configuration for the printer \"${p}\"."
+			rm -f ${i}
+			continue
+
+		}
+
+		plist="${plist} ${p}"
+
+	done
+
+	##########
+	#
+	# Classes (Pass1):
+	##########
+	clist=
+	if [ -n "${safe_class}" ]
+	then
+	    for c in `ls ${safe_class}`
+	    do
+
+		for p in `cat ${safe_class}/${c}`
+		do
+			/usr/lib/lpadmin -p ${p} -c ${c} 2>/dev/null || {
+				echo \
+"Could not restore the printer \"${p}\" to the class \"${c}\"."
+
+			}
+		done
+
+		clist="${clist} ${c}"
+
+	    done
+	fi
+
+	##########
+	#
+	# Start the Spooler/Scheduler so the rest of
+	# the configuration can be set.
+	##########
+	cd /
+	/usr/lib/lpsched >/dev/null 2>&1
+
+	##########
+	#
+	# Printers (Pass 2):
+	##########
+	if [ -n "${plist}" ]
+	then
+	    for p in ${plist}
+	    do
+
+		estate=`echo "${dump}" | grep "PRTR  *${p}"` || continue
+		astate=`echo "${dump}" | grep "DEST  *${p}"` || continue
+
+		##########
+		#
+		# Enable and accept the printer, even if we'll just
+		# turn around and disable or reject it. Otherwise
+		# the attempt to disable or reject with the original
+		# reasons will fail.
+		##########
+		/usr/lib/accept ${p} >/dev/null 2>&1
+		/usr/bin/enable ${p} >/dev/null 2>&1
+
+		echo ${estate} | grep "${p} E " >/dev/null 2>&1 || {
+			reason="`echo \"${estate}\" | cut -c23-`"
+			/usr/bin/disable -r "${reason}" ${p} >/dev/null 2>&1
+		}
+
+		echo ${astate} | grep "${p} A " >/dev/null 2>&1 || {
+			reason="`echo \"${astate}\" | cut -c23-`"
+			/usr/lib/reject -r "${reason}" ${p} >/dev/null 2>&1
+		}
+
+	    done
+	fi
+
+	##########
+	#
+	# Odd interface support programs:
+	##########
+	cd ${SPOOLDIR}/interface && {
+		find . -print \
+		| cpio -dumpl ${SPOOLDIR}/admins/lp/interfaces \
+			>/dev/null 2>&1
+	}
+	cd /
+	rm -fr ${SPOOLDIR}/interface 
+
+	##########
+	#
+	# Classes (Pass2):
+	##########
+	if [ -n "${clist}" ]
+	then
+	    for c in ${clist}
+	    do
+
+		astate=`echo "${dump}" | grep "DEST  *${c}` || continue
+
+		##########
+		#
+		# Accept the class, even if we'll just turn around and
+		# reject it. Otherwise the attempt to reject with the
+		# original reason will fail.
+		##########
+		/usr/lib/accept ${c} >/dev/null 2>&1
+
+		echo ${astate} | grep "${c} A " >/dev/null 2>&1 || {
+			reason="`echo \"${astate}\" | cut -c23-`"
+			/usr/lib/reject -r "${reason}" ${c} >/dev/null 2>&1
+		}
+
+	    done
+	fi
+
+
+	##########
+	#
+	# Default destination stays the same.
+	##########
+
+
+	##########
+	#
+	# Restore the original models (minus any "standard"
+	# we've already taken out.)
+	##########
+	if [ -n "${safe_model}" ] && ls ${safe_model}/* >/dev/null 2>&1
+	then
+		cd ${safe_model}
+		find . -print \
+		| cpio -dump ${SPOOLDIR}/model 2>/dev/null 1>&2
+		cd /
+	fi
+
+
+	rm -fr \
+		${SPOOLDIR}/member \
+		${SPOOLDIR}/pstatus \
+		${SPOOLDIR}/qstatus \
+		${safe_class} \
+		${safe_model}
+
+	trap 0 1 2 3 15
+
+
+	echo "
+The LP Print Service configuration looks like this:
+"
+	lpstat -s
+
+
+	echo "
+Continuing with the balance of the installation."
+
+
+else
+
+	cd /
+	/usr/lib/lpsched >/dev/null 2>&1
+
+fi
+
+##########
+#
+# Make sure the login "lp" exists. This is a bit tricky
+# because we want to do this securely if post-SVR3.1 tools
+# are available. We proceed by defining an equivalent tool
+# if one is not available.
+##########
+
+echo "
+Checking to see if there is a user ID for the \"lp\" login."
+
+if entry=`grep "^lp:" /etc/passwd`
+then
+	if expr "${entry}" : ".*\(:71:\)" >/dev/null 2>&1
+	then
+		echo \
+"There is and it looks fine."
+		opt=
+	else
+		echo \
+"There is but the ID is wrong. That is okay, for it will be fixed."
+		opt="-m"
+	fi
+else
+	echo \
+"There isn't, so it will be added."
+	opt="-a"
+fi
+
+if [ -n "${opt}" ]
+then
+	until passmgmt \
+		${opt} \
+		-c "LP Print Service (Spooler)" \
+		-h ${SPOOLDIR} \
+		-u 71 \
+		-g 2
+		lp
+	do
+		##########
+		#
+		# VERY RUDIMENTARY!
+		##########
+		passmgmt () {
+			case "$1" in
+			-a )
+				shift
+				echo "$9:*LK*:$6:$8:$2:" >>/etc/passwd
+				;;
+			-m )
+				echo "
+NOTE: Changing the user ID for \"lp\" to $6."
+				ed - /etc/passwd <<-EOF
+				/^lp:/s/^\(lp:[^:]*\):[0-9]*:/\1:$6:/
+				EOF
+				;;
+			esac
+			return 0
+		}
+	done
+fi
+
+
+##########
+#
+# For compatibility with the old LP Spooler, the enable/disable
+# commands should be SETUID with owner "lp". However, maybe the
+# customer has a different idea.
+##########
+
+echo "
+For compatibility with the old LP Spooler Utilities, we can  make  the
+commands  for disabling and enabling a printer available to ALL users.
+However, you may not want this on your system.
+"
+
+if ${CHECKYN} ${flags} -f -Dy -H "
+        If you answer \"y\" (or \"yes\") the disable and enable commands
+        will  be  marked  to  allow  ANY user to disable or enable a
+        printer.  This is the way the old LP Spooler worked, and  is
+        useful  on small systems where anybody who notices a problem
+        with a printer should be able to stop  further  printing  on
+        the printer (i.e. DISABLE the printer).
+
+        If you answer \"n\" (or \"no\") the disable and enable  commands
+        will  not  be  so  marked, thus preventing anyone except the
+        \"root\" and \"lp\" users from using them.  This is NOT the  way
+        the  old  LP Spooler worked, but is likely to be appropriate
+        for  larger  systems  where  regular  users  should  not  be
+        interfering with printers." \
+	"Should the disable and enable commands be available
+to ALL users?"
+then
+
+	chown lp /usr/bin/enable /usr/bin/disable
+	chmod u+s /usr/bin/enable /usr/bin/disable
+
+	echo "
+If you later change your mind, enter the following command:
+
+        chmod u-s /usr/bin/enable /usr/bin/disable
+"
+
+else
+
+	chmod u-s /usr/bin/enable /usr/bin/disable
+
+	echo "
+If you later change your mind, enter the following commands:
+
+        chown lp /usr/bin/enable /usr/bin/disable
+        chmod u+s /usr/bin/enable /usr/bin/disable
+"
+
+fi
+
+##########
+#
+# Link a few System Administration menu/commands together.
+##########
+LPMGMT=/usr/admin/menu/packagemgmt/lpmgmt
+ln ${LPMGMT}/printers/status_p ${LPMGMT}/status/printers 2>/dev/null
+ln ${LPMGMT}/forms/status_f ${LPMGMT}/status/forms 2>/dev/null
+#ln ${LPMGMT}/requests/status_r ${LPMGMT}/status/requests 2>/dev/null
+ln ${LPMGMT}/printers/mount_p ${LPMGMT}/forms/mount_f 2>/dev/null
+ln ${LPMGMT}/printers/unmount_p ${LPMGMT}/forms/unmount_f 2>/dev/null
+
+##########
+#
+# SVR3.0 AND AFTER:
+# Make linked copies of the startup/shutdown scripts in their
+# proper places. Give the startup script a high number so that
+# LP is one of the last utilities to start; conversely, give the
+# shutdown script a low number so that LP is one of the first to
+# stop. This makes sure that anything that LP needs is available.
+#
+# PRE-SVR3.0:
+# Move the startup/shutdown scripts to their old places. Use special
+# names that will clue the script to what it should do.
+#
+# EITHER:
+# Get rid of any old startup/shutdown scripts.
+##########
+if [ -d /etc/rc0.d -a -d /etc/rc2.d ]
+then
+	ln /etc/init.d/lp /etc/rc0.d/K20lp
+	ln /etc/init.d/lp /etc/rc2.d/S80lp
+else
+	mv /etc/init.d/lp /etc/rc.d/lp-start
+	ln /etc/rc.d/lp-start /etc/shutdown.d/lp-stop
+	rmdir /etc/init.d 2>/dev/null	# we probably created it, so rm it
+fi
+rm -f /etc/rc.d/lp /etc/shutdown.d/lp 2>/dev/null
+
+##########
+#
+# We no longer need the program that dumps old LP Spooler
+# status files. It was added in this installation procedure
+# only so we could use it to convert from old to new.
+##########
+rm -f /usr/lib/dumpolp
+
+##########
+#
+# Set up the crontab entry.
+##########
+CRONALLOW=/usr/lib/cron/cron.allow
+CRONDENY=/usr/lib/cron/cron.deny
+CRONDIR=/usr/spool/cron/crontabs
+
+if [ -f "${CRONDENY}" ] && grep "lp" ${CRONDENY} 1>/dev/null 2>&1
+then
+	#
+	# If lp is being denied, something may be up that we shouldn't
+	# mess with.
+	echo "
+WARNING: The login ID \"lp\" is being denied from making a crontab entry.
+         Thus the periodic emptying of the job log for finished print
+         requests will not be enabled when installation is finished.
+         This will have to be taken care of later.
+"
+
+elif [ -d ${CRONDIR} ]
+then
+	if [ -f "${CRONALLOW}" ]
+	then
+		#
+		# If lp is not being allowed, it is likely to be
+		# simply an oversight. Go ahead and add lp.
+		if grep "lp" ${CRONALLOW} 1>/dev/null 2>&1
+		then
+			:
+		else
+			echo "lp" >>${CRONALLOW}
+			echo "
+NOTE: The login ID \"lp\" has been added to the list of IDs
+      allowed to make crontab entries.
+"
+		fi
+	fi
+
+	su lp <<-EOF
+		echo '#
+# This entry will age the request log, removing logs older
+# than two days (-c2). Change the number 2 after the -c option to
+# another integer to change the duration that old logs will
+# be kept. Note that the ; before the > is intended.
+13 3 * * * cd /usr/spool/lp/logs; if [ -f requests ]; then /bin/mv requests xyzzy; /bin/cp xyzzy requests; >xyzzy; /usr/lbin/agefile -c2 requests; /bin/mv xyzzy requests; fi
+#
+# This entry ages the print service log, removing logs older
+# than four weeks (-c4). Change the number 4 after the -c option to
+# another integer to change the number of weeks to keep old logs.
+15 3 * * 0 /usr/lbin/agefile -c4 /usr/spool/lp/logs/lpsched' \
+		| crontab
+EOF
+
+else
+	echo "
+WARNING: Cannot install the lp crontab entry.
+         The periodic removal of job files for finished print
+         requests will not be enabled when installation is finished.
+         This will have to be taken care of later.
+"
+fi
+
+
+echo "
+Finished setting up the new LP Print Service configuration.
+
+
+To change the LP Print Service configuration, or to examine it  again,
+enter the following command:
+
+
+		sysadm packagemgmt/lpmgmt
+
+
+"

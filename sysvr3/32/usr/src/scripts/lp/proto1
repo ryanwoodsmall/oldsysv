@@ -1,0 +1,28 @@
+/dev/null
+1422 50
+d--775 0 3
+install		d--775 0 3
+	INSTALL 	---755 2 2	./install/lp/INSTALL
+	ORDER		---444 2 2	./install/lp/ORDER1
+	Rlist		---555 2 2	./install/lp/Rlist.lp
+	UNINSTALL	---555 2 2	./install/lp/UNINSTALL
+	postinstall	---755 2 2	./install/lp/postinstall
+	preinstall	---755 2 2	./install/lp/preinstall
+	uninstall	---755 2 2	./install/lp/uninstall
+$
+new		d--775 0 3
+	usr		d--775 0 3
+		lib		d--775 0 3
+			lpadmin		---555 71 2	../usr/lib/lpadmin
+			lpforms		---555 71 2	../usr/lib/lpforms
+			lpmove		---555 71 2	../usr/lib/lpmove
+			lpshut		---555 71 2	../usr/lib/lpshut
+			lpusers		---555 71 2	../usr/lib/lpusers
+		$
+		options		d--775 0 3
+			lp.name		---555 2 2	./install/lp/lp.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.nlp:lp/proto1	1.6"

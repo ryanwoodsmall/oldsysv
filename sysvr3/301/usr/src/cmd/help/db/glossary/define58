@@ -1,0 +1,18 @@
+
+\S special character \S
+
+A special character is a non-alphanumeric character that has 
+meaning to the shell other than its literal meaning. "Asterisk(*)"\S*\S,
+"dot(.)"\S*\S, "ampersand(&)"\S*\S, "question mark(?)"\S*\S, "backslash(\)"\S*\S, 
+"pipe(|)"\S*\S, and "pound sign (#)"\S*\S are some of the special characters.
+Some special characters are used for matching "file names"\S*\S.  For example,
+the "asterisk(*)"\S*\S in the "string"\S*\S "*save" in command line 
+
+	rm *save
+
+causes "tempsave", "memosave", and "lettersave", and any other
+file names  in the directory that end in "save" to be deleted.
+Special characters  are decsribed on the "manual page"\S*\S for the
+shell command, sh(1). 
+
+\S*\S defined in the \Sglossary\S

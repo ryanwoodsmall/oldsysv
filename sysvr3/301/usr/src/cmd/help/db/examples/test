@@ -1,0 +1,32 @@
+
+\Stest\S:  Examples
+
+        test -r exercise.1
+
+   Tests the expression "-r exercise.1".  Checks if the file "exercise.1"
+   exists and is readable.  If it exists and is readable, then \Stest\S sets
+   the exit status to zero.
+
+   ---------------------------------------------------------------------------
+
+        [ "$a" = "yes" ]
+
+   Checks if the value for the variable "a" is the string "yes".  If it is,
+   \Stest\S sets the exit status to zero.
+
+
+
+
+   ---------------------------------------------------------------------------
+   The following is an example of \Stest\S in a shell program.
+
+         if
+             \Stest\S -s exercise.1
+         then
+             pr exercise.1
+         fi
+
+   The \Stest\S in this shell program tests the expression "-s exercise" which
+   checks if "exercise.1" is a file with at least one character.  If it is, the
+   program prints the file; if it is not a file, or if it is empty, the program
+   does not print the file.

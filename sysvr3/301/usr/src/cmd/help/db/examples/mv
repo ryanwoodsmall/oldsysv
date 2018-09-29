@@ -1,0 +1,27 @@
+
+\S mv \S:  Examples
+
+       mv lab1 lab2
+
+    Moves the file "lab1" to "lab2" under the current working directory.  The
+    effect is renaming "lab1" as "lab2".
+
+    ----------------------------------------------------------------------
+
+       mv junk1 junk2 DIR
+
+    Moves the files "junk1" and "junk2" under the current working directory to
+    the directory "DIR" in the current working directory.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       mv * SRCDIR
+
+    Moves the contents of all the files in the current directory to files of 
+    the same names under the directory "SRCDIR" in the current working 
+    directory.
+
+

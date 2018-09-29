@@ -1,0 +1,4 @@
+#ident	@(#)adm:root	1.1.1.1
+#
+# The root crontab should be used to perform accounting data collection.
+#

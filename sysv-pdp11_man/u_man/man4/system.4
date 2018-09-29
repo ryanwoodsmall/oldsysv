@@ -1,0 +1,170 @@
+'\" t
+.TH SYSTEM 4 "3B20S only"
+.SH NAME
+system \- format of 3B20S system description file
+.SH DESCRIPTION
+This file contains information
+about the hardware configuration and system-dependent
+parameters for the user's system.
+A more complete description of the system file
+is found in
+Setting up the \s-1UNIX\s+1 System in the
+.IR "U\s-1NIX\s+1 System Administrator's Guide" .
+This information is used
+by the \fIconfig\fP(1M) program
+in configuring systems.
+The file is divided into two sections,
+separated by a line
+with a dollar sign
+.RB ( $ )
+in column 1.
+The first section describes the hardware configuration
+and the second contains system-dependent information.
+Any lines with a number sign
+.RB ( # )
+in column 1
+are treated as comments and are ignored.
+Blank lines are also ignored.
+All fields may be separated by one or more space and tab characters.
+.PP
+The following codes are used throughout the following description:
+.PP
+.RS
+.TS
+lI lI
+l l.
+Name	Meaning
+chan	channel
+count	number of disk blocks in swap or dump area
+dev	device on a channel
+devname	name of device
+driver	name of a software device driver
+equip	equipage
+hv	hardware version
+inter	interrupt source bit
+low	lowest disk block in swap or dump area
+minor	minor device number
+mt	maintenance type
+mv	maintenance version
+num	the number of instances of a software device driver
+parm	name of a \s-1UNIX\s+1 System parameter
+pc	name of device driver for a \s-1PC\s+1
+pumpcode	path name of pump code file
+slot	slot number of a sub-device on its device
+unit	logical unit number of a device
+value	value of a \s-1UNIX\s+1 System parameter
+.TE
+.RE
+.SS "Hardware Configuration"
+This section describes the configuration
+of the Control Unit (\s-1CU\s+1)
+and its components,
+the Disk File Controllers (\s-1DFC\s+1s)
+and their Moving Head Disks (\s-1MHD\s+1s),
+and the Input Output Processors (\s-1IOP\s+1s)
+and their Peripheral Controllers (\s-1PC\s+1s).
+Any line that describes an \s-1IOP\s+1, \s-1DFC\s+1, \s-1MHD\s+1 or \s-1PC\s+1
+may optionally have an exclamation point
+.RB ( ! )
+preceding the first field.
+This indicates that a device
+should not automatically
+be brought into service
+by the system
+(see
+.IR don (1M)).
+Note that an exclamation point which precedes an \s-1IOP\s+1
+implies that neither the \s-1IOP\s+1
+nor its \s-1PC\s+1s
+will be brought into service.
+The same applies to a \s-1DFC\s+1 and its \s-1MHD\s+1s.
+.PP
+The \s-1CU\s+1 and its components are specified as follows:
+.PP
+.RS
+.TS
+lB lB l l l l l l l.
+cu	\fRunit\fP	chan	dev	mt	mv	hv	
+	cc	unit	mt	mv	hv	equip	0
+	masc	unit	mt	mv	hv	equip	0
+	sat	unit	mt	mv	hv	equip	0
+	ch	unit	mt	mv	hv	equip	0
+	ch	unit	mt	mv	hv	equip	0
+	csu	unit	mt	mv	hv	equip	0
+	dma	unit	mt	mv	hv	equip	0
+		\fBch\fP	unit	mt	mv	hv	equip	inter
+.TE
+.RE
+.PP
+Each \s-1DFC\s+1 and its \s-1MHD\s+1s are specified as follows:
+.PP
+.RS
+.TS
+lB lB l l l l l l l.
+dfc	\fRunit\fP	chan	dev	mt	mv	hv	equip
+	mhd	unit	slot	mt	mv	hv	equip
+.TE
+.RE
+.PP
+Each \s-1IOP\s+1 and its \s-1PC\s+1s are specified as follows:
+.PP
+.RS
+.TS
+lB l l l l l l l l.
+iop	unit	chan	dev	mt	mv	hv	equip
+	pc	unit	slot	mt	mv	hv	equip	[pumpcode]
+.TE
+.RE
+.SS "System-Dependent Information"
+This section
+specifies \s-1UNIX\s+1 System devices,
+\s-1UNIX\s+1 System parameters
+and software drivers.
+.PP
+The root and pipe devices are specified by:
+.PP
+.RS
+.TS
+lfB l l.
+root	devname	minor
+pipe	devname	minor
+.TE
+.RE
+.PP
+The swap and dump devices are specified by:
+.PP
+.RS
+.TS
+lfB l l l l.
+swap	devname	minor	low	count
+dump	devname	minor	low	count
+.TE
+.RE
+.PP
+Tunable parameters are specified by:
+.PP
+.RS
+.TS
+l l.
+parm	value
+.TE
+.RE
+.PP
+Software drivers are specified in one of two forms:
+.PP
+.RS
+.TS
+l l.
+driver	num
+driver
+.TE
+.RE
+.PP
+.SH "SEE ALSO"
+config(1M),
+don(1M),
+master(4).
+.br
+Setting up the \s-1UNIX\s+1 System in the
+.IR "U\s-1NIX\s+1 System Administrator's Guide" .
+.\"	@(#)system.4	5.2 of 5/18/82

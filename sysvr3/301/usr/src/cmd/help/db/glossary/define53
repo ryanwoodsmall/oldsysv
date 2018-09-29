@@ -1,0 +1,12 @@
+
+\S separator : separator character \S
+
+A separator character is a  character that is used to show the
+boundaries between "strings"\S*\S or "fields"\S*\S.   A separator is
+"white space"\S*\S or any defined character that serves to separate
+adjacent strings. Almost all printing characters that are not
+alphanumeric can be used as separators in UNIX systems; however it
+is not good practice  to use "special characters"\S*\S because of
+their special meaning.
+
+\S*\S defined in the \Sglossary\S

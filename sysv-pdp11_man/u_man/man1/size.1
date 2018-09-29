@@ -1,0 +1,55 @@
+.TH SIZE 1 "not on PDP-11"
+.SH NAME
+\*psize \- print section sizes of common object files
+.SH SYNOPSIS
+.BR \*psize
+.RB [ \-o ]
+.RB [ \-x ]
+.RB [ \-V ]
+files
+.SH DESCRIPTION
+The
+.I \*psize
+command
+produces section size information for each section in the
+common object files.
+The size of the text, data and bss (uninitialized data) sections are
+printed along with the total size of the object file.  If an archive
+file is input to the
+.IR size
+command the information for all archive members is displayed.
+.PP
+Numbers will be printed in
+decimal unless either the
+.B \-o
+or the
+.B \-x
+option is used, in which case
+they will be printed in octal or in hexadecimal, respectively.
+.PP
+The
+.B \-V
+flag will supply the version information on the
+.I \*psize
+command.
+.SH "SEE ALSO"
+\*pas(1),
+\*pcc(1),
+\*pld(1),
+a.out(4),
+ar(4).
+.SH "DIAGNOSTICS"
+\*psize:  name:  cannot open
+.br
+	if
+.I name
+cannot be read.
+.PP
+
+\*psize:  name:  bad magic
+.br
+	if
+.I name
+is not an appropriate common object file.
+'\" \%W\%
+.\"	@(#)size.1	5.2 of 5/18/82

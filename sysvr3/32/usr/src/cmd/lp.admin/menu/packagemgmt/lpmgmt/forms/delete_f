@@ -1,0 +1,128 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/delete_f	1.6"
+## IDOC:   SCREEN 2.40: DELETE FORM
+#menu# Delete a form
+
+##+++ (help _H113)
+#help#        You use the "delete" command to remove a form from the print
+#help#        service.   No  more  print requests will be accepted  for it
+#help#        and the  form  definition  will  be  destroyed.   Any  print
+#help#        requests  currently  queued  to  print  on this form will be
+#help#        CANCELED.
+##--- (help _H113)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_form_list () {
+# listof: form-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!form-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then :; else  if ( set -- ${RESP}
+		flags="-m1"
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| chk_name >/dev/null 2>&1 || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid form name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+
+DEF_f=`cat ${TMPDIR:-/tmp}/FRM.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.40.1)
+chk_form_list \
+	"Enter the names of the forms to remove: ${DEF_f:+(default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of the form you  want  to
+        delete.   You  can  give  a  list  of  forms  to  delete  by
+        separating the names with spaces or commas.   If  you  don't
+        know  a  form  name, enter \"q\" and select the \"list\" command
+        from the \"forms\" menu, to get a list of known forms.
+
+                                   NOTE
+If any print requests are currently queued to print on the form(s), you will
+not be able to delete them.
+        \
+"
+OPT_f=${RESP}
+##--- (2.40.1)
+
+
+##+++ (2.40.2)
+if checkyn ${flags} -f \
+	${DEF:+"-D${DEF}"} -H \
+	"\
+        Enter a \"n\" (for no) if you made  a  mistake  and  gave  the
+        wrong  form  name(s).   Otherwise, enter a \"y\" (for yes) and
+        the  form(s)  you  named  will  be  deleted  and  the   form
+        definition(s) DESTROYED.
+
+                                  WARNING
+Any print requests currently queued to print on the form(s) will be CANCELED
+if you delete them.
+
+        \
+" \
+	"Are you sure?${DEF:+ (default: ${DEF})}"
+then
+	repeat=no
+	for form in ${OPT_f}
+	do
+		if /usr/lib/lpforms -f ${form} -x
+		then
+			if [ "all" = "${form}" ]
+			then 
+				echo "All forms deleted"
+			else
+				echo "Form ${form} deleted."
+			fi
+			if [ "${DEF_f}" = "${form}" ]
+			then
+				rm -f ${TMPDIR:-/tmp}/FRM.`basename \`tty\``
+			fi
+		else
+			repeat=yes
+		fi
+	done
+	if [ "no" = "${repeat}" ]
+	then
+		break
+	fi
+else
+	:
+fi
+done
+##--- (2.40.2)

@@ -1,0 +1,144 @@
+.TH NSCOPS 8
+.SH NAME
+NSCops \- NSC SYS32 console operations
+.SH DESCRIPTION
+The procedures described here include the major operational
+sequences involved in running the \s-1UNIX\s+1 system on
+the SYS32 system.  The following notation is used:
+.TP 3
+1.
+Special characters are enclosed in <> (e.g., \fB<ctl>\fR
+represents the "control" key, and \fB<cr>\fR
+stands for the "carriage return" key).
+.TP
+2.
+Items within \fB{}\fRs are mandatory substitutions.
+.TP
+3.
+Items within \fB[]\fRs are optional.
+.SH DAILY PROCEDURES
+.SS Disk Boot
+When the system is first powered on, it will run through
+its power-on diagnostics and boot the stand-alone shell.
+Following is an example of what will appear on the console:
+
+   0 1 2 3 4 5 6 7 8 9
+   Boot: dc(1,0)vmunix
+   20992+7592+12732
+
+   $$
+.PP
+The $$ prompt indicates that the stand-alone shell has
+been booted and is ready to accept commands.  If
+it is desired to run stand-alone \f2fsck\fR(1M), or
+other stand-alone functions, now is the time to run them.
+The commands have the form
+.B/stand/
+\fBprogram\fR where \fBprogram\fR can be any name from
+a limited list of the \s-1UNIX\s+1 System commands found in the
+directory
+.B/stand
+.
+To perform a file system consistency check, type:
+.PP
+  $$ /stand/fsck /dev/dsk/1s0
+.PP
+To bring up the \s-1UNIX\s+1 system, the operator must type
+.Bunix<cr>.
+Typically, the system will come up in \s-1SINGLE-USER\s+1
+\s-1MODE\s+1 [
+.IS "init s" ,
+see \f2init\fR(1M))].
+.PP
+This is the appropriate time to do file system backups,
+and \fIfsck\f1(1M) should be executed if it was not
+executed in the stand-alone section of the boot.
+One must never operate the \s-1UNIX\s+1 system with a defective file system.
+.PP
+After successful completion of \f2fsck\fR, the operator can bring
+the system to mulit-user operation by executing
+.Btelenit 2.
+.SS Bringing the System Down
+The shutdown procedure is designed to gracefully turn off all
+processes and being the system back to single-user state
+with all buffers flushed.  To do this, the operator should
+execute \f2shutdown\fR(1M).  If shutdown is not successful, use
+the following sequence of commands:
+.nf
+   killall
+   sync
+   telinit 6
+   fsdk (optional)
+.fi
+.PP
+The system may now be powered off or reset.
+.bp
+.SS System Dumps
+After a system crash, the following procedure should be used
+to get a system dump on tape:
+.TP 4
+1.
+Insert a rewound writeable tape into the tape drive.
+.TP
+2.
+Enter the following commands:
+.nf
+     <ctl>a
+     D
+.fi
+.TP
+3.
+Reset the machine.
+.TP
+4.
+Before returning to the \s-1UNIX\s+1 system, execute the
+stand-alone \fIfsck\fR(1M).
+.SH INSTALLATION BOOT PROCEDURE
+.SS Tape Boot
+.TP
+1.
+Power up the machine.  Be sure to power up the CPU module
+first and wait a few moments before powering up the 
+disk/tape module.
+.TP
+2.
+Insert tape 1 of the distribution tapes into the tape drive.
+.TP
+3.
+Reset the machine.  You now have ten second to respond to the
+menu mode question before anything happens.
+.TP
+4.
+Enter the following responses:
+.nf
+    Menu mode - y/n  \fBy\fR
+    .
+    .
+    .
+    Select - 0,1,2,...,9,X,M,R,S,L,H(elp) ? \fBm\fR
+.fi
+.TP
+5.
+When the monitor prompt (*) appears, enter
+.Bb<cr>
+to boot the stand-alone boot program.
+.TP
+6.
+Boot the initial load program, \fBiltd\fR, as
+follows:
+   Boot: \fBtc(0,2)<cr>\fR
+.TP
+7.
+\fBIltd\fR will initiate a question and answer sequence
+to control the remainder of the \s-1UNIX\s+1 system
+installation process.
+.SH FILES
+/etc/shutdown
+.SH "SEE ALSO"
+filesave(1M), fsck(1M), init(1M), shutdown(1M).
+.br
+.sp
+\f2NS16000 SYS16 System Manual\fR \- Chapter 4
+.br
+\f2\s-1UNIX\s+1 System V Operator's Guide\f1 \- Chapter 4.
+.\"	@(#)NSCops.1m	6.2 of 10/15/84

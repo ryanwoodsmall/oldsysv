@@ -1,0 +1,92 @@
+#ident	"@(#)pkg.lp:lp/setup	1.8"
+#
+# Loop while installer configures in the desired printers.
+#
+
+REQ=/usr/spool/lp/request
+
+while
+	true
+do
+	echo "Available printer types are:"
+	echo "  \"5310\" for AT&T 5310/5320 Dot Matrix Printer,"
+	echo "  \"lqp40\" for LQP-40 Letter Quality Printer,"
+	echo "  \"dqp10\" for DQP-10 Matrix Printer,"
+	echo "  \"hp\" for Hewlett Packard 2631A line printer at 2400 baud,"
+	echo "  \"prx\" for Printronix P300 at 4800 baud using XON/XOFF"
+	echo "    protocol on a serial interface,"
+	echo "  \"1640\" for Diablo 1640 at 1200 baud using XON/XOFF protocol,"
+	echo "  \"450\" for DASI 450 using XON/XOFF protocol,"
+	echo "  \"dumb\" for a line printer without special functions or protocol,"
+	echo "  \"done\", if no more printers are to be configured."
+	echo "Enter type of printer to be added to lp system:  \c"
+	read answer
+	case "$answer" in
+	\"done\"|done)
+		#
+		# initialize default to "/", since that can never be
+		# a legal printer name
+		#
+		default=/
+		while
+			[ "$default" = "/" ]
+		do
+			echo "Select the name of the printer to be the default"
+			echo "destination from the following:"
+			ls $REQ
+			echo "(or type <return> for none)"
+			read default
+			if
+				[ "$default" = "" ]
+			then
+				: continue, no default
+			elif
+				[ "$REQ/$default" = "`ls -d $REQ/$default`" ]
+			then
+				/usr/lib/lpadmin -d$default
+			else
+				default=/
+			fi
+		done
+		rm -f /usr/spool/lp/SCHEDLOCK
+		/usr/lib/lpsched
+		echo "\n Current lp system status:"
+		lpstat -t
+		#
+		# Create entry in /etc/rc.d to start scheduler
+		# when system is booted
+		#
+		if
+			test -d /etc/rc.d
+		then
+			echo "# This script is used to start the lp scheduler." >/etc/rc.d/lp
+			echo "rm -f /usr/spool/lp/SCHEDLOCK" >>/etc/rc.d/lp
+			echo "/usr/lib/lpsched" >>/etc/rc.d/lp
+		fi
+		exit;;
+	5310|\"5310\")
+		/install/install/setup1 "AT&T 5310/5320 Dot Matrix Printer" 5310;;
+	lqp40|\"lqp40\")
+		/install/install/setup1 "LQP-40 Letter Quality Printer" lqp40;;
+	hp|\"hp\")
+		/install/install/setup1 "Hewlett Packard 2631A" hp hp2631a;;
+	dqp10|\"dqp10\")
+		/install/install/setup1 "DQP-10 Matrix Printer" dqp10;;
+	prx|\"prx\")
+		/install/install/setup1 "Serial Printronix P300" prx prx;;
+	1640|\"1640\")
+		/install/install/setup1 "Diablo 1640" 1640;;
+	450|\"450\")
+		/install/install/setup1 "DASI 450" f450;;
+	dumb|\"dumb\")
+		/install/install/setup1 dumb dumb;;
+	*)
+		echo "Printer type $answer not known.\07"
+		continue;;
+	esac
+	if [ $? -ne 0 ]
+	then
+		echo "configuration error"
+		break 2
+	fi
+done

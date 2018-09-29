@@ -1,0 +1,39 @@
+#ident	"@(#)sadmin:shell/oldfile	1.3"
+#	Look for files older than so-many days.
+
+#!	chmod +x ${file}
+
+accessed=accessed
+a=a
+u=u
+case "$1" in
+-m )	# modify days
+	accessed=modified
+	a=m
+	u=
+	shift
+	;;
+-c )	# inode modified
+	accessed='inode modified'
+	a=c
+	u=c
+	shift
+esac
+if [ $# = 0  -o  $# -gt 2 ]
+then
+	echo >&2 "Usage:  $0 [ -m|c ] directory [ age in days ] 
+For more detail type:	prtdoc devcmd.$0"
+	exit 1
+fi
+if [ "$2" = '' ]
+then
+	d=90
+else
+	d=$2
+fi
+echo "files not ${accessed} in the last ${d} days under directory $1"
+cd $1
+find . -${a}time +${d} -print  |
+	sort  |
+	xargs ls -dls${u}  |
+	sed 's;\./;;'

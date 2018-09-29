@@ -1,0 +1,218 @@
+520 clearall
+705 0 0 72
+                  INTRODUCTION TO PIPES
+
+	In this part of the UNIX System walkthru, you will learn about
+"pipes."  Pipes are a way for you to take the output from one
+program, and pass it as input to another program.
+
+
+	As with the rest of the UNIX System walkthru, the top left portion
+of your screen will simulate a UNIX System session.  You will be entering
+commands there, and the output of the commands will also appear there.  
+The top right side of the screen will be used to present diagrams to 
+help explain concepts.  You will see explanatory text on the bottom 
+half of your screen, and on occasion, you will see the instruction 
+to type a command.  
+706 
+520 arrow
+520 clearall
+2 13 0
+34 alt
+700 r79
+35 alt
+2 15 0
+19 
+2 0 0
+18 
+705 3000 3001 78
+As you will remember, the output of many commands will appear on your terminal 
+(for instance, "ls" causes a list of files names to appear on your terminal).  
+You probably also remember that you can redirect this output to a file, using 
+the "greater than" symbol (>).
+706 
+520 arrow
+520 clearbot
+705 3000 3001 70
+You may find times when you want to run some command, and use another 
+command on the output of the first command.  For example, imagine that 
+you wanted to know how many files are in your current directory.  You 
+could first use "ls" to list each file, and redirect output to a file.
+706 
+8 0 0 $
+520 instruct
+3 redirect output of the "ls" command to "count"
+2 0 2
+18 
+253 %0ls%0>%0count%0
+254 ls > count
+520 shansloop
+8 1 0 $
+520 clearbot
+520 instruct
+3 use the "cat" command to look at the contents of "count"
+2 1 2
+18 
+253 %0cat%0count%0
+254 cat count
+520 shansloop
+8 2 0 count
+8 3 0 main.c
+8 4 0 memo
+8 5 0 $
+520 clearbot
+705 3000 3001 78
+In passing, note that the file "count" appears in the output from "ls."  When 
+you specify output redirection, the UNIX System creates the output file before 
+executing the command.  This is why "count" shows up in the directory.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 66
+Continuing with our example, you could now use the "wc" (short for 
+"word count") command to count the number of lines in the file 
+"count."  To do this, you would type "wc count."  Try that now.
+706 
+520 instruct
+3 Find out how many lines are in "count"
+2 5 2
+18 
+253 %0wc%1count%0
+254 wc count
+520 shansloop
+8 6 6 3      3     18 count
+8 7 0 $
+520 clearbot
+705 3000 3001 78
+The first number is the number of lines, the second is the number of words, and
+the third is the number of characters.  "wc" also prints out the name of the
+file which it counted.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+While this two step method works fine, it involves creating a temporary file.  
+The only reason we created "count" was so we could use the "wc" command.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+The UNIX System provides a way to get the same result without creating a 
+temporary file.  The way to do this is to use "pipes." Instead of sending the 
+output of a program to a file, a pipe allows you to send it directly to 
+another program.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 75
+Pipes are used as follows:
+   command_1 | command_2
+The vertical bar is the "pipe" character, and it means that the output from 
+command_1 should be used instead of standard input by command_2.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+Try finding out the number of files in your current directory, but do it with 
+one command line.
+706 
+520 instruct
+3 use pipes to find out the number of files in your directory
+253 %0ls%0|%0wc%0
+254 ls | wc
+2 7 2
+18 
+520 shansloop
+8 8 6 3      3     18
+8 9 0 $
+520 clearbot
+705 3000 3001 77
+As you can see, you got the same numbers as before, but you only had to enter 
+one command line to get them.  (Remember that the file "count" is still in 
+the directory.)
+706 
+520 arrow
+520 clearbot
+705 3000 3001 75
+Let's consider an analogy to help make the concept of pipes clear.  Imagine 
+that each UNIX System command is a processing vat.
+706 
+520 vat1
+520 arrow
+520 clearbot
+705 3000 3001 75
+Imagine that wine is being made in each vat.  The role of the command is to 
+make the wine.
+706 
+520 wine1
+520 arrow
+520 clearbot
+705 3000 3001 77
+When the wine has been made, many commands pour the wine onto your terminal.  
+In other words, the output goes to standard output.
+706 
+520 pour1
+520 arrow
+520 clearbot
+705 3000 3001 76
+The "|" character allows you to "pipe" the wine into another vat for further 
+processing.
+706 
+520 wine1
+520 vat2
+520 arrow
+520 clearbot
+520 pour2
+520 arrow
+520 pour3
+520 arrow
+520 cleartop
+520 clearbot
+705 3000 3001 78
+There are two restrictions on when you may use a pipe.  First, the command to 
+the left of the pipe should normally produce output on standard output.  If it
+didn't, there would be nothing to pass to the second command.  For example,
+it wouldn't make sense for the "cd" ("change directory") command to be used as 
+the first command in a pipe.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+The second requirement is that the command that follows the pipe must expect 
+its input from standard input.  This is true for many UNIX System commands 
+(see the command's manual page, or look at the ASSIST help messages), but not 
+all.  For example, the "pwd" ("print working directory") command expects no 
+input at all.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Two final notes about using pipes:  First, you may use pipes to join more than 
+one command.  For example, the string
+           who | sort | grep tty
+will produce a sorted list of users who are on tty devices.  (Don't worry about
+the details of the commands, just look at the pipes.)
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Second, you can combine pipes and redirection. For example, the command string:
+     who | sort > users
+will create a file called "users" that will contain a sorted list of people 
+currently logged on.
+706 
+520 clearall
+705 0 0 65
+                       SUMMARY OF PIPES
+
+     You have now learned how to "pipe" the output of one command
+to another command.  In effect, when you use the pipe character
+you are telling the UNIX System to treat the output of the first 
+command as the input to the second.
+
+     Remember that the command to the left of the pipe must
+produce its output on standard output, and the command to the
+right of the pipe must be expecting its input from standard input.
+706 
+520 arrow
+520 clearall

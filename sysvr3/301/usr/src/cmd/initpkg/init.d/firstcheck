@@ -1,0 +1,36 @@
+#ident	"@(#)initpkg:init.d/firstcheck	1.1"
+#	Perform the "never have been run before" checks.
+
+set `who -r`
+if [ $9 != "S" ]
+then
+	exit
+fi
+
+echo '
+This machine has not been used as a customer machine yet.  The messages that
+follow are from checking the built-in file systems for damage that might have
+occurred during shipment.  As long as you do not see either of the messages
+                                BOOT UNIX
+or                      FILE SYSTEM WAS MODIFIED
+all is well.  If either message does come out, call your service representative.
+However, the machine is still usable unless you are told otherwise.'
+sleep 20
+echo 'Checking file systems:
+'
+sync
+if  /etc/fsck -y -D `sed '	/^#/d
+			s/[ 	].*//' /etc/fstab`
+then
+	echo '\n'
+else
+	echo '
+        WARNING: The file system check has identified serious problems.
+        We strongly recommend that you contact your service representative
+        before using the machine.
+
+The power will now be turned off.
+'
+	sleep 4
+	/etc/uadmin 2 0
+fi

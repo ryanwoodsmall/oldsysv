@@ -1,0 +1,42 @@
+cat.o	DR11C_0
+csi.o	CSI_0
+da.o	DA11B_0
+dmb.o	DMB_0
+dmc.o	DMC11_0
+dmk.o	DMK_0
+dmr.o	DMR_0
+dn.o	DN11_0
+du.o	DU11_0
+err.o	define
+ht.o	TU16_0
+ht.o	TE16_0
+ht.o	TU45_0
+ht.o	TU77_0
+kl.o	DL11_0
+lp.o	LP11_0
+main.o	define
+maus.o	MAUS.*1
+msg.o	MESG.*1
+nc.o	NC_0
+nsc.o	NSC_0
+pcl.o	PCL11B_0
+sem.o	SEMA.*1
+st1.o	define\	ST_0
+st2.o	define\	ST_0
+sys.o	define
+tm.o	TU10_0
+trace.o	TRACE_0
+vp.o	VP_0
+vpmt.o	VPM_0
+x25m.o	X25_0
+x25r.o	X25_0
+x25s.o	X25_0
+x25u.o	X25_0
+*
+dmb.o dmr.o dmc.o maus.o msg.o sem.o
+nsc.o kl.o sys.o vp.o
+vpmt.o trace.o lp.o err.o main.o ht.o dn.o
+x25u.o cat.o da.o du.o st1.o
+x25r.o nc.o st2.o
+x25s.o x25m.o dmk.o pcl.o
+csi.o tm.o

@@ -1,0 +1,143 @@
+.TH FSPEC 4
+.SH NAME
+fspec \- format specification in text files
+.SH DESCRIPTION
+It is sometimes convenient to
+maintain text files on the \s-1UNIX\s0
+system
+with non-standard tabs,
+(i.e.,
+tabs which are not set at every eighth column).
+Such files must generally be converted
+to a standard format,
+frequently by replacing all tabs with
+the appropriate number of spaces,
+before they can be processed by \s-1UNIX\s0 system commands.
+A format specification
+occurring in the first line of a text file
+specifies how tabs are to be expanded in the remainder of the file.
+.PP
+A format specification consists of a sequence of parameters
+separated by blanks and surrounded by the brackets
+\fB<:\fP and \fB:>\fP.
+Each parameter consists of a keyletter,
+possibly followed immediately by a value.
+The following parameters are recognized:
+.PP
+.RS 2
+.TP 9
+\fBt\fItabs\fR
+The
+.B t
+parameter specifies
+the tab settings for the file.
+The value of
+.I tabs\^
+must be one of the following:
+.RE
+.RS 13
+.TP 3
+1.
+a list of column numbers separated by commas,
+indicating tabs set at the specified columns;
+.TP
+2.
+a \fB\-\fP followed immediately by an integer
+.IR n ,
+indicating tabs at intervals of
+.I n\^
+columns;
+.TP
+3.
+a \fB\-\fP followed by the name of a ``canned'' tab specification.
+.PP
+.RE
+.RS 11 
+Standard tabs are specified by \fBt\-8\fP, or equivalently,
+.BR t1,9,17,25, etc.
+The canned tabs which are recognized are defined by the
+.IR tabs (1)
+command.
+.RE
+.PP
+.RS 2
+.TP 9
+\fBs\fIsize\fR
+The
+.B s
+parameter specifies a maximum line size.
+The value of
+.I size\^
+must be an integer.
+Size checking is performed after tabs have been expanded,
+but before the margin is prepended.
+.PP
+.RE
+.RS 2
+.TP 9
+\fBm\fImargin\fR
+The
+.B m
+parameter specifies a number of spaces to be
+prepended to each line.
+The value of
+.I margin\^
+must be an integer.
+.PP
+.RE
+.RS 2
+.TP 9
+\fBd\fR
+The
+.B d
+parameter takes no value.
+Its presence indicates that the line containing the format specification
+is to be deleted from the converted file.
+.PP
+.RE
+.RS 2
+.TP 9
+\fBe\fR
+The
+.B e
+parameter takes no value.
+Its presence indicates that the current format is to prevail
+only until another format specification
+is encountered in the file.
+.RE
+.i0
+.PP
+Default values, which are assumed for parameters not supplied,
+are \fBt\-8\fP and \fBm0\fP.
+If the
+.B s
+parameter is not specified, no size checking is performed.
+If the first line of a file does not contain a format specification,
+the above defaults are assumed for the entire file.
+The following is an example of a line containing a format specification:
+.PP
+.RS 6
+\(** <:t5,10,15 s72:> \(**
+.RE
+.i0
+.PP
+If a format specification can be disguised as a comment,
+it is not necessary to code the
+.B d
+parameter.
+.PP
+Several
+.SM UNIX
+system commands correctly interpret the format specification for a file.
+Among them is
+.I gath\^
+(see
+.IR send (1C))
+which
+may be used to convert files to a standard format
+acceptable to other \s-1UNIX\s0 system commands.
+.SH SEE ALSO
+ed(1), newform(1), send(1C), tabs(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.br
+.\"	%W% of %G%

@@ -1,0 +1,40 @@
+/*LINTLIBRARY*/
+
+/*	from file agettxt.c */
+#include "oam.h"
+char			*agettxt (msg_id, buf, buflen)
+	long			msg_id;
+	char			*buf;
+	int			buflen;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file fmtmsg.c */
+#include "stdio.h"
+#include "string.h"
+
+/**
+ ** fmtmsg()
+ **/
+int			fmtmsg (
+				label,
+				classification,
+				severity,
+				text,
+				tag,
+				action
+			)
+	char			*label;
+	long			classification;
+	int			severity;
+	char			*text,
+				*tag,
+				*action;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** wrap() - PUT OUT "STUFF: string", WRAPPING string AS REQUIRED
+ **/

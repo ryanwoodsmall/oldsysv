@@ -1,0 +1,32 @@
+
+\Senv\S:  Description
+
+Syntax Summary:
+      env [-] var_name=string ... command
+      env [var_name=string ...]
+
+
+         where:  var_name  is an environmental variable name.
+
+
+                 string  is a sequence of characters delimited by
+                         white space and/or double quotes.
+
+                 command  is a UNIX system command, a shell program,
+                          or an executable file and any arguments
+                          it might take.
+
+
+
+Description:
+     \Senv\S stands for "environment." Use \Senv\S to change the value of
+     environmental variables for the execution of a command.  Environmental
+     variables are normally set by your .profile program when you log in.
+     Without any arguments \Senv\S lists the variables in the environment and
+     their values.  With one or more variable assignments as arguments, \Senv\S
+     includes the new values for the variables in the list.  When a variable
+     assignment and a command are arguments to \Senv\S, the command is
+     executed using the new value of the variable.  When you use the 
+     "-" option, \Senv\S ignores the environment that the system sets up 
+     when you login.  The environment the command is executed with is the one 
+     you create with variable assignments on the command line.

@@ -1,0 +1,194 @@
+.TH GUTIL 1G
+.SH NAME
+gutil \- graphical utilities
+.SH SYNOPSIS
+command-name [options] [files]
+.SH DESCRIPTION
+Below is a list of miscellaneous device
+independent utility commands found in
+.BR /usr/bin/graf .
+If no
+.I files\^
+are given, input is from the standard input.
+All output is to the standard output.
+Graphical data is stored in \s-1GPS\s+1 format; see 
+.IR gps (4).
+.sp
+.PP
+.TP 10
+.B bel \c
+ \- send bel character to terminal
+.PP
+.TP 10
+.B cvrtopt
+[\|=\c
+.BI s "string\^"
+.BI f "string\^"
+.BI i "string " t string\c\^
+\|\|]  [\|\c
+.I args\c\^
+\|\|] \c
+ \- options converter
+.br
+.I Cvrtopt\^
+reformats \fIargs\fR (usually
+the command line arguments of a
+calling shell procedure)
+to facilitate processing by shell procedures.
+An \fIarg\fR is either a file name
+(a string not beginning with
+a \fB\-\fR, or a \fB\-\fR by itself)
+or an option string
+(a string of options beginning with a \fB\-\fR).
+Output is of the form:
+.br
+		\fB\-\fIoption \fB\-\fIoption . . . file name(s)
+.br
+\fRAll options appear singularly and preceding
+any file names.
+Options that take values (e.g.,
+\fB\-\fRr1.1) or are two-letters long must
+be described through options to \fIcvrtopt\fR.
+.sp
+\fICvrtopt\fR is usually used with \fIset\fR in the following manner
+as the first line of a shell procedure:
+.br
+.BI "		set \- \*`cvrtopt =[" options "] $@\*`\^"
+.br
+.I Options\^
+to
+.I cvrtopt\^
+are:
+.RS 10n
+.TP 10
+.BI s string\^
+\fIString\fP accepts string values.
+.TP 10
+.BI f string\^
+\fIString\fP accepts floating point numbers as values.
+.TP 10
+.BI i string\^
+\fIString\fP accepts integers as values.
+.TP 10
+.BI t string\^
+\fIString\fP is a two-letter option name that takes no value.
+.TP 10
+\fIString\fP is a one- or two-letter option name.
+.RE
+.PP
+.TP 10
+.B gd
+[\|\s-1GPS\s+1
+.I files\^
+\|\|] \c
+ \- \s-1GPS\s+1 dump
+.br
+.I Gd\^
+prints a human readable listing of \s-1GPS\s+1.
+.PP
+.TP 10
+.B gtop
+[\|\fB\-\c
+.BI r n\| u\^
+\|\|]  [\|\s-1GPS\s+1
+.I files\^
+\|\|] \c
+ \- \s-1GPS\s+1 to \fIplot\^\fR(4) filter
+.br
+.I Gtop\^
+transforms a \s-1GPS\s+1 into \fIplot\^\fR(4) commands displayable by \fIplot\fR filters.
+\s-1GPS\s+1 objects are translated if they fall within the window
+that circumscribes the first \fIfile\fR unless an
+\fIoption\fR is given.
+.br
+Options:
+.RS 10n
+.TP 10
+.BI r n\^
+translate objects in \s-1GPS\s+1 
+\fBr\fRegion \fIn\fR.
+.TP 10
+.B u
+translate all objects in the \s-1GPS\s+1 \fBu\fRniverse.
+.RE
+.PP
+.TP 10
+.B pd
+[
+.I plot\c\^
+\^(5)
+.I files\^
+\|\|] \c
+ \- \fIplot\^\fR(4) dump
+.br
+.I Pd\^
+prints a human readable listing of \fIplot\^\fR(4) format graphical commands.
+.RE
+.PP
+.TP 10
+.B ptog
+[
+.I plot\c\^
+\^(5)
+.I files\^
+\|\|] \c
+ \- \fIplot\^\fR(4) to \s-1GPS\s+1 filter
+.br
+.I Ptog\^
+transforms \fIplot\^\fR(4) commands into a \s-1GPS\s+1.
+.PP
+.TP 10
+.B quit \c
+ \- terminate session
+.PP
+.TP 10
+.B remcom
+[
+.I files\^
+\|\|] \c
+ \- remove comments
+.br
+.I Remcom\^
+copies its input to its output with comments removed.
+Comments are as defined in C (i.e., /\(** comment \(**/).
+.PP
+.TP 10
+.B whatis
+[\|\fB\-\c
+.B o
+\|\|]  [\|
+.I names\^
+\|\|] \c
+ \- brief on-line documentation
+.br
+.I Whatis\^
+prints a brief description of each \fIname\fR given.
+If no \fIname\fR is given, then the current list of description \fInames\fR is printed.
+The command
+.B whatis \e\(**
+prints out every description.
+.br
+Option:
+.RS 10n
+.TP 10
+.B o
+just print command
+.BR o ptions
+.RE
+.PP
+.TP 10
+.B yoo
+.I file\^\c
+ \- pipe fitting
+.br
+.I Yoo\^
+is a piping primitive that deposits the output of a pipeline
+into a \fIfile\fR used in the pipeline.
+Note that, without \fIyoo\fR, this is not usually successful as it causes a read and write
+on the same file simultaneously.
+.SH "SEE ALSO"
+graphics(1G).
+.br
+gps(4), plot(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)gutil.1g	6.2 of 9/2/83

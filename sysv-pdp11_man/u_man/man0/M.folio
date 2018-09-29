@@ -1,0 +1,280 @@
+.OP
+.tl '''November 19, 1982'
+.sp 2
+.ce
+UNIX System User's Manual
+.ce
+System V
+.tr ~
+.sp 2
+.ce
+.ul
+PRINTING INSTRUCTIONS
+.sp 2
+Print entire manual two-sided; mock-ups of front and back
+cover (together with sizing information), as well as cover
+title and tabs copy are attached.
+.sp
+Total page count (including blank pages) is 750.
+.nf
+.sp 2
+.ce
+.I "FOLIO LIST"
+.sp 2
+.I "Front Matter:"
+.sp
+.ta 5 10 25 34
+.ul
+	No tab:
+		Title page			~~~~1*
+		Trademark page			~~~~2
+.FS *
+Page 1 is
+.I not
+numbered.
+.I All
+other pages
+.I "that carry any text"
+are numbered by entry and should
+be placed back-to-back, regardless of odd or even number, with
+the exception of new "Tab" divisions.
+.FE
+.sp
+.ul
+	Tab "INTRO":
+		Introduction			~~~~3-4 incl.
+		How To Get Started			~~~~5-8 incl.
+.sp
+.ul
+	Tab "CONTENTS":
+		Contents			~~~~1-9 incl.
+		     Blank page	~~~~10
+.sp
+.ul
+	Tab "INDEX":
+		Permuted Index		~~~~1-37 incl.
+		     Blank page	~~~~38
+.bp
+.nf
+.sp 2
+.ul
+Tab "1":
+'\"	Section 1 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(1)	1	FIND(1)	1-2 incl.	REGCMP(1)	1
+300(1)	1-2 incl.	FSEND(1C)	1-2 incl.	RJESTAT(1C)	1
+4014(1)	1	FSPLIT(1)	1	RM(1)	1
+450(1)	1	GCAT(1C)	1-2 incl.	RMDEL(1)	1
+ACCTCOM(1)	1-2 incl.	GCOSMAIL(1C)	1	SACT(1)	1
+ADB(1)	1-6 incl.	GDEV(1G)	1	SADP(1)	1
+ADMIN(1)	1-4 incl.	GED(1G)	1-6 incl.	SAG(1G)	1
+AR(1)	1-2 incl.	GET(1)	1-5 incl.	SAR(1)	1-2 incl.
+AR.PDP(1)	1-2 incl.	GETOPT(1)	1	SCAT(1)	1
+ARCV(1)	1	GRAPH(1G)	1	SCC(1)	1
+AS(1)	1	GRAPHICS(1G)	1	SCCSDIFF(1)	1
+AS.PDP(1)	1	GREEK(1)	1	SDB(1)	1-7 incl.
+ASA(1)	1	GREP(1)	1-2 incl.	SDIFF(1)	1
+AWK(1)	1-3 incl.	GUTIL(1G)	1-2 incl.	SE(1)	1-6 incl.
+BANNER(1)	1	HELP(1)	1	SED(1)	1-3 incl.
+BASENAME(1)	1	HP(1)	1	SEND(1C)	1-5 incl.
+BC(1)	1-2 incl.	HPIO(1)	1-3 incl.	SH(1)	1-8 incl.
+BDIFF(1)	1	HYPHEN(1)	1	SIZE(1)	1
+BFS(1)	1-3 incl.	ID(1)	1	SIZE.PDP(1)	1
+BS(1)	1-9 incl.	IPCRM(1)	1	SLEEP(1)	1
+CAL(1)	1	IPCS(1)	1-3 incl.	SNO(1)	1
+CALENDAR(1)	1	JOIN(1)	1	SORT(1)	1-2 incl.
+CAT(1)	1	KASB(1)	1	SPELL(1)	1-2 incl.
+CB(1)	1	KILL(1)	1	SPLINE(1G)	1
+CC(1)	1-2 incl.	LD(1)	1-2 incl.	SPLIT(1)	1
+CD(1)	1	LD.PDP(1)	1-2 incl.	STAT(1G)	1-3 incl.
+CDC(1)	1-2 incl.	LEX(1)	1-2 incl.	STLOGIN(1)	1
+CFLOW(1)	1-2 incl.	LINE(1)	1	STRIP(1)	1
+CHMOD(1)	1	LINT(1)	1-2 incl.	STRIP.PDP(1)	1
+CHOWN(1)	1	LIST(1)	1	STSTAT(1)	1
+CMP(1)	1	LOGIN(1)	1-2 incl.	STTY(1)	1-3 incl.
+COL(1)	1	LOGNAME(1)	1	SU(1)	1
+COMB(1)	1	LORDER(1)	1	SUM(1)	1
+COMM(1)	1	LP(1)	1-2 incl.	SYNC(1)	1
+CONVERT(1)	1	LPR(1)	1	TABS(1)	1-2 incl.
+CP(1)	1	LPSTAT(1)	1	TAIL(1)	1
+CPIO(1)	1-2 incl.	LS(1)	1-2 incl.	TAR(1)	1-2 incl.
+CPP(1)	1-3 incl.	M4(1)	1-3 incl.	TBL(1)	1-2 incl.
+CPRS(1)	1	MACHID(1)	1	TC(1)	1
+CRYPT(1)	1	MAIL(1)	1-2 incl.	TEE(1)	1
+CSPLIT(1)	1-2 incl.	MAKE(1)	1-5 incl.	TEST(1)	1-2 incl.
+CT(1C)	1	MAKEKEY(1)	1	TIME(1)	1
+CU(1C)	1-2 incl.	MAN(1)	1-2 incl.	TIMEX(1)	1
+CUT(1)	1	MESG(1)	1	TOC(1G)	1-2 incl.
+CW(1)	1-4 incl.	MKDIR(1)	1	TOUCH(1)	1
+CXREF(1)	1	MM(1)	1-2 incl.	TPLOT(1G)	1
+DATE(1)	1	MMT(1)	1	TR(1)	1
+DC(1)	1-2 incl.	NET(1C)	1-2 incl.	TROFF(1)	1-2 incl.
+DD(1)	1-2 incl.	NEWFORM(1)	1-2 incl.	TROUBLE(1)	1
+DELTA(1)	1-2 incl.	NEWGRP(1)	1	TRUE(1)	1
+DEROFF(1)	1	NEWS(1)	1	TSORT(1)	1
+DIFF(1)	1	NICE(1)	1	TTY(1)	1
+DIFF3(1)	1	NL(1)	1-2 incl.	UMASK(1)	1
+DIFFMK(1)	1	NM(1)	1-2 incl.	UNAME(1)	1
+DIRCMP(1)	1	NM.PDP(1)	1	UNGET(1)	1
+DIS(1)	1	NOHUP(1)	1	UNIQ(1)	1
+DPD(1C)	1-2 incl.	NROFF(1)	1-2 incl.	UNITS(1)	1
+DPR(1C)	1	NSCSTAT(1C)	1	UUCP(1C)	1-2 incl.
+DU(1)	1	NSCTORJE(1C)	1	UUSTAT(1C)	1-2 incl.
+DUMP(1)	1-2 incl.	NUSEND(1C)	1-2 incl.	UUTO(1C)	1
+ECHO(1)	1	OD(1)	1	UUX(1C)	1-2 incl.
+ED(1)	1-9 incl.	PACK(1)	1-2 incl.	VAL(1)	1-2 incl.
+EFL(1)	1-2 incl.	PASSWD(1)	1	VC(1)	1-3 incl.
+ENABLE(1)	1	PASTE(1)	1	VPR(1)	1
+ENV(1)	1	PR(1)	1-2 incl.	WAIT(1)	1
+EQN(1)	1-2 incl.	PROF(1)	1-2 incl.	WC(1)	1
+EXPR(1)	1-2 incl.	PRS(1)	1-3 incl.	WHAT(1)	1
+F77(1)	1-2 incl.	PS(1)	1-2 incl.	WHO(1)	1-2 incl.
+FACTOR(1)	1	PTX(1)	1	WRITE(1)	1
+FGET(1C)	1-2 incl.	PWD(1)	1	XARGS(1)	1-2 incl.
+FILE(1)	1	RATFOR(1)	1	YACC(1)	1
+.TE
+.sp 2
+.ul
+Tab "2":
+'\"	Section 2 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(2)	1-8 incl.	LSEEK(2)	1	SHMCTL(2)	1
+ACCESS(2)	1	MAUS(2)	1-2 incl.	SHMGET(2)	1-2 incl.
+ACCT(2)	1	MKNOD(2)	1	SHMOP(2)	1-2 incl.
+ALARM(2)	1	MOUNT(2)	1	SIGNAL(2)	1-3 incl.
+BRK(2)	1	MSGCTL(2)	1	STAT(2)	1-2 incl.
+CHDIR(2)	1	MSGGET(2)	1	STIME(2)	1
+CHMOD(2)	1	MSGOP(2)	1-3 incl.	SYNC(2)	1
+CHOWN(2)	1	NICE(2)	1	SYS3B(2)	1
+CHROOT(2)	1	OPEN(2)	1-2 incl.	TIME(2)	1
+CLOSE(2)	1	PAUSE(2)	1	TIMES(2)	1
+CREAT(2)	1	PIPE(2)	1	ULIMIT(2)	1
+DUP(2)	1	PLOCK(2)	1	UMASK(2)	1
+EXEC(2)	1-3 incl.	PROFIL(2)	1	UMOUNT(2)	1
+EXIT(2)	1	PTRACE(2)	1-2 incl.	UNAME(2)	1
+FCNTL(2)	1	READ(2)	1	UNLINK(2)	1
+FORK(2)	1	SEMCTL(2)	1-2 incl.	USTAT(2)	1
+GETPID(2)	1	SEMGET(2)	1-2 incl.	UTIME(2)	1
+GETUID(2)	1	SEMOP(2)	1-3 incl.	WAIT(2)	1
+IOCTL(2)	1	SETPGRP(2)	1	WRITE(2)	1
+KILL(2)	1	SETUID(2)	1	blank page	1
+LINK(2)	1
+.TE
+.bp
+.sp 2
+.ul
+Tab "3":
+'\"	Section 3 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(3)	1-2 incl.	GETC(3S)	1	PERROR(3C)	1
+A64L(3C)	1	GETCWD(3C)	1	PLOT(3X)	1-2 incl.
+ABORT(3C)	1	GETENV(3C)	1	POPEN(3S)	1
+ABORT(3F)	1	GETENV(3F)	1	PRINTF(3S)	1-3 incl.
+ABS(3C)	1	GETGRENT(3C)	1	PUTC(3S)	1
+ABS(3F)	1	GETLOGIN(3C)	1	PUTPWENT(3C)	1
+ACOS(3F)	1	GETOPT(3C)	1-2 incl.	PUTS(3S)	1
+AIMAG(3F)	1	GETPASS(3C)	1	QSORT(3C)	1
+AINT(3F)	1	GETPW(3C)	1	RAND(3C)	1
+ASIN(3F)	1	GETPWENT(3C)	1-2 incl.	RAND(3F)	1
+ASSERT(3X)	1	GETS(3S)	1	REGCMP(3X)	1-2 incl.
+ATAN(3F)	1	GETUT(3C)	1-2 incl.	ROUND(3F)	1
+ATAN2(3F)	1	HSEARCH(3C)	1-2 incl.	SCANF(3S)	1-3 incl.
+ATOF(3C)	1	HYPOT(3M)	1	SETBUF(3S)	1
+BESSEL(3M)	1	INDEX(3F)	1	SETJMP(3C)	1
+BOOL(3F)	1	L3TOL(3C)	1	SIGN(3F)	1
+BSEARCH(3C)	1	LDAHREAD(3X)	1	SIGNAL(3F)	1
+CLOCK(3C)	1	LDCLOSE(3X)	1	SIN(3F)	1
+CONJG(3F)	1	LDFHREAD(3X)	1	SINH(3F)	1
+CONV(3C)	1	LDLREAD(3X)	1	SINH(3M)	1
+COS(3F)	1	LDLSEEK(3X)	1	SLEEP(3C)	1
+COSH(3F)	1	LDOHSEEK(3X)	1	SPUTL(3X)	1
+CRYPT(3C)	1	LDOPEN(3X)	1-2 incl.	SQRT(3F)	1
+CTERMID(3S)	1	LDRSEEK(3X)	1	SSIGNAL(3C)	1
+CTIME(3C)	1-2 incl.	LDSHREAD(3X)	1	STDIO(3S)	1
+CTYPE(3C)	1	LDSSEEK(3X)	1	STDIPC(3C)	1
+CUSERID(3S)	1	LDTBINDEX(3X)	1	STRING(3C)	1-2 incl.
+DIAL(3C)	1-2 incl.	LDTBREAD(3X)	1	STRTOL(3C)	1
+DRAND48(3C)	1-2 incl.	LDTBSEEK(3X)	1	SWAB(3C)	1
+ECVT(3C)	1	LEN(3F)	1	SYSTEM(3F)	1
+END(3C)	1	LOG(3F)	1	SYSTEM(3S)	1
+ERF(3M)	1	LOG10(3F)	1	TAN(3F)	1
+EXP(3F)	1	LOGNAME(3X)	1	TANH(3F)	1
+EXP(3M)	1	LSEARCH(3C)	1	TMPFILE(3S)	1
+FCLOSE(3S)	1	MALLOC(3C)	1	TMPNAM(3S)	1
+FERROR(3S)	1	MATHERR(3M)	1-2 incl.	TRIG(3M)	1
+FLOOR(3M)	1	MAX(3F)	1	TSEARCH(3C)	1-2 incl.
+FOPEN(3S)	1-2 incl.	MCLOCK(3F)	1	TTYNAME(3C)	1
+FREAD(3S)	1	MEMORY(3C)	1	TTYSLOT(3C)	1
+FREXP(3C)	1	MIN(3F)	1	UNGETC(3S)	1
+FSEEK(3S)	1	MKTEMP(3C)	1	X25ALNK(3C)	1-2 incl.
+FTW(3C)	1	MOD(3F)	1	X25CLNK(3C)	1
+FTYPE(3F)	1-2 incl.	MONITOR(3C)	1	X25HLNK(3C)	1
+GAMMA(3M)	1	NLIST(3C)	1	X25IPVC(3C)	1
+GETARG(3F)	1
+.TE
+.bp
+.sp 2
+.ul
+Tab "4":
+'\"	Section 4 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(4)	1	FS(4)	1-2 incl.	MNTTAB(4)	1
+A.OUT(4)	1-4 incl.	FSPEC(4)	1	PASSWD(4)	1
+A.OUT.PDP(4)	1-3 incl.	GETTYDEFS(4)	1-2 incl.	PLOT(4)	1
+ACCT(4)	1-2 incl.	GPS(4)	1-2 incl.	PNCH(4)	1
+AR(4)	1-2 incl.	GROUP(4)	1	PROFILE(4)	1
+AR.PDP(4)	1	INITTAB(4)	1-3 incl.	RELOC(4)	1-2 incl.
+CHECKLIST(4)	1	INODE(4)	1	SCCSFILE(4)	1-3 incl.
+CORE(4)	1	ISSUE(4)	1	SCNHDR(4)	1
+CPIO(4)	1	LDFCN(4)	1-2 incl.	SYMS(4)	1-2 incl.
+DIR(4)	1	LINENUM(4)	1	SYSTEM(4)	1-2 incl.
+ERRFILE(4)	1-4 incl.	MASTER.DEC(4)	1-2 incl.	UTMP(4)	1
+FILEHDR(4)	1	MASTER.U3B(4)	1-2 incl.	
+.TE
+.sp 2
+.ul
+Tab "5":
+'\"	Section 5 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(5)	1	GREEK(5)	1	MV(5)	1-2 incl.
+ASCII(5)	1	MAN(5)	1-2 incl.	REGEXP(5)	1-3 incl.
+ENVIRON(5)	1	MM(5)	1	STAT(5)	1
+EQNCHAR(5)	1	MOSD(5)	1-2 incl.	TERM(5)	1-2 incl.
+FCNTL(5)	1	MPTX(5)	1	TYPES(5)	1
+				blank page	1
+.TE
+.sp 2
+.ul
+Tab "6":
+'\"	Section 6 goes here
+.TS H
+l1 l| l1 l| l1 l.
+ENTRY	PAGES	ENTRY	PAGES	ENTRY	PAGES
+_
+.TH
+INTRO(6)	1	CRAPS(6)	1-2 incl.	QUIZ(6)	1
+ARITHMETIC(6)	1	HANGMAN(6)	1	REVERSI(6)	1
+BACK(6)	1	JOTTO(6)	1	SKY(6)	1
+BJ(6)	1	MAZE(6)	1	TTT(6)	1
+CHESS(6)	1	MOO(6)	1	WUMP(6)	1
+.TE

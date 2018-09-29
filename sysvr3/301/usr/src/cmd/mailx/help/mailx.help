@@ -1,0 +1,23 @@
+		mailx commands
+type [msglist]			print messages
+next				goto and type next message
+edit [msglist]			edit messages
+from [msglist]			give header lines of messages
+delete [msglist]		delete messages
+undelete [msglist]		restore deleted messages
+save [msglist] file		append messages to file
+reply [message]			reply to message, including all recipients
+Reply [msglist]			reply to the authors of the messages
+preserve [msglist]		preserve messages in mailbox
+mail user			mail to specific user
+quit				quit, preserving unread messages
+xit				quit, preserving all messages
+header				print page of active message headers
+!				shell escape
+cd [directory]			chdir to directory or home if none given
+list				list all commands (no explanations)
+top [msglist]			print top 5 lines of messages
+z [-]				display next [last] page of 10 headers
+
+[msglist] is optional and specifies messages by number, author, subject or
+type.  The default is the current message.

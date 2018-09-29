@@ -1,0 +1,3 @@
+mcmp -l -m /usr/4.1man/u_man -o /usr/man/u_man -t /usr/man/tmp
+mcmp -l -m /usr/4.1man/a_man -o /usr/man/a_man -t /usr/man/altmp
+#	@(#)compare	5.2 of 5/19/82

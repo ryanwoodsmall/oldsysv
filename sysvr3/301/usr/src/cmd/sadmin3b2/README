@@ -1,0 +1,81 @@
+#ident	"@(#)sadmin3b2:README	1.3"
+	Simple Administration software for AT&T 3B2 Computers (sadmin3b2)
+
+UPDATING A PREVIOUSLY INSTALLED SIMPLE ADMINISTRATION
+	If a previous installation of sadmin3b2 is in place
+and you intend to replace that one with a new one, perform the following
+sequence to remove the installed product, clobber intermediate files in the
+source tree, remove the previous source files and remove the source tree
+directory structure.  See the note about INSTALLING UNDER A DIFFERENT ROOT,
+below.
+
+		make -f sadmin3b2.mk ROOT=`pwd`/installdir remove clobber
+		rm -f `make -f sadmin3b2.mk partslist`
+		find * -type d -print  |  sort -r  |  xargs rmdir
+
+Then install all the new source files and follow the instructions below.
+It is possible to install new source without going through this sequence,
+but there is a chance that it won't work because of name collisions and the
+like.  This is guarenteed to give a clean sweep and properly build the product.
+
+INSTALLATION INSTRUCTIONS
+All source files are installed under a single directory, traditionally
+/usr/src/cmd/sadmin3b2.
+All the product pieces are built by the issuing the command
+		make -f sadmin3b2.mk
+
+All the product pieces are installed by the super-user issuing the command
+		make -f sadmin3b2.mk install
+
+INSTALLING UNDER A DIFFERENT ROOT
+The installation above installs releative to /.
+The relative position of these files can be modified by adding a ROOT:
+		make -f sadmin3b2.mk ROOT=`pwd`/installdir install
+
+This will make the file in "installdir" below the current directory.
+DO NOT set  ROOT=`pwd` !  It will wipe out your source!
+
+CREATING DEVICE DIRECTORIES
+The "harddisk" submenu depends on the existence of the directories
+/dev/SA and /dev/rSA, which contain the block-special and the character-
+special files for the file systems built-into the system.
+Traditionally, these are known as /dev/SA/disk<number> where <number> is
+1 and greater.
+These files should be created by linking the appropriate /dev/dsk and
+/dev/rdsk files into the /dev/SA and /dev/rSA directories.
+
+The command /etc/disks is used to do this automatically when new disks are
+configured on a 3B2.
+
+
+MISCELLANEOUS make TARGETS
+Note:
+    All the following use the same ROOT conventions as "make install", above.
+
+To list all product files created by "make install", type
+	make -f sadmin3b2.mk product
+
+To list all product directories created by "make install", type
+	make -f sadmin3b2.mk productdir
+
+To list all parts (delivered) files, type
+	make -f sadmin3b2.mk partslist
+
+To list all commands used within Simple Administration shell scripts, type
+	make -f sadmin3b2.mk cmdsused
+
+To clean out all intermediate files from the source directories (i.e. *.o), type
+	make -f sadmin3b2.mk clean
+
+To clean out all intermediate and final product files
+from the source directories, type
+	make -f sadmin3b2.mk clobber
+
+To remove the product files from the installed directories, type
+	make -f sadmin3b2.mk remove
+(This must be done by the same user who issued  make install .)
+
+NOTE:  Manual pages are also delivered with this package and is formatted
+and installed separate from the software.  To format and install, type:
+	make -f sadmin3b2.mk installdoc
+(This also understands the ROOT keyword, same as above.)

@@ -1,0 +1,75 @@
+.if '\*p'' \{\
+.ds N 3B20S
+.ds p 
+.ds P 
+.ds l libc.a\}
+.if !'\*p'' \{\
+.TH \*PLIST 1L \*N
+\}
+.if '\*p''\{\
+.TH \*PLIST 1 "\*N only"
+\}
+.SH NAME
+\*plist \- produce C source listing from \*N object file
+.SH SYNOPSIS
+.B \*plist
+.B [ \-V ]
+.RB [ \-h ]
+source-file
+.B . \|. \|.
+[object-file]
+.SH DESCRIPTION
+The
+.I \*Plist
+command
+produces a C source listing with line number information attached.
+If multiple C source files were used to create the object file,
+.I \*plist
+will accept multiple file names. 
+The object file is taken to be the last non-C source
+file argument.
+If no object file is specified the default object file,
+.B \*pa.out\c
+\&,
+will be used.
+.PP
+Line numbers will be printed for each breakpoint
+inserted by the compiler (generally, each executable C statement
+that begins a new line of source).
+Line numbering begins anew for each function.
+Line number 1 is always the line containing the left curly brace
+.RB (\| { \|)
+that
+begins the function body.
+Line numbers will also be supplied for inner block
+redeclarations of local variables so that they can be distinguished
+by the symbolic debugger.
+.PP
+The
+.B \-V
+flag will supply version information of the
+.I \*plist
+command.
+.PP
+The
+.B \-h
+flag will suppress heading output.
+.SH "CAVEATS"
+Object files given to
+.I \*plist
+must have symbolic debugging symbols.
+.PP
+Since
+.I \*plist
+does not use the C preprocessor,
+it may be unable to recognize function definitions whose
+syntax has been distorted by the use of C preprocessor macro substitutions.
+.SH "SEE ALSO"
+\*pas(1),
+\*pcc(1),
+\*pld(1).
+.SH "DIAGNOSTICS"
+``\*plist: name: cannot open'' if
+.I name
+cannot be read.
+.\"	@(#)list.1	5.2 of 5/18/82

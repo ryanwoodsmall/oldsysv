@@ -1,0 +1,9 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/service/DESC	1.3"
+## IDOC:   SCREEN 2.13: PRINT SERVICE MANAGEMENT MENU
+#menu# Print service management menu
+
+#head#                   PRINT SERVICE MANAGEMENT MENU
+
+#help#        The "service" menu  gives  you  commands  for  starting  and
+#help#        stopping  the  LP  Print Service and for selecting a default
+#help#        destination for print requests.

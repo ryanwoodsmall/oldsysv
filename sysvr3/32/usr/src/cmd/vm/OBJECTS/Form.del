@@ -1,0 +1,19 @@
+form="Remove Service"
+done=`delserve "$F1" "HOME"`close $VMSYS/OBJECTS/Form.del $VMSYS/OBJECTS/Menu.list
+help=OPEN TEXT OBJECTS/Text.mfhelp  T.rem "Remove Services"
+
+name=Service Menu Name:
+nrow=1
+ncol=1
+rows=1
+columns=10
+frow=1
+fcol=28
+value=${ARG1}
+rmenu={ `listserv -l HOME` }
+menuonly=true
+fieldmsg="Name of service being removed"
+
+name=RESET
+button=8
+action=reset

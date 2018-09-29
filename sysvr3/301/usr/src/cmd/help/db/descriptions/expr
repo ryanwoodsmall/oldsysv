@@ -1,0 +1,18 @@
+
+\Sexpr\S:  Description
+
+Syntax Summary:  expr expression1 operator expression2
+
+         where:  expressions  are names of files, variable names,
+                              regular expressions, or integers.
+                 operator  is a logical or arithmetic operator.
+
+Description:
+     \Sexpr\S stands for "expression." Use \Sexpr\S to evaluate expressions
+     that are composed of two strings and an operator. \Sexpr\S sends the
+     value of the expression to standard output.  The primary use for \Sexpr\S
+     is in shell programs.  In programs, \Sexpr\S changes the value of shell
+     variables through addition, subtraction, multiplication, or division of an
+     integer.  \Sexpr\S can also compare strings to a regular expression to
+     check for matches, and evaluate expressions with logical operators.  The
+     operators are listed on the manual page for \Sexpr\S.

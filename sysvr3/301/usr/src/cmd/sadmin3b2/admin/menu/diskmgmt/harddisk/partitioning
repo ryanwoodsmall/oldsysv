@@ -1,0 +1,119 @@
+#ident	"@(#)sadmin3b2:admin/menu/diskmgmt/harddisk/partitioning	1.5"
+#menu# partition a hard disk
+#help# 
+#help#	This command interactively configures an empty hard disk.  It creates
+#help#	a file system within each partition and arranges for it to be mounted
+#help#	automatically.
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+# Add /etc to local path variable for commands: fmthard mount umount
+PATH=${PATH}:/etc
+export PATH
+
+DIR=/dev/rSA
+DEVS=`ls ${0}.d`
+ROOTDEV=`/etc/devnm /`
+ROOTDEV=`expr "${ROOTDEV}" : '\(.*\) .*'`
+ROOT_SIX=`expr "${ROOTDEV}" : '\(.*\).'`
+ROOT_SIX="${ROOT_SIX}6"
+LS_ROOT=`ls -l ${ROOT_SIX}`
+ROOT_MAJ=`expr "${LS_ROOT}" : '.* [ 	*].* [ 	*].* [ 	*]\([0-9][0-9]*\),.*'`
+ROOT_MIN=`expr "${LS_ROOT}" : '.*, *\([0-9][0-9]*\)'`
+SELECTION=`selectdevice -c $$ ${DIR} ${DEVS}`
+if [ -z "${SELECTION}" ]
+then
+	exit 0
+fi
+LS_SELECT=`ls -l ${SELECTION}`
+SEL_MAJ=`expr "${LS_SELECT}" : '.* [ 	*].* [ 	*].* [ 	*]\([0-9][0-9]*\),.*'`
+SEL_MIN=`expr "${LS_SELECT}" : '.*, *\([0-9][0-9]*\)'`
+
+command=`basename ${SELECTION} | sed -e 's/[0-9][0-9]*.*//p'`
+. ${0}.d/${command}
+
+bdrive=`basename ${SELECTION}`
+ndrive=`drivename ${bdrive}`
+
+if [ ${ROOT_MAJ} -eq ${SEL_MAJ} -a ${ROOT_MIN} -eq ${SEL_MIN} ]
+then
+	echo "
+Sorry, the ${ndrive} is already partitioned; it holds
+the root file system."
+	exit 1
+else
+	break
+fi
+
+# Obtain /dev/rdsk/c?d?s entry from link in /dev/rSA directory.
+	
+DEV_RSIX=`ls /dev/rdsk/*6`
+SELECT_RALL=`echo "${DEV_RSIX}" | while read dev 
+do
+	DEV_COMP=\`ls -l ${dev}\`
+	DEV_MAJ=\`expr "${DEV_COMP}" : '.* [ 	*].* [ 	*].* [ 	*]\([0-9][0-9]*\),.*'\`
+	DEV_MIN=\`expr "${DEV_COMP}" : '.*[0-9][0-9]*, *\([0-9][0-9]*\)'\`
+	if [ ${DEV_MAJ} -eq ${SEL_MAJ} -a ${DEV_MIN} -eq ${SEL_MIN} ] 
+	then
+		echo \`expr "${dev}" : '\(/.*\).'\`
+		break
+	fi
+done`
+
+if [ -z "${SELECT_RALL}" ]
+then
+	admerr ${0} "No corresponding /dev/rdsk entry for ${SELECTION}"
+	exit 1
+fi
+
+# Check for entries in /etc/fstab; if so, advise and exit
+
+SELECT_NALL=`echo "${SELECT_RALL}" | sed -e 's/\/r/\//p'`
+if while read dev dir readonly junk
+do
+	device=`expr "${dev}" : '\(/.*\).'`
+	if [ "${device}" = "${SELECT_NALL}" ]
+	then
+		echo "
+The ${ndrive} is currently configured in the system."
+		exit 1
+	fi
+done < /etc/fstab 
+then
+	:
+else
+	exit 1
+fi
+
+#
+# Partition the selected device - fmthard defaults to /etc/vtoc/hd%dft for data
+#
+if fmthard ${SELECT_RALL}6 > /dev/null
+then
+	:
+else
+	admerr ${0} "Unsuccessful fmthard of ${SELECT_RALL}6"
+	exit 1
+fi
+
+#
+# Remove default partitioning specification; assumes that
+# /etc/vtoc/hd%dft maps all space to partition "8".
+#
+fmthard -d "8:0:1:0:0" ${SELECT_RALL}6 > /dev/null
+
+eval `devinfo -i ${SELECTION}  |
+	sed  's/\(\/dev\/.*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\).*/devname=\1 version=\2 driveid=\3 blockscyl=\4 bytesblock=\5 numpar=\6/'`
+eval `labelit ${ROOTDEV} | sed -n 's/Current fsname: \([a-zA-Z0-9]*\), \
+Current volname: \([^ ,]*\), .*/fsname=\1 REL=\2/p'`
+
+eval `echo "${SELECTION}" | sed -n 's/[^0-9]*\([0-9][0-9]*\)/disksel=\1/p'`
+
+FSTAB=`optparttn -S -d ${disksel} -r / -c ${blockscyl} -g ${REL} ${SELECT_RALL}`
+if [ $? -eq 0 -a -n "${FSTAB}" ]
+then
+	echo "${FSTAB}" >> /etc/fstab
+	echo "\nThe ${ndrive} is now partitioned."
+fi
+exit 0

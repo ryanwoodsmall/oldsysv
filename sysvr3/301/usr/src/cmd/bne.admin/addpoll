@@ -1,0 +1,110 @@
+#ident	"@(#)bne.admin:addpoll	2.2"
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+AN=an
+FIRST=true
+flags="-qq -k$$"
+trap exit 1 2 15
+
+if [ -f "$POLL" -a \( ! -w "$POLL" -o ! -r "$POLL" \) ]; then
+	admerr $0 "Can't write and read '$POLL'\nCan't do add operation!\n"
+	exit
+fi
+
+echo "\nThis procedure is used to add entries for the polling demon.
+"
+
+while  echo "\n"; $FIRST \
+|| chkyn ${flags} -f "Add $AN entry to the Poll file?" || exit
+do
+FIRST=false
+
+NAME=`chkyn ${flags} -ref "
+Enter the name of the system you want to poll:" \
+	'^[0-9A-z][0-9A-z-]*$' 'Name is letters, digits, "-" character only'`
+
+
+if grep "^$NAME[	]" $POLL 2>/dev/null 1>&2; then
+echo "
+'$NAME' already exists in '$POLL'.
+Duplicate names are not allowed\n"
+continue
+fi
+
+
+if grep "^$NAME[ 	]" $SYSTEMS 2>/dev/null 1>&2; then
+echo "\c"
+
+else
+echo "
+**WARNING** There is no entry for '$NAME' in $SYSTEMS.
+One is required to be able to poll '$NAME'.
+You may continue and add the entry later using 'systemmgmt'.\n"
+
+	if chkyn ${flags} -f  'Do you want to continue with this entry?'
+	then :
+	else
+		continue
+	fi
+
+fi
+
+
+#### Loop so that the hours can be checked individually
+while true
+do
+
+TIMES=`chkyn ${flags} -D"all" -ref "
+Enter the hours you want to poll system $NAME:
+(The line should contain a space separated list of 1 or 2 digit times)
+For example
+5 9 12 23
+(every hour is default): " \
+	'^ *[0-9][0-9 ]*$' '*** Times are space separated numbers'`
+
+
+if [ "$TIMES" = "all" ]; then
+TIMES="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+fi
+
+# Check all times for range 0<=TIME<=23
+fail=false
+for i in $TIMES; do
+	if [ $i -lt 0 -o $i -gt 23 ]; then
+		echo "*** Hours must be >= 0 and < 24\n"
+		fail=true
+		break
+	fi
+done
+if $fail ; then   :
+else break
+fi
+
+done
+#####		#####################################
+
+
+LINE="$NAME	$TIMES"
+echo "\nThe line generated is:\n $LINE\n"
+
+
+if  chkyn ${flags} -f \
+	'Do you want to add this entry to the Poll file?'
+then
+cat <<-! >>$POLL
+	$LINE
+!
+echo "*** Entry has been added to '$POLL'.\n"
+fi
+
+
+AN=another
+done

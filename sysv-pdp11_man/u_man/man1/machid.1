@@ -1,0 +1,32 @@
+.TH MACHID 1 
+.SH NAME
+pdp11, u3b, vax \- provide truth value about your processor type
+.SH SYNOPSIS
+.B pdp11
+.PP
+.B u3b
+.PP
+.B vax
+.SH DESCRIPTION
+The following commands will return a true value (exit code of 0) if you are on
+a processor that the command name indicates.
+.RS
+.TP \w'pdp11\ \ \ 'u
+.B pdp11
+True if you are on a PDP-11/45 or PDP-11/70.
+.TP &
+.B u3b
+True if you are on a 3B20S.
+.TP &
+.B vax
+True if you are on a VAX-11/750 or VAX-11/780.
+.dt
+.RE
+.PP
+The commands that do not apply will return a false (non-zero) value.
+These commands are often used within
+.IR make (1)
+makefiles and shell procedures to increase portability.
+.SH SEE ALSO
+sh(1), test(1), true(1).
+.\"	@(#)machid.1	5.2 of 5/18/82

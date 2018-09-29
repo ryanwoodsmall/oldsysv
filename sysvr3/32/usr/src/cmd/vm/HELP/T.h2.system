@@ -1,0 +1,53 @@
+
+   FACE is  a user-friendly "menu-driven" interface  to the UNIX 
+   System V  Operating  System.  It presents  UNIX through a system of 
+   menus  and  forms,  providing  an  easy way to navigate through and  
+   manage  your Filecabinet,  i.e., your  system of folders and files.
+   FACE also provides you with ways  to customize  some  aspects
+   of  the interfacee througe the Preferencee  menu (access  it's help
+   menu  through  the  Office  Overview  item  in the  Help facility's
+   Table  of Contents).  FACE  also provides extensive  feedback
+   and  an  on-line Help facility.  The following  sections define the
+   different parts of the FACE Display.
+
+   NOTIFICATION LINE -- This is the top line of the display.  The  day
+   and  date  are  always displayed in the center of the line.  On the
+   far left end is the electronic mail alert, "MAIL", indicating  when
+   new  mail  has  arrived  for  you.   On  the  far  right end is the
+   "WORKING" indicator, letting you know that the system is processing
+   your requested action.
+
+   OFFICE  FRAME -- This is a  frame  containing  all  the  FACE
+   Office  objects.   It  is  the  "active"  frame  upon  entering the
+   system.  It serves as a starting point  from  which  all  parts  of
+   FACE  can  be  accessed.  It is always present on the screen.
+   Each  of  the Office  menu  items  are described  in  detail in the
+   Office Overview item  of  the Help facility's Table of Contents.
+
+   WORK AREA -- This  is  the  middle  section  of  the  screen  where
+   FACE   frames are  displayed.  The  Office menu is located in
+   the far left corner of the Work Area.  The size of the Work Area is
+   determined by the size of the screen of your terminal.
+
+   MESSAGE LINE -- This is the line just  below  the  Work  Area.   It
+   displays  messages  giving  you  feedback  on  the  action  you are
+   performing  and explaining errors.  It is also  used in conjunction
+   with  the  COMMAND  LINE  to  prompt  you  for  more information to
+   complete an action you are performing.
+
+   COMMAND LINE -- This the line just below the Message Line.   It  is
+   the  place  where you type commands and their arguments.  This line
+   is  accessed by holding down the control key (CTRL) and typing z. A
+   --> prompt  will  appear.  The COMMAND  LINE is also used to prompt
+   you for additional  information  needed to perform a command.
+
+   FUNCTION  KEYS  -- These  labels  at  the  bottom   of  the  screen
+   correspond  to the keyboard function keys <F1> to <F8> supported on
+   many terminal keyboards.  The keys are pressed  to  accomplish  the
+   labeled  tasks.   The  labels  change  depending on what object  
+   is currently active.
+
+   If your terminal does not have function keys that are  usable  with
+   FACE   there   are   alternate  keystrokes  defined  in  your
+   FACE  User's  Guide.  Most of  the labeled functions are also
+   available through the Command menu or the COMMAND LINE.

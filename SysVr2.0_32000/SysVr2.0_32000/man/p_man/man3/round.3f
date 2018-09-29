@@ -1,0 +1,37 @@
+.TH ROUND 3F
+.SH NAME
+anint, dnint, nint, idnint \- \s-1FORTRAN\s+1 nearest integer functions
+.SH SYNOPSIS
+.nf
+.B "integer i"
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = anint(r1)"
+.B "i = nint(r1)"
+.P
+.B "dp2 = anint(dp1)"
+.B "dp2 = dnint(dp1)"
+.P
+.B "i = nint(dp1)"
+.B "i = idnint(dp1)"
+.SH DESCRIPTION
+.I Anint\^
+returns the nearest whole real number to its real argument (i.e., int(a+0.5)
+if a \(>= 0, int(a\-0.5) otherwise).
+.I Dnint\^
+does the same for its double-precision argument.
+.I Nint\^
+returns the nearest integer to its real argument.
+.I Idnint\^
+is the double-precision version.
+.I Anint\^
+is the generic form of
+.I anint\^
+and
+.I dnint ,
+performing the same operation and returning the data type of its argument.
+.I Nint\^
+is also the generic form of
+.I idnint.
+.\"	%W% of %G%

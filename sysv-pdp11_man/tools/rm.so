@@ -1,0 +1,30 @@
+DEBUG=OFF
+MANUAL=/usr/4.2man
+for sec in 1 2 3 4 5 6
+do
+	cd $MANUAL/u_man/man${sec}
+	for solink in *
+	do
+		firstline=`line < $solink`
+		case "$firstline" in
+			.so*)	if [ "$DEBUG" = ON ]; then echo $solink; fi
+				rm $solink ;;
+			* )	continue  
+		esac
+	done
+done
+
+for sec in 1 7 8
+do
+	cd $MANUAL/a_man/man${sec}
+	for solink in *
+	do
+		firstline=`line < $solink`
+		case "$firstline" in
+			.so*)	if [ "$DEBUG" = ON ]; then echo $solink; fi
+				rm $solink ;;
+			* )	continue  
+		esac
+	done
+done
+#	@(#)rm.so	5.2 of 5/19/82

@@ -1,0 +1,132 @@
+.TH RST 1M "3B20S only"
+.SH NAME
+rst \- restore unit to service after on-line diagnostics
+.SH SYNOPSIS
+.B /dgn/bin/rst
+name unit [ options ]
+.SH DESCRIPTION
+\fIRst\fP restores the device
+identified by
+\fIname\fP
+and \fIunit\fP into service
+according to the \fIoptions\fP
+specified.
+A device can be restored to service
+conditionally or unconditionally.
+By default, \fIrst\fP restores a device
+into service conditionally, unless the
+the option \fBucl\fP is specified.
+A conditional restore implies that diagnostics will
+first be performed, and the final
+results must be ATP (All Tests Passed)
+before the device will be restored to service.
+Otherwise the device is left out of service.
+If the device is restored unconditionally (i.e., \fBucl\fP option
+is specified), then no diagnostics are performed.
+.P
+The following \fIoptions\fP are
+recognized, each as a separate argument:
+.PP
+.PD 0
+.TP 10
+.B raw
+Print the diagnostic results
+of every phase and all failures.
+By default, only the final results
+and first five failures
+of each failing phase will be
+printed.
+.TP
+.B ucl
+Unconditionally restore the device
+specified by \fIname\fP and \fIunit\fP
+into service.
+Note this \fIoption\fP implies that
+no diagnostics will be performed.
+.TP
+.B tlp
+Executes the Trouble Location Procedure
+at the conclusion of the diagnostic.
+This procedure analyzes all diagnostic
+failures and generates a weighted
+list of faulty circuit packs.
+This \fIoption\fP must \fInot\fP
+be used in conjunction with
+.BR ucl .
+.TP
+\fBfile\fP=\fIfilename\fP
+Routes all output messages into a file named
+\fIfilename\fP instead of the user's
+terminal.
+\fIFilename\fP is opened for appending and
+is relative to the directory \fB/dgn/dgnc\fP
+unless a full pathname is specified.
+.TP
+.B cont
+This \fIoption\fP is only effective
+when \fIname\fP and \fIunit\fP is
+an Input-Output Processor (\s-1IOP\s+1).
+By default,
+.I rst
+will restore an \s-1IOP\s+1
+and its
+associated peripheral controllers
+(\s-1PC\s+1s)
+into service.
+Use of this \fIoption\fP restores only the \s-1IOP\s+1
+and \fInot\fP its \s-1PC\s+1s.
+Note that restoring a Disk File Controller (\s-1DFC\s+1) never
+implies restoring its Moving Head Disks (\s-1MHD\s+1s).
+.TP
+.BI hu= "name \|unit"
+This
+.I option
+allows a helper unit identified by
+.I name
+and 
+.I unit
+to be specified.
+For example,
+when diagnosing the magnetic tape controller (i.e.,
+.SM UN\*S32),
+a diagnostic test tape with a write ring must be
+mounted on the specified helper unit.
+The following example shows how one might invoke
+diagnostics using the helper unit option:
+.RS
+dgn \|un32 \|0 \|ph=5 \|hu=mt \|2
+.RE
+.SH EXAMPLES
+.P
+The following two examples show how one
+might invoke this command for
+either an unconditional or conditional restore,
+respectively.
+.RS
+.TP
+Example 1:
+rst dfc 1 ucl
+.br
+would restore the device \fBdfc 1\fP into service
+unconditionally.
+The option \fBucl\fP is the only
+valid \fIoption\fP for an unconditional restore request.
+.TP
+Example 2:
+rst dfc 1 raw tlp file=filename
+.br
+would restore the device \fBdfc 1\fP
+to service
+if all diagnostics results were ATP.
+The remaining \fIoptions\fP are applied
+as described above.
+.SH "SEE ALSO"
+dgn(1M),
+rmv(1M).
+.br
+.IR "3B DMERT Output Messages" ,
+OM-4C000-01.
+.SH WARNING
+Diagnostic commands are intended for use only by trained
+hardware maintenance personnel.
+.\"	@(#)rst.1m	5.2 of 5/18/82

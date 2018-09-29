@@ -1,0 +1,174 @@
+.TH LDOPEN 3X
+.SH NAME
+ldopen, ldaopen \- open a common object file for reading
+.SH SYNOPSIS
+.nf
+.ft B
+.ta \w'\s-1LDFILE\s+1\ \ \ 'u
+.B #include <stdio.h>
+.ie '\*p'' \{\
+.B #include <filehdr.h>
+.B #include <ldfcn.h> \}
+.el \{\
+.B #include "\s-1INCDIR\s+1\/filehdr.h"
+.B #include "\s-1INCDIR\s+1\/ldfcn.h" \}
+.PP
+.B \s-1LDFILE\s+1 \(**ldopen (filename, ldptr)
+.B char \(**filename;
+.B \s-1LDFILE\s+1 \(**ldptr;
+.PP
+.B \s-1LDFILE\s+1 \(**ldaopen (filename, oldptr)
+.B char \(**filename;
+.B \s-1LDFILE\s+1 \(**oldptr;
+.ft R
+.fi
+.DT
+.SH DESCRIPTION
+.I Ldopen
+and
+.ie '\*p'' \{\
+.IR ldclose (3X)
+\}
+.el \{\
+.IR ldclose (3L)
+\}
+are designed to provide uniform access to both simple object files and
+object files that are members of archive files.
+Thus an archive
+of common object files can be processed as if it were a series of
+simple common object files.
+.PP
+If 
+.I ldptr
+has the value
+.BR \s-1NULL\s+1\*S ,
+then 
+.I ldopen
+will open
+.I filename
+and allocate and initialize the
+.B \s-1LDFILE\s+1
+structure, and return a pointer to
+the structure to the calling program.
+.PP
+If
+.I ldptr
+is valid and if
+.BI \s-1TYPE\s+1( ldptr )
+is the archive magic number,
+.I ldopen
+will reinitialize the
+.BR \s-1LDFILE\s+1 " structure"
+for the next archive member of
+.IR filename .
+.PP
+.I Ldopen
+and
+.IR ldclose (3X)
+are designed to work in concert.
+.I Ldclose
+will return
+.B \s-1FAILURE\s+1
+only when
+.BI \s-1TYPE\s+1( ldptr )
+is the archive magic number and there is another file in the archive
+to be processed.
+Only then should
+.I ldopen
+be called with the current value of
+.IR ldptr .
+In all other cases,
+in particular whenever a new
+.I filename
+is opened,
+.I ldopen
+should be called with a
+.SM \fBNULL\fR
+.I ldptr
+argument.
+.PP
+The following is a prototype for the use of 
+.I ldopen
+and
+.IR ldclose (3X) .
+.PP
+.nf
+.ne 12
+.RS
+/\(** for each filename to be processed \(**/
+.PP
+ldptr = \s-1NULL\s+1;
+do
+{
+	if ( (ldptr = ldopen(filename, ldptr)) != \s-1NULL\s+1 )
+	{
+		/\(** check magic number \(**/
+		/\(** process the file \(**/
+	}
+} while (ldclose(ldptr) == \s-1FAILURE\s+1 );
+.fi
+.RE
+.PP
+If the value of
+.I oldptr
+is not
+.BR \s-1NULL\s+1\*S ,
+.I ldaopen
+will open
+.I filename
+anew and allocate and initialize a new
+.B \s-1LDFILE\s+1
+structure, copying the
+.BR \s-1TYPE\s+1 ", " \s-1OFFSET\s+1 ", and " \s-1HEADER\s+1"
+fields from
+.IR oldptr .
+.I Ldaopen
+returns a pointer to the new
+.BR \s-1LDFILE\s+1 " structure."
+This new pointer is independent of the old pointer,
+.IR oldptr .
+The two pointers may be used concurrently to read separate parts of
+the object file.
+For example,
+one pointer may be used to step sequentially through the relocation information,
+while the other is used to read indexed symbol table entries.
+.PP
+Both
+.I ldopen
+and
+.I ldaopen
+open
+.I filename
+for reading.
+Both functions return
+.SM \fBNULL\fR
+if
+.I filename
+cannot be opened, or if memory for the
+.B \s-1LDFILE\s+1
+structure cannot be allocated.
+A successful open does not insure that the given file is a common object
+file or an archived object file.
+\}
+.PP
+The program must be loaded with the object file access routine library
+.ie '\*p'' \{\
+.BR libld.a .
+\}
+.el \{\
+.BR \s-1LIBDIR\s+1\/libld.a
+\}
+.if !'\*p'' \{\
+.PP
+.IR Intro (4)
+describes
+.BR \s-1INCDIR\s+1  and  \s-1LIBDIR\s+1 .
+\}
+.SH SEE ALSO
+.ie '\*p'' \{\
+fopen(3S), ldclose(3X), ldfcn(4).
+\}
+.el \{\
+fopen(3S), ldclose(3X), intro(4), ldfcn(4), paths.h(4).
+\}
+.\"	%W% of %G%

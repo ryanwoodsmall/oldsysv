@@ -1,0 +1,16 @@
+
+\S control-d:  <control d> \S
+
+Control-d is a name for the "signal"\S*\S you send to the system when you
+hold down the control key and strike the letter "d" simultaneously.  Some
+texts represent control-d as <control d>. You use control-d to signal the
+system that you are finished giving input to a command.  When you are
+giving a command standard input through the terminal keyboard, every
+character you type is accepted as input.  When you type control-d, the
+shell interprets it as the "end of file"\S*\S.  Everything you typed
+after the command up until you typed the control-d is accepted as input.
+If you are not creating input for a command and you type control-d, you
+will be logged off of the system because the shell gets the message that
+there is no more input.
+
+\S*\S defined in the \Sglossary\S

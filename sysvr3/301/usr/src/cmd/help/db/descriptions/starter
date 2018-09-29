@@ -1,0 +1,15 @@
+
+\Sstarter\S:  Description
+
+Syntax Summary:  starter
+                 help starter
+
+Description:
+     \Sstarter\S provides general information about UNIX systems, and it is
+     one module of the UNIX system on-line help facility.  Use \Sstarter\S 
+     to get a list of UNIX system commands that beginners should learn first,
+     a list of important UNIX system documents, information about on-line
+     teaching aids available on the user's system, a list of education centers
+     where UNIX system training is offered, and information about your UNIX
+     system.  See also: help(1), glossary(1), and usage(1) for commands that
+     might be used with \Sstarter\S.

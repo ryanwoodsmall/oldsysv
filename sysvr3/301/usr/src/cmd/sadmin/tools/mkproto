@@ -1,0 +1,156 @@
+#ident	"@(#)sadmin:tools/mkproto	1.7"
+#	make a prototype file
+
+#	Usage:  mkproto [ -u<userid> ] [ -g<groupid> ] [ file ... ]
+#	file(s) contains or stdin is list of file names, one to a line.
+#	stdout is a proto file for the files names presented, which must exist.
+#	stderr lists files not found.
+#	If file names are absolute path names, the leading / is stripped in the
+#	proto file output.
+
+#!	chmod +x ${file}
+
+u=0
+g=3
+userid='\5'
+groupid='\6'
+
+blocks=1422
+inodes=200
+l=n
+l1=
+l2=
+
+while [ $# -gt 0 ]
+do
+	case $1 in
+	-g[0-9]* )
+		g=`expr "$1" : '-.\(.*\)'`
+		groupid=${g}
+		l1=yes
+		;;
+	-u[0-9]* )
+		u=`expr "$1" : '-.\(.*\)'`
+		userid=${u}
+		l2=yes
+		;;
+	-b[0-9]* )
+		blocks=`expr "$1" : '-.\(.*\)'`
+		;;
+	-i[0-9]* )
+		inodes=`expr "$1" : '-.\(.*\)'`
+		;;
+	-* )
+		echo >&2 "$0:  Illegal flag argument '$1'"
+		exit 1
+		;;
+	* )
+		break
+	esac
+	shift
+done
+
+if [ "${l1}" = yes  -a  "${l2}" = yes ]
+then	# kludge to make it work on prior to sVr3
+	l=l
+fi
+
+echo "/dev/null
+${blocks} ${inodes}
+d--755" ${u} ${g}
+sed '	s;//*;/;g
+	s/[ 	].*//' $*  |
+sort -u  |
+xargs ls -${l}d  |
+sed '
+	s;\(.\)\(...\)\(...\)\(...\)  *[0-9]* \([^ ]*\) *\([^ ]*\) *.* /*\(.*\);\7	\1 X-- A\2 B\3 C\4	'"${userid} ${groupid}"'	\7;
+	/ [AB][r-][w-]s/ {
+		/ A[r-][w-]s/ {
+			s/ X--/ Xu-/
+			s/\( A[r-][w-]\)s/\1x/
+		}
+		/ B[r-][w-]s/ {
+			s/\( X[u-]\)-/\1g/
+			s/\( B[r-][w-]\)s/\1x/
+		}
+	}
+	s/ X\([u-][g-]\)/\1/
+	s/ [ABC]---/0/g
+	s/ [ABC]--x/1/g
+	s/ [ABC]-w-/2/g
+	s/ [ABC]-wx/3/g
+	s/ [ABC]r--/4/g
+	s/ [ABC]r-x/5/g
+	s/ [ABC]rw-/6/g
+	s/ [ABC]rwx/7/g
+	/	d[u-][g-]/s/\(.*\)	[^ 	]*$/\1/
+	/	[-d][u-][g-]/{
+		s;^[^/]*/;	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+		s;^\(	*\)[^/	]*/;\1	;
+	}
+'  |
+awk '	#  figure out where the $ that closes a directory goes.
+BEGIN	{
+		FS = "\t"
+	}
+/./	{
+		putdollar = 0
+		for( i = 1; i < NF;  i++ ) {
+			if( $i ~ /./ )
+				break
+		}
+		curdepth = i
+		for( j = maxdepth;  j > curdepth;  j-- ) {
+			for( i = j;  --i; )
+				printf "\t"
+			print "$"
+		}
+		maxdepth = curdepth
+	}
+$0 ~ /	d--/	{
+		for( i = 1; i < NF;  i++ ) {
+			if( $i ~ /./ )
+				break
+		}
+		maxdepth = i + 1;
+	}
+	{
+		print
+	}
+END	{
+		for( j = maxdepth;  j > 1;  j-- ) {
+			for( i = j;  --i;  )
+				printf "\t"
+			print "$"
+		}
+		print "$"
+	}
+'

@@ -1,0 +1,20 @@
+menu="Print `basename $ARG3`"
+help=`message "Select Print Command to print $PRINT or Print Options to change defaults"`
+reread=`regex -v $PRACT "false" "false" ".*" "true"`
+`set -l PRACT=true`
+
+name=`echo $PRINCMD1 | cut -c1-40`
+description="Print Command #1"
+action=`set -l PRACT=false && run /bin/sh -c "$PRINCMD1 $ARG3"`
+
+name=`echo $PRINCMD2 | cut -c1-40`
+description="Print Command #2"
+action=`set -l PRACT=false && run  /bin/sh -c "$PRINCMD2 $ARG3"`
+
+name=`echo $PRINCMD3 | cut -c1-40`
+description="Print Command #3"
+action=`set -l PRACT=false && run /bin/sh -c "$PRINCMD3 $ARG3"`
+
+name=Print Options
+description="Change Print Options"
+action=OPEN FORM $VMSYS/OBJECTS/Form.prin

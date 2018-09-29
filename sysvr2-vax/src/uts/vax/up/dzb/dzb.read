@@ -1,0 +1,21 @@
+# @(#)dzb.read	6.1
+This software does DMA input and output to a DZ and executes on
+a KMC11-B.  Installation procedure follows:
+
+1) Install kmc program object in /lib:
+	/lib/cpp main.s | kasb -o /lib/dzkmcb.o 
+2) Install kmc load shell in /etc:
+	cp dzbload /etc
+3) Install dzbset command in /etc:
+	cp dzbset.c /etc
+3) Update /etc/brc
+  For example, add
+	/etc/dzbset /dev/kmc0 /dev/tty00 /dev/tty08 /dev/tty16 /dev/tty24
+	/etc/dzbload /dev/kmc0
+4) Update /etc/powerfail
+  For example, add 
+	/etc/dzbload /dev/kmc0
+5) Make nodes for kmc and dz lines
+	mknod /dev/kmc0 c X 0
+	mknod /dev/tty?? c Y Z
+	(see Setting up UNIX)

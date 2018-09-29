@@ -1,0 +1,14 @@
+#ident	"@(#)sadmin3b2:admin/menu/filemgmt/bupsched/DESC	2.2"
+#menu# backup reminder scheduling menu
+#head#				BACKUP REMINDER SCHEDULING
+#help#
+#help#	Backup scheduling is used to schedule backup reminder messages
+#help#	and backup reminder checks.  Backup reminder messages are
+#help#	sent to the console to remind the administrator to backup
+#help#	particular file systems when the machine is shutdown or a
+#help#	reminder check has been run during the specified time period.
+#help#
+#help#	Backup reminder checks specify particular times at which the
+#help#	system will check to see if any backup reminder messages
+#help#	have been scheduled.
+

@@ -1,0 +1,33 @@
+#ident	"@(#)initpkg:init.d/sysetup	1.3"
+
+#   This file contains system setup requirements for the system.
+  
+#   First, the ps_data file is always removed so that the ps command
+#   will be force to read the /unix file, since it may have recently
+#   been created.
+
+set `who -r`
+if [ $9 != "S" ]
+then
+	exit
+fi
+
+#   recreate /etc/ps_data
+
+rm -f /etc/ps_data
+/bin/ps >/dev/null 2>&1
+
+#   if the prtconf command exists, then, the system configuration
+#   is printed
+
+if [ -x /etc/prtconf ]
+then
+	/etc/prtconf
+fi
+
+#  If there are trademark files, print them.
+
+if [ -d /etc/tm ]
+then
+	cat /etc/tm/* 2> /dev/null
+fi

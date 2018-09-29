@@ -1,0 +1,63 @@
+
+   The  ORGANIZE command  allows  you  to change  the presentation of
+   objects in a folder.
+
+     1.  To use the ORGANIZE command choose one of the options  below.
+         If  a  frame  number is  not  specified the  currently active
+         frame is assumed.
+
+            - Command menu - Select ORGANIZE + RETURN
+
+            - COMMAND LINE - Type organize [frame_#]
+                               + RETURN
+
+     2.  Fill in the ORGANIZE form by entering your  preferences.  The
+         available values for each field are:
+
+         FOLDER DISPLAY TYPE:
+
+            - NAME AND DESCRIPTION (default value):  For each  object,
+              its name and description are displayed.
+
+            - NAME ONLY:  For each object, only the name is displayed.
+
+            - LONG  FORM:   For  each   object,   its   name,   object
+              description  (if  specified),  object type, and the date
+              and time the object was created/changed are displayed.
+
+         FOLDER DISPLAY ORDER:
+
+            - ALPHABETICAL  (default  value):  Names  beginning   with
+              numbers  are  displayed first, then names beginning with
+              capital letters, followed by names beginning with  lower
+              case letters.
+
+            - ALPHABETICAL BY DESCRIPTION:  All objects with the  same
+              description  are  grouped  together  and  alphabetically
+              sorted within each group.  The object description groups
+              are  also  ordered  alphabetically  (e.g.  File  Folders
+              before Standard Files).
+
+            - LEAST RECENT:  Objects least recently created or changed
+              are displayed first.
+
+            - MOST RECENT:  Objects most recently created  or  changed
+              are displayed first.
+
+     3.  Press SAVE to save the settings and close the ORGANIZE  form.
+         If the folder you are reorganizing is displayed on the screen
+         you will see the changes immediately.
+
+   The Function Keys provided with this form are (in addition to
+   PREV-FRM, NEXT-FRM, HELP and CMD-MENU):
+
+      - CANCEL - cancels the form frame without saving any changes.
+
+      - CHOICES - For  the  current  field,  pressing  CHOICES  either
+        toggles between the possible values for the field, or displays
+        a pop-up menu of available choices.
+
+      - SAVE - saves all entries and closes the form frame.
+
+      - RESET - resets the current field back to the value  in  effect
+        at the beginning of the current editing session.

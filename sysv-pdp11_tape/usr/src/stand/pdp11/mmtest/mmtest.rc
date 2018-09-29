@@ -1,0 +1,6 @@
+#	@(#)mmtest.rc	1.1
+as -o mmmch.o mmmch.s
+cc -c -O mmtest.c
+ld -o mmtest mmmch.o mmtest.o
+cp mmtest /stand
+rm -f mmtest *.o

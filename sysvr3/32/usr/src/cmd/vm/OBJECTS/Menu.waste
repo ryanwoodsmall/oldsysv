@@ -1,0 +1,50 @@
+menu=Objects Scheduled for Removal
+
+lifetime=shortterm
+
+altslks
+
+begrow=center
+begcol=center
+
+`set -l mes=""`
+close=`regex -v "$mes" '^$' || message "$mes"; message -p ""`
+
+`genfind -n $HOME/WASTEBASKET * any any ">${WASTEDAYS:-1}" | regex '(.*)$0;(.*)$1;(.*)$2;(.*)$3' '
+name=$m2
+lininfo=$m0
+description=$m3
+action=`genfind -n $HOME/WASTEBASKET * any any ">${WASTEDAYS:-1}" | regex \'^([^;]*)$0;.*$\' \$\m0"
+" | xargs rm -rf; set -l mes="Objects have been permanently removed from WASTEBASKET"`close' || echo init=false`
+
+name=CANCEL
+button=9
+action=close
+
+name=
+button=10
+action=badchar
+
+name=`message -p 'These objects in WASTEBASKET are due for removal, press RETURN to remove them'`
+button=11
+action=badchar
+
+name=`set -l mes="Objects remain in WASTEBASKET"`
+button=12
+action=badchar
+
+name=
+button=13
+action=badchar
+
+name=HELP
+button=14
+action=`message 'Hit RETURN to remove these objects, CANCEL to leave them in WASTEBASKET'`nop
+
+name=
+button=15
+action=badchar
+
+name=
+button=16
+action=badchar

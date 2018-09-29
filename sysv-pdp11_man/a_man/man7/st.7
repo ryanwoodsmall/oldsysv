@@ -1,0 +1,155 @@
+.TH ST 7
+.SH NAME
+st \- synchronous terminal interface
+.SH DESCRIPTION
+The synchronous terminal interface is a pseudo-device driver that enables
+a \s-1UNIX\s+1 System to communicate with
+\s-1TELETYPE\s+1\*R Model 4540 compatible \s-1ASCII\s+1 synchronous terminals.
+The driver utilizes the bottom half of the Virtual Protocol Machine
+(\s-1VPM\s+1)
+to perform the end-to-end protocol
+and transmission assurance for the synchronous line.
+.PP
+There are two modes of operation for synchronous terminals;
+application mode and line mode.
+In application mode,
+the user must be familiar with the operation of the Model 4540
+terminal.
+Screen management functions are completely controlled by the user process;
+when formating a screen, the user must supply everything from
+the initial \s-1STX\s+1 (Start-of-Text) character
+to the \s-1ETX\s+1 (End-of-Text) character.
+.PP
+In line mode,
+the basic screen management functions are handled by the driver to make the
+synchronous terminal usable as a login terminal for most of the standard
+.SM UNIX
+System
+commands.
+(Commands that put the terminal in raw mode or write any control characters
+to the screen will probably not work as expected.)\ 
+Writes to the terminal will be packaged in the necessary protocol so
+that only terminal operator input will be returned to the user process on a
+.IR read (2).
+See
+.IR stty (1)
+for details on setting these modes and other available options.
+.PP
+By convention,
+.B /dev/st?
+is the synchronous terminal control channel for communications line
+.BR ? .
+Communication with the control channel is handled by the
+.I stcntrl\^
+and
+.I stprint\^
+commands
+(see 
+.IR st (1M)).
+.PP
+A user process will sleep when trying to open a terminal
+channel,
+until a terminal requests service.
+At that time, a channel will be assigned to that terminal,
+and it will remain allocated until the user process
+closes the terminal.
+.PP
+A user process will not sleep when trying to open a printer channel.
+Printer channel connections are established by
+.I stprint\^
+and remain in effect until the associated communications line drops.
+.PP
+In addition to the synchronous terminal equipment,
+appropriate synchronous \s-1VPM\s+1 hardware
+is required.
+.SH FILES
+.br
+.ns
+.TP 15
+/lib/stscr
+synchronous terminal prototype script
+.br
+.ns
+.TP 15
+/dev/un53.?
+\s-1TN82/UN53\s+1 peripheral controller pair (3B20S only)
+.br
+.ns
+.TP 15
+/dev/kmc?
+\s-1KMC11-B\s+1 microprocessor (\s-1DEC\s+1 only)
+.br
+.ns
+.TP 15
+/dev/vpb?
+\s-1VPM\s+1 bottom half (\s-1DEC\s+1 only)
+.br
+.ns
+.TP 15
+/dev/st?
+synchronous terminal control channels
+.br
+.ns
+.TP 15
+/dev/tty\(**
+synchronous terminal user channels
+.br
+.ns
+.TP
+/dev/sp\(**
+synchronous printer user channels
+.PP
+In addition to the standard
+.I ioctl\^
+functions listed in
+.IR stermio (7),
+the commands defined in
+.B /usr/include/sys/stermio.h
+are provided with the following interfaces:
+.IP
+ioctl(stcontrolfd, \s-1STPRINT\s+1, device)
+.br
+char	device;
+.PP
+tells the driver that a printer is at the device address specified by
+.I device\^
+on the synchronous communications line associated with
+.IR stcontrolfd .
+The return value is the minor device number associated with the printer.
+A \-1 is returned if the association can't be made.
+(Too many printers are already associated or the communications line is not
+connected.)
+.IP
+ioctl(stcontrolfd, \s-1VPMSDEV\s+1, arg);
+.PP
+will assign \s-1VPM\s+1 minor device number
+.I arg\^
+to the line associated with
+.IR stcontrolfd .
+.IP
+ioctl(stcontrolfd, \s-1STSTART\s+1);
+.PP
+tells the driver to start up the line associated with
+.IR stcontrolfd .
+If this is the first line started,
+buffer space will be allocated from physical memory for use by all lines.
+.IP
+ioctl(stcontrolfd, \s-1STHALT\s+1);
+.PP
+tells the driver to stop the line associated with
+.IR stcontrolfd .
+If this is the last active line,
+the buffer space allocated on the first
+.SM STSTART
+will be returned to the system.
+.IP
+ioctl(stfd, \s-1STWLINE\s+1);
+.PP
+returns the synchronous communications line number associated with the
+terminal,
+printer,
+or control channel file descriptor
+.IR stfd .
+.SH "SEE ALSO"
+st(1M), kmc(7), stermio(7), trace(7), un53(7), vpm(7).
+.\"	@(#)st.7	5.2 of 5/18/82

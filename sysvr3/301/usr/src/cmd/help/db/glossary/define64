@@ -1,0 +1,23 @@
+
+\S shell variable:  export:  exported variable \S
+
+A shell variable is a named location in the computer's memory for storing a
+"string"\S*\S of characters for use in a "shell program"\S*\S.  By
+convention, shell variables are named in capital letters. Some shell
+variables in the UNIX system, e.g. "HOME"\S*\S, are created by the system
+when you log in.  These shell variables make up your environment so they
+are also called environment variables.  You can also create shell variables
+as you need them.
+
+When you create a shell variable, it is only accessible to the current
+shell.  To make a variable accessible to other shells you create, you need
+to "export" the variable. To do this you type
+
+         export USER
+
+where USER is the name of a shell variable you created.  USER becomes an
+exported variable which is a shell variable that is accessible to all shell
+processes created by the current shell.  (see also:  shell, shell language,
+and shell program)
+
+\S*\S defined in the \Sglossary\S

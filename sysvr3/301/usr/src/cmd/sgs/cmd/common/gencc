@@ -1,0 +1,141 @@
+#ident	"@(#)sgs-cmd:common/gencc	1.1"
+#
+#	TEMPLATE FOR THE FRONT-END TO CC
+
+# This shell script creates the front-end to the cc command.  It should be run
+# in the same directory where the front-end to cc is going to reside.  The front-end
+# to cc is a one line shell script which calls the executable cc command
+# with the appropriate '-Y' options.  This shell script will be given the same
+# name as the executable cc.  Therefore, the front-end to cc and the executable
+# cc command can not exist in the same directory when using this shell script.
+# A logical place to put the executable cc command is the same directory where
+# other tools which are not called directly are placed (E.g., /lib).
+
+
+# ABSOLUTE PATHNAME FOR THE EXECUTABLE CC
+cont="T"
+while [ "$cont" = "T" ]
+do
+	echo "Enter the absolute pathname of the current executable cc: \c"
+	x=`line`
+	dir=`dirname "$x"`
+	if [ "$dir" != `pwd` -a "$dir" != "." ]
+	then
+		cont="F"
+	else
+		echo "Executable cc cannot be in current directory. Try again.\n"
+	fi
+done
+CC="$x"
+
+
+# DEFINE THE LOCATIONS OF THE VARIOUS PIECES OF THE SGS
+
+echo "\nHit RETURN in response to any of the following questions if you wish\nto use the default value.\n"
+
+# OPTION SPECIFYING DIRECTORY CONTAINING PREPROCESSOR
+echo "Enter absolute pathname of the directory containing the preprocessor: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	CPPOPT=""
+else
+	CPPOPT="-Y p,$x"
+fi
+
+# OPTION SPECIFYING DIRECTORY CONTAINING COMPILER
+echo "Enter absolute pathname of the directory containing the compiler: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	COMPOPT=""
+else
+	COMPOPT="-Y 0,$x"
+fi
+
+# OPTION SPECIFYING DIRECTORY CONTAINING OPTIMIZER
+echo "Enter absolute pathname of the directory containing the optimizer: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	OPTOPT=""
+else
+	OPTOPT="-Y 2,$x"
+fi
+
+# OPTION SPECIFYING DIRECTORY CONTAINING ASSEMBLER
+echo "Enter absolute pathname of the directory containing the assembler: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	ASOPT=""
+else
+	ASOPT="-Y a,$x"
+fi
+
+# OPTION SPECIFYING DIRECTORY CONTAINING LINK-EDITOR
+echo "Enter absolute pathname of the directory containing the link-editor: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	LDOPT=""
+else
+	LDOPT="-Y l,$x"
+fi
+
+# OPTION SPECIFYING DIRECTORY CONTAINING BASICBLK
+echo "Enter absolute pathname of the directory containing basicblk (if it exists): \c"
+x=`line`
+if [ -z "$x" ]
+then
+	BBOPT=""
+else
+	BBOPT="-Y b,$x"
+fi
+
+# OPTION SPECIFYING DIRECTORY CONTAINING START-UP ROUTINES
+echo "Enter absolute pathname of the directory containing start-up routines: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	SUPOPT=""
+else
+	SUPOPT="-Y S,$x"
+fi
+
+# OPTION SPECIFYING DEFAULT INCLUDE DIRECTORY
+echo "Enter absolute pathname of the default include directory: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	INCOPT=""
+else
+	INCOPT="-Y I,$x"
+fi
+
+# OPTION SPECIFYING DEFAULT LIB DIRECTORY
+echo "Enter absolute pathname of the first default lib directory: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	LIBOPT=""
+else
+	LIBOPT="-Y L,$x"
+fi
+
+# OPTION SPECIFYING DEFAULT LIB DIRECTORY
+echo "Enter absolute pathname of the second default lib directory: \c"
+x=`line`
+if [ -z "$x" ]
+then
+	LLIBOPT=""
+else
+	LLIBOPT="-Y U,$x"
+fi
+
+
+# CREATE THE FRONT-END TO CC
+echo "Creating the front-end to cc"
+base=`basename $CC`
+echo "$CC $CPPOPT $COMPOPT $OPTOPT $ASOPT $LDOPT $BBOPT $SUPOPT $INCOPT $LIBOPT $LLIBOPT \"\$@\"" > $base
+chmod ugo+x $base

@@ -1,0 +1,9 @@
+dnl	#ident	"@(#)m4:m4.test4	1.3"
+aaaaa
+divert(1)
+1111111
+divert
+divert(-1)
+undivert
+divert
+zzzzz

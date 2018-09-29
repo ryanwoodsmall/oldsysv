@@ -1,0 +1,11 @@
+
+\Scmp\S:  Options
+
+     -l   lists the output in three columns.  In the first column is the byte
+          number where the difference between the files occurs.  In the second
+          and third columns are the octal representations of the two characters
+          that differ.
+
+     -s   changes the exit status:  0 means the files are identical, 1 means the
+          files differ, and  2 means the files are omitted or are not
+          accessible.  With this option \Scmp\S produces no output.

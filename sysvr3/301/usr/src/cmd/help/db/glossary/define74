@@ -1,0 +1,18 @@
+
+\S compiler:  link editor:  loader:  interpreter \S
+
+Before you can execute a program that you write, the UNIX system translates
+it so the computer can understand it.  A compiler changes the "high-level 
+language"\S*\S instructions in your program, which is the "source code"\S*\S,
+into "machine language"\S*\S instructions, which is the "object code"\S*\S.
+A link editor, or loader, then combines "object files"\S*\S that are 
+necessary to make a complete working program.  The result is an "a.out 
+file"\S*\S. Link editing is automatically done when you compile your program 
+on UNIX systems. You can link edit without compiling with the ld(1) command.
+
+UNIX system shell is an interpreted language which means that it does not
+need to be compiled.  A shell program is translated and executed from the
+source code by an interpreter.  The interpreter does not create object code
+or an a.out file. It executes each line of the shell program one at a time.
+
+\S*\S defined in the \Sglossary\S

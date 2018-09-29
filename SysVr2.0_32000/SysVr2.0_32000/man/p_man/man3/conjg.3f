@@ -1,0 +1,17 @@
+.TH CONJG 3F
+.SH NAME
+conjg, dconjg \- \s-1FORTRAN\s+1 complex conjugate intrinsic function
+.SH SYNOPSIS
+.nf
+.B "complex cx1, cx2"
+.B "double complex dx1, dx2"
+.P
+.B "cx2 = conjg(cx1)"
+.P
+.B "dx2 = dconjg(dx1)"
+.SH DESCRIPTION
+.I Conjg\^
+returns the complex conjugate of its complex argument.
+.I Dconjg\^
+returns the double-complex conjugate of its double-complex argument.
+.\"	%W% of %G%

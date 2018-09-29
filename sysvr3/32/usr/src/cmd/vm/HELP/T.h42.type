@@ -1,0 +1,32 @@
+
+   File objects are the containers for your work.  Just as the  normal
+   office  uses  filecabinets, folders, and files, FACE uses the
+   same objects.
+
+   A file object is a named object that contains one  piece  of  work.
+   The  following list describes the various types of file objects you
+   can create or store.
+
+      - Standard File -- Contains an ascii text  document.   When  you
+        open a Standard File your default editor will be invoked.
+
+      - Foreign File -- This  type file can be copied, renamed, moved,
+        etc. but  cannot be viewed  or edited.  It  is usually  a file
+        from another computer system that is incompaible with the UNIX
+        operating  System, (e.g., an  MS-DOS file).  Typically, a user
+        would  want to  store this  type of  object in the filecabinet
+        only  temporarily  before  transferring  it to the appropriate
+        computer system (e.g., PC).
+
+      - Data File -- This  type  of  file's  contents  are  in  binary
+        format, which can not be viewed, printed or edited.  It can be
+        copied, moved, deleted, etc.
+
+      - Executable -- This  type  of  file  will  contain  a  computer
+        program.   Opening  this  type of object will execute or "run"
+        the  program.  The  screen clears and  the output is displayed
+        and you must press 'RETURN' to continue FACE.
+
+   Excluding the exceptions noted above, a file object can be created,
+   copied,  deleted,  moved,  opened, redescribed,  renamed,  and have 
+   its security changed.

@@ -1,0 +1,36 @@
+#ident "@(#)pkg.lp:lp/setup2	1.5"
+#
+#  setup2 dev
+#
+#	This procedure will modify /etc/inittab so that "tty" will be usable
+#	by the lp system as a hardwired printer port.
+#
+
+#
+# Modify entry in /etc/inittab
+# (either there from the beginning or added with ports board)
+#
+
+if
+	[ "${1:?}" = "/dev/contty" ]
+then
+	num=ct
+	tty=contty
+else
+	tty="`expr $1 : '.*\(tty[0-9][0-9]\)\$'`"
+	num=`expr "$tty" : '.*\(..\)'`
+fi
+ed - /etc/inittab <<-!End
+	H
+	g/^$num:/s/ *#.*//\\
+	s/:respawn:/:off:/\\
+	s/\$/ # Dedicated lp printer port/
+	w
+	q
+!End
+
+#
+# Tell /etc/init to look at /etc/inittab again.
+#
+
+/etc/init q

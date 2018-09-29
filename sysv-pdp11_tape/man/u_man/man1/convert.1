@@ -1,0 +1,71 @@
+.TH CONVERT 1 "not on PDP-11" 
+.SH NAME
+convert \- convert object and archive files to common formats
+.SH SYNOPSIS
+.B convert
+infile outfile
+.SH DESCRIPTION
+.PP
+.I Convert
+transforms input
+.I infile
+to output
+.IR outfile .
+.I Infile
+must be different from
+.IR outfile .
+.I Infile 
+may be any one of the following:
+.RS
+.TP
+1)
+a pre\-\s-1UNIX\s+1 System 5.0 \s-1VAX\s+1 object file or link edited (a.out) module
+.TP
+2)
+a pre\-\s-1UNIX\s+1 System 5.0 \s-1VAX\s+1 archive of object files or link edited (a.out) modules
+.TP
+3)
+a pre\-\s-1UNIX\s+1 System 5.0 \s-13B20S\s+1 archive of object files or link edited (a.out) modules.
+.RE
+.PP
+.I Convert 
+will transform \fIinfile\fP to one of the following:
+.RS
+.TP
+1)
+an equivalent \s-1UNIX\s+1 System 5.0 \s-1VAX\s+1 object file or link edited (a.out) module
+.TP
+2)
+an equivalent \s-1UNIX\s+1 System 5.0 portable archive of equivalent
+object files or link edited (a.out) modules
+.TP
+3)
+an equivalent \s-1UNIX\s+1 System 5.0 portable archive of unaltered
+3B20S object files or link edited (a.out) modules.
+.RE
+.PP
+All other types of input to the
+.IR convert (1)
+command will be passed unmodified from the input file to the output file (along
+with appropriate warning messages).
+When transforming archive files, the 
+.IR convert (1)
+command will inform the user that the archive symbol table has been deleted.
+The archive symbol table may be restored by executing the
+.IR ar (1)
+command with the 
+.B s
+option.
+.PP
+The
+.I convert
+command may be used in conjunction with the
+.IR arcv (1)
+command to transform archives generated
+on a \s-1PDP\s+1-11 to the \s-1UNIX\s+1 System 5.0
+archive format for usage on a 3B20S or \s-1VAX\s+1 processor.
+.SH FILES
+/tmp/conv\(**
+.SH "SEE ALSO"
+ar(1), arcv(1), a.out(4), ar(4).
+.\"	@(#)convert.1	5.2 of 5/18/82

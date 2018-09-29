@@ -1,0 +1,36 @@
+#ident	"@(#)pkg.nsu:unsetup	1.2"
+#
+#	Unsetup script for AT&T NSU Package for AT&T 3B2 Computer.
+#
+
+#
+# Remove the NSU self-configuring drivers.
+#
+
+DRVPATH=/etc/master.d
+/etc/drvinstall -u -f -m $DRVPATH/clone -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/log -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/timod -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/tirdwr -v 1.0
+
+rm -rf /dev/log
+
+ed - /etc/master.d/kernel <<!
+/^NSTREAM/s/= [0-9][0-9]*$/= 0/
+/^NQUEUE/s/= [0-9][0-9]*$/= 0/
+/^NMUXLINK/s/= [0-9][0-9]*$/= 0/
+/^NSTREVENT/s/= [0-9][0-9]*$/= 0/
+/^NBLK4096/s/= [0-9][0-9]*$/= 0/
+/^NBLK2048/s/= [0-9][0-9]*$/= 0/
+/^NBLK1024/s/= [0-9][0-9]*$/= 0/
+/^NBLK512/s/= [0-9][0-9]*$/= 0/
+/^NBLK256/s/= [0-9][0-9]*$/= 0/
+/^NBLK128/s/= [0-9][0-9]*$/= 0/
+/^NBLK64/s/= [0-9][0-9]*$/= 0/
+/^NBLK16/s/= [0-9][0-9]*$/= 0/
+/^NBLK4/s/= [0-9][0-9]*$/= 0/
+w
+q
+!
+
+/etc/mkboot -k /boot/KERNEL

@@ -1,0 +1,35 @@
+#ident	"@(#)nlp:terminfo/495qume.ti	1.5"
+#01-07-88
+
+495qume|att495qume|AT&T 495 qume emulation,
+
+
+	bufsz#1024,
+	cols#80,
+	lines#63,
+	orc#12,
+	orhi#120,
+	orl#8,
+	orvi#48,
+	cps#800,
+
+	cr=^M,
+	chr=%?%p1%{0}%>%p1%{127}%<%&%t\E\037%p1%{1}%+%c%;,
+	cud1=^J,
+	cuf1=\s,
+	cvr=%?%p1%{0}%>%p1%{127}%<%&%t\E\036%p1%{1}%+%c%;,
+	ff=^L,
+	hpa=%?%p1%{100}%<%t\EC%p1%02d%e%p1%{110}%<%t\ECA%p1%{100}%-%d%e%p1%{120}%<%t\ECB%p1%{110}%-%d%e%p1%{130}%<%t\ECC%p1%{120}%-%d%e%p1%{140}%<%t\ECD%p1%{130}%-%d%e%p1%{150}%<%t\ECE%p1%{140}%-%d%e%p1%{160}%<%t\ECF%p1%{150}%-%d%;,
+#Set to 10 CPI
+
+	is2=\E[0~\E[11~\E\037^M,
+	lpi=%?%p1%{2}%=%t\EL24%e%p1%{3}%=%t\EL16%e%p1%{4}%=%t\EL12%e%p1%{6}%=%t\EL08%e%p1%{8}%=%t\EL06%e%p1%{12}%=%t\EL04%;,
+	rmul=\EJ,
+	smul=\EI,
+	smgb=\E-,
+	smgl=\E9,
+	smgr=\E0,
+	smgt=\E+,
+#Set form length
+	u9=%?%p1%{128}%<%t\EF%p1%02d%;,
+	vpa=%?%p1%{100}%<%t\EP%p1%02d%e%p1%{110}%<%t\EPA%p1%{100}%-%d%e%p1%{120}%<%t\EPB%p1%{110}%-%d%e%p1%{130}%<%t\EPC%p1%{120}%-%d%e%p1%{140}%<%t\EPD%p1%{130}%-%d%e%p1%{150}%<%t\EPE%p1%{140}%-%d%e%p1%{160}%<%t\EPF%p1%{150}%-%d%;,

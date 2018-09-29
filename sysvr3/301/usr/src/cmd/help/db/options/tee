@@ -1,0 +1,6 @@
+
+\Stee\S: Options
+
+     -a   appends output to <file_name> rather than overwriting.
+
+     -i   ignores interrupt signals.

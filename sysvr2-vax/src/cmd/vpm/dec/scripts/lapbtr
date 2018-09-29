@@ -1,0 +1,12 @@
+#	lapbtr 1.1 of 9/28/81
+#	@(#)lapbtr	1.1
+define(TRACE,ifdef(`TRACEON',{U = $1|$2; trace(U,$3);}))
+define(TSEQ,	0)
+define(TSTART_T1,	040)
+define(TSTOP_T1,	0100)
+define(TXMT,	0140)
+define(TRCV,	0200)
+define(TNOBUF,	0240)
+define(TOSTATE,	0300)
+define(TNSTATE,	0340)
+define(TDSCFRM,	020)

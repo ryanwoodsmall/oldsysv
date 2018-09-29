@@ -1,0 +1,44 @@
+
+\Sbatch\S:  Examples
+
+    The following is an example of how you can execute a command using
+    \Sbatch\S    \Sbatch\S.  If you type \Sbatch\S and a carriage return,
+    \Sbatch\S waits for a command from standard input.
+
+        \Sbatch\S
+
+    Then if you want to format a file, you type:
+
+
+        \S mm -r08 -Tlp -c chapter1 > format.ch1 \S.
+
+    \Sbatch\S waits for more input until you type a control character and the
+    letter "d" simultaneously.
+
+        \S control-d \S
+    
+    \Sbatch\S prints the job number, and executes the command when the
+    system's work load is not heavy.  You will receive a message through 
+    mail(1) when the job is finished.
+
+        job 465053081.b at Wed Sept 26 09:21:41 1984
+
+    ----------------------------------------------------------------------
+
+        batch shtrue
+
+    "shtrue" is an executable file.  \Sbatch\S assigns a job number and
+    executes the file as the system load permits.  You receive the output of
+    the program through the mail(1).
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+        batch < test.file
+
+    "test.file" is a file of commands. \Sbatch\S assigns a job number and
+    waits to execute the commands when the system load permits.  You receive
+    the output of the commands through mail(1).

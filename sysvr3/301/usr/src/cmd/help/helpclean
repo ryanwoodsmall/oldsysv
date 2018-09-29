@@ -1,0 +1,7 @@
+#ident	"@(#)help:helpclean	1.4"
+ROOT=
+HELP="${ROOT}/usr/lib/help"
+
+rm -f ${HELP}/oHELPLOG
+cp ${HELP}/HELPLOG ${HELP}/oHELPLOG
+> ${HELP}/HELPLOG

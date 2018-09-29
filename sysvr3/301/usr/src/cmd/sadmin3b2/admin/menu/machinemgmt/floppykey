@@ -1,0 +1,43 @@
+#ident	"@(#)sadmin3b2:admin/menu/machinemgmt/floppykey	1.3"
+#menu# create a "floppy key" removable disk
+#help# 
+#help#	The "floppy key" removable disk allows you to enter firmware mode
+#help#	if you have changed the firmware password and then forget what it is.
+#help#	Thus the "floppy key" is just that, the "key" to your system and
+#help#	should be protected as such.
+echo '
+Creating a floppy key requires you to take the system down and perform
+a procedure found in the firmware monitor.  We will tell you what to do and
+then take the system down for you.  You will then have to type the commands we
+told you about.  The instructions are also in Chapter 4 of the Owner/Operator
+Manual, "Making A Floppy Key" should you forget what we told you here.
+You will need a floppy that is already formatted.  If you do not have one,
+quit this procedure and issue the command:
+		sysadm format
+'
+trap 'exit 0' 1 2  15
+checkyn -f -k$$ -qq \
+	'
+(You will have another chance to abort this procedure.)
+Do you want to take the system down and create a "floppy key"?'  ||
+	exit 0
+echo '
+Be sure the floppy removable disk IS NOT WRITE PROTECTED!!
+After these instructions, you will start the "firmware" procedure.  After
+		SELF-CHECK
+		FIRMWARE MODE
+appear you should type the firmware password, which is
+		mcp
+if you have not changed it.  To the message
+		Enter name of program to execute:
+answer
+		newkey
+Follow the printed instructions.  
+When the "Enter name of program to execute:" message reappears:
+	<>	REMOVE THE DISK!!!
+	<>	Press the OFF switch to turn off the power.
+	<>	Press ON to restart UNIX.
+We will now start the sequence to take the machine to firmware.  Type  q
+to the next question to quit this whole process.
+'
+. `find ${MENUTOP:?} -name firmware -print`

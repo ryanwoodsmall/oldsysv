@@ -1,0 +1,27 @@
+#ident	"@(#)initpkg:init.d/RMTMPFILES	1.1"
+#	Clean up temporary files.
+
+set `who -r`
+if [ $9 != "S" ]
+then
+	exit
+fi
+
+#  clean up /tmp
+rm -rf /tmp
+mkdir /tmp
+chmod 777 /tmp
+chgrp sys /tmp
+chown sys /tmp
+
+#  clean up /usr/tmp
+if [ -d /usr/tmp  -o  -d /usr/bin ]
+then	#	Conditional, so we won't make /usr/tmp if /usr file system
+	#	did not mount successfully.  We check for /usr/bin in case
+	#	/usr/tmp disappeared unexpectedly.
+	rm -rf /usr/tmp
+	mkdir /usr/tmp
+	chmod 777 /usr/tmp
+	chgrp sys /usr/tmp
+	chown sys /usr/tmp
+fi

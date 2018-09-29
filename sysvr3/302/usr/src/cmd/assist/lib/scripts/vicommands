@@ -1,0 +1,51 @@
+705 0 0 75
+                      SUMMARY OF VI COMMANDS
+
+CURSOR MOVING COMMANDS              ADDING TEXT COMMANDS
+SPACE .. forward one character      i ..... insert text to cursor left
+<BS> ... backward one character     a ..... add text to cursor right
+j ...... jump-down one line         o ..... open line below current line
+k ...... kick-up one line           O ..... open line above current line
+w ...... word forward
+b ...... backward-word              <BS>... erase characters in input mode
+6k ..... move down 6 lines          <ESC>.. Stop inputting text; return to
+4b ..... move back 4 words                    command level of vi
+
+DELETING COMMANDS                   WRITING AND QUITTING
+x ...... x-out character            :w<CR> ... save (write) changes
+dw ..... delete word                :q<CR> ... quit vi
+dd ..... delete entire line         :q!<CR> .. quit vi without saving the 
+3x ..... delete (x-out) 3 chars                  changes made since the last
+6dw .... delete 6 words                          write command
+4dd .... delete 4 lines            
+                                    SETTING vi OPTIONS
+UNDO COMMAND                        :set nu<CR> ..... line numbering on
+u ...... undo last editing change   :set nonu<CR> ... line numbering off
+u ...... redo (undo last undo)      :set smd<CR> .... show mode option on
+706 
+34 alt
+2 1 0
+700 r79
+2 11 0
+700 r79
+2 2 34
+700 d21
+2 19 0
+700 r34
+2 18 35
+700 r40
+35 alt
+2 23 0
+30 
+3 -->
+31 
+8 1000 1001 Strike the RETURN key to continue  
+25 
+15 
+20 
+256 13 32
+200 1
+245 10000
+32 
+20 
+250 

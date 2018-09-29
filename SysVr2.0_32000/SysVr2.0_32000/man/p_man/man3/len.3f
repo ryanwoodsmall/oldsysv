@@ -1,0 +1,14 @@
+.TH LEN 3F
+.SH NAME
+len \- return length of \s-1FORTRAN\s+1 string
+.SH SYNOPSIS
+.nf
+.B "character\(**N ch"
+.B "integer i"
+.P
+.B "i = len(ch)"
+.SH DESCRIPTION
+.I Len\^
+returns the length of string
+.IR ch .
+.\"	%W% of %G%

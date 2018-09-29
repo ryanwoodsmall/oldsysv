@@ -1,0 +1,16 @@
+/bin/make
+/etc/install
+/usr/bin/mcs
+/usr/bin/sdb
+/usr/lib/sdbp
+/usr/lib/sdbs
+/usr/bin/lex
+/usr/bin/prof
+/usr/bin/yacc
+/usr/lib/libg.a
+/usr/lib/libl.a
+/usr/lib/liby.a
+/usr/lib/yaccpar
+/usr/lib/lex/ncform
+/usr/lib/lex/nrform
+/usr/options/esg.name

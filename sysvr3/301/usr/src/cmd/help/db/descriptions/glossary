@@ -1,0 +1,18 @@
+
+\Sglossary\S:  Description
+
+Syntax Summary:  glossary [term]
+                 help glossary [term]
+
+         where:  term  is a technical term or symbol with
+                       special meaning to the UNIX system.
+Description:
+     \Sglossary\S is the dictionary for the UNIX system on-line help
+     facility. Use \Sglossary\S to find definitions for technical terms that
+     are important to the UNIX system, and definitions for special characters
+     and symbols used in the UNIX system and its documentation.  Without an
+     option, \Sglossary\S prints a list showing the contents of the glossary,
+     and a menu from which definitions can be requested.  \Sglossary\S
+     followed by <term> prints the definition for that term.  See also: 
+     help(1), starter(1), locate(1), and usage(1) for commands that might be
+     used with glossary.

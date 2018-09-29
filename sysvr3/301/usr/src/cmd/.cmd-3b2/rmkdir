@@ -1,0 +1,21 @@
+#ident	"@(#)cmd-3b2:rmkdir	1.2"
+#
+# rmkdir
+#
+# Recursively make directories.
+#
+
+set -ue
+myname=${0}
+
+for dir
+do
+	if [ ! -d "${dir}" ]
+	then
+		${myname} "`ignore expr \
+			${dir-.}'/' : '\(/\)[^/]*/$' \
+			\| ${dir-.}'/' : '\(.*[^/]\)//*[^/][^/]*//*$' \
+			\| .`"
+		mkdir "${dir}"
+	fi
+done

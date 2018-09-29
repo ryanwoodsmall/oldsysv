@@ -1,0 +1,11 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/status/service	1.3"
+## IDOC:   SCREEN 2.56: STATUS OF PRINT SERVICE
+#menu# Display status of print service
+
+##+++ (help _H146)
+#help#        You use the "service" command in the "status" menu  to  find
+#help#        out if the LP Print Services are currently running.
+##--- (help _H146)
+
+echo
+lpstat -r

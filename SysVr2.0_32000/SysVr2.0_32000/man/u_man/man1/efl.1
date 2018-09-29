@@ -1,0 +1,149 @@
+.TH EFL 1
+.SH NAME
+ef\&l \- Extended \s-1FORTRAN\s+1 Language
+.SH SYNOPSIS
+.B ef\&l
+[ options ]
+[ files ]
+.SH DESCRIPTION
+.I Ef\&l\^
+compiles a program written in the
+.SM EFL
+language into clean \s-1FORTRAN\s+1
+on the standard output.
+.I Ef\&l\^
+provides the C-like control constructs of
+.IR ratfor (1):
+.RS
+.TP
+statement grouping with braces.
+.TP
+decision-making:
+.BR if ,
+.BR if - else ,
+and
+.BR select - case
+(also known as
+.BR switch - case );
+.br
+.BR while ,
+.BR for ,
+\s-1FORTRAN\s+1
+.BR do ,
+.BR repeat ,
+and
+.BR repeat " .\|.\|. " until
+loops;
+.br
+multi-level
+.B break
+and
+.BR next .
+.RE
+.PP
+.SM EFL
+has C-like data structures, e.g.:
+.RS
+.TP
+struct
+.nf
+{
+integer \|flags(3)
+character(8) \|name
+long \|real \|coords(2)
+} \|table(100)
+.fi
+.RE
+.PP
+The language offers generic functions,
+assignment operators
+.RB ( += ,
+.BR &= ,
+etc.), and
+sequentially evaluated logical operators
+.RB ( &&
+and
+.BR \(bv\(bv\^ ).
+There is a uniform input/output syntax:
+.IP
+write(6,x,y\f3:\fPf(7,2), \|do \|i=1,10 \|{ \|a(i,j),z\f3.\fPb(i) \|}\|)
+.PP
+.SM EFL
+also provides
+some syntactic ``sugar'':
+.RS
+.TP
+free-form input:
+multiple statements per line; automatic continuation;
+statement label names (not just numbers).
+.TP
+comments:
+.B #
+this is a comment.
+.TP
+translation of relational and logical operators:
+.BR > ,
+.BR >= ,
+.BR & ,
+etc., become
+.BR \&.\s-1GT\s+1. ,
+.BR \&.\s-1GE\s+1. ,
+.BR \&.\s-1AND\s+1. ,
+etc.
+.TP
+return expression to caller from function:
+.BI "return (" expression )\fR
+.TP
+defines:
+.br
+.B define
+.I name replacement\^
+.TP
+includes:
+.br
+.B include
+.I file\^
+.RE
+.PP
+.I Efl\^
+understands several option arguments:
+.B \-w
+suppresses warning messages,
+.B \-#
+suppresses comments in the generated program,
+and the default option
+.B \-C
+causes comments to be included in the generated program.
+.PP
+An argument with an embedded
+.B =
+(equal sign)
+sets an
+.SM EFL
+option
+as if it had appeared in an
+.B option
+statement at the start of the program.
+Many options are described in the reference manual.
+A set of defaults for a particular target machine may be selected
+by one of the choices:
+.BR "system=unix" ,
+.BR "system=gcos" ,
+or
+.BR "system=cray" .
+The default setting of the
+.B system
+option is the same as the machine the compiler is running on.
+.PP
+Other specific options determine the style of input/output,
+error handling, continuation conventions, the number of characters packed
+per word, and default formats.
+.PP
+.I Ef\&l\^
+is best used with
+.IR f77 (1).
+.SH SEE ALSO
+cc(1),
+f77(1),
+ratfor(1).
+.\"	@(#)efl.1	6.2 of 9/2/83

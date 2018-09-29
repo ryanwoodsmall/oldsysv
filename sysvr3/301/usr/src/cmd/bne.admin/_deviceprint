@@ -1,0 +1,28 @@
+#ident	"@(#)bne.admin:_deviceprint	2.6"
+#
+#	This internal program prints device entries in
+#	user readable form
+
+if [ "$5" = "direct" ]; then
+	TYPE="Direct"
+else
+	TYPE=$1
+fi
+
+#	don't print protocol subfield (for TLI device)
+TYPE="`echo $TYPE | sed -e 's%,.*%%'`"
+
+echo "
+CALLER TYPE:	$TYPE
+PORT NAME:	$2
+SPEED:		$4"
+
+if [ -n "$5" ]; then
+	case $5 in
+	801) echo "DIALER PORT:	$3"
+	     echo "DEVICE TYPE:	$5" ;;
+	ventel|penril|hayes|att2212c|att2224|att4000)
+	     echo "DEVICE TYPE:	$5" ;;
+	*) ;;
+	esac
+fi

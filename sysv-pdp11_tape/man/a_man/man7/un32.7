@@ -1,0 +1,82 @@
+.TH UN32 7 "3B20S only"
+.SH NAME
+un32 \- magnetic tape interface
+.SH DESCRIPTION
+The files
+.BR tp? " and " tp?n
+refer to the
+.SM UN\*S32
+magnetic tape controllers and associated transports.
+Only 1600bpi is available.
+The files
+.B tp?
+are designated normal-rewind on close, and the files
+.B tp?n
+are no-rewind on close.
+When opened for reading or writing, the tape is assumed to
+be positioned as desired.
+When a file is closed, a double end-of-file (double tape mark)
+is written if the file was opened for writing.
+If the file was normal-rewind, the tape is rewound.
+If it is no-rewind and the file was open for writing,
+the tape is positioned before the second
+.SM EOF
+just written.
+If the file was no-rewind and opened read-only, the tape is
+positioned after the
+.SM EOF
+following the data just read.
+Once opened, reading is restricted to
+between the position when opened and the next
+.SM EOF
+or
+the last write.
+The
+.SM EOF
+is returned as a zero-length read.
+By judiciously choosing
+.B tp
+files, it is possible to read and write multi-file tapes.
+.PP
+A standard tape consists of
+several 512 byte records terminated by an
+.SM EOF\*S.
+To the extent possible, the system makes
+it possible, if inefficient, to treat
+the tape like any other file.
+Seeks have their usual meaning and it is possible
+to read or write a byte at a time (although very inadvisable).
+.PP
+The
+.B tp
+files discussed above are useful
+when it is desired to access the tape in a way
+compatible with ordinary files.
+When foreign tapes are to be dealt with, and especially
+when long records are to be read or written, the
+``raw'' interface is appropriate.
+The associated files are named
+.BR rtp? " and " rtp?n .
+Each
+.I read\^
+or
+.I write\^
+call reads or writes the next record on the tape.
+In the write case the record has the same length as the
+buffer given.
+During a read, the record size is passed
+back as the number of bytes read,
+up to the buffer size specified.
+In raw tape I/O, the buffer must begin on a word boundary
+and the count cannot be greater than 2048 bytes.
+Seeks are ignored.
+An
+.SM EOF
+is returned as a zero-length read, with the tape positioned
+after the
+.SM EOF\*S,
+so that the next read will return the next
+record.
+.SH FILES
+/dev/tp\(**, /dev/rtp\(**
+.\"	@(#)un32.7	5.2 of 5/18/82

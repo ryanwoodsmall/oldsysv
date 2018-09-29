@@ -1,0 +1,38 @@
+Mark-
+	Here is the latest on my problems with vi...
+
+zap()
+{
+	register char *namp;
+	register bool **fp;
+	register char ***sp;
+
+ 	/* ( ** 1 ** ) */
+ 	namp = "ambsdadbeohchzinmincnsosulxbxnxtxx";
+	fp = sflags;
+	do {
+		*(*fp++) = tgetflag(namp);
+		namp += 2;
+	} while (*namp);
+	/* ( ** 2 ** ) */
+	namp = "albcbtcdceclcmcrcsdcdldmdoedeihoicimipllmandnlpcrcscsesfsosrtatetiupvbvsveDOUPALDL";
+	
+       If one compiles all the routines (one right after the other), the
+object bombs out during the first while loop.  If one then recompiles ex_tty.c,
+neither while loop bombs out, but the object does not work either.  Using
+sdb, I can see that namp (in the first case) points to the middle of the
+second string (instead of the beginning of the first string ambs...xx). 
+Also, the second string initialization (namp = "albc...DL") gets set-up wrong
+sdb shows that initially namp (again) points toward the middle of the albc...DL
+string instead of the beginning.  Recompiling ex_tty.c corrects the pointer
+problems but does not fix the buggy vi object.  The recompiled vi does not
+recognise 2 character strings (ie. `se' becomes ae: not an editor command).
+Thinking that the problem might be caused by the optimizer, I turned it off
+but nothing changed.  I changed the strings to be separate variables (amp,
+and namp)...still no change.
+
+Is this a compiler/loader problem?
+
+beau
+.
+

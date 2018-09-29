@@ -1,0 +1,89 @@
+.TH LOCATE 1
+.SH NAME
+locate \- identify a UNIX system command using keywords
+.SH SYNOPSIS
+[
+.B help
+]
+.B locate
+.PP
+[
+.B help
+]
+.B locate
+[
+.I keyword1
+[
+.I keyword2 
+] ... ]
+.SH DESCRIPTION
+The
+.I locate
+command is part of the UNIX System \fIhelp\fP Facility,
+and provides on-line assistance with identifying
+UNIX system commands.
+.PP
+Without arguments,
+the initial
+.I locate
+screen is displayed from which the user may enter keywords functionally
+related to the action of the desired UNIX system
+commands they wish to have identified.
+A user may enter keywords and receive a list of UNIX system commands whose
+functional attributes match those in the keyword list, or may
+exit to the shell by typing \fBq\fP (for ``quit'').
+For example, if you wish to print the contents of a file, enter the
+keywords ``print'' and ``file''.
+.I locate
+would then print the names of all commands related to these
+keywords.
+.PP
+Keywords may also be entered directly from the shell,
+as shown above.
+In this case, the initial screen is not displayed,
+and the resulting command list is printed.
+.PP
+More detailed information on a command in the list
+produced by
+.I locate
+can be obtained by accessing the
+.I usage
+module of the UNIX System \fIhelp\fP Facility.
+Access is made by entering the appropriate
+menu choice after the command list is displayed.
+.PP
+From any screen in the facility, a user may execute a command via the
+shell (\fBsh(1)\fP) by typing a \fB!\fP and the command to be executed.
+The screen will be redrawn if the command that was executed
+was entered at a first level prompt.
+If entered at any other prompt level, only the prompt will be redrawn.
+.PP
+By default, the \fIhelp\fP facility scrolls the data that is
+presented to the user.  If a user prefers to have
+the screen clear before printing the data (non-scrolling), 
+a variable must be defined in the user's \fB.profile\fP file called
+\fBSCROLL\fP.  The variable \fBSCROLL\fP must be set to \fBno\fP and exported
+for non-scrolling to occur.
+If the user later decides that scrolling is desired, the variable \fBSCROLL\fP
+must be set to \fByes\fP or deleted from the user's \fB.profile\fP file.
+.PP
+Further information on the UNIX System \fIhelp\fP Facility
+can be found on the
+.IR help (1),
+.IR usage (1),
+.IR starter (1),
+and
+.IR glossary (1)
+manual pages.
+.SH SEE ALSO
+help(1),
+usage(1),
+starter(1),
+glossary(1).
+.SH WARNINGS
+.PP
+If the \fBTERM\fP variable is not set in the user's \fB.profile\fP file,
+then \fBTERM\fP will default to the terminal value type \fB450\fP 
+( a hardcopy terminal ).  For a list of valid terminal types, refer to
+\fIterm(5)\fP in the UNIX Programmer's Manual.
+The \fIhelp\fP facility assumes that tabs are set on the user's terminal.

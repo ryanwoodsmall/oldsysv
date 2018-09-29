@@ -1,0 +1,5 @@
+#	@(#)adm	1.1
+0 4 * * 1-6 /usr/lib/acct/runacct 2> /usr/adm/acct/nite/fd2log
+0 * * * * /usr/lib/acct/ckpacct
+15 5 1 * * /usr/lib/acct/monacct
+5 18 * * 1-5 /usr/lib/sa/sa2 -s 8:00 -e 18:01 -i 3600 -ubcwydaqvm &

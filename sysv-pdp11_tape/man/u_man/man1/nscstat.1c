@@ -1,0 +1,94 @@
+.\"@(#)nscstat.1c	5.2
+.TH NSCSTAT 1C
+.SH NAME
+nscstat \- query the operation status of the \s-1NSC\s+1 network
+.SH SYNOPSIS
+.B nscstat
+[ netname ... ]
+.RB [ \-ludqrbpa ]
+.RB [ \-n " names ]"
+.SH DESCRIPTION
+.IR Nscstat ,
+without arguments, gives a short operational status report
+of the \s-1NSC\s+1 network from the viewpoint of the local node.
+This includes the status of the \s-1NSC\s+1 network
+and the total number of files queued for transmission.
+A list of network names may be specified.
+If no network names are given, the options specified are
+performed for all known networks.
+.I Nscstat
+recognizes the following arguments:
+.PP
+.TP "\w'\fB\-l\fP\ \ 'u"
+.B \-l
+Output a long listing.
+This option indicates the status of the printed
+node (on-line or off-line), the total number
+of files queued waiting transmission to this node,
+and the time when the first job was queued for transmission.
+.TP
+.B \-p
+Report the last time the system received a 
+.I poke
+from remote systems.
+.TP
+.B \-r
+Report the last time the system received a request to transfer from remote
+systems.
+.TP
+.B \-b
+Report the last time the current system had to notify remote systems
+that it was too busy to handle its request.
+.TP
+.B \-u
+List the status of all nodes that are on-line (up).
+.TP
+.B \-d
+List the status of all nodes that are off-line (down).
+.TP
+.B \-q
+List the status of all nodes that have files queued for transmission.
+.TP
+.B \-a
+List the status of all nodes configured on the network.
+.TP
+.BR \-n " names"
+.I Name
+specifies that status is requested for this node only.
+If more than one network is specified, this option is disabled.
+.PP
+Each of the above arguments may be used singly or together with
+several others.
+When used together, the output is the intersection
+of the sets of nodes matching each option.
+If a node name list is specified, status for that node will only
+be reported if it is in the intersection set of the specified options.
+.SH EXAMPLE
+To get a long listing of all nodes that are currently off-line and
+have files queued for transmission:
+.PP
+.RS
+nscstat \|\-ldq
+.RE
+.PP
+.SH FILES
+.PD 0
+.TP "\w'/usr/nsc/on-line/\(**\ \ 'u"
+/usr/nsc/rvchan
+list of nodes currently configured on the network
+.TP
+/usr/nsc/cons/\(**
+nodes that are considered on-line
+.TP
+/usr/nsc/jobs/\s-1C\s+1\(**
+jobs queued for transmission
+.TP
+/usr/nsc/cons/on-line/\(**
+whether the \s-1NSC\s+1 network is active or not on this network
+.SH BUGS
+.I Nscstat
+tries to interpret the specified options intelligently.
+If none of
+the options specified apply to any of the
+specified nodes, no detailed status will be reported.
+.\"	@(#)nscstat.1c	5.2 of 5/18/82

@@ -1,0 +1,41 @@
+
+\Sat\S:  Examples
+
+        at -l
+
+    Lists the jobs that you scheduled using \Sat\S.
+
+    ----------------------------------------------------------------------
+
+        at -r 459803100.a
+
+    Removes the job with the job number "459803100.a".
+
+
+
+
+
+
+    ----------------------------------------------------------------------
+
+    The following example shows you how to use \Sat\S to execute a command.
+
+        \Sat now +30minutes\S
+
+    If you type "\Sat\S now +30minutes " followed by a carriage return, \Sat\S
+    waits for you to type a command.  If you want a reminder of a meeting,
+    you type:
+
+        \S banner MEETING AT 3:00 \S
+
+    \Sat\S will wait for input until you type a control character and the
+    letter "d" simultaneously.
+
+        \S control-d \S
+
+
+
+    After you type control-d, \Sat\S prints the job number and the time that
+    it will execute the job.
+
+        job 465053400.a at Wed Sep 26 14:45:00 1984

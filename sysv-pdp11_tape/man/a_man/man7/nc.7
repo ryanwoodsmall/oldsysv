@@ -1,0 +1,262 @@
+.TH NC 7
+.SH NAME
+nc \- network control
+.SH DESCRIPTION
+The network control pseudo-device provides a means by which a
+privileged user process
+can install, remove, and get the status of a
+.SM BX\*S.25
+Permanent
+Virtual Circuit (\s-1PVC\s+1), and
+attach, detach,
+start, stop, get the
+status of,
+and perform a changeover on a
+.SM BX\*S.25
+link.
+Additional functions are planned for this driver when the
+virtual-call feature and additional layers of
+.SM BX\*S.25
+are added to the
+.SM UNIX
+System
+.SM BX\*S.25 implementation.
+The
+.SM BX\*S.25
+driver supports
+.IR open (2),
+.IR close (2),
+and
+.IR ioctl (2)
+system calls.
+Definitions of constants and
+declarations for the data structures mentioned can be
+obtained by:
+.PP
+.RS
+#include	<sys/nc.h>
+.RE
+.PP
+The network-control
+.I ioctl
+system call has the following form:
+.PP
+.RS
+ioctl \|(\|fildes,\|cmd,\|arg\|)
+.RE
+.PP
+where
+.I fildes
+is the file descriptor returned by the
+.I open
+of the
+.B nc
+device and
+.I cmd
+is one of the following constants:
+.P
+.B \s-1NCPVCI\s+1
+\- Install a \s-1PVC\s+1.
+This command creates
+one end of a \s-1PVC\s+1 by connecting a minor device of the
+.SM BX\*S.25
+driver
+(slot) to a particular logical
+channel on a specified link.
+.I Arg
+is a pointer to a
+.I ncpvc
+data structure
+where
+.I slot\^
+is the minor device number of the slot to be used as the end point
+of the \s-1PVC\s+1,
+.I chno\^
+is the logical channel number to be used, and
+.I link\^
+is the number of the
+.SM BX\*S.25
+link to be used.
+Links are numbered starting with 0.
+.I Chno\^
+must be in the range 1 to 4,095
+and must not be currently in use on this link.
+The following errors may be returned: 
+\s-1ENXIO\s+1 if the minor device number is out of range; 
+\s-1ECHRNG\s+1 if the channel number is out of range;
+\s-1ELNRNG\s+1 if the link number is out of range; 
+\s-1EBUSY\s+1 if the slot is in use. 
+The two low-order bits of
+.I options\^
+specify one of three possible session-establishment protocols:
+.PP
+.PD 0
+.IP "" 7
+\s-1PVC_SESS\s+1	session-layer open/close protocol
+.IP "" 7
+\s-1PVC_RST\s+1	reset in-order/out-of-order protocol
+.IP "" 7
+\s-1PVC_NONE\s+1	``no-protocol'' session mode
+.PD
+.PP
+These protocols are explained in
+.IR x25 (7).
+The constants \s-1PVC_SESS\s+1, \s-1PVC_RST\s+1, and \s-1PVC_NONE\s+1 are
+defined in
+.BR /usr/include/sys/x25u.h .
+If the link on which the \s-1PVC\s+1 is installed is
+currently active (i.e., not in the halted
+state), the
+.SM BX\*S.25 
+reset procedure will be initiated for the logical channel.
+When the reset procedure is completed, the \s-1PVC\s+1 is ready
+for data transfer.
+.P
+.B \s-1NCPVCR\s+1
+\- Remove a \s-1PVC\s+1.
+If
+.I arg
+is the minor device number of a slot that is currently
+associated with a \s-1PVC\s+1 and is not open,
+the local end of that \s-1PVC\s+1 is removed, i.e., disconnected.
+The slot and logical channel number become available for
+reuse.
+The following errors may be returned:
+\s-1ENXIO\s+1 if the minor device number is out of range;
+\s-1ENODEV\s+1 if the minor device is not installed;
+\s-1EBUSY\s+1 if the slot is in use. 
+.P
+.B \s-1NCPVCSTAT\s+1
+\- Get the status of a \s-1PVC\s+1.
+This command gets the connection and status information
+for slot
+.I slot
+and places it in the
+.I ncpvcstat
+data structure
+pointed to by
+.I arg.
+The following errors may be returned:
+\s-1ENXIO\s+1 if the minor device number is out of range;
+\s-1ENODEV\s+1 if the minor device is not installed. 
+.P
+.B \s-1NCATTACH\s+1, \s-1NCBKATTACH\s+1 
+\- Associate a link with a specified communications device
+and mark the device as primary
+.SM (\fBNCATTACH\fP)
+or
+backup
+.SM (\fBNCBKATTACH\fP).
+.I Arg
+is a pointer to an
+.I ncattch
+data structure that contains the link number and
+major/minor device number of the device.
+The following errors may be returned:
+\s-1ELNRNG\s+1 if the link number is out of range;
+\s-1EACCES\s+1 if the link is already attached;
+\s-1EBUSY\s+1 if the device is already attached;
+\s-1ENOCSI\s+1 if no
+.SM CSI
+structure is available;
+.SM ENXIO
+if the
+minor device number of the communications device is out of range. 
+.P
+.br
+.ne 4v
+.B \s-1NCDETACH\s+1, \s-1NCBKDETACH\s+1 
+\- Disassociate the link specified by
+.I arg
+from its associated primary
+.SM (\fBNCDETACH\fP)
+or
+backup
+.SM (\fBNCBKDETACH\fP)
+device.
+The link and device become available for reuse.
+The following errors may be returned: 
+\s-1ELNRNG\s+1 if the link number is out of range;
+\s-1EUNATCH\s+1 if the link is not attached to a device;
+\s-1ENODEV\s+1 if the device is not attached;
+\s-1EBUSY\s+1 if the device has not been halted. 
+.P
+.B \s-1NCSTART\s+1, \s-1NCBKSTART\s+1 
+\- Start a specified link.
+The level 2 protocol is started on the primary
+.SM (\fBNCSTART\fP)
+or
+backup
+.SM (\fBNCBKSTART\fP)
+device associated
+with the link specified.
+.I Arg\^
+is a pointer to an
+.I ncstart
+data structure
+that contains information such as the link number and packet size.
+The level 3 restart procedure is then initiated for the link
+if
+.B \s-1NCSTART\s+1
+is the command used. 
+The following errors may be returned:
+\s-1ELNRNG\s+1 if the link number is out of range;
+\s-1EUNATCH\s+1 if the link is not attached to a device;
+\s-1EBUSY\s+1 if the device is already started;
+\s-1EINVAL\s+1 if the packet size specified with
+.B \s-1NCSTART\s+1
+is different from that specified with
+.BR \s-1NCBKSTART\s+1 . 
+.P
+.B \s-1NCSTOP\s+1, \s-1NCBKSTOP\s+1 
+\- Stop a
+.SM BX\*S.25
+link.
+The
+.B \s-1NCSTOP\s+1
+command stops the level 3 protocol
+on the link specified by
+.I arg 
+and the link data structure is reinitialized.
+For either command, the level 2 protocol is stopped
+on the associated primary or backup device. 
+For
+.BR \s-1NCSTOP\s+1 ,
+if a backup device has been attached,
+the level 2 protocol is also stopped on that device.
+The following errors may be returned:
+\s-1ELNRNG\s+1 if the link number is out of range;
+\s-1EUNATCH\s+1 if the link is not attached to a device;
+\s-1EBUSY\s+1 if the level 3 protocol is running on the backup device
+.SM (\fBNCSTOP\fP).
+.P
+.B \s-1NCCHNGE\s+1
+\- Changeover to the standby device associated with the link
+specified by
+.IR arg.
+If the standby device is synchronized at level 2,
+the level 3 protocol will now run on that device.
+The following errors may be returned:
+\s-1ELNRNG\s+1 if the link number is out of range;
+\s-1EUNATCH\s+1
+if the link is not attached to both a primary and backup device; 
+\s-1EACCES\s+1
+if the backup device was not started.
+.P
+.B \s-1NCLNKSTAT\s+1
+\- Get the status of a link.
+This command gets the connections and status information
+for link
+.I link
+and places it in the
+.I nclnkstat
+data structure
+pointed to by
+.I arg.
+The following errors may be returned:
+\s-1ELNRNG\s+1 if the link number is out of range;
+\s-1EUNATCH\s+1
+if the link is not attached to either a primary or backup device.
+.SH SEE ALSO
+x25pvc(1M), x25(7).
+.\"	@(#)nc.7	5.2 of 5/18/82

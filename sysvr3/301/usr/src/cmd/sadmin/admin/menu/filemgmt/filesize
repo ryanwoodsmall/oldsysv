@@ -1,0 +1,68 @@
+#ident	"@(#)sadmin:admin/menu/filemgmt/filesize	2.5"
+#menu# list the largest files in a particular directory
+#help# 
+#help#	Filesize prints the names of the largest files in a specific
+#help#	directory.  If you don't enter a directory name, your HOME
+#help#	directory will be used.  If you don't specify how many large
+#help#	files to list, 10 files will be listed.
+
+trap 'exit 0' 1 2 15
+trap "	trap '' 1 2
+	rm -f /tmp/$$filesize" 0
+
+flags="-qq -k$$"
+deffiles=10	# default number of large files
+
+while true
+do
+	fsys=`checkre ${flags} -D "$HOME" -H'
+	This is the starting point used to build the list of large files.' \
+		-fe "Enter full path name of the directory to search
+(default $HOME) [?, q]: " \
+		'^/.*' 'Directory name must begin with a "/".'`
+
+	if [ -d "${fsys}" ]
+	then
+		break
+	else
+		echo "\t${fsys} is not the full path name of a valid directory."
+	fi
+done
+
+nfiles=`checkre ${flags} -D "${deffiles}" \
+		-fe "Enter the number of large files to be included in list
+(default ${deffiles}) [q]:" \
+		'^[0-9]*$' 'Answer contains an illegal character.
+	Only numbers are permitted.' \
+		'[1-9]' 'Answer must be greater than zero.' \
+		'^0*.\{1,3\}$' 'Answer must not be larger than 999.'`
+
+
+cd ${fsys}
+
+a="`expr 0${nfiles} "*" 10`"
+du -a  |
+	sort -bnr +0 -1  |
+	sed -n 1,0${a}'s:^[0-9]*	\./:ls -ldsu :p'  |
+	sh -  |
+	grep -v '^ *[0-9][0-9]* d'  |
+	sed -n 1,0${nfiles}p  |
+	sort -bnr +5 -6 |
+	cut -c21-29,37- > /tmp/$$filesize
+
+afiles="`cat /tmp/$$filesize  |  wc -l  |  cut -c5-`"
+
+if [ "${nfiles}" -ne "${afiles}" ]
+then
+	nfiles=${afiles}
+	echo "
+	There are only ${nfiles} files in `pwd`."
+fi
+echo "
+The ${nfiles} largest files in" `pwd`:"
+
+       file size   date of
+owner (characters) last access  filename
+----- ------------ ------------ --------"
+
+cat /tmp/$$filesize

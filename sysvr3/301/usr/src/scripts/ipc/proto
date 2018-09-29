@@ -1,0 +1,45 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 0
+	Rlist		---555 2 2	./install/ipc/Rlist.ipc
+	INSTALL		---555 2 2	./install/ipc/INSTALL
+	UNINSTALL	---555 2 2	./install/ipc/UNINSTALL
+	setup		---555 2 2	./install/ipc/setup
+	unsetup		---555 2 2	./install/ipc/unsetup
+$
+new	d--775 0 3
+	boot	d--775 0 3
+		ipc.o			---555 2 2	../usr/src/uts/3b2/io/ipc.o
+		msg.o			---555 2 2	../usr/src/uts/3b2/io/msg.o
+		sem.o			---555 2 2	../usr/src/uts/3b2/io/sem.o
+		shm.o			---555 2 2	../usr/src/uts/3b2/io/shm.o
+	$
+	etc	d--775 0 3
+		master.d	d--775 0 3
+			ipc			---444 2 2	../usr/src/uts/3b2/master.d/ipc
+			msg			---444 2 2	../usr/src/uts/3b2/master.d/msg
+			sem			---444 2 2	../usr/src/uts/3b2/master.d/sem
+			shm			---444 2 2	../usr/src/uts/3b2/master.d/shm
+		$
+	$
+	usr	d--775 0 3
+		include d--775 2 2
+			sys d--775 2 2
+				ipc.h	---664 2 2	../usr/include/sys/ipc.h
+				msg.h	---664 2 2	../usr/include/sys/msg.h
+				sem.h	---664 2 2	../usr/include/sys/sem.h
+				shm.h	---664 2 2	../usr/include/sys/shm.h
+			$
+		$
+		options	d--775 0 3
+			ipc.name	---555 2 2	./install/ipc/ipc.name
+		$
+	$
+	bin	d--775 2 2
+			ipcrm		---775 2 2	../bin/ipcrm
+			ipcs		--g755 0 3	../bin/ipcs
+		$
+	$
+$
+$

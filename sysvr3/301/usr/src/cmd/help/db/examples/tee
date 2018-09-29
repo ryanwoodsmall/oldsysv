@@ -1,0 +1,29 @@
+
+\S tee \S:  Examples
+
+
+       pr prog.c | tee progcopy
+
+    Prints the contents of "prog.c" on the standard output and also places a
+    copy of it in the file "progcopy".
+
+
+    ----------------------------------------------------------------------
+
+       find . -print | tee list | cpio -o > /dev/tape
+
+    Copies all the files under the current working directory to the file "list"
+    and creates an archive on the tape "/dev/tape".
+
+
+    ----------------------------------------------------------------------
+
+       tee -ai script | sh -i 2>& 1 | tee -ai script
+
+    Records all your input and output in the file "script".  The first \S tee \S
+    records all of your input and stores it in the file script.  \S tee \S also
+    sends this input to standard output which is used by sh(1) as input.  sh(1)
+    executes the input and sends standard error output to "script".  The
+    standard output is used as input to the second \S tee \S command.  \S tee \S
+    sends its output to standard output and to the file "script".  If you want
+    to stop recording your interactions in "script", you type control-d.

@@ -1,0 +1,837 @@
+.TH SDB 1
+.SH NAME
+sdb \- symbolic debugger
+.SH SYNOPSIS
+.B sdb
+[\fB\-w\fR] [\fB\-W\fR] [ objfil [ corfil [ directory-list ] ] ]
+.SH DESCRIPTION
+.I Sdb\^
+is a symbolic debugger that can be used with C and F77 programs.
+It may be used to examine their object files and core files and to provide
+a controlled environment for their execution.
+.PP
+.I Objfil\^
+is normally an executable program file
+which has been compiled with the
+.B \-g
+(debug) option;
+if it has not been compiled with the
+.B \-g
+option, or if it is not an executable file,
+the symbolic capabilities of
+.I sdb\^
+will be limited,
+but the file can still be examined
+and the program debugged.
+The default for
+.I objfil\^
+is
+.BR a.out .
+.I Corfil\^
+is assumed to be a core image file produced after
+executing
+.IR objfil ;
+the default for
+.I corfil\^
+is
+.BR core .
+The core file need not be present.
+A
+.B \-
+in place of
+.I corfil\^
+will force
+.I sdb\^
+to ignore any core image file.
+The colon separated list of directories
+(\f2directory-list\fR) is used to locate
+the source files used to build \f2objfil\fR.
+.PP
+It is useful to know that at any time there is a
+.I "current line\^"
+and
+.IR "current file" .
+If
+.I corfil\^
+exists then they are initially set to the line and file
+containing the source statement at which the process terminated.
+Otherwise, they are set to the first line in
+.IR main ( ).
+The current line and file may be changed with the source file
+examination commands.
+.PP
+By default, warnings are provided if
+the source files used in producing
+.I objfil
+cannot be found,
+or are newer than
+.IR objfil .
+This checking feature
+and the accompanying warnings
+may be disabled by the use of the
+.B \-W
+flag.
+.PP
+Names of variables are written just as they are in C or F77.
+Note that names in C are now of arbitrary length,
+\f2sdb\fR will no longer truncate names.
+Variables local to a procedure may be accessed using the form
+.IB procedure : variable\fR.
+If no procedure name is given, the procedure containing the
+current line is used by default.
+.P
+It is also possible to refer to structure members as
+.IB variable . member\fR,
+pointers to structure members as
+.IB variable \(mi> member
+and array elements
+as
+.IB variable [ number ]\fR.
+Pointers may be dereferenced by using the form
+\fIpointer\fB[\fR0\fB]\fR.
+Combinations of these forms may also be used.
+F77
+common variables may be referenced by using the name
+of the common block instead of the structure name.
+Blank common variables may be named by the form
+.BI . variable\fR.
+A number may be used in place of a structure variable name,
+in which case the number is viewed as the address of the structure,
+and the template used for the structure is that of the last structure
+referenced by
+.I sdb\fR.
+An unqualified structure variable may also be used with various commands.
+Generally,
+.I sdb
+will interpret a structure as a set of variables.
+Thus,
+.I sdb
+will display the values of all the elements of a structure
+when it is requested to display a structure.
+An exception to this interpretation occurs when displaying variable
+addresses.
+An entire structure does have an address, and it is this
+value
+.I sdb 
+displays,
+not the addresses of individual elements.
+.P
+Elements of a multidimensional array may be referenced as
+.IB variable [ number ][ number ]...\fR,
+or as
+.IB variable [ number,number,... ]\fR.
+In place of
+.I number\fR,
+the form
+.IB number ; number
+may be used to indicate a range of values,
+.B \(**
+may be used to indicate all legitimate values for that subscript,
+or subscripts may be omitted entirely if they are the last subscripts
+and the full range of values is desired.
+As with structures,
+.I sdb
+displays all the values of an array or of the section of an array if
+trailing subscripts are omitted.
+It displays only the address of the array itself or of the section
+specified by the user if subscripts are omitted.
+A multidimensional parameter in an
+F77
+program cannot be displayed as an array,
+but it is actually a pointer, whose value is the location of the array.
+The array itself can be accessed symbolically from the calling function.
+.P
+A particular instance of a variable on the stack
+may be referenced by using the form
+.IB procedure : variable , number\fR.
+All the variations mentioned in naming variables may be used.
+.IB Number\^
+is the occurrence of the specified procedure on the stack,
+counting the top, or most current,
+as the first.
+If no procedure is specified, the procedure currently executing
+is used by default.
+.PP
+It is also possible to specify a variable by its address.
+All forms of integer constants which are valid in C may be used, so that
+addresses may be input in decimal, octal or hexadecimal.
+.PP
+Line numbers in the source program are referred to as
+.IB file-name : number
+or
+.IB procedure : number\fR.
+In either case the number is relative to the beginning of the file.
+If no procedure or file name is given,
+the current file is used by default.
+If no number is given,
+the first line of the named procedure or file is used.
+.PP
+While a process is running under
+.IR sdb ,
+all addresses refer to the executing program;
+otherwise they refer to
+.I objfil\^
+or
+.I corfil\^.
+An initial argument of
+.B  \-w
+permits overwriting locations in
+.I objfil\^.
+.SS Addresses
+The address in a file associated with
+a written address is determined by a mapping
+associated with that file.
+Each mapping is represented by two triples
+.RI ( "b1, e1, f1" )
+and
+.RI ( "b2, e2, f2" )
+and the
+.I file address\^
+corresponding to a written
+.I address\^
+is calculated as follows:
+.PP
+.RS
+.IR b1 \*(LE address < e1
+\*(IM
+.IR "file address" = address + f1\-b1
+.RE
+otherwise
+.PP
+.RS
+.IR b2 \*(LE address < e2
+\*(IM
+.IR "file address" = address + f2\-b2,
+.RE
+.PP
+otherwise, the requested
+.I address\^
+is not legal.
+In some cases (e.g., for programs with separated I and D
+space) the two segments for a file may overlap.
+.PP
+The initial setting of both mappings is suitable for
+normal
+.B a.out 
+and
+.B core 
+files.
+If either file is not of the kind expected then, for that file,
+.I b1\^
+is set to 0,
+.I e1\^
+is set to
+the maximum file size,
+and
+.I f1\^
+is set to 0; in this way the whole
+file can be examined with no address translation.
+.PP
+In order for
+.I sdb\^
+to be used on large files,
+all appropriate values are kept as signed 32-bit integers.
+.SS Commands
+.PP
+The commands for examining data in the program are:
+.TP 5
+.B t
+Print a stack trace of the terminated or halted program.
+.TP 5
+.B T
+Print the top line of the stack trace.
+.TP 5
+.IB variable / clm
+Print the value of
+.I variable\^
+according to
+length
+.I l\^
+and format 
+.IR m .
+A numeric count
+.I c
+indicates that a region of memory, beginning at the address
+implied by
+.IR variable ,
+is to be displayed.
+The length specifiers are:
+.RS
+.RS
+.PD 0
+.TP
+.BI b\^
+one byte
+.TP
+.BI h\^
+two bytes (half word)
+.TP
+.BI l\^
+four bytes (long word)
+.RE
+.PD
+.br
+.ne 5
+.PP
+Legal values for
+.I m\^
+are:
+.RS
+.PD 0
+.TP
+.BI c\^
+character
+.TP
+.BI d\^
+decimal
+.TP
+.BI u\^
+decimal, unsigned
+.TP
+.BI o\^
+octal
+.TP
+.BI x\^
+hexadecimal
+.TP
+.BI f\^
+32-bit single precision floating point
+.TP
+.BI g\^
+64-bit double precision floating point
+.TP
+.BI s\^
+Assume
+.I variable\^
+is a string pointer and print characters starting at the
+address pointed to by the variable.
+.TP
+.BI a\^
+Print characters starting at the variable's address.
+This format may not be used with register variables.
+.TP
+.BI p\^
+pointer to procedure
+.TP
+.BI i\^
+disassemble machine-language instruction
+with addresses printed numerically and symbolically.
+.TP
+.BI I\^
+disassemble machine-language instruction
+with addresses just printed numerically.
+.RE
+.PD
+The length specifiers are only effective with the formats
+\fBc\fP, \fBd\fP, \fBu\fP, \fBo\fP and \fBx\fP.
+Any of the specifiers,
+\fIc\fP, \fIl\fP, and \fIm\fP,
+may be omitted.
+If
+all are omitted,
+.I sdb
+choses a length and a format suitable for the variable's
+type as declared in the program.
+If
+.I m
+is specified, then this format is used for displaying the variable.
+A length specifier determines the output length of the value
+to be displayed, sometimes resulting in truncation.
+A count specifier
+.I c
+tells
+.I sdb
+to display that many units of memory, beginning at
+the address of
+.IR variable .
+The number of bytes in one such unit of memory is determined by
+the length specifier
+.IR l ,
+or if no length is given,
+by the size associated with the
+.IR variable.
+If a count specifier is used for the
+.B s
+or
+.B a
+command, then that many characters are printed.
+Otherwise successive characters are printed until either
+a null byte is reached
+or 128 characters are printed.
+The last variable may be redisplayed with the command
+.BR ./ .
+.PP
+The
+.IR sh (1)
+metacharacters 
+.B \(**
+and
+.B ?
+may be used within procedure and variable names,
+providing a limited form of pattern matching.
+If no procedure name is given, variables local to the current
+procedure and global variables are matched;
+if a procedure name is specified then
+only variables local to that procedure are matched.
+To match only global variables,
+the form
+.BI : pattern\^
+is used.
+.RE
+.TP 5
+.PD 0
+.IB linenumber ? lm
+.TP 5
+\fIvariable:\fB?\fIlm\fR
+.PD
+Print the value at the address
+from
+.BR a.out
+or I space
+given by
+.I linenumber\^
+or
+.IR variable
+(procedure name),
+according to the format
+.IR lm .
+The default format is `i'.
+.TP 5
+.PD 0
+.IB variable = lm
+.TP 5
+.IB linenumber = lm
+.TP 5
+.IB number = lm
+.PD
+Print the address of
+.I variable\^
+or
+.IR linenumber ,
+or the value of
+.IR number ,
+in the format specified by
+.IR lm .
+If no format is given, then
+.B lx
+is used.
+The last variant of this command provides a convenient way to convert
+between decimal, octal and hexadecimal.
+.TP 5
+.IB variable ! value
+Set
+.I variable\^
+to the given
+.IR value .
+The value may be a number, a character constant or a variable.
+The value must be well defined;
+expressions which produce more than one value, such as structures,
+are not allowed.
+Character constants are denoted
+.BI ' character\fR.
+Numbers are viewed as integers unless a decimal point or exponent
+is used.
+In this case, they are treated as having the type double.
+Registers are viewed as integers.
+The
+.I variable
+may be an expression which indicates more than one variable,
+such as an array or structure name.
+If the address of a variable is given,
+it is regarded as the address of a variable of type
+.IR int .
+C
+conventions are used in any type conversions necessary
+to perform the indicated assignment.
+.TP 5
+.B x
+Print the machine registers and
+the current machine-language instruction.
+.TP 5
+.B X
+Print the current machine-language instruction.
+.PP
+The commands for examining source files are:
+.PP
+.PD 0
+.TP 5
+.BI "e " procedure\^
+.TP 5
+.BI "e " file-name\^
+.TP 5
+.BI "e " directory/\^
+.TP 5
+.BI "e " "directory file-name"\^
+.PD
+The first two forms set the current file to
+the file containing
+.I procedure\^
+or to
+.IR file-name .
+The current line is set to the first line in the named
+procedure or file.
+Source files are assumed to be in
+.IR directory .
+The default is the current working directory.
+The latter two forms change the value of
+.IR directory .
+If no procedure, file name, or directory is given,
+the current procedure name and file name
+are reported.
+.TP 5
+.BI / "regular expression" /
+Search forward from the current line for a line containing
+a string matching 
+.I regular expression\^
+as in
+.IR ed (1).
+The trailing
+.B /
+may be deleted.
+.TP 5
+.BI ? "regular expression" ?
+Search backward from the current line for a line containing
+a string matching
+.I regular expression\^
+as in
+.IR ed (1).
+The trailing
+.B ?
+may be deleted.
+.TP 5
+.B p
+Print the current line.
+.TP 5
+.B z
+Print the current line followed by the next 9 lines.
+Set the current line to the last line printed.
+.TP 5
+.B w
+Window.
+Print the 10 lines around the current line.
+.TP 5
+.I number\^
+Set the current line to the given line number.
+Print the new current line.
+.TP 5
+.IB count +
+Advance the current line by
+.I count\^
+lines.
+Print the new current line.
+.TP 5
+.IB count \(mi
+Retreat the current line by
+.I count\^
+lines.
+Print the new current line.
+.PP
+The commands for controlling the execution of the source program are:
+.PP
+.TP 5
+\fIcount\fB r \fIargs\fR
+.br
+.ns
+.TP 5
+\fIcount\fB R
+Run the program with the given arguments.
+The \fBr\fP command with no arguments reuses the previous arguments
+to the program while the \fBR\fP command
+runs the program with no arguments.
+An argument beginning with
+.B <
+or
+.B >
+causes redirection for the
+standard input or output, respectively.
+If \fIcount\fP is given,
+it specifies the number of breakpoints to be ignored.
+.TP 5
+\fIlinenumber\fB c\fI count\fR
+.br
+.ns
+.TP 5
+\fIlinenumber\fB C\fI count\fR
+Continue after a breakpoint or interrupt.
+If \fIcount\fP is given,
+it specifies the breakpoint at which to stop after ignoring \f2count\fR - 1 breakpoints.
+\fBC\fP continues with the signal which caused the program to stop
+reactivated and
+\fBc\fP ignores it.
+If a line number is specified
+then a temporary breakpoint is placed at the line
+and execution is continued.
+The breakpoint is deleted when the command finishes.
+.TP 5
+\fIlinenumber\fB g\fI count\fR
+Continue after a breakpoint
+with execution resumed at the given line.
+If \fIcount\fP is given,
+it specifies the number of breakpoints to be ignored.
+.TP 5
+\fBs \fIcount\fR
+.br
+.ns
+.TP 5
+\fBS \fIcount\fR
+Single step
+the program through \fIcount\fP lines.
+If no count is given then the program is run for one line.
+.B S
+is equivalent to
+.B s
+except it steps through procedure calls.
+.TP 5
+\fBi\fR
+.br
+.ns
+.TP 5
+\fBI\fR
+Single step by one machine-language instruction.
+\fBI\fP steps with the signal
+which caused the program to stop reactivated and
+\fBi\fP ignores it.
+.TP 5
+\fIvariable$\fBm \fIcount\fR
+.br
+.ns
+.TP 5
+\fIaddress:\fBm \fIcount\fR
+Single step
+(as with \fBs\fP)
+until the specified location
+is modified with a new value.
+If \fIcount\fP is omitted,
+it is effectively infinity.
+\fIVariable\fR
+must be accessible from the current procedure.
+Since this command is done by software,
+it can be very slow.
+.TP 5
+\fIlevel\fB v \fR
+Toggle verbose mode,
+for use when single stepping with
+\fBS\fP,
+\fBs\fP or
+\fBm\fP.
+If \fIlevel\fP is omitted,
+then just the current
+source file and/or subroutine name
+is printed when either changes.
+If \fIlevel\fP is 1 or greater,
+each C source line is printed
+before it is executed;
+if \fIlevel\fP is 2 or greater,
+each assembler statement
+is also printed.
+A \fBv\fP turns verbose mode off if it is on for any level.
+.TP 5
+.B k
+Kill the program being debugged.
+.TP 5
+procedure\fB(\fParg1,arg2,...\fB)\fP
+.br
+.ns
+.TP 5
+procedure\fB(\fParg1,arg2,...\fB)/\fP\fIm\fP
+Execute the named procedure with the given arguments.
+Arguments can be integer, character or string constants
+or names of variables accessible from the current procedure.
+The second form causes the value returned by the procedure to be
+printed according to format \fIm\fP.
+If no format is given, it defaults to
+.BR d .
+.TP 5
+\fIlinenumber\fB b\fR \fIcommands\fR
+Set a breakpoint at the given line.
+If a procedure name without a line number is given (e.g., ``proc:''),
+a breakpoint is placed at the first line in the procedure
+even if it was not compiled with the
+.B \-g
+option.
+If no \fIlinenumber\fP is given,
+a breakpoint is placed at the current line.
+If no
+.I commands\^
+are given, execution stops just before the breakpoint
+and control is returned to
+.IR sdb .
+Otherwise
+the 
+.I commands\^
+are executed when the breakpoint is
+encountered and execution continues.
+Multiple commands are specified by separating them with semicolons.
+If \fBk\fP
+is used as a command to execute at a breakpoint,
+control returns to
+.IR sdb ,
+instead of continuing execution.
+.TP 5
+.B B
+Print a list of the currently active breakpoints.
+.TP 5
+\fIlinenumber\fB d\fR
+Delete a breakpoint at the given line.
+If no \fIlinenumber\fP is given then the breakpoints are deleted interactively.
+Each breakpoint location is printed and a line is read from the standard input.
+If the line begins with a
+.B y
+or
+.B d
+then the breakpoint is deleted.
+.TP 5
+.B D
+Delete all breakpoints.
+.TP 5
+.B l
+Print the last executed line.
+.TP 5
+\fIlinenumber\fB a\fR
+Announce.
+If \fIlinenumber\fR is of the form
+.IB proc : number\fR,
+the command
+effectively does a
+.IB "linenumber " "b l\fR.
+If \fIlinenumber\fR is of the form
+.IB proc :\fR,
+the command
+effectively does a
+.IB proc ": b T"\fR.
+.PP
+Miscellaneous commands:
+.TP 5
+.BI ! command\^
+The command is interpreted by
+.IR sh (1).
+.TP 5
+.B new-line
+If the previous command printed a source line then
+advance the current line by one line and
+print the new current line.
+If the previous command displayed a memory location, then
+display the next memory location.
+.TP 5
+.B control-D
+Scroll.
+Print the next 10 lines
+of instructions, source or data
+depending on which was printed last.
+.TP 5
+.BI "< " filename
+Read commands from
+.I filename
+until the end of file is reached, and then continue
+to accept commands from standard input.
+When
+.I sdb
+is told to display a variable by a command in such a file,
+the variable name is displayed along with the value.
+This command may not be nested;
+.B <
+may not appear as a command in a file.
+.TP 5
+.B M
+Print the address maps.
+.TP 5
+.BR M\ [ ?/ ][ \(** "] \fIb \|e \|f\fP"
+Record new values for the address map.
+The arguments
+\fB?\fP and \fB/\fP
+specify the text and data maps, respectively.
+The first segment,
+.RI ( "b1, e1, f1" ),
+is changed unless \fB\(**\fP is specified,
+in which case the second segment
+.RI ( "b1, e1, f1" ),
+of the mapping is changed.
+If fewer than three values are given,
+the remaining map parameters are left unchanged.
+.TP 5
+\fB"\fI string\fR
+Print the given string.
+The
+C
+escape sequences of the form
+.I "\\\\character"
+are recognized,
+where
+.I character
+is a nonnumeric character.
+.TP 5
+.B q
+Exit the debugger.
+.PP
+The following commands also exist and are intended only for
+debugging the debugger:
+.PP
+.PD 0
+.TP 5
+.B V
+Print the version number.
+.TP 5
+.B Q
+Print a list of procedures and files being debugged.
+.TP 5
+.B Y
+Toggle debug output.
+.PD
+.SH FILES
+a.out
+.br
+core
+.SH SEE ALSO
+cc(1), f77(1), sh(1). 
+.br
+a.out(4), core(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH WARNINGS
+C
+variables are identified internally with an underscore prepended.
+User variables which differ by only an initial underscore cannot
+be distinguished, as
+.I sdb
+recognizes both internal and external names.
+.PP
+When \f2sdb\fR prints the
+value of an external variable for
+which there is no debugging information,
+a warning is printed before the
+value.
+The value is assumed to be \f3int\fR (integer).
+.PP
+Data which are stored in text sections are indistinguishable
+from functions.
+.PP
+Line number information in optimized functions is unreliable,
+and some information may be missing.
+.SH BUGS
+If a procedure is called when the program is
+.I not\^
+stopped at a breakpoint
+(such as when a core image is being debugged),
+all variables are initialized before the procedure is started.
+This makes it impossible to use a procedure which formats
+data from a core image.
+.PP
+The default type for printing F77 parameters is incorrect.
+Their address is printed instead of their value.
+.PP
+Tracebacks containing F77 subprograms with multiple entry points
+may print too many arguments in the wrong order, but their values
+are correct.
+.PP
+The range of an F77 array subscript is assumed to be
+.I 1
+to
+.IR n ,
+where
+.I n
+is the dimension corresponding to that subscript.
+This is only significant when the user omits a subscript, or uses
+.B \(**
+to indicate the full range.
+There is no problem in general with arrays having subscripts whose
+lower bounds are not 1.
+'\"	@(#)sdb.1	1.4

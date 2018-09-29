@@ -1,0 +1,117 @@
+/dev/null
+1422 144
+d--775 0 3
+	setup		---555 2 2	setup.core2
+	save	d--775 0 3
+	$
+	boot	d--775 0 3
+	$
+	bck	d--775 0 3
+	$
+	bin		d--775 2 2
+		basename	---555 2 2	../bin/basename
+		cmp		---555 2 2	../bin/cmp
+		dd		---555 2 2	../bin/dd
+		df		-u-555 0 2	../bin/df
+		dirname		---555 2 2	../bin/dirname
+		du		---555 2 2	../bin/du
+		kill		---555 2 2	../bin/kill
+		echo		---555 2 2	../bin/echo
+		line		---555 2 2	../bin/line
+		ls		---555 2 2	../bin/ls
+		mesg		---555 2 2	../bin/mesg
+		newgrp		-u-755 0 3	../bin/newgrp
+		passwd		-ug555 0 3	../bin/passwd
+		pr		---555 2 2	../bin/pr
+		sleep		---555 2 2	../bin/sleep
+		sort		---555 2 2	../bin/sort
+		stty		---555 2 2	../bin/stty
+		su		-u-555 0 3	../bin/su
+		tail		---555 2 2	../bin/tail
+		tee		---555 2 2	../bin/tee
+		time		---555 2 2	../bin/time
+	$
+	etc	d--775 0 3
+		TIMEZONE	---444 0 3	../etc/TIMEZONE
+		bcheckrc	---744 0 3	../etc/bcheckrc
+		brc		---744 0 3	../etc/brc
+		bupsched	---644 0 3	../etc/bupsched
+		bzapunix	---744 0 3	../etc/bzapunix
+		checklist	---664 0 3	/dev/null
+		ckbupscd	---755 0 3	../etc/ckbupscd
+		clri		---555 2 2	../etc/clri
+		coredirs	---644 0 3	../etc/coredirs
+		disks		---755 0 3	../etc/disks
+		disketteparm	---444 0 3	../etc/disketteparm
+		fsck1b		---555 2 2	../etc/fsck1b
+		fsstat		---555 0 3	../etc/fsstat
+		fstyp		---555 0 3	../etc/fstyp
+		fstyp.d		d--775 0 3
+			s5fstyp		---555 0 3	../etc/fstyp.d/s5fstyp
+		$
+		gettydefs	---664 0 2	../etc/gettydefs
+		ioctl.syscon	---644 0 0	../etc/ioctl.syscon
+		log		d--775 0 3
+		$
+		mknod		---555 2 2	../etc/mknod
+		mnttab		---644 0 2	/dev/null
+		motd		---644 0 3	/dev/null
+		mountall	---555 0 3	../etc/mountall
+		profile		---444 0 3	../etc/profile
+		prtconf		---555 0 3	../etc/prtconf
+		pump		---544 0 3	../etc/pump
+		rc0		---744 0 3	../etc/rc0
+		rc2		---744 0 3	../etc/rc2
+		rc3		---744 0 3	../etc/rc3
+		rc.d		d--775 0 3
+			setup		---444 0 3	../etc/rc.d/setup
+		$
+		init.d		d--775 0 3
+			ANNOUNCE	---444 0 3	../etc/init.d/ANNOUNCE
+			MOUNTFSYS	---444 0 3	../etc/init.d/MOUNTFSYS
+			README		---444 0 3	../etc/init.d/README
+			RMTMPFILES	---444 0 3	../etc/init.d/RMTMPFILES
+			autoconfig	---444 0 3	../etc/init.d/autoconfig
+			cron		---444 0 3	../etc/init.d/cron
+			disks		---444 0 3	../etc/init.d/disks
+ 			firstcheck	---444 0 3	../etc/init.d/firstcheck
+			sysetup		---444 0 3	../etc/init.d/sysetup
+			uucp		---444 0 3	../etc/init.d/uucp
+		$
+		rc0.d		d--775 0 3
+		$
+		rc2.d		d--775 0 3
+		$
+		rc3.d		d--775 0 3
+		$
+		save.d		d--775 0 3
+			except		---444 0 3	../etc/save.d/except
+		$
+		savecpio	---555 0 3	../etc/savecpio
+		setclk		---550 2 2	../etc/setclk
+		shutdown	---775 0 3	../etc/shutdown
+		shutdown.d	d--775 0 3
+		$
+		stdprofile	---444 0 3	../etc/stdprofile
+		tm		d--775 0 3
+		$
+		umountall	---555 0 3	../etc/umountall
+		vtoc	d--775 0 3
+		$
+		wall		---555 2 2	../etc/wall
+		wtmp		---664 4 4	/dev/null
+	$
+	lib	d--775 0 2
+		libp		d--775 2 2
+		$
+		pump		d--775 2 2
+			ports		---555 0 0	../lib/pump/ports
+		$
+	$
+	shlib	d--775 0 3
+		libnsl_s	---555 0 2	../shlib/libnsl_s
+	$
+	mnt	d--775 0 3
+	$
+$
+:#ident	"@(#)core:proto.core2	1.16"

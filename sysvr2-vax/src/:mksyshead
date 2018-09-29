@@ -1,0 +1,38 @@
+#	@(#):mksyshead	1.11
+
+if vax
+then
+	MACH=vax/sys
+elif pdp11
+then
+	MACH=pdp11/sys
+elif u3b
+then
+	MACH=3b/sys
+elif u3b2
+then
+	MACH=3b2/sys
+elif u3b5
+then
+	MACH=3b5/sys
+fi
+
+cd $ROOT/usr/include/sys
+rm -rf *
+for DIR in sys $MACH
+do
+	cd $ROOT/usr/src/uts/$DIR
+	echo "`pwd`:"
+	for FILE in *
+	do
+		cp $FILE $ROOT/usr/include/sys
+		echo "	$FILE"
+	done
+done
+cd $ROOT/usr/include/sys
+if [ "$ROOT" = "" ]
+then
+	chmod 664 *
+	chown bin *
+	chgrp bin *
+fi

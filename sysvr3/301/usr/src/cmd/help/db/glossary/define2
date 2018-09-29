@@ -1,0 +1,16 @@
+
+\S $:  dollar sign \S  
+
+1)  A dollar sign is used as a "primary prompt"\S*\S in UNIX
+systems. It tells the user when the system is ready to accept input
+again after executing a command. 
+
+2)  Also, when used preceding a "shell variable"\S*\S, a  dollar
+sign ($) causes the value of the shell variable to be substituted 
+for its name. For example, 
+
+	echo $HOME
+
+prints the pathname of the user's login directory.
+
+\S*\S defined in the \Sglossary\S

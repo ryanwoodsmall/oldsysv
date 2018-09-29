@@ -1,0 +1,105 @@
+* @(#)master	6.8
+*
+* The following devices are those that can be specified in the system
+* description file.  The name specified must agree with the name shown.
+*
+sio	1	237	21	sio	7170	0	4	8	4	tty
+dc	1	36	33	dc	512	0	2	1	5
+tc	1	37	33	tc	512	1	6	1	5
+lp	2	33	11	lp	8	0	7	1	4
+sxt	0	37	21	sxt	0	0	8	32	0
+prf	0	7	31	prf	0	0	9	1	0
+*
+* The following devices must not be specified in the system description
+* file.  They are here to supply information to the config program.
+*
+con	0	237	35	con	0	0	0	1	0	tty
+memory	0	6	35	mm	0	0	1	1	0
+tty	0	27	35	sy	0	0	3	1	0
+errlog	0	34	35	err	0	0	5	1	0
+$$$
+*
+* The following entries form the alias table.
+*
+dcu	dc
+tcu	tc
+$$$
+*
+* The following entries form the tunable parameter table.
+*
+buffers	NBUF
+inodes	NINODE
+files	NFILE
+mounts	NMOUNT
+calls	NCALL
+procs	NPROC
+clists	NCLIST
+sabufs	NSABUF	0
+power	POWER	0
+maxproc	MAXUP	25
+* hashbuf must be a power of 2
+hashbuf	NHBUF	64
+physbuf	NPBUF	20
+csibnum	CSIBNUM	20
+vpmbsz	VPMBSZ	8192
+vpmnexus VPMNEXUS 0
+x25links	X25LINKS	1
+x25bufs	X25BUFS	256
+x25nexus X25NEXUS 0
+x25bytes	X25BYTES	(16*1024)
+bx25links	BX25LINKS	2
+bx25bufs	BX25BUFS	80
+bx25nexus BX25NEXUS 0
+bx25bytes	BX25BYTES	(16*1024)
+bx25hlprot	BX25HLPROT	2
+sesbufs	SESBUFS	32
+sesbytes	SESBYTES	(8*1024)
+mesg	MESG	0
+msgmap	MSGMAP	100
+msgmax	MSGMAX	8192
+msgmnb	MSGMNB	16384
+msgmni	MSGMNI	50
+msgssz	MSGSSZ	8
+msgtql	MSGTQL	40
+msgseg	MSGSEG	1024
+sema	SEMA	0
+semmap	SEMMAP	10
+semmni	SEMMNI	10
+semmns	SEMMNS	60
+semmnu	SEMMNU	30
+semmsl	SEMMSL	25
+semopm	SEMOPM	10
+semume	SEMUME	10
+semvmx	SEMVMX	32767
+semaem	SEMAEM	16384
+shmem	SHMEM	0
+shmmax	SHMMAX	(128*1024)
+shmmin	SHMMIN	1
+shmmni	SHMMNI	100
+shmseg	SHMSEG	6
+shmbrk	SHMBRK	16
+shmall	SHMALL	512
+stibsz	STIBSZ	8192
+stobsz	STOBSZ	8192
+stihbuf	STIHBUF	(ST_0*4)
+stohbuf	STOHBUF	(ST_0*4)
+stnprnt	STNPRNT	(ST_0>>2)
+stnexus STNEXUS 0
+emtbsz	EMTBSZ	8192
+emrbsz	EMRBSZ	8192
+emrcvsz	EMRCVSZ	2048
+embhdr	EMBHDR	(EM_0*6)
+emnexus	EMNEXUS	0
+flckrec	FLCKREC	200
+flckfil	FLCKFIL	50
+regions	REGIONS	400
+getpgslo	GETPGSLO	25
+getpgshi	GETPGSHI	50
+vhandr	VHANDR	4
+vhandl	VHANDL	999999
+vhndfrac	VHNDFRAC	8
+agerate AGERATE	5
+prepage PREPAGE 4
+maxsc	MAXSC	32
+sptmap	SPTMAP	200
+maxpmem MAXPMEM	0

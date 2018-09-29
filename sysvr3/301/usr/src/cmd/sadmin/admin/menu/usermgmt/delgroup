@@ -1,0 +1,45 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/delgroup	2.3"
+#menu# delete a group from the system
+#help# 
+#help#	Delgroup allows you to remove groups from the computer.  The
+#help#	deleted group is no longer identified by name.  However files may
+#help#	still be identified with the group ID number.
+
+minuid=100	# minimum group ID number that is deletable
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+while true
+do
+	groupname=`checkre ${flags} -fe 'Which group name do you wish to delete? [q]' \
+		'.' 'You must enter at least one character.'`
+	idline=`grep "^${groupname}:" /etc/group`
+	if [ -n "${idline}" ]
+	then
+		gid=`echo "${idline}"  |  cut -d: -f3`
+		if [ "${gid}" -lt ${minuid} ]
+		then
+			echo "\\tThat group has group ID ${gid} which is less than ${minuid}.
+	This procedure will not delete that group ID."
+		elif  checkyn ${flags} -H"
+	If you answer  y  files with group ID ${gid} will no longer be
+	identified as being in group ${groupname}." \
+			-f "Do you want to delete group name '${groupname}', group ID ${gid}?"
+		then
+			ed - /etc/group <<-!
+				H
+				/^${groupname}:/d
+				w
+				q
+			!
+			echo ${groupname} has been deleted.
+		fi
+
+	else
+		echo "\\t'${groupname}' is not an existing group.
+\\tThis is the current list:"
+		cut -d: -f1 /etc/group  |  sort  |  pr -t -w80 -6
+	fi
+	checkyn -f ${flags} 'Do you want to delete any other groups?'  ||  break
+done

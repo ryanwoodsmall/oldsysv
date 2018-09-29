@@ -1,0 +1,129 @@
+.TH AR 4
+.SH NAME
+ar \-  common archive file format
+.SH DESCRIPTION
+The archive command
+.IR ar (1)
+is used to combine several files into
+one.
+Archives are used mainly as libraries to be searched
+by the link editor
+.IR ld (1).
+.PP
+Each archive begins with the archive magic string.
+.nf
+.ds HZ #definexx\s-1ARMAG\s+1xxx#M<arch>/n#xxx
+
+#define  \s-1ARMAG\s+1   "\^!<arch>\en"\h'|\w'\*(HZ'u'/\(** magic string \(**/
+#define  \s-1SARMAG\s+1  8\h'|\w'\*(HZ'u'/\(** length of magic string \(**/
+
+.fi
+.PP
+Each archive which contains common object files [see
+.IR a.out (4)]
+includes an archive symbol table.
+This symbol table is used by the link editor
+.IR ld (1)
+to determine which archive members must be loaded during the link
+edit process.
+The archive symbol table (if it exists) is always the first file
+in the archive (but is never listed) and is automatically
+created and/or updated by
+.IR ar .
+.PP
+Following the archive magic string are the archive file members.
+Each file member is preceded by a file member header which is of the following
+format:
+.nf
+.ds HZ #definexx\s-1ARFMAG\s+1xxx#M/n#xxx
+
+#define  \s-1ARFMAG\s+1    "\^`\^\en"\h'|\w'\*(HZ'u'/\(** header trailer string \(**/
+
+struct  ar_hdr\h'|\w'\*(HZ'u'/\(** file member header \(**/
+{
+    char    ar_name[16];\h'|\w'\*(HZ'u'/\(** '/' terminated file member name \(**/
+    char    ar_date[12];\h'|\w'\*(HZ'u'/\(** file member date \(**/
+    char    ar_uid[6];\h'|\w'\*(HZ'u'/\(** file member user identification \(**/
+    char    ar_gid[6];\h'|\w'\*(HZ'u'/\(** file member group identification \(**/
+    char    ar_mode[8];\h'|\w'\*(HZ'u'/\(** file member mode (octal) \(**/
+    char    ar_size[10];\h'|\w'\*(HZ'u'/\(** file member size \(**/
+    char    ar_fmag[2];\h'|\w'\*(HZ'u'/\(** header trailer string \(**/
+};
+
+.fi
+.PP
+All information in the file member headers is in printable
+.SM ASCII.
+The numeric information contained in the headers is stored as
+decimal numbers (except for
+.I ar_mode\^
+which is in octal).
+Thus, if the archive contains printable files, the archive itself is printable.
+.PP
+The
+.I ar_name\^
+field is blank-padded and slash (/) terminated.  The
+.I ar_date\^
+field is the modification date of the file at the time of its insertion
+into the archive.
+Common format archives can be moved from system to system as long as the
+portable archive command
+.IR ar (1)
+is used.  Conversion tools such as
+.IR arcv (1)
+and
+.IR convert (1)
+exist to aid in the transportation
+of non-common format archives to this format.
+.PP
+Each archive file member begins on an even byte boundary;
+a newline is inserted between files if necessary.
+Nevertheless the size given reflects the
+actual size of the file exclusive of padding.
+.PP
+Notice there is no provision for empty areas in an archive
+file.
+.PP
+If the archive symbol table exists, the first file in the archive
+has a zero length name (i.e.,
+.B ar_name[0]
+== '/').  The contents of this file are as follows:
+.TP
+\(bu
+The number of symbols.  Length: 4 bytes.
+.TP
+\(bu
+The array of offsets into the archive file.  Length: 4 bytes * ``the
+number of symbols''.
+.TP
+\(bu
+The name string table.  Length:
+.I ar_size\^
+\- (4 bytes * (``the number of symbols'' + 1)).
+.PP
+The number of symbols and the array of offsets are managed with
+.IR sgetl " and " sputl .
+The string table contains exactly as many null terminated strings
+as there are elements in the offsets array.
+Each offset from the array is associated with the corresponding
+name from the string table (in order).
+The names in the string table are all the defined global symbols
+found in the common object files in the archive.
+Each offset is the location of the archive header for the associated symbol.
+.SH SEE ALSO
+sputl(3X), a.out(4).
+.br
+ar(1),
+arcv(1),
+convert(1),
+ld(1),
+strip(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.SH CAVEATS
+.IR Strip (1)
+will remove all archive symbol entries from the header.  The archive symbol
+entries must be restored via the \fBts\fR option of the
+.IR ar (1)
+command before the archive can be used with the link editor
+.IR ld (1).
+.\"	%W% of %G%

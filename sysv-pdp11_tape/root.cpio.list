@@ -1,0 +1,251 @@
+drwx------  12 root     root            0 Oct 10  1983 .
+drwxrwxr-x   2 daemon   daemon          0 Oct 10  1983 bin
+-rwxrwxr-x   1 daemon   daemon      11148 Oct 10  1983 bin/ls
+-rwxrwxr-x   1 daemon   daemon       4796 Oct 10  1983 bin/cat
+-rwxrwxr-x   1 daemon   daemon       5912 Oct 10  1983 bin/expr
+-rwxrwxr-x   1 daemon   daemon       2356 Oct 10  1983 bin/echo
+-rwxrwxr-x   1 daemon   daemon      49626 Oct 10  1983 bin/make
+-rwxrwxr-x   1 daemon   daemon       6612 Oct 10  1983 bin/chown
+-rwxrwxr-x   1 daemon   daemon      14052 Oct 10  1983 bin/sed
+-rwxrwxr-x   1 daemon   daemon       3994 Oct 10  1983 bin/chmod
+-rwxrwxr-x   1 daemon   daemon       8224 Oct 10  1983 bin/grep
+-rwxrwxr-x   1 daemon   daemon       6282 Oct 10  1983 bin/chgrp
+-rwxrwxr-x   1 daemon   daemon       6554 Oct 10  1983 bin/rm
+-rwxrwxr-x   1 daemon   daemon       5148 Oct 10  1983 bin/cmp
+-rwxrwxr-x   2 daemon   daemon       6424 Oct 10  1983 bin/cp
+-rwxrwxr-x   1 daemon   daemon      21704 Oct 10  1983 bin/cpio
+-rwxrwxr-x   1 daemon   daemon       6174 Oct 10  1983 bin/crypt
+-rwxrwxr-x   1 daemon   daemon       9184 Oct 10  1983 bin/date
+-rwxrwxr-x   1 daemon   daemon       7672 Oct 10  1983 bin/dd
+-rwsr-xr-x   1 root     daemon       6094 Oct 10  1983 bin/df
+-rwxrwxr-x   1 daemon   daemon      10334 Oct 10  1983 bin/diff
+-rwxrwxr-x   1 daemon   daemon        114 Oct 10  1983 bin/dirname
+-rwxrwxr-x   1 daemon   daemon       5228 Oct 10  1983 bin/du
+-rwxrwxr-x   1 daemon   daemon         82 Oct 10  1983 bin/basename
+-rwxrwxr-x   2 daemon   daemon      23146 Oct 10  1983 bin/ed
+-rwxrwxr-x   1 daemon   daemon       4910 Oct 10  1983 bin/env
+-rwxrwxr-x   1 daemon   daemon       5730 Oct 10  1983 bin/as
+-rwxrwxr-x   5 daemon   daemon         49 Oct 10  1983 bin/false
+-rwxrwxr-x   1 daemon   daemon      19018 Oct 10  1983 bin/file
+-rwxrwxr-x   1 daemon   daemon      14820 Oct 10  1983 bin/find
+-rwxrwxr-x   1 daemon   daemon      11906 Oct 10  1983 bin/ar
+-rwxrwxr-x   1 daemon   daemon      22624 Oct 10  1983 bin/kasb
+-rwxrwxr-x   1 daemon   daemon       3746 Oct 10  1983 bin/kill
+-rwxrwxr-x   1 daemon   daemon       6108 Oct 10  1983 bin/kunb
+-rwxrwxr-x   1 daemon   daemon      11406 Oct 10  1983 bin/ld
+-rwxrwxr-x   1 daemon   daemon        422 Oct 10  1983 bin/line
+-rwxrwxr-x   2 daemon   daemon       6424 Oct 10  1983 bin/ln
+-rwxrwxr-x   1 daemon   daemon        421 Oct 10  1983 bin/lorder
+-rwxrwxr-x   1 daemon   daemon      26210 Oct 10  1983 bin/adb
+-rwxr-sr-x   2 daemon   disk        18716 Oct 10  1983 bin/mail
+-rwxrwxr-x   1 daemon   daemon      23308 Oct 10  1983 bin/acctcom
+-rwxrwxr-x   1 daemon   daemon       5122 Oct 10  1983 bin/mesg
+-rwxrwxr-x   2 daemon   daemon      15980 Oct 10  1983 bin/STTY
+-rwsr-xr-x   1 root     daemon       4332 Oct 10  1983 bin/mkdir
+-rwxrwxr-x   1 daemon   daemon      11100 Oct 10  1983 bin/write
+-rwsrwxr-x   1 root     daemon       6424 Oct 10  1983 bin/mv
+-rwsr-xr-x   1 root     daemon       9654 Oct 10  1983 bin/newgrp
+-rwxrwxr-x   1 daemon   daemon       5722 Oct 10  1983 bin/nice
+-rwxrwxr-x   1 daemon   daemon       7588 Oct 10  1983 bin/nm
+-rwxrwxr-x   1 daemon   daemon       6144 Oct 10  1983 bin/nohup
+-rwxrwxr-x   1 daemon   daemon       6858 Oct 10  1983 bin/od
+-rwsr-sr-x   1 root     daemon      11328 Oct 10  1983 bin/passwd
+-rwxrwxr-x   2 daemon   daemon         18 Oct 10  1983 bin/pdp11
+-rwxrwxr-x   1 daemon   daemon      11588 Oct 10  1983 bin/pr
+-rwxrwsr-x   1 daemon   sys         16370 Oct 10  1983 bin/ps
+-rwxrwxr-x   1 daemon   daemon       3982 Oct 10  1983 bin/pwd
+-rwxrwxr-x   2 daemon   daemon      23146 Oct 10  1983 bin/red
+-rwxrwxr-x   1 daemon   daemon      11164 Oct 10  1983 bin/cc
+-rwxr-sr-x   2 daemon   disk        18716 Oct 10  1983 bin/rmail
+-rwsr-xr-x   1 root     daemon       4450 Oct 10  1983 bin/rmdir
+-rwxrwxr-x   2 daemon   daemon      23222 Oct 10  1983 bin/rsh
+-rwxrwxr-x   1 daemon   daemon       4902 Oct 10  1983 bin/scat
+-rwxrwxr-x   1 daemon   daemon      29664 Oct 10  1983 bin/bs
+-rwxrwxr-x   2 daemon   daemon      23222 Oct 10  1983 bin/sh
+-rwxrwxr-x   1 daemon   daemon       5628 Oct 10  1983 bin/size
+-rwxrwxr-x   1 daemon   daemon       3790 Oct 10  1983 bin/sleep
+-rwxrwxr-x   1 daemon   daemon      10504 Oct 10  1983 bin/sort
+-rwxrwxr-x   1 daemon   daemon       7506 Oct 10  1983 bin/strip
+-rwxrwxr-x   2 daemon   daemon      15980 Oct 10  1983 bin/stty
+-rwsr-xr-x   1 root     sys         12146 Oct 10  1983 bin/su
+-rwxrwxr-x   1 daemon   daemon       4690 Oct 10  1983 bin/sum
+-rwxrwxr-x   1 daemon   daemon        156 Oct 10  1983 bin/sync
+-rwxrwxr-x   1 daemon   daemon       5446 Oct 10  1983 bin/tail
+-rwxrwxr-x   1 daemon   daemon       1224 Oct 10  1983 bin/tee
+-rwxrwxr-x   1 daemon   daemon       6332 Oct 10  1983 bin/time
+-rwxrwxr-x   1 daemon   daemon       7696 Oct 10  1983 bin/touch
+-rwxrwxr-x   2 daemon   daemon         18 Oct 10  1983 bin/true
+-rwxrwxr-x   1 daemon   daemon       4854 Oct 10  1983 bin/tty
+-rwxrwxr-x   5 daemon   daemon         49 Oct 10  1983 bin/u370
+-rwxrwxr-x   5 daemon   daemon         49 Oct 10  1983 bin/u3b
+-rwxrwxr-x   5 daemon   daemon         49 Oct 10  1983 bin/u3b5
+-rwxrwxr-x   1 daemon   daemon       4714 Oct 10  1983 bin/uname
+-rwxrwxr-x   5 daemon   daemon         49 Oct 10  1983 bin/vax
+-rwxrwxr-x   1 daemon   daemon       4006 Oct 10  1983 bin/wc
+-rwxrwxr-x   1 daemon   daemon      13130 Oct 10  1983 bin/who
+-rwxrwxr-x   1 root     daemon      15436 Oct 10  1983 bin/login
+drwxr-xr-x   2 root     sys             0 Oct 10  1983 dev
+cr--------   1 root     sys        7,   1 Oct 10  1983 dev/rrp1
+cr--r-----   1 adm      sys        2,   1 Oct 10  1983 dev/kmem
+crw-rw-rw-   1 root     sys        6,   0 Oct 10  1983 dev/rmt0
+crw-rw-rw-   1 root     sys        6,   8 Oct 10  1983 dev/rmt1
+brw-rw-rw-   1 root     sys        1,   8 Oct 10  1983 dev/mt1
+brw-rw-rw-   1 root     sys        1,  12 Oct 10  1983 dev/mt5
+crw-rw-rw-   1 root     sys        6,  12 Oct 10  1983 dev/rmt5
+cr--------   1 root     sys        7,   0 Oct 10  1983 dev/rrp0
+cr--r-----   1 adm      sys        2,   0 Oct 10  1983 dev/mem
+crw-rw-rw-   1 root     sys        6,   4 Oct 10  1983 dev/rmt4
+br--r-----   1 adm      sys        0,   0 Oct 10  1983 dev/swap
+br--------   1 root     sys        0,   1 Oct 10  1983 dev/rp1
+cr--------   1 root     sys        7,   3 Oct 10  1983 dev/rrp3
+cr--------   1 root     sys        7,   2 Oct 10  1983 dev/rrp2
+br--------   1 root     sys        0,   2 Oct 10  1983 dev/rp2
+cr--------   1 root     sys        7,   4 Oct 10  1983 dev/rrp4
+br--------   1 root     sys        0,   3 Oct 10  1983 dev/rp3
+cr--------   1 root     sys        7,   7 Oct 10  1983 dev/rrp7
+br--------   1 root     sys        0,   4 Oct 10  1983 dev/rp4
+br--------   1 root     sys        0,   5 Oct 10  1983 dev/rp5
+br--------   1 root     sys        0,   6 Oct 10  1983 dev/rp6
+br--------   1 root     sys        0,   7 Oct 10  1983 dev/rp7
+cr--------   1 root     sys        7,   6 Oct 10  1983 dev/rrp6
+cr--------   1 root     sys        7,   5 Oct 10  1983 dev/rrp5
+br--------   1 root     sys        0,   0 Oct 10  1983 dev/rp0
+brw-rw-rw-   1 root     sys        1,   0 Oct 10  1983 dev/mt0
+brw-rw-rw-   1 root     sys        1,   4 Oct 10  1983 dev/mt4
+crw-rw-rw-   1 root     sys        2,   2 Oct 10  1983 dev/null
+cr--r--r--   1 root     sys       20,   0 Oct 10  1983 dev/error
+crw-rw-rw-   1 root     sys       13,   0 Oct 10  1983 dev/tty
+crw--w--w-   3 root     sys        0,   0 Oct 10  1983 dev/console
+crw--w--w-   3 root     sys        0,   0 Oct 10  1983 dev/syscon
+crw--w--w-   3 root     sys        0,   0 Oct 10  1983 dev/systty
+drwxrwxr-x   3 root     sys             0 Oct 10  1983 etc
+drwxrwxr-x   2 root     sys             0 Oct 10  1983 etc/log
+-rw-rw-r--   1 root     sys             0 Oct 10  1983 etc/log/filesave.log
+-rw-r--r--   1 root     sys            26 Oct 10  1983 etc/mnttab
+-rwxrwxr-x   1 daemon   daemon       7984 Oct 10  1983 etc/mount
+-rwxrwxr-x   1 daemon   daemon       4200 Oct 10  1983 etc/umount
+-rw-r--r--   1 root     sys           146 Oct 10  1983 etc/group
+-rw-r--r--   1 root     sys           478 Oct 10  1983 etc/passwd
+-rw-rw-r--   1 root     sys            14 Oct 10  1983 etc/motd
+-rwxrwxr-x   1 daemon   daemon      35870 Oct 10  1983 etc/crash
+-rwxr--r--   1 daemon   daemon       8260 Oct 10  1983 etc/cron
+-rwxrwxr-x   1 daemon   daemon      14028 Oct 10  1983 etc/dcopy
+-rwxrwxr-x   1 daemon   daemon       4814 Oct 10  1983 etc/devnm
+-rwxrwxr-x   1 daemon   daemon       9008 Oct 10  1983 etc/dfsck
+-rwxrwxr-x   1 daemon   daemon        236 Oct 10  1983 etc/dzbload
+-rwxrwxr-x   1 daemon   daemon       5594 Oct 10  1983 etc/errdead
+-rwxrwxr-x   1 daemon   daemon        302 Oct 10  1983 etc/errstop
+-rwxrwxr-x   1 daemon   daemon       2728 Oct 10  1983 etc/filesave
+-rwxrwxr-x   1 daemon   daemon      39808 Oct 10  1983 etc/fsck
+-rwxrwxr-x   1 daemon   daemon      14234 Oct 10  1983 etc/fscv
+-rwxrwxr-x   1 daemon   daemon      17870 Oct 10  1983 etc/fsdb
+-rwxrwxr-x   1 daemon   daemon       8794 Oct 10  1983 etc/fuser
+-rwxr--r--   1 root     daemon      17210 Oct 10  1983 etc/getty
+-rwxr--r--   1 root     sys           396 Oct 10  1983 etc/gettydefs
+-rwxr--r--   1 root     sys           186 Oct 10  1983 etc/brc
+-rwxrwxr-x   1 daemon   daemon       6202 Oct 10  1983 etc/grpck
+-rwxrwxr-x   1 root     daemon      22688 Oct 10  1983 etc/init
+-rw-rw-r--   1 daemon   daemon        434 Oct 10  1983 etc/inittab
+-rwxrwxr-x   1 daemon   daemon       4577 Oct 10  1983 etc/install
+-rw-r--r--   1 root     root           43 Oct 10  1983 etc/ioctl.syscon
+-rwxrwxr-x   1 daemon   daemon       5870 Oct 10  1983 etc/killall
+-rwxrwxr-x   1 daemon   daemon       7602 Oct 10  1983 etc/labelit
+-rwx------   1 root     sys           326 Oct 10  1983 etc/link
+-rwxrwxr-x   1 daemon   daemon       5118 Oct 10  1983 etc/bcopy
+-rwxrwxr-x   1 daemon   daemon       1758 Oct 10  1983 etc/magic
+-rw-r--r--   1 root     sys          2456 Oct 10  1983 etc/master
+-rwxr--r--   1 root     sys           695 Oct 10  1983 etc/bcheckrc
+-rwxrwxr-x   1 daemon   daemon      10370 Oct 10  1983 etc/mkfs
+-rw-rw-r--   1 lp       adm             0 Oct 10  1983 etc/wtmp
+-rwxrwxr-x   1 daemon   daemon       4876 Oct 10  1983 etc/mknod
+-rwxrwxr-x   1 daemon   daemon        117 Oct 10  1983 etc/checkall
+-rw-rw-r--   1 root     sys             9 Oct 10  1983 etc/checklist
+-rwxrwxr-x   1 daemon   daemon       4658 Oct 10  1983 etc/chroot
+-rwxr--r--   1 root     sys           559 Oct 10  1983 etc/mvdir
+-rwxrwxr-x   1 daemon   daemon       6924 Oct 10  1983 etc/ncheck
+-rwxrwxr-x   1 daemon   daemon      13928 Oct 10  1983 etc/ovld
+-rwxrwxr-x   1 daemon   daemon       4374 Oct 10  1983 etc/clri
+-rwxr--r--   1 root     sys           263 Oct 10  1983 etc/powerfail
+-rwxrwxr-x   1 daemon   daemon       6256 Oct 10  1983 etc/prfdc
+-rwxrwxr-x   1 daemon   daemon       1724 Oct 10  1983 etc/prfld
+-rwxrwxr-x   1 daemon   daemon       8786 Oct 10  1983 etc/prfpr
+-rwxrwxr-x   1 daemon   daemon       3804 Oct 10  1983 etc/prfsnap
+-rwxrwxr-x   1 daemon   daemon       3604 Oct 10  1983 etc/prfstat
+-rw-r--r--   1 daemon   daemon        255 Oct 10  1983 etc/profile
+-rwxrwxr-x   1 daemon   daemon       5554 Oct 10  1983 etc/pwck
+-rwxr--r--   1 root     sys           751 Oct 10  1983 etc/rc
+-rwxrwxr-x   1 daemon   daemon        668 Oct 10  1983 etc/setmnt
+-rwxrwxr-x   1 daemon   daemon       1382 Oct 10  1983 etc/shutdown
+-rwxrwxr-x   1 daemon   daemon      14694 Oct 10  1983 etc/sysdef
+-rwxrwxr-x   1 daemon   daemon       7772 Oct 10  1983 etc/sysfix
+-rwxrwxr-x   1 daemon   daemon        876 Oct 10  1983 etc/tapesave
+-rw-r--r--   1 daemon   daemon      66405 Oct 10  1983 etc/termcap
+-rwxrwxr-x   1 daemon   daemon      21988 Oct 10  1983 etc/config
+-rwx------   1 root     sys           298 Oct 10  1983 etc/unlink
+-rw-r--r--   1 daemon   daemon          0 Oct 10  1983 etc/utmp
+-rwxrwxr-x   1 daemon   daemon      16582 Oct 10  1983 etc/volcopy
+-rwxrwxr-x   1 daemon   daemon      13194 Oct 10  1983 etc/vpmfmt
+-rwxrwxr-x   1 daemon   daemon       9896 Oct 10  1983 etc/vpmfsr
+-rwxrwxr-x   1 daemon   daemon      10076 Oct 10  1983 etc/vpmsave
+-rwxrwxr-x   1 daemon   daemon       8340 Oct 10  1983 etc/vpmset
+-rwxrwxr-x   1 daemon   daemon        574 Oct 10  1983 etc/vpmstart
+-rwxrwxr-x   1 daemon   daemon      12030 Oct 10  1983 etc/vpmtest
+-rwxrwxr-x   1 daemon   daemon      10462 Oct 10  1983 etc/wall
+-rwxrwxr-x   1 daemon   daemon        595 Oct 10  1983 etc/whodo
+drwxrwxr-x   3 daemon   daemon          0 Oct 10  1983 lib
+drwxrwxr-x   2 daemon   daemon          0 Oct 10  1983 lib/libp
+-rw-rw-r--   1 daemon   daemon      99472 Oct 10  1983 lib/libp/libc.a
+-rw-rw-r--   1 daemon   daemon      32110 Oct 10  1983 lib/libp/libm.a
+-rwxrwxr-x   2 daemon   daemon      40830 Oct 10  1983 lib/c1
+-rwxrwxr-x   1 daemon   daemon      12512 Oct 10  1983 lib/c2
+-rwxrwxr-x   1 daemon   daemon     134630 Oct 10  1983 lib/comp
+-rwxrwxr-x   1 daemon   daemon      27926 Oct 10  1983 lib/cpp
+-rw-rw-r--   1 daemon   daemon        200 Oct 10  1983 lib/crt0.o
+-rw-rw-r--   1 daemon   daemon       1036 Oct 10  1983 lib/crt2.o
+-r--r--r--   1 daemon   daemon      14978 Oct 10  1983 lib/cslapb.kms
+-r--r--r--   1 daemon   daemon      13996 Oct 10  1983 lib/cslapb.o
+-rwxrwxr-x   1 daemon   daemon       5110 Oct 10  1983 lib/as2
+-rwxrwxr-x   1 daemon   daemon      12910 Oct 10  1983 lib/dzkmcb.o
+-rw-rw-r--   1 daemon   daemon        556 Oct 10  1983 lib/mcrt0.o
+-rwxrwxr-x   2 daemon   daemon      26604 Oct 10  1983 lib/fc0
+-rwxrwxr-x   2 daemon   daemon      40830 Oct 10  1983 lib/fc1
+-rw-rw-r--   1 daemon   daemon        236 Oct 10  1983 lib/fcrt0.o
+-rw-rw-r--   1 daemon   daemon        592 Oct 10  1983 lib/fmcrt0.o
+-rw-rw-r--   1 daemon   daemon      23754 Oct 10  1983 lib/libPW.a
+-rw-rw-r--   1 daemon   daemon      92304 Oct 10  1983 lib/libc.a
+-rw-rw-r--   1 daemon   daemon      30834 Oct 10  1983 lib/libm.a
+-rwxrwxr-x   2 daemon   daemon      26604 Oct 10  1983 lib/c0
+drwxrwxrwx   2 daemon   daemon          0 Oct 10  1983 lost+found
+drwxr-xr-x   2 root     sys             0 Oct 10  1983 mnt
+drwxr-xr-x   2 root     sys             0 Oct 10  1983 bck
+drwxrwxr-x   2 daemon   daemon          0 Oct 10  1983 stand
+-rwxrwxr-x   1 daemon   daemon      15636 Oct 10  1983 stand/dd
+-rwxrwxr-x   1 daemon   daemon      15670 Oct 10  1983 stand/du
+-rwxrwxr-x   1 daemon   daemon      35532 Oct 10  1983 stand/fsck
+-rwxrwxr-x   1 daemon   daemon      26066 Oct 10  1983 stand/fsdb
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/hmboot1
+-rwxrwxr-x   1 daemon   daemon       3092 Oct 10  1983 stand/hmboot2
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/hpboot1
+-rwxrwxr-x   1 daemon   daemon       3092 Oct 10  1983 stand/hpboot2
+-rwxrwxr-x   1 daemon   daemon       8216 Oct 10  1983 stand/iltd
+-rwxrwxr-x   1 daemon   daemon      20748 Oct 10  1983 stand/ls
+-rwxrwxr-x   1 daemon   daemon      15024 Oct 10  1983 stand/cat
+-rwxr-xr-x   1 daemon   daemon       3152 Oct 10  1983 stand/mmtest
+-rwxrwxr-x   1 daemon   daemon       1024 Oct 10  1983 stand/tapeboot
+-rwxrwxr-x   1 daemon   daemon      16616 Oct 10  1983 stand/od
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rk11boot
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rl11boot
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rm05boot
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rp03boot
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rp04boot
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rpboot1
+-rwxrwxr-x   1 daemon   daemon       3076 Oct 10  1983 stand/rpboot2
+-rwxrwxr-x   1 daemon   daemon        512 Oct 10  1983 stand/rs04boot
+-rwxrwxr-x   1 daemon   daemon      18980 Oct 10  1983 stand/sash
+drwxr-xr-x   2 root     sys             0 Oct 10  1983 usr
+drwxrwxrwx   2 root     sys             0 Oct 10  1983 tmp
+-rwxrwxr-x   1 root     sys         71856 Oct 10  1983 tmp/unixgdht
+-rwxrwxr-x   1 daemon   daemon      67336 Oct 10  1983 unixrpht
+-rwxrwxr-x   1 daemon   daemon      71256 Oct 10  1983 unixgdtm
+-rwxrwxr-x   1 daemon   daemon      66672 Oct 10  1983 unixrptm
+-rwxrwxr-x   1 daemon   daemon      71856 Oct 10  1983 unixgdht

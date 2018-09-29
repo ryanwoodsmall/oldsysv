@@ -1,0 +1,156 @@
+'\" t
+.TH DON 1M "3B20S only"
+.SH NAME
+don, doff, disp \- device logically on, logically off or display status
+.SH SYNOPSIS
+.B /etc/don
+unit unitnum [ pump-file ]
+.br
+.B "/etc/don all"
+[ sysfile ]
+.PP
+.B /etc/doff
+unit unitnum
+.PP
+.B /etc/disp
+unit unitnum
+.br
+.B "/etc/disp all"
+[ sysfile ]
+.br
+.B /etc/disp
+.B "all \-"
+[ sysfile ]
+.br
+.B /etc/disp
+.B "all \-i"
+[ sysfile ]
+.br
+.B /etc/disp
+.B "all \-c"
+[ incr ] [ sysfile ]
+.SH DESCRIPTION
+.I Don\^
+restores to service (logically connects to the system)
+a hardware
+.IR unit .
+.I Unitnum
+is the unit number of that particular
+.IR unit .
+For example,
+.PP
+.RS
+don tn4 1
+.RE
+.PP
+restores to service the \fBtn4\fP whose unit number is \fB1\fP.
+.I Pump-file
+in directory
+.B /firm
+is pumped into that specified device.
+The default pump-file is
+.BR unit .
+.I Don all
+reads
+.IR sysfile ,
+default is
+.BR /etc/system ,
+and performs a
+.I don unit unitnum [pump-file]
+on each
+.SM IOP\*S,
+.SM DFC
+and associated peripherals listed in that file.
+Lines prefixed with a \fB#\fP (comment) or \fB!\fP (no-pump) will be
+skipped.
+.I Don all
+is primarily useful when the system is brought to multi-user mode.
+.PP
+.I Doff
+removes from service (logically disconnects)
+.I unitnum
+of type
+.IR unit .
+.PP
+.I Disp\^
+prints the status of
+.I unitnum
+of type
+.I unit
+(e.g., ``out of service'', ``undergoing diagnostics'').
+.I Disp all
+reads
+.IR sysfile ,
+default is
+.BR /etc/system ,
+and performs a
+.I disp unit unitnum
+on each
+.SM IOP\*S,
+.SM DFC
+and associated peripherals listed in that file.
+Lines prefixed with a \fB#\fP are skipped.
+Output is in the form of:
+.PP
+.RS
+unit-unitnum    chan    dev    status
+.RE
+.PP
+for an \s-1IOP\s+1 or \s-1DFC\s+1 and
+.PP
+.RS
+slot	unit-unitnum	status
+.RE
+.PP
+for each device on that
+.SM IOP
+or
+.SM DFC\*S.
+If the \- argument is given, a status diagram of the hardware is
+printed on the terminal.
+Known
+.I terminals
+from the environment parameter
+.B
+.SM $TERM
+(see
+.IR environ (5))
+are:
+.PP
+.RS
+.TS
+lI lI
+l l.
+$TERM Value	Terminal Type
+4420	TTY 4420
+vt100	VT 100
+2621	HP 2621
+2645	HP 2645
+.TE
+.RE
+.PP
+Peripherals out of service are displayed in inverse video and
+invalid entries are blinked
+(shown by \fB\(**\fP and \(bv,
+respectively, under the device slot on Hewlett Packard terminals).
+The
+.B i
+flag makes the program interactive; the
+.B c
+flag redraws the status of the machine every
+.I incr
+seconds, default is 30
+(a \fB?\fP is printed under each entry that has changed status since the
+invocation of the program).
+.SH FILES
+.PD 0
+.TP \w'/etc/master\ \ 'u
+/etc/master
+default table for hardware specifications
+.TP
+/etc/system
+default system configuration file
+.PD
+.SH "SEE ALSO"
+config(1M), master(4), system(4).
+.\"	@(#)don.1m	5.2 of 5/18/82

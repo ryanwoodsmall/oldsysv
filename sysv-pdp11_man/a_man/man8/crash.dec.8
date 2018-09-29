@@ -1,0 +1,345 @@
+.tr ~
+.TH CRASH 8 "DEC only"
+.SH NAME
+crash \- what to do when the system crashes
+.SH DESCRIPTION
+This entry gives at least a few clues about how to proceed if the
+system crashes.
+It can't pretend to be complete.
+.PP
+.IR "How to bring it back up" .
+If the reason for the crash is not evident
+(see below for guidance on ``evident'')
+you may want to try to dump the system if you feel up to
+debugging.
+At the moment a dump can be taken only on magtape.
+With a tape mounted and ready,
+stop the machine, load address 44(8) (on the
+.SM PDP\*S-11),
+400(16) (on the
+.SM VAX\*S-11/780;
+see
+.IR 780ops (8)),
+and start.
+This should write a copy of all of core
+on the tape with an \s-1EOF\s+1 mark.
+Be sure the ring is in,
+the tape is ready, and the tape is clean and new.
+.PP
+In restarting after a crash,
+always bring up the system single-user,
+as specified in
+.IR unixboot (8)
+as modified for your particular installation.
+Then
+perform an
+.IR fsck (1M)
+on all file systems which could have been in use at the time
+of the crash.
+If any serious file system problems are found, they should be repaired.
+When you are satisfied with the health of your disks,
+check and set the date if necessary,
+then come up multi-user.
+.PP
+To even boot the \s-1UNIX\s+1 System at all,
+three files (and the directories leading to them)
+must be intact.
+First,
+the initialization program
+.B /etc/init
+must be present and executable.
+If it is not,
+the
+.SM CPU
+will loop in user mode at location 6(8)
+(\s-1PDP\s0-11), 13(16) (\s-1VAX\s0-11/780).
+For
+.I init\^
+to work correctly,
+.B /dev/console
+and
+.B /bin/sh
+must be present.
+If either does not exist, the symptom is best described as thrashing.
+.I Init\^
+will go into a
+.I fork/exec\^
+loop trying to create a
+shell with proper standard input and output.
+.PP
+If you cannot get the system to boot,
+a runnable system must be obtained from
+a backup medium.
+The root file system may then be doctored as
+a mounted file system as described below.
+If there are any problems with the root
+file system,
+it is probably prudent to go to a
+backup system to avoid working on a
+mounted file system.
+.PP
+.IR "Repairing disks" .
+The first rule to keep in mind is that an addled disk
+should be treated gently;
+it shouldn't be mounted unless necessary,
+and if it is very valuable yet
+in quite bad shape, perhaps it should be copied before
+trying surgery on it.
+This is an area where experience and informed courage count for much.
+.PP
+.IR Fsck (1M)
+is adept at diagnosing and repairing file system problems.
+It first identifies all of the files
+that contain bad (out of range) blocks or
+blocks that appear in more than one file.
+Any such files are then identified by
+name and
+.I fsck\^
+requests permission to remove them from the
+file system.
+Files with bad blocks should be removed.
+In the case of duplicate blocks, all of the
+files except the most recently modified
+should be removed. The contents of the survivor
+should be checked after the file system is repaired
+to ensure that it contains the proper data.
+(Note that running
+.I fsck\^
+with the
+.B \-n
+option will cause it to report all problems
+without attempting any repair.)
+.PP
+.I Fsck\^
+will also report on incorrect link counts and
+will request permission to adjust any that are
+erroneous. In addition, it will reconnect any
+files or directories that are allocated but have
+no file system references to a ``lost+found'' directory.
+Finally, if the free list is bad (out of range,
+missing, or duplicate blocks)
+.I fsck\^
+will, with the operators concurrence, construct a new one.
+.PP
+.IR "Why did it crash" ?
+The
+.SM UNIX
+System types a message
+on the console typewriter when it voluntarily crashes.
+Here is the current list of such messages,
+with enough information to provide
+a hope at least of the remedy.
+The message has the form ``panic:\ .\|.\|.'',
+possibly accompanied by other information.
+Left unstated in all cases
+is the possibility that hardware or software
+error produced the message in some unexpected way.
+.TP 5
+blkdev
+The
+.I getblk\^
+routine was called with a nonexistent major device as argument.
+Definitely hardware or software error.
+.TP
+devtab
+Null device table entry for the major device used as argument to
+.IR getblk .
+Definitely hardware or software error.
+.TP
+iinit
+An I/O error reading the super-block for the root file system
+during initialization.
+.TP
+no fs
+A device has disappeared from the mounted-device table.
+Definitely hardware or software error.
+.TP
+no imt
+Like ``no fs'', but produced elsewhere.
+.TP
+no clock
+During initialization,
+neither the line nor programmable clock was found to exist.
+.TP
+I/O error in swap
+An unrecoverable I/O error during a swap.
+Really shouldn't be a panic,
+but it is hard to fix.
+.TP
+out of swap space
+A program needs to be swapped out, and there is no more swap space.
+It has to be increased.
+This really shouldn't be a panic, but there is no easy fix.
+.TP
+trap
+An unexpected trap has occurred within the system.
+This is accompanied by three numbers:
+a ``ka6'', which is the contents of the segmentation
+register for the area in which the system's stack is kept;
+``aps'', which is the location where the hardware stored
+the program status word during the trap;
+and a ``trap type'' which encodes
+which trap occurred.
+The trap types are:
+.TP
+\&
+.SM PDP\*S-11:
+.PD 0
+.RS
+.TP 7
+0
+bus error
+.TP
+1
+illegal instruction
+.TP
+2
+\s-1BPT\s+1/trace
+.TP
+3
+.SM IOT
+.TP
+4
+power fail
+.TP
+5
+.SM EMT
+.TP
+6
+recursive system call (\s-1TRAP\s+1 instruction)
+.TP
+7
+11/70 cache parity, or programmed interrupt
+.TP
+8
+floating point trap
+.TP
+9
+segmentation violation
+.RE
+.PD
+.TP
+\&
+.SM VAX\*S-11/780:
+.PD 0
+.RS
+.TP 7
+0
+reserved addressing fault
+.TP
+1
+illegal instruction
+.TP
+2
+.SM BPT
+instruction trap
+.TP
+3
+.SM XFC
+instruction trap
+.TP
+4
+reserved operand fault
+.TP
+5
+recursive system call (\s-1CHMK\s0 instruction)
+.TP
+6
+floating point trap
+.TP
+7
+software level 1 (reschedule) trap
+.TP
+8
+segmentation violation
+.TP
+9
+protection fault
+.TP
+10
+trace trap
+.TP
+11
+compatibility mode fault
+.RE
+.PP
+In some of these cases it is
+possible for octal 40 to be added into the trap type;
+this indicates that the processor was in user mode when the trap occurred.
+If you wish to examine the stack after such a trap,
+either dump the system, or use the console switches to examine core;
+the required address mapping is described below.
+.PP
+.IR "Interpreting dumps" .
+All file system problems
+should be taken care of before attempting to look at dumps.
+The dump should be read into the file
+.BR /usr/tmp/core ;
+.IR cp (1)
+will do.
+At this point, you should execute
+.I "ps \-el \-c /usr/tmp/core\^"
+and
+.I who\^
+to print the process table and the users who were on
+at the time of the crash.
+.PP
+.IR "Additional information for the \s-1PDP\s0-11" .
+You should dump
+.RI ( adb (1))
+the first 30 bytes of
+.BR /usr/tmp/core .
+Starting at location 4,
+the registers \s-1R0\s0, \s-1R1\s0, \s-1R2\s0,
+.SM R3\*S,
+.SM R4\*S,
+.SM R5\*S,
+.SM SP\*S
+and
+.SM KDSA6
+(\s-1KISA6\s0 for 11/40s) are stored.
+If the dump had to be restarted,
+.SM R0
+will not be correct.
+Next, take the value of
+.SM KA6
+(location 22(8) in the dump)
+multiplied by 100(8) and dump 2000(8) bytes starting from there.
+This is the per-process data associated with the process running
+at the time of the crash.
+Relabel
+the addresses 140000 to 141776.
+.SM R5
+is C's frame or display pointer.
+Stored at (\s-1R5\s0) is the old
+.SM R5
+pointing to the previous
+stack frame.
+At (\s-1R5\s0)+2
+is the saved
+.SM PC
+of the calling procedure.
+Trace this calling chain until you obtain an
+.SM R5
+value of 141756, which is where the user's
+.SM R5
+is stored.
+If the chain is broken, you have to look for a plausible
+.SM R5\*S,
+.SM PC
+pair and continue from there.
+Each
+.SM PC
+should be looked up in the system's name list using
+.IR adb (1)
+and its
+.B :
+command, to get a reverse calling order.
+In most cases this procedure will give
+an idea of what is wrong.
+A more complete discussion
+of system debugging is impossible.
+.SH SEE ALSO
+adb(1), fsck(1M), 780ops(8), unixboot(8).
+.tr ~~
+.\"	@(#)crash.dec.8	5.2 of 5/18/82

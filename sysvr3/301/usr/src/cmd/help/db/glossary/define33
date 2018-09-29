@@ -1,0 +1,7 @@
+
+\S kill character \S
+
+The kill character signals the computer to ignore everything already
+typed on the current command line. The kill character for your
+terminal is @, unless you change it  by using the set teletype
+command, stty(1).

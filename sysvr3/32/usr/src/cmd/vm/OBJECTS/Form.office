@@ -1,0 +1,79 @@
+form="Office Preferences for $LOGNAME"
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.h537.off 'Office Preferences'
+done=`set WASTEDAYS="$F1" WASTEPROMPT="$F2" LOGINWIN1="$F4" LOGINWIN2="$F5" LOGINWIN3="$F6" LOGINWIN4="$F7" -f$HOME/pref/.variables EDITOR="$F3" -e EDITOR="$F3"`
+
+name=Delete objects from my wastebasket after (# of days):
+nrow=1
+ncol=1
+rows=1
+columns=2
+frow=1
+fcol=55
+value=const ${WASTEDAYS:-1}
+choicemsg=const "Enter a number of days between 1 and 30."
+valid=`echo "$F1" | regex '^[1-9]$' "true" '^[1-2][0-9]$' "true" '^30$'`
+
+name=Prompt before emptying wastebasket (yes,no):
+nrow=3
+ncol=9
+rows=1
+columns=3
+frow=3
+fcol=55
+rmenu={ yes no }
+menuonly=true
+value=const ${WASTEPROMPT:-yes}
+
+name=Default Editor:
+nrow=5
+ncol=38
+rows=1
+columns=14
+frow=5
+fcol=55
+value=const ${EDITOR:-vi}
+rmenu={ vi ed } 
+valid=`shell type "$F3" | regex ".*$F3\$"`
+
+name=Additional frames open upon login --
+nrow=7
+ncol=10
+rows=1
+columns=45
+frow=9
+fcol=12
+choicemsg=const "Enter a path to an object under your FILECABINET, or a full path."
+value=const $LOGINWIN1
+valid=`pathconv -f -v "$F4" | set -l tmp | shell "test -z \"$F4\" -o -r \"$tmp\""` 
+
+name=
+frow=10
+fcol=12
+rows=1
+columns=45
+choicemsg=const "Enter a path to an object under your FILECABINET, or a full path."
+value=const $LOGINWIN2
+valid=`pathconv -f -v "$F5" | set -l tmp | shell "test -z \"$F5\" -o -r \"$tmp\""` 
+
+name=
+frow=11
+fcol=12
+rows=1
+columns=45
+choicemsg=const "Enter a path to an object under your FILECABINET, or a full path."
+value=const $LOGINWIN3
+valid=`pathconv -f -v "$F6" | set -l tmp | shell "test -z \"$F6\" -o -r \"$tmp\""` 
+
+name=
+frow=12
+fcol=12
+rows=1
+columns=45
+choicemsg=const "Enter a path to an object under your FILECABINET, or a full path."
+value=const $LOGINWIN4
+valid=`pathconv -f -v "$F7" | set -l tmp | shell "test -z \"$F7\" -o -r \"$tmp\""` 
+
+name=RESET
+button=8
+action=reset

@@ -1,0 +1,80 @@
+'\" e
+.TH GAMMA 3M
+.SH NAME
+gamma \- log gamma function
+.SH SYNOPSIS
+.B #include <math.h>
+.PP
+.B double gamma (x)
+.br
+.B double x;
+.PP
+.B extern int signgam;
+.SH DESCRIPTION
+.EQ
+delim $$
+.EN
+.I Gamma\^
+returns
+$ln ( | GAMMA ( ^ x ) | )$,
+where $GAMMA ( ^ x )$ is defined as
+$int from 0 to inf e sup { - t } t sup { x - 1 } dt$.
+The sign of
+.EQ
+GAMMA ( ^ x )
+.EN
+is returned in the external integer
+.IR signgam .
+The argument
+.I x
+may not be a non-positive integer.
+.PP
+The following C program fragment might be
+used to calculate
+\(*G:
+.PP
+.RS
+.nf
+if ((y = gamma(x)) > \s-1LN_MAXDOUBLE\s+1)
+	error(\|);
+y = signgam \(** exp(y);
+.fi
+.RE
+.PP
+where
+.SM LN_MAXDOUBLE
+is
+the least value that causes
+.IR exp (3M)
+to return a range error, and is defined in the
+.I <values.h>\^
+header file.
+.SH DIAGNOSTICS
+For non-negative integer arguments
+.SM
+.B HUGE
+is returned,
+and
+.I errno\^
+is set to
+.SM
+.BR EDOM .
+A message indicating \s-1SING\s+1 error is
+printed on the standard error output.
+.PP
+If the correct value would overflow,
+.I gamma\^
+returns
+.SM
+.B HUGE
+and sets
+.I errno
+to
+.SM
+.BR ERANGE .
+.PP
+These error-handling procedures may be changed with the function
+.IR matherr (3M).
+.SH SEE ALSO
+exp(3M), matherr(3M), values(5).
+.\"	%W% of %G%

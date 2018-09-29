@@ -1,0 +1,598 @@
+#ident	"@(#)sadmin3b2:admin/bupsched	1.4"
+flags="-qq -k$$"
+firstbreak="y"
+chged="No"
+
+trap 'exit 0' 1
+trap '\
+	if [ "${firstbreak}" = "y" -a "${chged}" = "Yes" ]
+	then
+		firstbreak="n"
+		if checkyn -f "
+WARNING -- changes have not been written
+Do you want them written before quitting bupsched?"
+		then
+			mv ${tmpfile} ${file}
+			if [ "${schedtype}" = "c" ]
+			then
+				echo "Changes will be in effect after next system restart"
+			fi
+		fi
+	fi
+	exit 0
+' 2 15
+
+gettime() {
+	if [ "${schedtype}" = "m" ]
+	then
+	timelist=
+	while true
+	do
+		timefld=`checkre -fe -qq -H "
+The time field defines the times of day during which you wish to 
+receive the reminders.  All times are 4 digit 24 hours.
+Examples of allowed formats:
+
+	00:00-23:59	full 24-hour clock time 
+	17:00-23:59	5:00 pm until midnight
+	
+A list of time intervals can be specified by answering more than once.
+Answering \"q\" will quit the command or terminate the list
+if a range has been successfully entered.
+Notice that blank spaces are NOT allowed." "
+Enter time intervals in which backup reminder messages are to be printed
+[ q, ?] :" "^[0-2][0-9]:[0-5][0-9]-[0-2][0-9]:[0-5][0-9]$" "Invalid format."`
+
+		if [ "${timefld}" = "" ]
+		then
+			timefld=${timelist}
+			break
+		fi
+
+		starthour=`expr ${timefld} : '^\([0-9]*\):'`
+		endhour=`expr ${timefld} : '.*-\([0-9]*\):'`
+		startmin=`expr ${timefld} : '.*:\([0-9]*-\)'`
+		endmin=`expr ${timefld} : '.*-[0-9]*:\([0-9]*\)'`
+		if [ "${starthour}" -gt 23 -o "${endhour}" -gt 23 -o \
+			"${startmin}" -gt 59 -o "${endmin}" -gt 59 ]
+		then
+			echo "Bad time specification"
+			continue
+		fi
+		
+		if [ ${starthour} -gt ${endhour} ]
+		then
+			echo "Start time must be less than end time"
+			continue
+		fi
+		if [ ${starthour} -eq ${endhour} ]
+		then
+			if [ ${startmin} -ge ${endmin} ]
+			then
+				echo "Start time must be less than end time"
+				continue
+			fi
+		fi
+		if [ ! "${timelist}" = "" ]
+		then
+			timelist=${timelist},${timefld}
+		else
+			timelist=${timefld}
+		fi
+	done
+	else
+	while true
+	do
+		timefld=`checkre -fe -qq -H "
+The time field defines the time of day during which you wish to 
+check for backup reminders messages to be printed.
+Times are based on 24 hour clock (0:00 - 23:59)
+Examples of allowed formats:
+	08:30		8:30 am
+	15:00		3:00 pm" "	
+Enter the times at which you want to check to see if any backups
+are scheduled [ q, ? ]:" "^[0-2][0-9]:[0-5][0-9]$" "Invalid format"`
+
+		hourfld=`expr "${timefld}" : '\([0-9]*\):'`
+		minfld=`expr "${timefld}" : '.*:\([0-9]*\)'`
+	
+		if [ "${hourfld}" -gt 24 -o "${minfld}" -gt 59 ]
+		then
+			echo "Bad time specification."
+			continue
+		fi
+		break
+	done
+	fi
+}
+
+getdweek() {
+	dwlist=
+	while true
+	do
+		dayweek=`checkre -fe -qq -D"*" -H "
+The day field defines the days of the week during which you 
+wish to receive the reminders.
+Days are expressed  by number with 0 for Sunday, 6 for Saturday.
+Examples of allowed formats:
+	1		Selected day of the week.
+	*		Any day at all (don't care)
+A list of days can be specified by answering more than once.
+Answering \"q\" will quit the command or terminate the list
+if a day has been successfully entered.
+The \"*\" option if used must be the only selected.
+If specific days of the month are given they will be used
+when \"*\" is specified here.
+Notice that blank spaces are NOT allowed." "
+Enter the day of the week [ 0-6, *, q, ? ]:" "^[0-6*]$" "Invalid format"`
+
+		if [ "${dayweek}" = "" ]
+		then
+			break
+		fi
+
+		if [ "${dayweek}" = '*' ]
+		then
+			if [ ! -z "${dwlist}" ]
+			then
+				echo "The value \"*\" cannot be used with other values"
+				continue
+			fi
+			dwlist="${dayweek}"
+			break
+		fi
+
+		if [ ! "${dwlist}" = "" ]
+		then
+			dwlist=${dwlist},${dayweek}
+		else
+			dwlist=${dayweek}
+		fi
+	done
+	if [ "${schedtype}" = "m" ]
+	then
+		dayweek=`echo  "${dwlist}" | sed -e s/0/sun/g -e s/1/mon/g -e s/2/tue/g -e s/3/wed/g \
+			-e s/4/thu/g  -e s/5/fri/g -e s/6/sat/g`
+	else
+		dayweek=${dwlist}
+	fi
+}
+
+getdmo() {
+	daylist=
+	while true
+	do
+		daymo=`checkre -fe -qq -D"*" -H "
+The day field defines the days of the month during which you 
+wish to receive the reminders.  These reminders will only be 
+displayed if you shut the system down or power it down during 
+these days, or have a reminder scheduled.
+Examples of allowed formats:
+	20		Selected days of month
+	*		Any day at all
+A list of days can be specified by answering more than once.
+Answering \"q\" will quit the command or terminate the list
+if a day has been successfully entered.
+The \"*\" option if used must be the only selected.
+If specific days of the week are given they will be used
+when \"*\" is specified here.
+Notice that blank spaces are NOT allowed." "
+Enter the day of the month [ 1-31, *, q, ? ]:" '^[*0-9]*$' "Invalid format"`
+
+		if [ "${daymo}" = "" ]
+		then
+			break
+		fi
+		
+		if [ "${daymo}" = '*' ]
+		then
+			if [ ! -z "${daylist}" ]
+			then
+				echo "The value \"*\" cannot be used with other values"
+				continue
+			fi
+			daylist="${daymo}"
+			break
+		fi
+
+		if [ "${daymo}" -gt 31 -o "${daymo}" -lt 1 ]
+		then
+			echo "Day must be between 1 and 31"
+			continue
+		fi
+		
+		if [ ! "${daylist}" = "" ]
+		then
+			daylist=${daylist},${daymo}
+		else
+			daylist=${daymo}
+		fi
+	done
+	daymo=${daylist}
+}
+
+getday() {
+	if [ "${daymo}" = "*" ]
+	then
+		dayfld=${dayweek}
+	else if [ "${dayweek}" = "*" ]
+		then
+			dayfld=${daymo}
+		else
+			dayfld=${dayweek},${daymo}
+		fi
+	fi
+}
+
+getmon() {
+	monlist=
+	while true
+	do
+		monfld=`checkre -fe -D"*" -qq -H "
+The month field defines the months of the year during which you wish 
+to receive the reminders.
+Examples of allowed formats:
+	1		Selected months of the year
+	*		Any month at all
+A list of months can be specified by answering more than once.
+Answering \"q\" will quit the command or terminate the list
+if a month has been successfully entered.
+Notice that blank spaces are NOT allowed." "
+Enter the month [ 1-12, *, q, ? ]:" '^[0-9*]*$' "Invalid format"`
+
+		if [ -z "${monfld}" ]
+		then
+			break
+		fi
+	
+		if [ "${monfld}" = '*' ]
+		then
+			if [ ! -z "${monlist}" ]
+			then
+				echo "The value \"*\" cannot be used with other values"
+				continue
+			fi
+			monlist="${monfld}"
+			break
+		fi
+
+		if [ "${monfld}" -gt 12 -o "${monfld}" -lt 1 ]
+		then
+			echo "Month must be between 1 and 12"
+			continue
+		fi
+		
+		if [ ! -z "${monlist}" ]
+		then
+			monlist=${monlist},${monfld}
+		else
+			monlist=${monfld}
+		fi
+	done
+	monfld=${monlist}
+}
+
+getfsys() {
+filelist=
+while true
+do
+	lstfld=`checkre -fe -qq -H "
+Enter the name of the file system for which you want backup reminder
+messages to be sent to the console.  The file system name corresponds
+to the mount directory used for file sysadm and that directory must
+exist for a reminder to be scheduled.
+A list of file systems can be entered by answering more than once.
+Example:
+	/usr		/usr file system
+	/ 		Root file system
+Note that the names always start with a / character." "
+Enter the file system you wish to backup [ q, ? ]": "^/.*$" "Invalid format"`
+
+		if [ -z "${lstfld}" ]
+		then
+			break
+		fi
+
+		if [ ! -d "${lstfld}" ]
+		then
+			echo "File system specified does not have mount directory"
+			continue
+		fi
+		
+		if [ ! -z "${filelist}" ]
+		then
+			filelist="${filelist} ${lstfld}"
+		else
+			filelist=${lstfld}
+		fi
+	done
+	lstfld="${filelist}"
+
+}
+
+getmaxline() {
+	maxline=`grep -v "^#" ${tmpfile} | wc -l | sed 's/ //g'`
+	while true
+	do
+		lnum=`checkre -fe -qq -H "
+Line numbers can be produced with the 'p' command" "
+$1 [ 1-${maxline}, q, ? ]" '^[0-9][0-9]*$' "Invalid format"`
+		if [ "${lnum}" = "" ]
+		then
+			break
+		fi
+
+		if [ ${lnum} -ge 1 -a ${lnum} -le ${maxline} ]
+		then
+			break
+		fi
+		echo "Line out of range."
+	done
+}
+
+{ exitcode_=0
+while getopts t: c_
+do
+	case $c_ in
+	\?)
+		exitcode_=1
+		break;;
+	*)	if [ "$OPTARG" ]
+		then
+			arg_="$arg_ -$c_ '$OPTARG'"
+		else
+			arg_="$arg_ -$c_"
+		fi;;
+	esac
+done
+shift `expr $OPTIND - 1`
+arg_="$arg_ --"
+for i_ in "$@"
+do
+	arg_="$arg_ '$i_'"
+done
+eval set -- "$arg_"
+test  $exitcode_ = 0 ;}
+if [ $? != 0  -o $# != 3 ]
+then
+	echo "Usage: bupsched -t type
+where type is one of:
+m - reminder messages are to be scheduled
+c - reminder checks are to be scheduled"
+	exit 1
+fi
+
+schedtype=$2
+
+if [ "${schedtype}" = "m" ]
+then
+	if [ ! -f /etc/bupsched ]
+	then
+		echo "No backup schedule file exists"
+		exit 1
+	fi
+	file=/etc/bupsched
+	tmpfile=/tmp/etcbupsched
+else
+	if [ ! -f /usr/spool/cron/crontabs/sysadm ]
+	then
+		echo "No backup reminder file exists"
+		exit 1
+	fi
+	file=/usr/spool/cron/crontabs/sysadm
+	tmpfile=/tmp/cronsysadm
+fi
+
+cp ${file} ${tmpfile}
+
+while true
+do
+cmd=`checklist ${flags} -fep -H "
+Commands available for editing:
+	p - Print lines of the file
+	r - Remove a line or group of lines
+	a - Add a line
+	m - Modify a line
+	w - Write the changes into the file
+	q - Quit - Leave bupsched" "
+Enter the command you wish to execute [p, r, a, m, w, q, ?]: " \
+	p r a m w q`
+
+	case ${cmd} in
+
+	p )
+		grep "^#" ${tmpfile}
+		grep -v "^#" ${tmpfile} | pr -tn
+		continue
+		;;
+	r )
+		getmaxline "Enter the line number you want erased"
+		if [ "${lnum}" = "" ]
+		then
+			continue
+		fi
+
+		lineval=`grep -v "^#" ${tmpfile} | sed -n  ${lnum}p`
+		if checkyn -f -qq "
+Line is:
+${lineval}
+		
+OK to remove?"
+		then
+			grep "^#" ${tmpfile} >/tmp/$$
+			grep -v "^#" ${tmpfile} | sed ${lnum}d >>/tmp/$$
+			mv /tmp/$$ ${tmpfile}
+			chged="Yes"
+		fi
+		continue
+		;;
+	a )
+		gettime
+		if [ "${timefld}" = "" ]
+		then
+			continue
+		fi
+
+		getdweek
+		if [ "${dayweek}" = "" ]
+		then
+			continue
+		fi
+
+		getdmo
+		if [ "${daymo}" = "" ]
+		then
+			continue
+		fi
+
+		if [ "${schedtype}" = "m" ]
+		then
+			getday
+		fi
+
+		getmon
+		if [ "${monfld}" = "" ]
+		then
+			continue
+		fi
+
+		if [ "${schedtype}" = "m" ]
+		then
+			getfsys
+			if [ "${lstfld}" = "" ]
+			then
+				continue
+			fi
+		
+			sed "\$a\\
+${timefld}	${dayfld}	${monfld}	${lstfld}" ${tmpfile} >/tmp/$$
+		else
+			sed "\$a\\
+${minfld}	${hourfld}	${daymo}	${monfld}	${dayweek}	/etc/ckbupscd >/dev/console 2>/dev/console" ${tmpfile} >/tmp/$$
+		fi
+
+		mv /tmp/$$ ${tmpfile}
+		chged="Yes"
+		continue
+		;;
+
+	m )
+		getmaxline "Enter the line number of the line to be modified"
+		if [ "${lnum}" = "" ]
+		then
+			continue
+		fi
+
+		if [ "${schedtype}" = "m" ]
+		then
+			eval `grep -v "^#" ${tmpfile} | sed -n "${lnum}s/\([^ 	]*\)[ 	]*\([^ 	]*\)[ 	]*\
+\([^ 	]*\)[ 	]*\(.*\)/timefld=\1; dayfld=\2; monfld=\3; lstfld=\"\4\"/p"`
+			if [ ! "${dayfld}" = "*" ]
+			then
+				dayweek=`expr "${dayfld}" : '\([a-z,]*[a-z][a-z]*\)[0-9,]*'`
+				if [ "${dayweek}" = "" ]
+				then
+					dayweek='*'
+				fi
+
+				daymo=`expr "${dayfld}" : '[a-z,]*\([0-9,-]*\)'`
+				if [ "${daymo}" = "" ]
+				then
+					daymo='*'
+				fi
+
+			else
+				dayweek='*'
+				daymo='*'
+			fi
+		else
+			eval ` grep -v "^#" ${tmpfile} | sed -n "${lnum}s/\([^ 	]*\)[ 	]*\([^ 	]*\)[ 	]*\
+\([^ 	]*\)[ 	]*\([^ 	]*\)[ 	]*\([^ 	]*\).*/minfld=\1; hourfld=\2; daymo=\3; monfld=\4; dayweek=\5/p"`
+			timefld="${hourfld}:${minfld}"
+		fi
+		
+		if checkyn -f "
+The current time field is ${timefld}, change it?"
+		then
+			gettime
+			if [ "${timefld}" = "" ]
+			then
+				continue
+			fi
+		fi
+		
+		if checkyn -f "
+The current day(s) of the week are ${dayweek}, change it?"
+		then
+			getdweek
+			if [ "${dayweek}" = "" ]
+			then
+				continue
+			fi
+		fi
+
+		if checkyn -f "
+The current day(s) of the month are ${daymo}, change it?"
+		then
+			getdmo
+			if [ "${daymo}" = "" ]
+			then
+				continue
+			fi
+		fi
+		if [ "${schedtype}" = "m" ]
+		then
+			getday
+		fi
+
+		if checkyn -f "
+The current month(s) are ${monfld}, change it?"
+		then
+			getmon
+			if [ "${monfld}" = "" ]
+			then
+				continue
+			fi
+		fi
+		
+		if [ "${schedtype}" = "m" ]
+		then
+			if checkyn -f "
+The current file item list is ${lstfld}, change it?"
+			then
+				getfsys
+				if [ "${lstfld}" = "" ]
+				then
+					continue
+				fi
+			fi
+			grep "^#" ${tmpfile} >/tmp/$$
+			grep -v "^#" ${tmpfile} | sed "${lnum}c\\
+${timefld}	${dayfld}	${monfld}	${lstfld}" >>/tmp/$$
+		else
+			grep "^#" ${tmpfile} >/tmp/$$
+			grep -v "^#" ${tmpfile} | sed "${lnum}c\\
+${minfld}	${hourfld}	${daymo}	${monfld}	${dayweek}	/etc/ckbupscd >/dev/console 2>/dev/console" >>/tmp/$$
+		fi
+		
+		mv /tmp/$$ ${tmpfile}
+		chged="Yes"
+		continue
+		;;
+
+	w )
+		if [ "$chged" = "No" ]
+		then
+			echo "File has not been changed."
+			continue
+		fi
+		if [ ${schedtype} = "c" ]
+		then
+			echo "Changes will be in effect after the next system restart"
+		fi
+		cp ${tmpfile} ${file}
+		chged="No"
+		continue
+		;;
+	esac
+done

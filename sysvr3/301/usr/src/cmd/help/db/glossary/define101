@@ -1,0 +1,16 @@
+
+\S positional parameters \S
+
+Positional parameters are "variables"\S*\S whose values are the arguments
+to a shell program.  When you type a command line to execute a shell
+program, you type the name of the file the program is in followed by any
+arguments the program needs to execute.  Each of the components of the
+command line are assigned to a positional parameter depending on the
+position they are in on the command line. The name of the file that holds
+the shell program is positional parameter "0", the first "argument"\S*\S
+is positional parameter 1, and so on until all of the arguments are
+assigned to a positional parameter or until all nine positional parameters
+have been assigned values.  The values of the positional parameters are
+passed to the program when the command is executed.
+
+\S*\S defined in the \Sglossary\S

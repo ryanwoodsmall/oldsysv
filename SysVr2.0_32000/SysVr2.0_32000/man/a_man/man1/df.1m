@@ -1,0 +1,52 @@
+.TH DF 1M
+.SH NAME
+df \- report number of free disk blocks
+.SH SYNOPSIS
+.B df
+[
+.B \-t
+]
+[
+.B \-f
+] [ file-systems ]
+.SH DESCRIPTION
+.I Df\^
+prints out the number of free blocks
+and free i-nodes
+available for on-line file systems
+by examining the counts kept in the
+super-blocks;
+.I file-systems\^
+may be specified either by device name (e.g.,
+.BR /dev/dsk/0s1 )
+or by mounted directory name (e.g.,
+.BR /usr ).
+If
+the
+.I file-systems\^
+argument
+is unspecified,
+the free space on all of the
+mounted file systems
+is printed.
+.PP
+The
+.B \-t
+flag causes the total allocated block figures to be reported as well.
+.PP
+If the
+.B \-f
+flag is given,
+only an actual count of the blocks in the
+free list is made
+(free i-nodes are not reported).
+With this option,
+.I df\^
+will report on raw devices.
+.SH FILES
+/dev/dsk/\(**
+.br
+/etc/mnttab
+.SH SEE ALSO
+fs(4), mnttab(4).
+.\"	@(#)df.1m	6.2 of 9/2/83

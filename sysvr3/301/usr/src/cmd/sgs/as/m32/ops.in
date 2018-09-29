@@ -1,0 +1,1708 @@
+MONOP1 GEN
+{
+#ident	"@(#)as:m32/ops.in	1.20"
+	/*
+	 * PUSHW pushw
+	 * TST|CLR|INC|DEC
+	 *	instructions
+	 */
+#if	ER10ERR
+	if ((instrptr->name[0] == 'P') && workaround)	/* PUSHW */
+		if (operstak[0].newtype != NOTYPE)
+			yyerror("Expand byte invalid in PUSHW instruction");
+#endif
+	if (instrptr->opcode != 0x80)	/* CLRW */
+		pswcheck(instrptr, &(operstak[0]));
+	if (instrptr->name[3] == 'W')	/* {CLR|DEC|INC|TST}W */
+		intaft1check(&(operstak[0]), memtoreg);
+
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+
+	if ((instrptr->name[0] == 'C') ||	/* CLR[WHB] */
+	    (instrptr->name[0] == 'D') ||	/* DEC[WHB] */
+	    (instrptr->name[0] == 'I'))		/* INC[WHB] */
+		pswcheck(instrptr, &(operstak[0]));
+
+	if (instrptr->opcode != 0xa0)	/* PUSHW,pushw */
+		pcintcheck(instrptr,&(operstak[0]));
+	memtoreg = 0;
+}
+"pushw",	IS25|INSTRW,	8,	0xa0L
+"TSTW",	INSTRW,		8,	0x28L
+"TSTH",	INSTRH,		8,	0x2aL
+"TSTB",	INSTRB,		8,	0x2bL
+"CLRW",	INSTRW,		8,	0x80L
+"CLRH",	INSTRH,		8,	0x82L
+"CLRB",	INSTRB,		8,	0x83L
+"INCW",	INSTRW,		8,	0x90L
+"INCH",	INSTRH,		8,	0x92L
+"INCB",	INSTRB,		8,	0x93L
+"DECW",	INSTRW,		8,	0x94L
+"DECH",	INSTRH,		8,	0x96L
+"DECB",	INSTRB,		8,	0x97L
+"PUSHW",	INSTRW,		8,	0xa0L
+.
+MONOP2 MEM
+{
+	/*
+	 * PUSHAW pushaw instruction
+	 * SWAP[BHW]I
+	 */
+#if	ER10ERR
+	if ((instrptr->name[0] != 'p') && workaround)
+		if (operstak[0].newtype != NOTYPE)
+			yyerror
+			("Expand byte invalid in PUSHAW,SWAPWI,SWAPHI, and SWAPBI instructions");
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	memtoreg = 0;
+}
+"pushaw",	IS25|INSTRW,	8,	0xe0L
+"SWAPWI",	INSTRW,		8,	0x1cL
+"SWAPHI",	INSTRH,		8,	0x1eL
+"SWAPBI",	INSTRB,		8,	0x1fL
+"PUSHAW",	INSTRW,		8,	0xe0L
+.
+MONOP3 DEST
+{
+	/*
+	 * POPW instruction
+	 */
+#if	ER10ERR
+	if (( operstak[0].newtype != NOTYPE) && workaround)
+		yyerror("Expand byte illegal in POPW Instruction.");
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	pswcheck(instrptr, &(operstak[0]));
+	memtoreg = 0;
+}
+"POPW",	INSTRW,		8,	0x20L
+.
+PUSHOP1 GEN
+{
+	/*
+	 * push[zb][bh] instructions
+	 */
+	pushopgen(instrptr,&(operstak[0]));
+	pcintcheck(instrptr,&(operstak[0]));
+	memtoreg = 0;
+}
+"pushzb",	IS25|INSTRB,	8,	0x87L
+"pushzh",	IS25|INSTRHW,	8,	0x84L
+"pushbb",	IS25|INSTRBW,	8,	0x87L
+"pushbh",	IS25|INSTRH,	8,	0x86L
+.
+DYAOP1 GEN, DEST
+{
+	/*
+	 * (AND|and)[BHW]2 (OR|or)[BHW]2 (XOR|xor)[BHW]2
+	 * MOD[BHW]2 MUL[BHW]2 DIV[BHW]2 modw2 mulw2 divw2
+	 * (MCOM|mcom)[BHW] MNEG[BHW]
+	 *	instructions
+	 */
+#if	ER13WAR
+	mulchk3(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[1]));
+#endif
+
+	/* Interrupt After TSTW Chip Bug
+	 * Check if instruction does a store to
+	 * a register and is a multiple cycle
+	 * ALU instruction (ie. multiply, divide,
+	 * modulo, move negate). If so, then set
+	 * memtoreg so that a NOP will be generated
+	 * after this instruction if necessary.
+	 */
+
+	if ( pswcheck(instrptr, &(operstak[0])) )
+		pswcheck(instrptr, &(operstak[1]));
+#ifdef	CHIPFIX
+	if (warlevel == ALLWAR)
+		if ((operstak[1].type == REGMD) &&
+		    (((instrptr->name[0] == 'M') && (instrptr->name[1] != 'C')) ||
+	 	    ((instrptr->name[0] == 'm') && (instrptr->name[1] != 'c')) ||
+		     (instrptr->name[0] == 'D') ||
+		     (instrptr->name[0] == 'd')))	/* MOD, MUL, MNEG and DIV */
+			memtoreg = 1;
+		else if (instrptr->opcode == 0x88) {	/* MCOMW, mcomw */
+			intaft2check(&(operstak[0]), &(operstak[1]), memtoreg);
+			memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+		}
+		else
+			memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr,&(operstak[1]));
+}
+"mcomb",	IS25|INSTRB,	8,	0x8bL
+"mcomh",	IS25|INSTRH,	8,	0x8aL
+"mcomw",	IS25|INSTRW,	8,	0x88L
+"andb2",	IS25|INSTRB,	8,	0xbbL
+"andh2",	IS25|INSTRH,	8,	0xbaL
+"andw2",	IS25|INSTRW,	8,	0xb8L
+"orb2",	IS25|INSTRB,	8,	0xb3L
+"orh2",	IS25|INSTRH,	8,	0xb2L
+"orw2",	IS25|INSTRW,	8,	0xb0L
+"xorb2",	IS25|INSTRB,	8,	0xb7L
+"xorh2",	IS25|INSTRH,	8,	0xb6L
+"xorw2",	IS25|INSTRW,	8,	0xb4L
+"mnegh",	IS25|INSTRH,	8,	0x8eL
+"mnegw",	IS25|INSTRW,	8,	0x8cL
+"mulw2",	IS25|INSTRW,	8,	0xa8L
+"divw2",	IS25|INSTRW,	8,	0xacL
+"modw2",	IS25|INSTRW,	8,	0xa4L
+"MNEGB",	INSTRB,		8,	0x8fL
+"MODH2",	INSTRH,		8,	0xa6L
+"MODB2",	INSTRB,		8,	0xa7L
+"MULH2",	INSTRH,		8,	0xaaL
+"MULB2",	INSTRB,		8,	0xabL
+"DIVH2",	INSTRH,		8,	0xaeL
+"DIVB2",	INSTRB,		8,	0xafL
+"MCOMB",	INSTRB,		8,	0x8bL
+"MCOMH",	INSTRH,		8,	0x8aL
+"MCOMW",	INSTRW,		8,	0x88L
+"ANDB2",	INSTRB,		8,	0xbbL
+"ANDH2",	INSTRH,		8,	0xbaL
+"ANDW2",	INSTRW,		8,	0xb8L
+"ORB2",	INSTRB,		8,	0xb3L
+"ORH2",	INSTRH,		8,	0xb2L
+"ORW2",	INSTRW,		8,	0xb0L
+"XORB2",	INSTRB,		8,	0xb7L
+"XORH2",	INSTRH,		8,	0xb6L
+"XORW2",	INSTRW,		8,	0xb4L
+"MNEGH",	INSTRH,		8,	0x8eL
+"MNEGW",	INSTRW,		8,	0x8cL
+"MULW2",	INSTRW,		8,	0xa8L
+"DIVW2",	INSTRW,		8,	0xacL
+"MODW2",	INSTRW,		8,	0xa4L
+.
+DYAOP2 MEM, DEST
+{
+	/* MOVAW movaw MOVTRW instructions */
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	if (instrptr->opcode == 0xcL)			/* MOVTRW */
+		generate(8,NOACTION,0x70,NULLSYM);	/* NOP */
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr,&(operstak[1]));
+	memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+}
+"movaw",	IS25|INSTRW,	8,	0x4L
+"MOVTRW",	INSTRW,		8,	0xcL
+"MOVAW",	INSTRW,		8,	0x4L
+.
+DYAOP4 GEN, DEST
+{
+	/*
+	 * (MOV|mov)[bhw] instructions
+	 *
+	 * if first operand is &0, use CLR opcodes
+	 * stored in 2nd low byte of opcode
+	 */
+	/* The following call to opt21gen
+	 * is not always executed out because of the
+	 * Interrupt After TSTW chip bug
+	 */
+	/*
+	 * [al][lr]sw2 instructions
+	 *
+	 * generate code using triadic opcode,
+	 * repeating 2nd operand
+	 */
+	pswcheck(instrptr, &(operstak[0]));
+
+	if (instrptr->name[0] == 'l' || instrptr->name[0] == 'a') /* [la][lr]sw2 */
+		shftopgen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[1]));
+	else if (((instrptr->name[3] == 'W') || (instrptr->name[3] == 'w')) &&
+	    (operstak[1].type == REGMD && memtoreg != 0)) {
+		intaft2check(&(operstak[0]), &(operstak[1]), memtoreg);
+		generate(8,NOACTION,instrptr->opcode & 0xFFL,NULLSYM);
+		addrgen(instrptr, &(operstak[0]), NOTYPE, 1);
+		addrgen(instrptr, &(operstak[1]), NOTYPE, 2);
+	}
+	else
+		opt21gen(instrptr,&(operstak[0]),&(operstak[1]),0);
+
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr, &(operstak[1]));
+	memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+}
+"llsw2",	IS25|INSTRW,	16,	0xd3d0L
+"lrsw2",	IS25|INSTRBW,	16,	0xd4d4L
+"alsw2",	IS25|INSTRBW,	16,	0xc0c0L
+"arsw2",	IS25|INSTRW,	16,	0xc7c4L
+"movb",	IS25|INSTRB,	16,	0x8387L
+"movh",	IS25|INSTRH,	16,	0x8286L
+"movw",	IS25|INSTRW,	16,	0x8084L
+"MOVB",	INSTRB,		8,	0x87L
+"MOVH",	INSTRH,		8,	0x86L
+"MOVW",	INSTRW,		8,	0x84L
+.
+DYAOP5 GEN, DEST
+{
+	/* movb[bh|bw|hw]  movt[wb|hb|wh] instructions */
+
+	pswcheck(instrptr, &(operstak[0]));
+	convgen(instrptr,&(operstak[0]),&(operstak[1]));
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr,&(operstak[1]));
+	memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+}
+"movbbh",	IS25|INSTRBH,	16,	0x87E7L
+"movbbw",	IS25|INSTRBW,	16,	0x87E7L
+"movbhw",	IS25|INSTRHW,	8,	0x86L
+"movthb",	IS25|INSTRHB,	8,	0x86L
+"movtwb",	IS25|INSTRWB,	8,	0x84L
+"movtwh",	IS25|INSTRWH,	8,	0x84L
+.
+DYAOP6 GEN, DEST
+{
+	/*
+	 * (ADD|SUB|add|sub)[bhw]2 instructions
+	 *
+	 * if first operand is &1, use INC (DEC) opcodes
+	 * stored in 2nd low byte of opcode
+	 */
+	/* The following call to opt21gen
+	 * is not always executed because of the
+	 * Interrupt After TSTW chip bug
+	 */
+	pswcheck(instrptr, &(operstak[0]));
+	if (operstak[1].type != REGMD || memtoreg == 0)
+		opt21gen(instrptr,&(operstak[0]),&(operstak[1]),1);
+	else {
+		generate(8,NOACTION,instrptr->opcode & 0xFFL,NULLSYM);
+		addrgen(instrptr, &(operstak[0]), NOTYPE, 1);
+		addrgen(instrptr, &(operstak[1]), NOTYPE, 2);
+	}
+	memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr,&(operstak[1]));
+}
+"addb2",	IS25|INSTRB,	16,	0x939fL
+"addh2",	IS25|INSTRH,	16,	0x929eL
+"addw2",	IS25|INSTRW,	16,	0x909cL
+"subb2",	IS25|INSTRB,	16,	0x97bfL
+"subh2",	IS25|INSTRH,	16,	0x96beL
+"subw2",	IS25|INSTRW,	16,	0x94bcL
+"ADDB2",	INSTRB,		8,	0x9fL
+"ADDH2",	INSTRH,		8,	0x9eL
+"ADDW2",	INSTRW,		8,	0x9cL
+"SUBB2",	INSTRB,		8,	0xbfL
+"SUBH2",	INSTRH,		8,	0xbeL
+"SUBW2",	INSTRW,		8,	0xbcL
+.
+DYAOP7 GEN, DEST
+{
+	/* movz[bh|bw|hw] instructions */
+	pswcheck(instrptr, &(operstak[0]));
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	expand = (optype(instrptr->tag,1) == 0) ? NOTYPE : UHALF;
+	addrgen(instrptr,&(operstak[0]),expand,1);
+	/* 2nd operand is signed (halfword/word) */
+	expand = (optype(instrptr->tag,2) == 1) ? UHALF : UWORD;
+	addrgen(instrptr,&(operstak[1]),expand,2);
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr,&(operstak[1]));
+	memtoreg = mtoregcheck(&(operstak[0]), &(operstak[1]));
+}
+"movzbh",	IS25|INSTRBH,	8,	0x87L
+"movzbw",	IS25|INSTRBW,	8,	0x87L
+"movzhw",	IS25|INSTRHW,	8,	0x86L
+.
+DYAOP8 GEN, DEST
+{
+	/* u(mul|div|mod)w2 instructions */
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),UWORD,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	pswcheck(instrptr, &(operstak[1]));
+	pcintcheck(instrptr,&(operstak[1]));
+	memtoreg = 1;
+}
+"umulw2",	IS25|INSTRW,	8,	0xa8L
+"udivw2",	IS25|INSTRW,	8,	0xacL
+"umodw2",	IS25|INSTRW,	8,	0xa4L
+.
+CMPOP1 GEN, GEN
+{
+	/*
+	 * (cmp|CMP)[bhw] instructions
+	 *
+	 * For IS25 versions, interchange operands and
+	 * if first operand is &0, use TST opcodes
+	 * stored in 2nd low byte of opcode
+	 *
+	 * (BIT|bit)[bhw] instructions
+	 */
+
+	if ( pswcheck(instrptr, &(operstak[0])) )
+		pswcheck(instrptr, &(operstak[1]));
+	if ((instrptr->tag & IS25) && (instrptr->name[0] == 'c')) {
+		/* The following call to opt21gen
+		 * is not always executed because of the
+		 * Interrupt After TSTW chip bug
+		 */
+		if (operstak[0].type != REGMD || memtoreg == 0 ||
+		    instrptr->name[3] != 'w')
+			opt21gen(instrptr,&(operstak[1]),&(operstak[0]),0);
+		else {
+			generate(8,NOACTION,instrptr->opcode,NULLSYM);
+			addrgen(instrptr,&(operstak[1]),NOTYPE,1);
+			addrgen(instrptr,&(operstak[0]),NOTYPE,2);
+		}
+	}
+	else {
+		/* generate normal sequence */
+		generate(8,NOACTION,instrptr->opcode,NULLSYM);
+		addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+		addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	}
+	memtoreg = 0;
+}
+"cmpb",	IS25|INSTRB,	16,	0x2b3fL
+"cmph",	IS25|INSTRH,	16,	0x2a3eL
+"cmpw",	IS25|INSTRW,	16,	0x283cL
+"CMPB",	INSTRB,		8,	0x3fL
+"CMPH",	INSTRH,		8,	0x3eL
+"CMPW",	INSTRW,		8,	0x3cL
+"bitb",	IS25|INSTRB,	8,	0x3bL
+"bith",	IS25|INSTRH,	8,	0x3aL
+"bitw",	IS25|INSTRW,	8,	0x38L
+"BITB",	INSTRB,		8,	0x3bL
+"BITH",	INSTRH,		8,	0x3aL
+"BITW",	INSTRW,		8,	0x38L
+.
+TRIOP1 GEN, GEN, DEST
+{
+	/*
+	 * (AND|and)[bhw]3 (OR|or)[bhw]3 (XOR|xor)[bhw]3
+	 * (ADD|add)[bhw]3 (SUB|sub)[bhw]3
+	 * (MOD|mod)[BHW]3 (MUL|mul)[BHW]3 (DIV|div)[BHW]3
+	 * (AR|LL)S[BHW]3 ALSW3 ROTW
+	 *	instructions
+	 */
+	if ( pswcheck(instrptr, &(operstak[0])) )
+		pswcheck(instrptr, &(operstak[1]));
+#if	ER13WAR
+	mulchk3(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]));
+#endif
+#if	ER21WAR
+	if (warlevel == ALLWAR)
+		er21(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]));
+#endif
+#if	0	/* trimul software workaround */
+	if ((instrptr->name[0] == 'M') || (instrptr->name[0] == 'm') ||
+	    (instrptr->name[0] == 'D') || (instrptr->name[0] == 'd')) {
+		trimulcheck(instrptr, &(operstak[0]), &(operstak[1]), &(operstak[2]));
+		memtoreg = 0;
+	}
+	else {
+#endif
+#if	ER16FIX || ER76FIX
+	if (er16fix(instrptr, &(operstak[0]), &(operstak[1]), &(operstak[2]))) {
+		memtoreg = 0;
+	}
+	else {
+#endif
+		generate(8,NOACTION,instrptr->opcode,NULLSYM);
+		addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+		addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+		addrgen(instrptr,&(operstak[2]),NOTYPE,3);
+		pswcheck(instrptr,&(operstak[2]));
+		pcintcheck(instrptr,&(operstak[2]));
+		if ((operstak[2].type == REGMD) &&	/* MUL, MOD, DIV */
+		   ((instrptr->name[0] == 'M') || (instrptr->name[0] == 'D') ||
+		    (instrptr->name[0] == 'm') || (instrptr->name[0] == 'd')))
+			memtoreg = 1;
+		else
+			memtoreg = mtoregcheck(&(operstak[1]), &(operstak[2]));
+#if	ER16FIX
+	}
+#endif
+#if	0	/* trimul software workaround */
+	}
+#endif
+}
+"andb3",	IS25|INSTRB,	8,	0xfbL
+"andh3",	IS25|INSTRH,	8,	0xfaL
+"andw3",	IS25|INSTRW,	8,	0xf8L
+"orb3",	IS25|INSTRB,	8,	0xf3L
+"orh3",	IS25|INSTRH,	8,	0xf2L
+"orw3",	IS25|INSTRW,	8,	0xf0L
+"xorb3",	IS25|INSTRB,	8,	0xf7L
+"xorh3",	IS25|INSTRH,	8,	0xf6L
+"xorw3",	IS25|INSTRW,	8,	0xf4L
+"addb3",	IS25|INSTRB,	8,	0xdfL
+"addh3",	IS25|INSTRH,	8,	0xdeL
+"addw3",	IS25|INSTRW,	8,	0xdcL
+"subb3",	IS25|INSTRB,	8,	0xffL
+"subh3",	IS25|INSTRH,	8,	0xfeL
+"subw3",	IS25|INSTRW,	8,	0xfcL
+"mulw3",	IS25|INSTRW,	8,	0xe8L
+"divw3",	IS25|INSTRW,	8,	0xecL
+"modw3",	IS25|INSTRW,	8,	0xe4L
+"ALSW3",	INSTRW,		8,	0xc0L
+"ARSW3",	INSTRW,		8,	0xc4L
+"ARSH3",	INSTRH,		8,	0xc6L
+"ARSB3",	INSTRB,		8,	0xc7L
+"LLSW3",	INSTRW,		8,	0xd0L
+"LLSH3",	INSTRH,		8,	0xd2L
+"LLSB3",	INSTRB,		8,	0xd3L
+"LRSW3",	INSTRW,		8,	0xd4L
+"ROTW",	INSTRW,		8,	0xd8L
+"MODH3",	INSTRH,		8,	0xe6L
+"MODB3",	INSTRB,		8,	0xe7L
+"MULH3",	INSTRH,		8,	0xeaL
+"MULB3",	INSTRB,		8,	0xebL
+"DIVH3",	INSTRH,		8,	0xeeL
+"DIVB3",	INSTRB,		8,	0xefL
+"ANDB3",	INSTRB,		8,	0xfbL
+"ANDH3",	INSTRH,		8,	0xfaL
+"ANDW3",	INSTRW,		8,	0xf8L
+"ORB3",	INSTRB,		8,	0xf3L
+"ORH3",	INSTRH,		8,	0xf2L
+"ORW3",	INSTRW,		8,	0xf0L
+"XORB3",	INSTRB,		8,	0xf7L
+"XORH3",	INSTRH,		8,	0xf6L
+"XORW3",	INSTRW,		8,	0xf4L
+"ADDB3",	INSTRB,		8,	0xdfL
+"ADDH3",	INSTRH,		8,	0xdeL
+"ADDW3",	INSTRW,		8,	0xdcL
+"SUBB3",	INSTRB,		8,	0xffL
+"SUBH3",	INSTRH,		8,	0xfeL
+"SUBW3",	INSTRW,		8,	0xfcL
+"MULW3",	INSTRW,		8,	0xe8L
+"DIVW3",	INSTRW,		8,	0xecL
+"MODW3",	INSTRW,		8,	0xe4L
+.
+TRIOP2 GEN, GEN, DEST
+{
+	/* u(mul|div|mod)w3 instructions */
+#if	0	/* trimul software workaround */
+	if (instrptr->name[0] == 'u')
+		trimulcheck(instrptr, &(operstak[0]), &(operstak[1]), &(operstak[2]));
+	else {
+#endif
+#if	ER16FIX || ER76FIX
+	if (er16fix(instrptr, &(operstak[0]), &(operstak[1]), &(operstak[2])))
+		memtoreg = 0;
+	else {
+#endif
+		generate(8,NOACTION,instrptr->opcode,NULLSYM);
+		addrgen(instrptr,&(operstak[0]),UWORD,1);
+		addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+		addrgen(instrptr,&(operstak[2]),NOTYPE,3);
+		pswcheck(instrptr,&(operstak[2]));
+		pcintcheck(instrptr,&(operstak[2]));
+		if (operstak[2].type == REGMD)
+			memtoreg = 1;
+#if	ER16FIX
+	}
+#endif
+#if	0	/* trimul software workaround */
+	}
+#endif
+}
+"umulw3",	IS25|INSTRW,	8,	0xe8L
+"udivw3",	IS25|INSTRW,	8,	0xecL
+"umodw3",	IS25|INSTRW,	8,	0xe4L
+.
+SHFTOP1 GEN, GEN, DEST
+{
+	/* [al][lr]sw3 instructions */
+	if ( pswcheck(instrptr, &(operstak[0])) )
+		pswcheck(instrptr, &(operstak[1]));
+	shftopgen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]));
+	pswcheck(instrptr,&(operstak[2]));
+	pcintcheck(instrptr,&(operstak[2]));
+	memtoreg = mtoregcheck(&(operstak[1]), &(operstak[2]));
+}
+"llsw3",	IS25|INSTRW,	16,	0xd3d0L
+"lrsw3",	IS25|INSTRBW,	16,	0xd4d4L
+"alsw3",	IS25|INSTRBW,	16,	0xc0c0L
+"arsw3",	IS25|INSTRW,	16,	0xc7c4L
+.
+MFPJMPOP1 MEM
+{
+	int i;
+	static char *map[][2] = {
+	{ "mjfz",	"jz" },
+	{ "mjfnz",	"jnz" },
+	{ "mjfpos",	"jpos" },
+	{ "mjfneg",	"jneg" },
+	{ "mjfe",	"je" },
+	{ "mjfne",	"jne" },
+	{ "mjfl",	"jl" },
+	{ "mjfnge",	"jl" },
+	{ "mjfle",	"jle" },
+	{ "mjfng",	"jle" },
+	{ "mjfg",	"jg" },
+	{ "mjfnle",	"jg" },
+	{ "mjfge",	"jge" },
+	{ "mjfnl",	"jge" },
+	{ "mjfo",	"jmp" },
+	{ "mjfio",	"jvs" },
+	{ "mjfimp",	"jlu" },
+	{ "mjfu",	NULL },
+	{ "mjfioe",	NULL },
+	{ "mjfoe",	NULL },
+	{ "mjfue",	NULL },
+	{ "mjfde",	NULL },
+	{ "mjfexc",	NULL },
+	{ NULL,		NULL }};
+
+/*
+ *	If we are ignoring whether or not the comparison is ordered,
+ *	we can copy the regular jump entries over the floating jump entries.
+ */
+	if (pswopt == YES) {
+		++pswopt;
+		for (i = 0; map[i][0]; i++)
+			(find_mnemonic(map[i][0]))->opcode = (map[i][1] ?
+				(find_mnemonic(map[i][1]))->opcode : 0);
+	}
+
+	if (pswopt) {
+		if (instrptr->opcode)
+			jmpopgen(instrptr,&(operstak[0]));
+	}
+	else
+		fpjmpgen(instrptr,&(operstak[0]),
+			((instrptr->opcode & 0xf0000000) >> 28));
+	memtoreg = 0;
+}
+"mjfz",		IS25|INSTRW,	8,	0x10000022L
+"mjfnz",	IS25|INSTRW,	8,	0x10000002L
+"mjfpos",	IS25|INSTRW,	8,	0x10000004L
+"mjfneg",	IS25|INSTRW,	8,	0x10000044L
+"mjfe",		IS25|INSTRW,	8,	0x10000023L
+"mjfne",	IS25|INSTRW,	8,	0x20000023L
+"mjfl",		IS25|INSTRW,	8,	0x10000045L
+"mjfle",	IS25|INSTRW,	8,	0x30000711L
+"mjfg",		IS25|INSTRW,	8,	0x10000007L
+"mjfge",	IS25|INSTRW,	8,	0x10000005L
+"mjfo",		IS25|INSTRW,	8,	0x10000001L
+"mjfu",		IS25|INSTRW,	8,	0x10000011L
+"mjfnl",	IS25|INSTRW,	8,	0x20000045L
+"mjfnle",	IS25|INSTRW,	8,	0x30004523L
+"mjfng",	IS25|INSTRW,	8,	0x20000007L
+"mjfnge",	IS25|INSTRW,	8,	0x20000005L
+"mjfio",	IS25|INSTRW,	8,	0x40080000L
+"mjfimp",	IS25|INSTRW,	8,	0x40040000L
+"mjfioe",	IS25|INSTRW,	8,	0x40000200L
+"mjfoe",	IS25|INSTRW,	8,	0x40000100L
+"mjfue",	IS25|INSTRW,	8,	0x40000080L
+"mjfde",	IS25|INSTRW,	8,	0x40000040L
+"mjfexc",	IS25|INSTRW,	8,	0x400403c0L
+.
+JMPOP1 MEM
+{
+	/*
+	 * jmp j(n)e j(n)neg j(n)pos j(n)z 
+	 * j[lg][eu] j[lg] j[lg]eu
+	 * JMP B(N)E[BH] BR[BH]
+	 * B[LG][EU][BH] B[LG]EU[BH] B[LG][BH]
+	 * BVC[BH] BVS[BH] BCC[BH] BCS[BH]
+	 * BEQL[BH]X BNEQ[BH]X
+	 *	instructions
+	 */
+
+	jmpopgen(instrptr,&(operstak[0]));
+	memtoreg = 0;
+}
+"jz",		IS25|INSTRW,	16,	0x777fL
+"jnz",		IS25|INSTRW,	16,	0x7f77L
+"jpos",	IS25|INSTRW,	16,	0x4f47L
+"jnpos",	IS25|INSTRW,	16,	0x474fL
+"jneg",	IS25|INSTRW,	16,	0x434bL
+"jnneg",	IS25|INSTRW,	16,	0x4b43L
+"je",		IS25|INSTRW,	16,	0x777fL
+"jne",		IS25|INSTRW,	16,	0x7f77L
+"jl",		IS25|INSTRW,	16,	0x434bL
+"jle",		IS25|INSTRW,	16,	0x474fL
+"jg",		IS25|INSTRW,	16,	0x4f47L
+"jge",		IS25|INSTRW,	16,	0x4b43L
+"jlu",		IS25|INSTRW,	16,	0x535bL
+"jleu",	IS25|INSTRW,	16,	0x575fL
+"jgu",		IS25|INSTRW,	16,	0x5f57L
+"jgeu",	IS25|INSTRW,	16,	0x5b53L
+"jmp",		IS25|INSTRW,	8,	0x7bL
+"BEB",		INSTRB,		8,	0x7fL
+"BNEB",	INSTRB,		8,	0x77L
+"BLB",		INSTRB,		8,	0x4bL
+"BLEB",	INSTRB,		8,	0x4fL
+"BGB",		INSTRB,		8,	0x47L
+"BGEB",	INSTRB,		8,	0x43L
+"BLUB",	INSTRB,		8,	0x5bL
+"BLEUB",	INSTRB,		8,	0x5fL
+"BGUB",	INSTRB,		8,	0x57L
+"BGEUB",	INSTRB,		8,	0x53L
+"BRB",		INSTRB,		8,	0x7bL
+"BEH",		INSTRH,		8,	0x7eL
+"BNEH",	INSTRH,		8,	0x76L
+"BLH",		INSTRH,		8,	0x4aL
+"BLEH",	INSTRH,		8,	0x4eL
+"BGH",		INSTRH,		8,	0x46L
+"BGEH",	INSTRH,		8,	0x42L
+"BLUH",	INSTRH,		8,	0x5aL
+"BLEUH",	INSTRH,		8,	0x5eL
+"BGUH",	INSTRH,		8,	0x56L
+"BGEUH",	INSTRH,		8,	0x52L
+"BRH",		INSTRH,		8,	0x7aL
+"BVCH",	INSTRH,		8,	0x62L
+"BVCB",	INSTRB,		8,	0x63L
+"BVSH",	INSTRH,		8,	0x6aL
+"BVSB",	INSTRB,		8,	0x6bL
+"BCCB",	INSTRB,		8,	0x53L
+"BCSB",	INSTRB,		8,	0x5bL
+"BCCH",	INSTRH,		8,	0x52L
+"BCSH",	INSTRH,		8,	0x5aL
+"BEQLBX",	INSTRB,		8,	0x6fL
+"BEQLHX",	INSTRH,		8,	0x6eL
+"BNEQBX",	INSTRB,		8,	0x67L
+"BNEQHX",	INSTRH,		8,	0x66L
+"JMP",		INSTRW,		8,	0x24L
+.
+JSBOP1 MEM
+{
+	/* jsb instruction */
+	jsbopgen(instrptr,&(operstak[0]));
+	memtoreg = 0;
+}
+"jsb",		IS25|INSTRW,	16,	0x3437L
+.
+JSBOP2 MEM
+{
+	/* JSB instruction */
+#if	ER10ERR
+	if ((operstak[0].newtype != NOTYPE) && workaround)
+		yyerror("Expand byte illegal in JSB Instruction.");
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,2);
+	memtoreg = 0;
+}
+"JSB",		INSTRW,		8,	0x34L
+.
+BSBOP1 TEXADMD
+{
+	/* BSB[BH] instructions */
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	if (instrptr->tag == INSTRB)
+		generate(8,RELPC8,operstak[0].expval,operstak[0].symptr);
+	else
+		generate(16,RELPC16,operstak[0].expval,operstak[0].symptr);
+	memtoreg = 0;
+}
+"BSBB",	INSTRB,		8,	0x37L
+"BSBH",	INSTRH,		8,	0x36L
+.
+JMBOP1 TIMMD, GEN, DEST
+{
+	/*
+	 * jb[cs] instructions
+	 *
+	 * jb(c|s)	&a,op1,op2
+	 *
+	 *	is encoded as
+	 *
+	 * bitw		&(1<<a),op1
+	 * j(z|nz)	op2
+	 *
+	 */
+	pswcheck(instrptr, &(operstak[1]));
+	generate(8,NOACTION,instrptr->opcode,NULLSYM); /* bitw opcode */
+	if (operstak[0].symptr == NULLSYM) {
+		if (operstak[0].expval<0L || operstak[0].expval>31L)
+			yyerror("Bit position out of range");
+		operstak[0].expval = 1L << operstak[0].expval;
+		addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	}
+	else {
+		/* generate long immediate with action routine */
+		generate(8,NOACTION,(long)(CIMMD),NULLSYM);
+		generate(32,SHIFTVAL,operstak[0].expval,operstak[0].symptr);
+	}
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+
+	generate(0,NEWSTMT,(long)line,NULLSYM);
+	newins = find_mnemonic( ((instrptr->name[2] == 'c')
+				? "jz"	/* for jbc */
+				: "jnz"	/* for jbs */));
+	jmpopgen(newins,&(operstak[2]));
+	memtoreg = 0;
+}
+"jbc",		IS25|INSTRW,	8,	0x38L
+"jbs",		IS25|INSTRW,	8,	0x38L
+.
+LOOPOP1 DEST, GEN, GEN, MEM
+{
+	/* acj[l|lu|le|leu] instructions */
+	loop1gen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]),&(operstak[3]));
+	pcintcheck(instrptr,&(operstak[3]));
+	memtoreg = 0;
+}
+"acjl",	IS25|INSTRW,	24,	0xb83c4bL
+"acjlu",	IS25|INSTRW,	24,	0xb83c5bL
+"acjle",	IS25|INSTRW,	24,	0xb83c4fL
+"acjleu",	IS25|INSTRW,	24,	0xb83c5fL
+.
+LOOPOP2 DEST, GEN, MEM
+{
+	/* atjnz[bhw] instructions */
+	loop2gen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]));
+	pcintcheck(instrptr,&(operstak[2]));
+	memtoreg = 0;
+}
+"atjnzb",	IS25|INSTRW,	8,	0x2bL
+"atjnzh",	IS25|INSTRW,	8,	0x2aL
+"atjnzw",	IS25|INSTRW,	8,	0x28L
+.
+BLOCKOP
+{
+	/* movbl[bh] */
+	if (memtoreg != 0) {
+		newins = find_mnemonic("NOP");
+		generate(8, NOACTION, newins->opcode, NULLSYM);
+		memtoreg = 0;
+	}
+	blockgen(instrptr);
+}
+"movblb",	IS25|INSTRB,	8,	0x87L
+"movblh",	IS25|INSTRH,	8,	0x86L
+.
+SPRTOP1 TIMMD
+{
+	/* SPOP */
+	if( operstak[0].newtype != NOTYPE) {
+		yyerror("Expand byte illegal in id word for Support Processor Instructions.");
+		return;
+	}
+	if( operstak[0].expspec != NULLSPEC ) {
+		yyerror("Operand specifier illegal in id word for Support Processor Instructions.");
+		return;
+	}
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	generate(32,NOACTION,swap_b4(operstak[0].expval),NULLSYM);
+#if	ER43ERR
+	er43chk(instrptr,operstak[0].expval);
+#endif
+}
+"SPOP",	INSTRW,		8,	0x32L
+.
+SPRTOP2 TIMMD, MEM 
+{
+	/* SPOPRS, SPOPRD, SPOPRT, SPOPWS, SPOPWD, SPOPWT */
+#if	ER40FIX
+	struct mnemonic *tmpins;
+#endif
+
+	if (operstak[0].newtype != NOTYPE) {
+		yyerror(
+	"Expand byte illegal in id word for Support Processor Instructions.");
+		return;
+	}
+	if( operstak[0].expspec != NULLSPEC ) {
+		yyerror(
+	"Operand specifier illegal in id word for Support Processor Instructions.");
+		return;
+	}
+#if	ER10ERR
+	if (operstak[1].newtype != NOTYPE && workaround) {
+		yyerror(
+	"Expand byte illegal in id word for Support Processor Instructions.");
+		return;
+	}
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	generate(32,NOACTION,swap_b4(operstak[0].expval),NULLSYM);
+	addrgen( instrptr, &(operstak[1]), NOTYPE, 2 );
+#if	ER40FIX
+	if ((instrptr->name[4] == 'W') && workaround) {
+		tmpins = find_mnemonic("NOP");
+		generate(8,NOACTION,tmpins->opcode,NULLSYM);
+	}
+#endif
+#if	ER43ERR
+	er43chk(instrptr,operstak[0].expval);
+#endif
+}
+"SPOPRS",	INSTRW,		8,	0x22L
+"SPOPRD",	INSTRW,		8,	0x02L
+"SPOPRT",	INSTRW,		8,	0x06L
+"SPOPWS",	INSTRW,		8,	0x33L
+"SPOPWD",	INSTRW,		8,	0x13L
+"SPOPWT",	INSTRW,		8,	0x17L
+.
+SPRTOP3 TIMMD, MEM, MEM 
+{
+	/* SPOPS2, SPOPD2, SPOPT2 */
+#if	ER40FIX
+	struct mnemonic *tmpins;
+#endif
+
+	if (operstak[0].newtype != NOTYPE) {
+		yyerror(
+	"Expand byte illegal in id word for Support Processor Instructions.");
+		return;
+	}
+#if	ER10ERR
+	if ((operstak[1].newtype != NOTYPE || operstak[2].newtype != NOTYPE) &&
+	     workaround) {
+		yyerror("Expand byte illegal in Support Processor Instructions.");
+	}
+#endif
+	if( operstak[0].expspec != NULLSPEC ) {
+		yyerror(
+	"Operand specifier illegal in id word for Support Processor Instructions.");
+		return;
+	}
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	generate(32,NOACTION,swap_b4(operstak[0].expval),NULLSYM);
+	addrgen( instrptr, &(operstak[1]), NOTYPE, 2 );
+	addrgen( instrptr, &(operstak[2]), NOTYPE, 3 );
+#if	ER40FIX
+	if (workaround) {
+		tmpins = find_mnemonic("NOP");
+		generate(8,NOACTION,tmpins->opcode,NULLSYM);
+	}
+#endif
+#if	ER43ERR
+	er43chk(instrptr,operstak[0].expval);
+#endif
+}
+"SPOPS2",	INSTRW,		8,	0x23L
+"SPOPD2",	INSTRW,		8,	0x03L
+"SPOPT2",	INSTRW,		8,	0x07L
+.
+FLDOP1	GEN, TIMMD, TIMMD, DEST
+{
+	/* insv instruction */
+	pswcheck(instrptr, &(operstak[0]));
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	--(operstak[2].expval); /* decrement field width */
+	addrgen(instrptr,&(operstak[2]),NOTYPE,3);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[3]),NOTYPE,4);
+	pswcheck(instrptr,&(operstak[3]));
+	pcintcheck(instrptr,&(operstak[3]));
+#ifdef	CHIPFIX
+	if (warlevel == ALLWAR)
+		if (operstak[3].type == REGMD)
+			memtoreg = 1;
+		else
+			memtoreg = 0;
+#endif
+}
+"insv",	IS25|INSTRW,	8,	0xc8L
+.
+FLDOP2	TIMMD, TIMMD, GEN, DEST
+{
+	/* extzv instruction */
+	pswcheck(instrptr, &(operstak[2]));
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	--(operstak[1].expval); /* decrement field width */
+	addrgen(instrptr,&(operstak[1]),NOTYPE,1);	/* xchange order of */
+	addrgen(instrptr,&(operstak[0]),NOTYPE,2);	/* oprnds 1 and 2 */
+	addrgen(instrptr,&(operstak[2]),NOTYPE,3);
+	addrgen(instrptr,&(operstak[3]),NOTYPE,4);
+	pswcheck(instrptr,&(operstak[3]));
+	pcintcheck(instrptr,&(operstak[3]));
+	memtoreg = mtoregcheck(&(operstak[2]), &(operstak[3]));
+}
+"extzv",	IS25|INSTRW,	8,	0xccL
+.
+FLDOP4	GEN, GEN, GEN, DEST
+{
+	/* (INS|EXT)F[BHW] instructions */
+	/* Interrupt After TSTW Chip Bug
+	 * Check if instruction does a store to
+	 * a register and is a multiple cycle
+	 * ALU instruction (ie. insert field).
+	 * If so, then set memtoreg so that a NOP
+	 * will be generated after this instruction
+	 * if necessary.
+	 */
+	if ( pswcheck(instrptr, &(operstak[0])) )
+		if ( pswcheck(instrptr, &(operstak[1])) )
+			pswcheck(instrptr, &(operstak[2]));
+#ifdef	CHIPFIX
+	if (warlevel == ALLWAR)
+		if ((operstak[3].type == REGMD) &&
+		    (instrptr->name[0] == 'I'))
+			memtoreg = 1;
+		else
+			memtoreg = mtoregcheck(&(operstak[2]), &(operstak[3]));
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	addrgen(instrptr,&(operstak[2]),NOTYPE,3);
+	addrgen(instrptr,&(operstak[3]),NOTYPE,4);
+	pswcheck(instrptr,&(operstak[3]));
+	pcintcheck(instrptr,&(operstak[3]));
+}
+"INSFW",	INSTRW,		8,	0xc8L
+"INSFH",	INSTRH,		8,	0xcaL
+"INSFB",	INSTRB,		8,	0xcbL
+"EXTFW",	INSTRW,		8,	0xccL
+"EXTFH",	INSTRH,		8,	0xceL
+"EXTFB",	INSTRB,		8,	0xcfL
+.
+ZEROP1
+{
+	/*
+	 * movblw rsb
+	 * RET GATE RETG [CALL|RET]PS [DIS|ENB]VJMP
+	 * R[LGN][EQ|EQU]
+	 * REQ[L|LU] R[LSS|GTR](U)
+	 * RC[CS] RV[CS] RSB
+	 * MOVBLW MVERNO WAIT SLFTST
+	 * BPT NOP STR(CPY|END)
+	 * CFLUSH
+	 *	instructions
+	 */
+	generate(instrptr->nbits,NOACTION,instrptr->opcode,NULLSYM);
+	memtoreg = 0;
+}
+"rsb",		IS25|INSTRW,	8,	0x78L
+"movblw",	IS25|INSTRW,	16,	0x3019L
+"RET",		INSTRW, 	8,	0x08L
+"GATE",	INSTRW,		16,	0x3061L
+"RETG",	INSTRW,		16,	0x3045L
+"CALLPS",	INSTRW,		16,	0x30acL
+"RETPS",	INSTRW,		16,	0x30c8L
+"MVERNO",	INSTRW,		16,	0x3009L
+"DISVJMP",	INSTRW,		16,	0x3013L
+"ENBVJMP",	INSTRW,		16,	0x300dL
+"STREND",	INSTRW,		16,	0x301fL
+"STRCPY",	INSTRW,		16,	0x3035L
+"SLFTST",	INSTRW,		16,	0x303cL
+"WAIT",	INSTRW,		8,	0x2fL
+"BPT",		INSTRW, 	8,	0x2eL
+"RGEQ",	INSTRW,		8,	0x40L
+"RGEQU",	INSTRW,		8,	0x50L
+"RGTR",	INSTRW,		8,	0x44L
+"RLSS",	INSTRW,		8,	0x48L
+"RLSSU",	INSTRW,		8,	0x58L
+"RLEQ",	INSTRW,		8,	0x4cL
+"RCC",		INSTRW,		8,	0x50L
+"RGTRU",	INSTRW,		8,	0x54L
+"RCS",		INSTRW,		8,	0x58L
+"RLEQU",	INSTRW,		8,	0x5cL
+"RVC",		INSTRW,		8,	0x60L
+"RVS",		INSTRW,		8,	0x68L
+"RNEQ",	INSTRW,		8,	0x74L
+"RNEQU",	INSTRW,		8,	0x64L
+"NOP",		INSTRW,		8,	0x70L
+"REQL",	INSTRW,		8,	0x7cL
+"REQLU",	INSTRW,		8,	0x6cL
+"RSB",		INSTRW,		8,	0x78L
+"MOVBLW",	INSTRW,		16,	0x3019L
+"CFLUSH",	INSTRW,		8,	0x27L
+"INTACK",	INSTRW,		16,	0x302FL
+"getsm",	INSTRX,		8,	0x1L
+"putsm",	INSTRX,		8,	0x11L
+"ungetsm",	INSTRX,		8,	0x21L
+.
+CALOP1 TIMMD, MEM
+{
+	/* call instruction */
+	callgen(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+}
+"call",	IS25|INSTRW,	8,	0x2cL
+.
+CALOP2 MEM, MEM
+{
+	/* CALL instruction */
+#if	ER10ERR
+	if ((operstak[0].newtype != NOTYPE || operstak[1].newtype != NOTYPE) &&
+	   workaround) 
+		yyerror("Expand byte illegal in CALL Instruction.");
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	memtoreg = 0;
+}
+"CALL",	INSTRW,		8,	0x2cL
+.
+SAVOP1 TIMMD
+{
+	/* save instruction */
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	/* let the action routine do the translation */
+	generate(8,SAVTRANS,operstak[0].expval,operstak[0].symptr);
+	memtoreg = 0;
+}
+"save",	IS25|INSTRW,	8,	0x10L
+.
+RETOP1 TIMMD
+{
+	/* ret instruction */
+#if M32RSTFIX
+	if (rstflag == YES && (warlevel == ALLWAR)) {
+		if (operstak[0].expval < 0 || operstak[0].expval > 6) {
+			yyerror("Invalid number of registers in `ret'");
+			return;
+		}
+		restorefix(&(operstak[0]));
+		/* generate the CRET instruction */
+		generate(8,NOACTION,(long)(instrptr->opcode >> 8),NULLSYM);
+	}
+	else {
+		generate(8,NOACTION,(instrptr->opcode & 0xFFL),NULLSYM);
+		/* let the action routine do the translation */
+		generate(8,SAVTRANS,operstak[0].expval,operstak[0].symptr);
+		/* generate the CRET instruction */
+		generate(8,NOACTION,(long)(instrptr->opcode >> 8),NULLSYM);
+	}
+#else
+	generate(8,NOACTION,(instrptr->opcode & 0xFFL),NULLSYM);
+	/* let the action routine do the translation */
+	generate(8,SAVTRANS,operstak[0].expval,operstak[0].symptr);
+	/* generate the CRET instruction */
+	generate(8,NOACTION,(long)(instrptr->opcode >> 8),NULLSYM);
+#endif
+	memtoreg = 0;
+}
+"ret",		IS25|INSTRW,	16,	0x0818L
+.
+SAVOP2 TREGMD
+{
+	/* SAVE RESTORE instructions */
+#if	ER10ERR
+	if (operstak[0].newtype != NOTYPE && workaround)
+		yyerror("Expand byte illegal in SAVE/RESTORE Instructions.");
+#endif
+#if M32RSTFIX
+	if ((instrptr->name[0] == 'R' ) && ((rstflag == YES) &&
+	    (warlevel == ALLWAR)))
+		restorefix(&(operstak[0]));
+	else {
+#endif
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	generate(8,NOACTION,(long)((CREGMD<<4)|operstak[0].reg),NULLSYM);
+#if M32RSTFIX
+	}
+#endif
+	memtoreg = 0;
+}
+"SAVE",	INSTRW,		8,	0x10L
+"RESTORE",	INSTRW,		8,	0x18L
+.
+SIMOP TEXADMD
+{
+	/* EXTOP instuction for the m32a simulator i/o routines */
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	generate(8,NOACTION,operstak[0].expval,NULLSYM);
+	memtoreg = 0;
+}
+"EXTOP",	INSTRX,		8,	0x14L
+.
+MFPMON1 FPDEST
+{
+	fptr1gen(instrptr,&(operstak[0]),NULL,&(operstak[0]));
+}
+#if	FLOAT
+"mfsqrs1",	IS25|INSTRS,	8,	0x0dL
+"mfrnds1",	IS25|INSTRS,	8,	0x0eL
+"mfnegs1",	IS25|INSTRS,	8,	0x17L
+"mfabss1",	IS25|INSTRS,	8,	0x0cL
+"mfsqrd1",	IS25|INSTRD,	8,	0x0dL
+"mfrndd1",	IS25|INSTRD,	8,	0x0eL
+"mfnegd1",	IS25|INSTRD,	8,	0x17L
+"mfabsd1",	IS25|INSTRD,	8,	0x0cL
+"mfsqrx1",	IS25|INSTRX,	8,	0x0dL
+"mfrndx1",	IS25|INSTRX,	8,	0x0eL
+"mfnegx1",	IS25|INSTRX,	8,	0x17L
+"mfabsx1",	IS25|INSTRX,	8,	0x0cL
+#endif
+.
+MFPMON2 FPGEN,  FPDEST
+{
+	fptr1gen(instrptr,&(operstak[0]),NULL,&(operstak[1]));
+}
+#if	FLOAT
+"mfsqrs2",	IS25|INSTRS,	8,	0x0dL
+"mfrnds2",	IS25|INSTRS,	8,	0x0eL
+"mfnegs2",	IS25|INSTRS,	8,	0x17L
+"mfabss2",	IS25|INSTRS,	8,	0x0cL
+"mfsqrd2",	IS25|INSTRD,	8,	0x0dL
+"mfrndd2",	IS25|INSTRD,	8,	0x0eL
+"mfnegd2",	IS25|INSTRD,	8,	0x17L
+"mfabsd2",	IS25|INSTRD,	8,	0x0cL
+"mfsqrx2",	IS25|INSTRX,	8,	0x0dL
+"mfrndx2",	IS25|INSTRX,	8,	0x0eL
+"mfnegx2",	IS25|INSTRX,	8,	0x17L
+"mfabsx2",	IS25|INSTRX,	8,	0x0cL
+#endif
+.
+MFPDYAOP1 FPGEN, FPDEST
+{
+#if	FLOAT
+	if ((instrptr->opcode & 0xff) == 0x05)
+		fptr2gen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[1]));
+	else
+		fptr1gen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mfadds2",	IS25|INSTRS,	8,	0x02L
+"mfsubs2",	IS25|INSTRS,	8,	0x03L
+"mfmuls2",	IS25|INSTRS,	8,	0x06L
+"mfdivs2",	IS25|INSTRS,	8,	0x04L
+"mfrems2",	IS25|INSTRS,	8,	0x05L
+"mfaddd2",	IS25|INSTRD,	8,	0x02L
+"mfsubd2",	IS25|INSTRD,	8,	0x03L
+"mfmuld2",	IS25|INSTRD,	8,	0x06L
+"mfdivd2",	IS25|INSTRD,	8,	0x04L
+"mfremd2",	IS25|INSTRD,	8,	0x05L
+"mfaddx2",	IS25|INSTRX,	8,	0x02L
+"mfsubx2",	IS25|INSTRX,	8,	0x03L
+"mfmulx2",	IS25|INSTRX,	8,	0x06L
+"mfdivx2",	IS25|INSTRX,	8,	0x04L
+"mfremx2",	IS25|INSTRX,	8,	0x05L
+#endif
+.
+MFPCNVFW FPINT, FPDEST
+{
+#if	FLOAT
+	fpcnvfw(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovws",	IS25|INSTRS,	8,	0x10L
+"mmovwd",	IS25|INSTRD,	8,	0x10L
+"mmovwx",	IS25|INSTRX,	8,	0x10L
+#endif
+.
+MFPCNVFU FPINT, FPDEST
+{
+#if	FLOAT
+	fpcnvfu(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovus",	IS25|INSTRS,	8,	0x10L
+"mmovud",	IS25|INSTRD,	8,	0x10L
+"mmovux",	IS25|INSTRX,	8,	0x10L
+#endif
+.
+MFPCNVTU FPGEN, MEM
+{
+#if	FLOAT
+	fpcnvtu(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovsu",	IS25|INSTRS,	8,	0x0FL
+"mmovdu",	IS25|INSTRD,	8,	0x0FL
+"mmovxu",	IS25|INSTRX,	8,	0x0FL
+#endif
+.
+MFPCNVTW FPGEN, MEM
+{
+#if	FLOAT
+	fpcnvtw(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovsw",	IS25|INSTRS,	8,	0x0FL
+"mmovdw",	IS25|INSTRD,	8,	0x0FL
+"mmovxw",	IS25|INSTRX,	8,	0x0FL
+#endif
+.
+MFPCNVF10 FPDEC, FPDEST
+{
+#if	FLOAT
+	fpcnvf10(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmov10s",	IS25|INSTRS,	8,	0x11L
+"mmov10d",	IS25|INSTRD,	8,	0x11L
+"mmov10x",	IS25|INSTRX,	8,	0x11L
+#endif
+.
+MFPCNVT10 FPGEN, MEM
+{
+#if	FLOAT
+	fpcnvt10(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovs10",	IS25|INSTRS,	8,	0x12L
+"mmovd10",	IS25|INSTRD,	8,	0x12L
+"mmovx10",	IS25|INSTRX,	8,	0x12L
+#endif
+.
+MFPMOVOP FPGEN, FPDEST
+{
+#if	FLOAT
+	fpmovgen(instrptr,&(operstak[0]),&(operstak[1]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovss",	IS25|INSTRS,	8,	0x07L
+"mmovsd",	IS25|INSTRSD,	8,	0x07L
+"mmovsx",	IS25|INSTRSX,	8,	0x07L
+"mmovds",	IS25|INSTRDS,	8,	0x07L
+"mmovdd",	IS25|INSTRD,	8,	0x07L
+"mmovdx",	IS25|INSTRDX,	8,	0x07L
+"mmovxs",	IS25|INSTRXS,	8,	0x07L
+"mmovxd",	IS25|INSTRXD,	8,	0x07L
+"mmovxx",	IS25|INSTRX,	8,	0x07L
+#endif
+.
+MFPMOVSP1 FPINT
+{
+#if	FLOAT
+	fpmovto(instrptr,&(operstak[0]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovta",	IS25|INSTRS,	8,	0x09L
+"mmovtd",	IS25|INSTRX,	8,	0x18L
+#endif
+.
+MFPMOVSP2 MEM
+{
+#if	FLOAT
+	fpmovfrom(instrptr,&(operstak[0]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mmovfa",	IS25|INSTRS,	8,	0x08L
+"mmovfd",	IS25|INSTRX,	8,	0x14L
+#endif
+.
+MFPTRIOP1 FPGEN, FPGEN, FPDEST
+{
+#if	FLOAT
+	if ((instrptr->opcode & 0xff) == 0x05)
+		fptr2gen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]));
+	else
+		fptr1gen(instrptr,&(operstak[0]),&(operstak[1]),&(operstak[2]));
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mfadds3",	IS25|INSTRS,	8,	0x02L
+"mfsubs3",	IS25|INSTRS,	8,	0x03L
+"mfmuls3",	IS25|INSTRS,	8,	0x06L
+"mfdivs3",	IS25|INSTRS,	8,	0x04L
+"mfrems3",	IS25|INSTRS,	8,	0x05L
+"mfaddd3",	IS25|INSTRD,	8,	0x02L
+"mfsubd3",	IS25|INSTRD,	8,	0x03L
+"mfmuld3",	IS25|INSTRD,	8,	0x06L
+"mfdivd3",	IS25|INSTRD,	8,	0x04L
+"mfremd3",	IS25|INSTRD,	8,	0x05L
+"mfaddx3",	IS25|INSTRX,	8,	0x02L
+"mfsubx3",	IS25|INSTRX,	8,	0x03L
+"mfmulx3",	IS25|INSTRX,	8,	0x06L
+"mfdivx3",	IS25|INSTRX,	8,	0x04L
+"mfremx3",	IS25|INSTRX,	8,	0x05L
+#endif
+.
+MFPCMPOP1 FPGEN, FPGEN
+{
+#if	FLOAT
+	fptr1gen(instrptr,&(operstak[0]),&(operstak[1]),NULL);
+	memtoreg = 0;
+#endif
+}
+#if	FLOAT
+"mfcmps",	IS25|INSTRS,	8,	0x0aL
+"mfcmpd",	IS25|INSTRD,	8,	0x0aL
+"mfcmpx",	IS25|INSTRX,	8,	0x0aL
+"mfcmpts",	IS25|INSTRS,	8,	0x0bL
+"mfcmptd",	IS25|INSTRD,	8,	0x0bL
+"mfcmptx",	IS25|INSTRX,	8,	0x0bL
+#endif
+.
+FPDYAOP1 FPGEN2, DEST
+{
+#if	FLOAT
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	if (operstak[0].type == FPIMMD) {
+		int dbl[2];
+		
+		atofd(operstak[0].fasciip,dbl);
+		if ((instrptr->tag&INST_MSK) != INSTRD)	/* change dbl -> single */
+			fpdtos(dbl);
+		operstak[0].expval = dbl[0];
+		operstak[0].fasciip = (char *) dbl[1];
+	}
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	memtoreg = 0;
+#endif
+}
+"fadds2",	IS25|INSTRW,		8,	0x31L
+"fsubs2",	IS25|INSTRW,		8,	0x41L
+"fmuls2",	IS25|INSTRW,		8,	0x51L
+"fdivs2",	IS25|INSTRW,		8,	0x61L
+"faddd2",	IS25|INSTRD,		8,	0x35L
+"fsubd2",	IS25|INSTRD,		8,	0x45L
+"fmuld2",	IS25|INSTRD,		8,	0x55L
+"fdivd2",	IS25|INSTRD,		8,	0x65L
+"movss",	IS25|INSTRW,		8,	0x91L
+"movsd",	IS25|INSTRW,		8,	0xa1L
+"movsh",	IS25|INSTRW,		8,	0xb1L
+"movsw",	IS25|INSTRW,		8,	0xd1L
+"movtsh",	IS25|INSTRW,		8,	0xc1L
+"movtsw",	IS25|INSTRW,		8,	0xe1L
+"movtdh",	IS25|INSTRD,		8,	0xc5L
+"movtdw",	IS25|INSTRD,		8,	0xe5L
+"movds",	IS25|INSTRD,		8,	0x95L
+"movdd",	IS25|INSTRD,		8,	0xa5L
+"movdh",	IS25|INSTRD,		8,	0xb5L
+"movdw",	IS25|INSTRD,		8,	0xd5L
+.
+FPDYAOP2 GEN, DEST
+{
+#if     FLOAT
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	memtoreg = 0;
+#endif
+}
+"movhs",	IS25|INSTRHW,	8,	0x71L
+"movws",	IS25|INSTRW,		8,	0x81L
+"movhd",	IS25|INSTRH,		8,	0x75L
+"movwd",	IS25|INSTRW,		8,	0x85L
+.
+FPTRIOP1 FPGEN2, FPGEN2, DEST
+{
+#if	FLOAT
+	if ((instrptr->tag&INST_MSK) == INSTRD) {	/* double operands */
+		if ((operstak[0].type==REGMD) && (operstak[1].type==REGMD))
+		/* see if register pairs are used correctly */
+		if (abs(operstak[1].reg - operstak[0].reg) == 1)
+			yyerror("invalid double register usage");
+	}
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	if (operstak[0].type == FPIMMD) {
+		int dbl[2];
+		
+		atofd(operstak[0].fasciip,dbl);
+		if ((instrptr->tag&INST_MSK) != INSTRD)	/* change dbl -> single */
+			fpdtos(dbl);
+		operstak[0].expval = dbl[0];
+		operstak[0].fasciip = (char *) dbl[1];
+	}
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	if (operstak[1].type == FPIMMD) {
+		int dbl[2];
+		
+		atofd(operstak[1].fasciip,dbl);
+		if ((instrptr->tag&INST_MSK) != INSTRD)	/* change dbl -> single */
+			fpdtos(dbl);
+		operstak[1].expval = dbl[0];
+		operstak[1].fasciip = (char *) dbl[1];
+	}
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	addrgen(instrptr,&(operstak[2]),NOTYPE,3);
+	memtoreg = 0;
+#endif
+}
+"fadds3",	IS25|INSTRW,		8,	0x39L
+"fsubs3",	IS25|INSTRW,		8,	0x49L
+"fmuls3",	IS25|INSTRW,		8,	0x59L
+"fdivs3",	IS25|INSTRW,		8,	0x69L
+"faddd3",	IS25|INSTRD,		8,	0x79L
+"fsubd3",	IS25|INSTRD,		8,	0x89L
+"fmuld3",	IS25|INSTRD,		8,	0x99L
+"fdivd3",	IS25|INSTRD,		8,	0xa9L
+.
+FPCMPOP1 FPGEN2, FPGEN2
+{
+#if	FLOAT
+	if ((instrptr->tag&INST_MSK) == INSTRD) {	/* fcmpd opcode */
+		if ((operstak[0].type==REGMD) && (operstak[1].type==REGMD))
+		/* see if register pairs are used correctly */
+			if (abs(operstak[1].reg - operstak[0].reg) == 1)
+			yyerror("invalid double register usage");
+	}
+	generate(8,NOACTION,instrptr->opcode,NULLSYM);
+	if (operstak[0].type == FPIMMD) {
+		int dbl[2];
+		
+		atofd(operstak[0].fasciip,dbl);
+		if ((instrptr->tag&INST_MSK) != INSTRD)	/* change dbl -> single */
+			fpdtos(dbl);
+		operstak[0].expval = dbl[0];
+		operstak[0].fasciip = (char *) dbl[1];
+	}
+	addrgen(instrptr,&(operstak[0]),NOTYPE,1);
+	if (operstak[1].type == FPIMMD) {
+		int dbl[2];
+		
+		atofd(operstak[1].fasciip,dbl);
+		if ((instrptr->tag&INST_MSK) != INSTRD)	/* change dbl -> single */
+			fpdtos(dbl);
+		operstak[1].expval = dbl[0];
+		operstak[1].fasciip = (char *) dbl[1];
+	}
+	addrgen(instrptr,&(operstak[1]),NOTYPE,2);
+	memtoreg = 0;
+#endif
+}
+"fcmps",	IS25|INSTRW,		8,	0xf1L
+"fcmpd",	IS25|INSTRD,		8,	0xf5L
+.
+PSTEXT
+{
+	if (txtsec < 0)
+		txtsec = mksect(lookup(_TEXT,INSTALL,USRNAME)->stp, STYP_TEXT);
+	cgsect(txtsec);
+}
+".text",	TXT,		0,	0x0L
+.
+PSDATA
+{
+	if (datsec < 0)
+		datsec = mksect(lookup(_DATA,INSTALL,USRNAME)->stp, STYP_DATA);
+	cgsect(datsec);
+}
+".data",	DAT,		0,	0x0L
+.
+PSPREV
+{
+	if (!previous)
+		yyerror("'.previous' invoked before any other section");
+	cgsect(previous);
+}
+".previous",	0,		0,	0x0L
+.
+PSIL
+{
+	generate(0,SETEXPAND,NULLVAL,NULLSYM);
+}
+".il",		PSEUDO,		0,	0x0L
+.
+PSZERO TEXADMD
+{
+	long val;
+
+	if (operstak[0].exptype != ABS)
+		yyerror("`.zero' size not absolute");
+	if ((val = operstak[0].expval) < 0)
+		yyerror("Invalid `.zero' size");
+	if (dot->styp != DAT)
+		yyerror("`.zero' valid only in .data");
+	generate(0, DOTZERO, val, NULLSYM);
+	newdot += val;
+}
+".zero",	PSEUDO,		0,	0x0L
+.
+PSALIGN TEXADMD
+{
+	if (operstak[0].exptype != ABS)
+		yyerror("'.align' field not absolute");
+	ckalign(operstak[0].expval);
+}
+".align",	PSEUDO,		0,	0x0L
+.
+PSENDEF
+{
+	generate(0,ENDEF,NULLVAL,NULLSYM);
+}
+".endef",	PSEUDO,		0,	0x0L
+.
+PSLN TEXADMD
+{
+	cline = (short)operstak[0].expval;
+	generate(0,LLINENO,operstak[0].expval,operstak[0].symptr);
+}
+".ln",		PSEUDO,		0,	0x0L
+.
+PSVAL TEXADMD
+{
+	generate(0,(unsigned short) SETVAL,operstak[0].expval,operstak[0].symptr);
+}
+".val",	PSEUDO,		0,	0x0L
+.
+PSSCL TEXADMD
+{
+	generate(0,(unsigned short) SETSCL,operstak[0].expval,operstak[0].symptr);
+}
+".scl",	PSEUDO,		0,	0x0L
+.
+PSTYPE TEXADMD
+{
+	generate(0,(unsigned short) SETTYP,operstak[0].expval,operstak[0].symptr);
+}
+".type",	PSEUDO,		0,	0x0L
+.
+PSLINE TEXADMD
+{
+	generate(0,(unsigned short) SETLNO,operstak[0].expval,operstak[0].symptr);
+}
+".line",	PSEUDO,		0,	0x0L
+.
+PSSIZE TEXADMD
+{
+	generate(0,(unsigned short) SETSIZ,operstak[0].expval,operstak[0].symptr);
+}
+".size",	PSEUDO,		0,	0x0L
+.
+PSVERS
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".version",	PSEUDO,		0,	0x0L
+.
+PSIDENT
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".ident",	PSEUDO,		0,	0x0L
+.
+PSGLOBL
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".globl",	PSEUDO,		0,	0x0L
+.
+PSSET
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".set",	PSEUDO,		0,	0x0L
+.
+PSSECTION
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".section",	PSEUDO,	0,	0x0L
+.
+PSBSS
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".bss",	BSS,		0,	0x0L
+.
+PSCOMM
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".comm",	PSEUDO, 	0,	0x0L
+.
+PSFILE
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".file",	PSEUDO,		0,	0x0L
+.
+PSDEF
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".def",	PSEUDO,		0,	0x0L
+.
+PSTAG
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".tag",	PSEUDO,		0,	0x0L
+.
+PSDIM
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".dim",	PSEUDO,		0,	0x0L
+.
+PSBYTE
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".byte",	PSEUDO,		0,	0x0L
+.
+PSHALF
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".half",	PSEUDO,		0,	0x0L
+.
+PSWORD
+{
+	/* handled in mixed parsing and semantics switch */
+}
+".word",	PSEUDO,		0,	0x0L
+.
+PSDECFP
+{
+	/* handled in mixed parsing and semantics switch */
+}
+#if	FLOAT
+".decfp",	PSEUDO,		0,	0x0L
+#endif
+.
+PSDECINT
+{
+	/* handled in mixed parsing and semantics switch */
+}
+#if	FLOAT
+".decint",	PSEUDO,		0,	0x0L
+#endif
+.
+PSFLOAT
+{
+	/* handled in mixed parsing and semantics switch */
+}
+#if	FLOAT
+".float",	PSEUDO,		0,	0x0L
+#endif
+.
+PSDOUBLE
+{
+	/* handled in mixed parsing and semantics switch */
+}
+#if	FLOAT
+".double",	PSEUDO,		0,	0x0L
+#endif
+.
+PSDOUBLX
+{
+	/* handled in mixed parsing and semantics switch */
+}
+#if	FLOAT
+".doublx",	PSEUDO,		0,	0x0L
+#endif
+.
+TESTOP1
+{
+	/* handled in mixed parsing and semantics switch */
+}
+"NOP3",	INSTRH,		8,	0x72L
+"NOP2",	INSTRB,		8,	0x73L
+.
+INTERNALOP
+{
+	/* for internal use only - may not appear in program */
+	yyerror("unknown instruction mnemonic \"jvs\"\n");
+}
+"jvs",	IS25|INSTRW,	16,	0x536bL
+.

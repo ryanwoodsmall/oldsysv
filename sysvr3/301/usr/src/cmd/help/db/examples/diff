@@ -1,0 +1,30 @@
+
+\Sdiff\S:  Examples
+
+        diff book.1 book.2
+
+   Compares the contents of "book.1" and "book.2" and lists the lines that you
+   must change to make the files identical.
+
+
+
+
+
+
+
+
+
+
+
+   ---------------------------------------------------------------------------
+
+        diff -e action /usr/src/ > script
+
+   Compares the file "action" to the file by the same name in the directory
+   "/usr/src/".  \Sdiff\S creates a script for ed(1) that makes "action"
+   identical to "usr/src/action".
+
+        (cat script; echo '1,$p') | ed - action
+
+   This command line edits the file "action" using the changes listed in
+   "script." The editor ed(1) prints the file after it is changed.

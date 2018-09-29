@@ -1,0 +1,160 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/modadduser	2.2"
+#menu# modify defaults used by adduser
+#help# 
+#help#	Modadduser allows you to change some of the defaults used when
+#help#	adduser creates a new login.  Changing the defaults does not
+#help#	effect any existing logins, only ones made from now on.
+
+defgroup=1	# Default group, "other"
+defparent=/usr	# Default parent of login directory
+loginlen=8	# Maximum login ID length
+minid=100	# Minimum user and group ID
+maxid=50000	# Maximum user and group ID
+
+if [ -r ${MENUTOP:?}/defadduser ]
+then	# This file allows easy modification of the defaults.
+	. ${MENUTOP}/defadduser
+fi
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+echo '
+Anytime you want to quit, type "q".
+If you are not sure how to answer any prompt, type "?" for help,
+or see the Owner/Operator Manual.
+'
+defgroupname=`cut -d: -f1,3 /etc/group  |  grep ":${defgroup}$"  |  cut -d: -f1`
+if [ -n "${defgroupname}" ]
+then
+	defgroupname="(${defgroupname})"
+fi
+echo "Current defaults for adduser:
+group ID		${defgroup}	${defgroupname}
+parent directory	${defparent}"
+
+if  checkyn ${flags} -H'
+	This is the "name" that the computer uses to identify users belonging
+	to the same group that share common project data files and directories.
+	See the GETTING STARTED chapter of the Owner/Operator Manual
+	for more information on how to assign group numbers.' \
+	-f 'Do you want to change the default group ID?'
+then
+	while true
+	do
+		groupid=`checkre ${flags} -H'
+	The group ID should be either a group number
+	or an existing group name.
+	Group names can contain only numbers and lower case letters.' \
+			-fe "Enter group ID number or group name [?, q]:" \
+			'^[0-9a-z]*$' 'Answer contains an illegal character.
+	Only numbers and lower case letters are permitted.'`
+		x=`grep "^${groupid}:" /etc/group  |  cut -d: -f3`
+		if [ -n "${x}" ]
+		then
+			if [ "${x}" -lt ${minid}  -a  "${x}" -ne 1 ]
+			then
+				echo "\\t${groupid} has group ID ${x} which is less than ${minid}.
+	q  for quit"
+				continue
+			else
+				groupname="${groupid}"
+				groupid=${x}
+				break
+			fi
+		fi
+		if  num "${groupid}"
+		then
+			if [ "${groupid}" -le ${maxid}  -a  \
+			\( "${groupid}" -ge ${minid} -o "${groupid}" -eq 1 \) ]
+			then
+				groupname=`cut -d: -f1,3 /etc/group  |
+					grep ":${groupid}$"  |  cut -d: -f1`
+				break
+			fi
+			echo "\\tGroup ID must be all digits.  Permitted values are
+	1, or at least ${minid} and not larger than ${maxid}.
+	q  for quit"
+		else
+			echo "\\t${groupid} is not a known group name.  Known groups (group ID):" \
+			"\\n`cut -d: -f1,3 /etc/group  |  sort  |
+				sed 's/:\(.*\)/	(\1)/'  |  pr -o4 -t -3`" \
+			'\nq  for quit'
+		fi
+	done
+	defgroup=${groupid}
+	defgroupname=${groupname}
+fi
+
+if checkyn ${flags} -H'
+	This is the directory under which new login directories
+	will be added.' -f 'Do you want to change the default parent directory?'
+then
+	while true
+	do
+		pardir=`checkre ${flags} \
+			-fe "Enter parent directory name [q]:" \
+			'^/' 'Directory name must begin with a "/".' \
+			'^//*[^/]*' 'Directory must not be the "/" directory.' \
+			'^[-./a-zA-Z0-9]*$' "Directory name contains an illegal character.
+	Only letters, numbers, '.', '-', and '/' are permitted."`
+		if [ -f "${pardir}" ]
+		then
+			echo "\\t${pardir} is already a file name.  Choose another."
+			continue
+		fi
+		if [ ! -d "${pardir}" ]
+		then
+			echo "\\t${pardir} directory does not exist.  Choose another."
+			continue
+		fi
+
+		# Grab characters beginning with the first slash (/) up to
+		# but not including the second slash -- assume this is a
+		# file system.
+
+		fs=`expr "X${pardir}" : 'X\(/[^/]*\)'`
+		x=`/etc/mount  |  grep "^${fs} "`
+		case "${x}" in
+		*'read only'* )
+			echo "\\tFile system ${fs} is not writable.  Choose another.
+	Possible file systems:
+	" `/etc/mount  |  cut -d' ' -f1  |  egrep -v '^/$|^/tmp$'`
+			continue
+			;;
+		'/ '*  |  '/tmp '* )
+			echo "\\tCannot put login directories into / or /tmp.  Choose another."
+			continue
+			;;
+		'' )
+			echo "\\t${fs} is not a file system.  Choose another.
+	Possible file systems:
+	" `/etc/mount  |  cut -d' ' -f1  |  egrep -v '^/$|^/tmp$'`
+			continue
+			;;
+		esac
+		break
+	done
+	defparent=${pardir}
+fi
+if [ -n "${defgroupname}" ]
+then
+	defgroupname="(${defgroupname})"
+fi
+echo "\\nThese will be the new defaults:
+group ID:		${defgroup}	${defgroupname}
+parent directory:	${defparent}"
+if checkyn ${flags} -f 'Do you want to keep these values?'
+then
+	/bin/sh -c "
+		trap '' 1 2 3 15
+		set -e
+		umask 022
+		date +'#	Default values for adduser.  Changed %D %T.
+defgroup=${defgroup}
+defparent=${defparent}' >${MENUTOP}/defadduser
+		echo Defaults installed.
+	"  ||  {
+		admerr $0 'Failure in attempting to create adduser defaults.'
+		exit 1
+	}
+fi

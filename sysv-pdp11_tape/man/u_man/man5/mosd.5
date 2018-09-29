@@ -1,0 +1,295 @@
+.TH MOSD 5
+.SH NAME
+mosd \- the \s-1OSDD\s+1 adapter macro package for formatting documents
+.SH SYNOPSIS
+.B osdd
+[ options ] [ files ]
+.PP
+.B "mm \-mosd"
+[ options ] [ files ]
+.PP
+.B "nroff \-mm \-mosd"
+[ options ] [ files ]
+.PP
+.B "nroff \-cm \-mosd"
+[ options ] [ files ]
+.sp 1v
+.B "mmt \-mosd"
+[ options ] [ files ]
+.PP
+.B "troff \-mm \-mosd"
+[ options ] [ files ]
+.PP
+.B "troff \-cm \-mosd"
+[ options ] [ files ]
+.SH DESCRIPTION
+The \s-1OSDD\s+1 adapter macro package is a tool used
+in conjunction with the
+.SM MM
+macro
+package to prepare Operations Systems Deliverable Documentation.
+Many of the \s-1OSDD\s+1 Standards
+are different than the default format provided by
+.SM MM\*S.
+The \s-1OSDD\s+1 adapter package
+sets the appropriate
+.SM MM
+options for automatic production of the \s-1OSDD\s+1
+Standards.
+The \s-1OSDD\s+1 adapter package also generates the correct
+.SM OSDD
+page headers and footers, heading styles, Table of Contents format,
+etc.
+.PP
+.SM OSDD
+document (input) files are prepared with the
+.SM MM
+macros.
+Additional information which must be given at the beginning of the
+document file is specified by the following string definitions:
+.RS
+.nf
+\&.ds H1 document-number
+\&.ds H2 section-number
+\&.ds H3 issue-number
+\&.ds H4 date
+\&.ds H5 rating
+.fi
+.RE
+.PP
+The
+.I document-number
+should be of the standard 10 character format.
+The words ``Section'' and ``Issue'' should not be
+included in the string definitions;
+they will be supplied automatically when the document is printed.
+For example:
+.RS
+.nf
+\&.ds H1 \s-1OPA\s+1\-1\s-1P\s+1\&135\-01
+\&.ds H2 4
+\&.ds H3 2
+.fi
+.RE
+automatically produces
+.RS
+.nf
+\s-1OPA\s+1\&-1\s-1P\s+1\&135-01
+Section 4
+Issue 2
+.fi
+.RE
+as the document page header.
+Quotation marks are not used in string definitions.
+.PP
+If certain information is not to be included in a page header,
+then the string is defined as null; e.g.,
+.RS
+.nf
+\&.ds H2
+.fi
+.RE
+means that there is no
+.IR section-number .
+.PP
+The \s-1OSDD\s+1 Standards require that the
+.I "Table of Contents"
+be numbered
+beginning with
+.IR "Page 1" .
+By default, the first page of text will be numbered
+.IR "Page 2" .
+If the
+.I "Table of Contents"
+has more than one page, for example
+.IR n ,
+then either
+.BI \-rP n+1
+must be included as a command line option or
+.B "\&.nr P n"
+must be included in the document file.
+For example, if the
+.I "Table of Contents"
+is four pages then use
+.B \-rP5
+on the command line or
+.B "\&.nr\ P\ 4"
+in the document file.
+.PP
+The
+.SM OSDD
+Standards require that certain information such as the document
+.I rating
+appear on the
+.I "Document Index"
+or on the
+.I "Table of Contents"
+page if
+there is no index.
+By default, it is assumed that an index has been
+prepared separately.
+If there is no index, the following must be included in the document file:
+.RS
+.nf
+\&.nr Di 0
+.fi
+.RE
+This will ensure that the necessary information is included on the
+.I "Table of Contents"
+page.
+.PP
+The \s-1OSDD\s+1 Standards require that all numbered figures be placed at the
+end of the document.
+The
+.B .Fg
+macro is used to produce full
+page figures.
+This macro produces a blank page with the appropriate header,
+footer, and figure caption.
+Insertion of the actual figure on
+the page is a manual operation.
+The macro usage is
+.RS
+.nf
+\&.Fg page-count "figure caption"
+.fi
+.RE
+where
+.I page-count
+is the number of pages required for a multi-page figure (default 1 page).
+.PP
+Figure captions are produced by the
+.B \&.Fg
+macro using the
+.BR \&.\s-1BS\s+1 / .\s-1BE\s+1
+macros.
+Thus the
+.BR \&.\s-1BS\s+1 / .\s-1BE\s+1
+macros are also not available for users.
+The
+.B \&.Fg
+macro cannot be used within the document unless
+the final
+.B \&.Fg
+in a series of figures is followed by a
+.B \&.\s-1SK\s+1
+macro to force
+out the last figure page.
+.PP
+The
+.I "Table of Contents"
+for
+.SM OSDD
+documents (see Figure 4 in Section 4.1 of
+the \s-1OSDD\s+1 Standards) is produced with:
+.RS
+.nf
+\&.Tc
+System Type
+System Name
+Document Type
+\&.Td
+.fi
+.RE
+The
+.BR \&.Tc / .Td
+macros are used instead of the
+.B "\&.\s-1TC\s+1"
+macro from
+.SM MM\*S.
+.PP
+By default, the adapter package causes the
+.SM \fBNOTICE\fP
+disclosure statement
+to be printed.
+The
+.B \&.\s-1PM\s+1
+macro
+may be used to suppress the
+.SM \fBNOTICE\fP
+or to replace it
+with the
+.SM \fBPRIVATE\fP
+disclosure statement as follows:
+.PP
+.RS
+.PD 0
+.TP 10
+\&.\s-1PM\s+1
+none printed
+.TP 10
+\&.\s-1PM P\s+1
+.SM PRIVATE
+printed
+.TP 10
+\&.\s-1PM N\s+1
+.SM NOTICE
+printed (default)
+.PD
+.RE
+.PP
+The
+.SM
+.B \&.P
+macro is used for paragraphs.
+The
+.B Np
+register is set automatically
+to indicate the paragraph numbering style.
+It is very important that the
+.SM
+.B \&.P
+macro be used correctly.
+All paragraphs (including those immediately
+following a
+.SM
+.B \&.H
+macro) must use a
+.SM
+.B \&.P
+macro.
+Unless there is a
+.SM
+.B \&.P
+macro,
+there will not be a number generated for the paragraph.
+Similarly, the
+.SM
+.B \&.P
+macro should not be used for text which is not a paragraph.
+The
+.SM
+.B \&.SP
+macro may be appropriate for these cases,
+e.g., for ``paragraphs'' within a list item.
+.PP
+The page header format is produced automatically in accordance with
+the
+.SM OSDD
+Standards.
+The
+.SM OSDD
+Adapter macro package uses the
+.SM
+.B \&.TP
+macro for this purpose.
+Therefore the
+.SM
+.B \&.TP
+macro normally available in
+.SM MM
+is not available
+for users.
+.SH FILES
+/usr/lib/tmac/tmac.osd
+.SH SEE ALSO
+.PD 0
+mm(1), mmt(1), nroff(1), troff(1), mm(5).
+.PP
+.I "\s-1MM\s+1\-Memorandum Macros\^"
+by D. W. Smith and J. R. Mashey.
+.PP
+.IR "Operations Systems Deliverable Documentation Standards\^" ,
+June 1980.
+.PD
+.\"	@(#)mosd.5	5.2 of 5/18/82

@@ -1,0 +1,32 @@
+#ident	"@(#)rfs.admin:resrcmgmt/advmgmt/lsinuse	1.7"
+#menu# list local resources that are mounted by other machines
+
+#help#
+#help#	The subcommand "lsinuse" shows you a list of your local 
+#help#	resources that are currently mounted and in use by other 
+#help#	machines.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/rmnt$$; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo "\n\n\tLOCAL RESOURCES CURRENTLY MOUNTED BY CLIENT MACHINES"
+
+HEADING="
+The fields in this list are in the following order:
+Resource identifier, Local pathname, Client name.
+---------------------------------------------------------------------------\n"
+echo "$HEADING\n"
+
+# execute rmntstat
+/usr/bin/rmntstat -h | /usr/bin/awk '{ if ( NF > 2 )
+	printf "%s\t%s\t%s\n", $1,$2, $3
+	}' >/usr/tmp/rmnt$$
+if [ -s /usr/tmp/rmnt$$ ]
+then
+	/usr/bin/pg -e -p"Enter <RETURN> to continue:" /usr/tmp/rmnt$$
+	echo
+else
+	echo "\nNo local resources are currently mounted by client machines.\n"
+fi

@@ -1,0 +1,13 @@
+
+\Sed\S:  Options
+
+     -   suppresses the printing of character counts from the "e", "r", and "w"
+         commands, diagnostics from the "e", and "q" commands, and the "!"
+         prompt after "! command" is executed.
+
+     -x   makes it possible to edit encrypted files.  (This option is only
+         available on domestic releases of UNIX systems.)
+
+     -p   string specifies <string> as the prompt.  Normally, \Sed\S does not
+          provide a prompt.
+

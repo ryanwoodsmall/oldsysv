@@ -1,0 +1,15 @@
+#ident	"@(#)sadmin:shell/mktable	1.3"
+#	concatenate files together, stripping comments and empty lines
+
+#!	chmod +x ${file}
+
+if [ $# -lt 1 ]
+then
+	echo >&2 "Usage:  $0 file ...
+For more detail type:	prtdoc syscmd.`basename $0`"
+	exit 1
+fi
+
+exec sed '	/^[ 	]*#/d
+		/^[ 	]*$/d
+	' "$@"

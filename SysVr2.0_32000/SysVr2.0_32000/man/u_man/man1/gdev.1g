@@ -1,0 +1,139 @@
+.TH GDEV 1G
+.SH NAME
+hpd, erase, hardcopy, tekset, td \- graphical device routines and filters
+.SH SYNOPSIS
+.B hpd
+.RB [ \- options]
+.RB "[\s-1GPS\s+1~file" "~.\|.\|." ]
+.br
+.B erase
+.br
+.B hardcopy
+.br
+.B tekset
+.br
+.B td
+.RB [ \-eur n]
+.RB "[\s-1GPS\s+1~file" "~.\|.\|." ]
+.SH DESCRIPTION
+All of the commands described below reside in
+.B /usr/bin/graf
+(see
+.IR graphics (1G)).
+.TP 10
+.B hpd
+Hpd translates a \s-1GPS\s+1 (see
+.IR gps (4)),
+to instructions for the Hewlett-Packard 7221A Graphics Plotter.
+A viewing window is computed from the maximum and minimum points in
+.I file\^
+unless the
+.B \-u
+or
+.B \-r
+.I option\^
+is provided.
+If no
+.I file\^
+is given, the standard input is assumed.
+.I Options\^
+are:
+.RS 10
+.TP 5
+.BI c n\^
+Select character set
+.IR n ,
+.I n\^
+between 0 and 5 (see the
+.SM
+.IR "HP\*S7221A Plotter Operating and Programming Manual" ", " "Appendix A" ).
+.TP 5
+.BI p n\^
+Select pen numbered
+.IR n ,
+.I n\^
+between 1 and 4 inclusive.
+.TP 5
+.BI r n\^
+Window on \s-1GPS\s+1 region
+.IR n ,
+.I n\^
+between 1 and 25 inclusive.
+.TP 5
+.BI s n\^
+Slant characters
+.I n\^
+degrees clockwise from the vertical.
+.TP 5
+.B u
+Window on the entire \s-1GPS\s+1 universe.
+.TP 5
+.BI xd n\^
+Set x displacement of the viewport's lower left corner to
+.I n\^
+inches.
+.TP 5
+.BI xv n\^
+Set width of viewport to
+.I n\^
+inches.
+.TP 5
+.BI yd n\^
+Set y displacement of the viewport's lower left corner to
+.I n\^
+inches.
+.TP 5
+.BI yv n\^
+Set height of viewport to
+.I n\^
+inches.
+.RE
+.TP 10
+\fBerase\fR 
+\fIErase\fR sends characters to a \s-1TEKTRONIX\s+1 4010 series storage terminal to erase the screen.
+.TP 10
+\fBhardcopy\fR 
+When issued at a \s-1TEKTRONIX\s+1 display terminal with a hard copy
+unit, \fIhardcopy\fR generates a screen copy on the unit.
+.TP 10
+\fBtekset\fR 
+\fITekset\fR sends characters to a \s-1TEKTRONIX\s+1 terminal to 
+clear the display screen, set the display mode to alpha,
+and set characters to the smallest font.
+.TP 10
+\fBtd\fR
+\fITd\fR translates a \s-1GPS\s+1 to scope code for a \s-1TEKTRONIX\s+1 4010 series storage terminal.  A viewing
+window is computed from the maximum and minimum points in
+.I file\^
+unless the
+.B \-u
+or
+.B \-r
+.I option\^
+is provided.
+If no
+.I file\^
+is given, the
+standard input is assumed.
+Options
+are:
+.RS 10
+.TP 5
+.B e
+Do not erase screen before initiating display.
+.TP 5
+.BI r n\^
+Display \s-1GPS\s+1 region \fIn\fR, \fIn\fR between 1 and
+25 inclusive.
+.TP 5
+.B u
+Display the entire \s-1GPS\s+1 universe.
+.RE
+.DT
+.SH "SEE ALSO"
+ged(1G), graphics(1G).
+.br
+gps(4) in the
+\f2\s-1\UNIX\s+1 System V Programmer Reference Manual\fR.
+.tr ~~
+.\"	@(#)gdev.1g	6.2 of 9/2/83

@@ -1,0 +1,7 @@
+
+\Snohup\S:  Examples
+
+        nohup mm -rO8 -Tlp -c chapter1 > chap1.form &
+
+    Formats "chapter1" in the background and puts the formatted version in
+    "chap1.form".  Ignores hangup and quit signals.

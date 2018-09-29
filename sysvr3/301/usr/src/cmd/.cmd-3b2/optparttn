@@ -1,0 +1,235 @@
+#ident	"@(#)cmd-3b2:optparttn	1.7"
+#
+# optparttn
+#
+# Allocate any disk free space into user partitions.
+#
+
+set -ue
+myname=${0}
+args="${*:-}"
+
+dir=/usr
+seq=2
+
+p_0=0	p_1=1	p_2=2	p_3=3	p_4=4	p_5=5	p_6=6	p_7=7
+p_8=8	p_9=9	p_a=10	p_b=11	p_c=12	p_d=13	p_e=14	p_f=15
+
+cylsize=1
+drive=
+rel=unk
+root=/
+SAflag=n
+
+fstab=
+mountdir=
+
+Again()
+{
+	if [ -n "${fstab}" ]
+	then
+		Undo $*
+	fi
+	exec ${myname} ${args}
+}
+
+Cleanup()
+{
+	Undo $*
+	exit 1
+}
+
+Undo()
+{
+	level=0
+	while [ $# -ge 2 ]
+	do
+		eval dev_${level}=\${1} dir_${level}=\${2}
+		level=`ignore expr ${level} + 1`
+		shift 2
+	done
+	while [ ${level} -ne 0 ]
+	do
+		level=`ignore expr ${level} - 1`
+		eval dev=\${dev_${level}} dir=\${dir_${level}}
+		unmnt ${dev}
+		part=`ignore expr ${dev} : '.*\(.\)$'`
+		eval partno=\${p_${part}}
+		eval fmthard -d ${partno}:0:1:0:0 ${devraw}${part} > /dev/null
+		rrmdir -r ${root} ${dir}
+	done
+}
+
+while [ $# -ne 0 ]
+do
+	case "${1}" in
+	-c)
+		cylsize="${2}" ; shift 2 ;;
+	-d)
+		drive="${2}" ; shift 2 ;;
+	-g)
+		rel="${2}" ; shift 2 ;;
+	-r)
+		root="${2}" ; shift 2 ;;
+	-S)
+		SAflag=y ; shift 1 ;;
+	-*)
+		echo "${myname}: \"${2}\": Unknown option" >&2 ; exit 1 ;;
+	*)
+		break ;;
+	esac
+done
+
+if [ $# -ne 1 ]
+then
+	echo "\
+Usage:	${myname} [ -c cylsize ] [ -d drivename ] [ -g release ]
+	[ -r rootdir ] devprefix" >&2
+	exit 1
+fi
+
+if expr ${1} : /dev/r > /dev/null
+then
+	devraw=${1}
+	devblk=/dev/`ignore expr ${1} : '/dev/r\(.*\)'`
+else
+	echo "${myname}: ${1}: Device name must begin with \"/dev/r\"" >&2
+	exit 1
+fi
+
+if [ ${SAflag} = y ]
+then
+	mnt()	{ /etc/mount ${1} ${2} && chmod 775 ${2} ; }
+	unmnt()	{ /etc/umount ${1} ; }
+else
+	mnt()	{ fsys -m ${2} -c 775 ${1} ; }
+	unmnt()	{ fsys -u ${1} ; }
+fi
+
+while true
+do
+	#
+	# "prtvtoc -f" prints several shell variable assignments:
+	#	FREE_PART	Concanentaion of free partition names (0-f)
+	#	FREE_START	Initial block of first chunk of free space
+	#	FREE_SIZE	Size of first chunk of free space
+	#	FREE_COUNT	Number of chunks of free space
+	#
+	eval `prtvtoc -f ${devraw}6`
+	if [ ${FREE_COUNT} -eq 0 ]
+	then
+		break
+	fi
+	echo "
+There are ${FREE_SIZE} blocks remaining${drive:+ on disk ${drive}}." >&2
+	FREE_PART=`ignore expr "${FREE_PART}" : '[0-7]*\(.*\)'`
+	while [ ${FREE_SIZE} -ne 0 ]
+	do
+		use_part=`ignore expr "${FREE_PART}" : '\(.\)'`
+		eval use_partno=\${p_${use_part}}
+		use_have=`ignore expr "${FREE_PART}" : '.*'`
+		case ${use_have} in
+		0)
+			echo "${myname}: ${devraw}?: Out of partitions!" >&2
+			exit 1
+			;;
+		${FREE_COUNT})
+			echo "
+Allocating ${FREE_SIZE} blocks to${drive:+ disk ${drive}} partition ${use_partno}." >&2
+			use_size=${FREE_SIZE}
+			;;
+		*)
+			use_size=`askx -s -q "\
+How many blocks for${drive:+ disk ${drive}} partition ${use_partno}?" \
+			    -h "\
+There are ${FREE_SIZE} blocks remaining${drive:+ on disk ${drive}}. \
+They may be distributed amongst
+one or more of the ${use_have} remaining partitions. Enter the \
+number of blocks to be
+allocated to partition ${use_partno}, \"again\" to reallocate the \
+optional partitions
+${drive:+on disk ${drive} }or \"quit\" to quit." \
+			    -c again -c quit -n 0:${FREE_SIZE} -d ${FREE_SIZE}`
+			if [ "${use_size}" = again ]
+			then
+				Again ${fstab}
+			elif [ "${use_size}" = quit ]
+			then
+				if [ -n "${fstab}" ]
+				then
+					Cleanup ${fstab}
+				else
+					exit 1
+				fi
+			fi
+			use_size=`ignore expr \( ${use_size} + ${cylsize} - 1 \) / ${cylsize} \* ${cylsize}`
+			if [ ${use_size} -gt ${FREE_SIZE} ]
+			then
+				use_size=${FREE_SIZE}
+			fi
+			;;
+		esac
+		FREE_PART=`ignore expr "${FREE_PART}" : '.\(.*\)'`
+		if [ ${use_size} -eq 0 ]
+		then
+			continue
+		fi
+		while true
+		do
+			while [ -r ${root}/${dir}${seq} ]
+			do
+				seq=`ignore expr ${seq} + 1`
+			done
+			use_dir=`askx -q "\
+Upon what directory should the file system within ${drive:+ disk ${drive}} partition ${use_partno} 
+be mounted?" \
+			    -h "\
+Enter the absolute directory name upon which this ${use_size}-block file system
+should be mounted. If you just hit <RETURN>, the file system will be mounted
+as \"${dir}${seq}\". See the \"3B2 System Owner/Operator Manual\" for more
+information about directory and file names.
+
+You may also enter \"again\" to reallocate the optional partitions
+${drive:+on disk ${drive} }or \"quit\" to quit." \
+			    -c again -c quit -p -d ${dir}${seq}`
+			if [ "${use_dir}" = again ]
+			then
+				Again ${fstab}
+			elif [ "${use_dir}" = quit ]
+			then
+				if [ -n "${fstab}" ]
+				then
+					Cleanup ${fstab}
+				else
+					exit 1
+				fi
+			elif [ ! -r ${root}${use_dir} ]
+			then
+				if (umask 022 ; exec rmkdir ${root}${use_dir})
+				then
+					break
+				fi
+			fi
+			echo "
+${use_dir} already exists; please choose a new directory name." >&2
+		done
+		fmthard -d ${use_partno}:0:0:${FREE_START}:${use_size} ${devraw}${use_part} > /dev/null
+		FREE_START=`ignore expr ${FREE_START} + ${use_size}`
+		FREE_SIZE=`ignore expr ${FREE_SIZE} - ${use_size}`
+		vmkfs ${devraw}${use_part} > /dev/null
+		labelit ${devraw}${use_part} `ignore expr ${use_dir} : '.*/\(.*\)$' \| ${use_dir}` ${rel} > /dev/null
+		mountdir=`ignore expr "${root}${use_dir}" : "/*\(/.*\)"`
+		mnt ${devblk}${use_part} ${mountdir}
+		mklost+found ${root}/${use_dir} ${devblk}${use_part}
+		fstab="${fstab} ${devblk}${use_part} ${use_dir}"
+	done
+done
+if [ -n "${fstab}" ]
+then
+	set -- ${fstab}
+	while [ $# -ne 0 ]
+	do
+		echo "${1}\t${2}"
+		shift 2
+	done
+fi

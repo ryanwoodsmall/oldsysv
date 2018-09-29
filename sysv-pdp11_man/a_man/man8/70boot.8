@@ -1,0 +1,192 @@
+.tr ~
+.TH "11/70 BOOT" 8 "PDP-11 only"
+.SH NAME
+70boot \- 11/70 bootstrap procedures
+.SH DESCRIPTION
+To bootstrap programs from a wide range of storage media, the \s-1PDP\s+1-11/70
+has a dedicated diagnostic bootstrap loader called the M9301-YC.
+The M9301-YC contains
+two 256 word \s-1ROM\s+1s
+(17\ 765\ 000 to 17\ 765\ 776 and 17\ 773\ 000
+to 17\ 773\ 776)
+which contain hardware verification diagnostic routines
+and bootstrap loader routines.
+.PP
+The diagnostic portion tests the basic \s-1CPU\s+1 to verify correct operation.
+The branches, registers, all addressing modes, and most of the instructions are
+checked.
+If requested, memory management and the \s-1UNIBUS\s+1 map are turned on.
+Then memory is tested
+from virtual address 001\ 000 to 157\ 776 with the cache disabled.
+Next the cache is enabled and tested.
+.PP
+The physical memory tested is determined by the console switches.
+Console switches <15:12> are used to set physical address bits <19:16>.
+If console switches <15:12> are zero, memory management
+and the \s-1UNIBUS\s+1 map will not be enabled,
+so that physical memory 0 to 157\ 776 will be used.
+If console switches <15:12> are non-zero, then memory management,
+the \s-1UNIBUS\s+1 map, and 22-bit mapping will be enabled.
+Table I describes the physical address ranges for each switch setting.
+In all cases, virtual addresses 160\ 000 to 177\ 776 are mapped to the peripheral page,
+physical addresses 17\ 600\ 000 to 17\ 777\ 776.
+Note that physical memory above 512K words is not accessible by this
+program even though the physical memory maximum is 1920K words.
+.PP
+The bootstrap portion of the M9301-YC attempts to \s-1BOOT\s+1
+from the device and drive number specified in the console switches.
+Console switches <7:3> select the device and console switches <2:0> select
+the drive number.
+Table II describes the devices selected for each switch setting.
+If console switches <7:0> are zero, the program will
+read a set of switches on the M9301-YC, set by field service,
+to determine a default boot device and drive number.
+These switches appear at location 17 773 024,
+however bits <8:4> select the device and bits <3:1> select the drive number.
+.PP
+Having selected a boot device, the program will read
+a block of data into memory starting
+at virtual address 0, and then jump to virtual address 0.
+Table III describes the details of booting for each device.
+Note that the physical address selection is the same as described above
+for the diagnostic portion.
+Excluding the RX11/RX01 floppy disk, bootstrap
+programs must fit in one block of 256 words,
+even though this program may read in more.
+.PP
+To start operation of the bootstrap loader, halt
+the \s-1CPU\s+1 by depressing the \s-1HALT\s+1 switch,
+set the Address Display select switch to Console Physical,
+set the Console Switch Register to 165\ 000, and
+depress the Load Address switch.
+Then reset the console switches to 0 and set switches <15:12> for the
+desired physical memory (normally 0) and
+switches <7:0> for the desired device (normally 0 for the default boot).
+Put the \s-1HALT\s+1 switch in the \s-1ENABLE\s+1 position
+and depress the \s-1START\s+1 switch.
+The diagnostic portion will then run followed by
+the boot from the selected media.
+This takes approximately three seconds.
+.PP
+Any error during the diagnostic portion will cause the \s-1CPU\s+1 to halt.
+Table IV lists the addresses and error indications.
+Only cache errors are recoverable in that by pressing the \s-1CONTINUE\s+1
+switch the program will disable the cache by forcing misses
+and proceed to the bootstrap section.
+If there is an error in reading the boot block, the program will
+do a \s-1RESET\s+1 instruction and
+jump back to the memory test section (test 24) and then attempt to boot again.
+.SH SEE ALSO
+romboot(8), unixboot(8).
+.nf
+.sp 1v
+.ne 20
+.IP
+Table I \- Physical Memory Selection
+.PP
+.ta 28n
+Console switches <15:12>	~~~Physical addresses
+~~~~~~~~~~~~00	00 000 000 - ~00 157 776
+~~~~~~~~~~~~01	00 200 000 - ~00 357 776
+~~~~~~~~~~~~02	00 400 000 - ~00 557 776
+~~~~~~~~~~~~03	00 600 000 - ~00 757 776
+~~~~~~~~~~~~04	01 000 000 - ~01 157 776
+~~~~~~~~~~~~05	01 200 000 - ~01 357 776
+~~~~~~~~~~~~06	01 400 000 - ~01 557 776
+~~~~~~~~~~~~07	01 600 000 - ~01 757 776
+~~~~~~~~~~~~10	02 000 000 - ~02 157 776
+~~~~~~~~~~~~11	02 200 000 - ~02 357 776
+~~~~~~~~~~~~12	02 400 000 - ~02 557 776
+~~~~~~~~~~~~13	02 600 000 - ~02 757 776
+~~~~~~~~~~~~14	03 000 000 - ~03 157 776
+~~~~~~~~~~~~15	03 200 000 - ~03 357 776
+~~~~~~~~~~~~16	03 400 000 - ~03 557 776
+~~~~~~~~~~~~17	03 600 000 - ~03 757 776
+.sp 1v
+.ne 15
+.IP
+Table II \- Device selection
+.PP
+.ta 28n 40n
+Console switches <7:3>	~~~~~~~~~Device
+~~~~~~~~~~~~00	illegal
+~~~~~~~~~~~~01	\s-1TM\s+1\&11/\s-1TU\s+1\&10	Magnetic tape
+~~~~~~~~~~~~02	\s-1TC\s+1\&11/\s-1TU\s+1\&56	\s-1DEC\s+1tape
+~~~~~~~~~~~~03	\s-1RK\s+1\&11/\s-1RK\s+1\&05	Disk pack
+~~~~~~~~~~~~04	\s-1RP\s+1\&11/\s-1RP\s+1\&03	Disk pack
+~~~~~~~~~~~~05	reserved
+~~~~~~~~~~~~06	\s-1RH\s+1\&70/\s-1TU\s+1\&16	Magnetic tape
+~~~~~~~~~~~~07	\s-1RH\s+1\&70/\s-1RP\s+1\&04	Disk pack
+~~~~~~~~~~~~10	\s-1RH\s+1\&70/\s-1RS\s+1\&04	Fixed head disk
+~~~~~~~~~~~~11	\s-1RX\s+1\&11/\s-1RX\s+1\&01	Diskette
+~~~~~~~~~~~~12-37	illegal
+.sp 1v
+.ne 22
+.IP
+Table III \- Boot procedures
+.PP
+.ta 10n
+\s-1TU\s+1\&10:	Select drive, wait until online,
+	set to 800 bpi, rewind,
+	space forward 1 record,
+	read 1 record (maximum of 256 words).
+\s-1TU\s+1\&56:	Select drive, rewind, read 512 words.
+\s-1RK\s+1\&05 or
+.br
+\s-1RP\s+1\&03:	Select drive, start at block 0, read 512 words.
+\s-1TU\s+1\&16:	Select drive on first \s-1TM\s+1\&02, wait until online,
+	set to 800 bpi, \s-1PDP\s+1 format, rewind,
+	space forward 1 record,
+	read 1 record (maximum of 512 words).
+\s-1RP\s+1\&04:	Select drive, read-in preset,
+	set to 16-bits/word, \s-1ECC\s+1 inhibit,
+	start at block 0, read 512 words.
+\s-1RS\s+1\&04:	Select drive, start at block 0, read 512 words.
+\s-1RX\s+1\&01:	Select drive 0 or 1,
+	start at track 1, sector 1 (\s-1IBM\s+1 standard),
+	read 64 words.
+.sp 1v
+.ne 39
+.IP
+Table IV \- Error halts
+.PP
+.ta 22n 31n
+Address displayed	Test	Subsystem under test
+17 765 004	1	Branch
+17 765 020	2	Branch
+17 765 036	3	Branch
+17 765 052	4	Branch
+17 765 066	5	Branch
+17 765 076	6	Branch
+17 765 134	7	Register data path
+17 765 146	10	Branch
+17 765 166	11	\s-1CPU\s+1 instruction
+17 765 204	12	\s-1CPU\s+1 instruction
+17 765 214	13	\s-1CPU\s+1 instruction
+17 765 222	14	\s-1CPU\s+1 instruction
+17 765 236	14	\s-1CPU\s+1 instruction
+17 765 260	15	\s-1CPU\s+1 instruction
+17 765 270	16	Branch
+17 765 312	16	\s-1CPU\s+1 instruction
+17 765 346	17	\s-1CPU\s+1 instruction
+17 765 360	20	\s-1CPU\s+1 instruction
+17 765 374	20	\s-1CPU\s+1 instruction
+17 765 450	21	Kernel \s-1PAR\s+1
+17 765 474	22	Kernel \s-1PDR\s+1
+17 765 510	23	\s-1JSR\s+1
+17 765 520	23	\s-1JSR\s+1
+17 765 530	23	\s-1RTS\s+1
+17 765 542	23	\s-1RTI\s+1
+17 765 550	23	\s-1JMP\s+1
+17 765 742	25	Main memory data compare error
+17 765 760	25	Main memory data compare error
+17 776 000	25	Main memory parity error;
+		~~~no recovery possible from this error
+17 773 644	26	Cache memory data compare error
+17 773 654	26	Cache memory no hit, recoverable
+17 773 736	27	Cache memory data compare error
+17 773 746	27	Cache memory no hit, recoverable
+17 773 764	25/26	Cache memory parity error, recoverable
+.fi
+.tr ~~
+.\"	@(#)70boot.8	5.2 of 5/18/82

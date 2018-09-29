@@ -1,0 +1,18 @@
+* @(#)rltm	1.1
+rl01	160	174400	5
+tu10	224	172520	5
+root	rl01	00
+pipe	rl01	00
+swap	rl01	00	8240	2000
+dump	tu10	0
+buffers	20
+inodes	40
+files	40
+mounts	2
+coremap	50
+swapmap	50
+calls	20
+procs	25
+texts	15
+clists	20
+sabufs	3

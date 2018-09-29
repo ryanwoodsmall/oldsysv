@@ -1,0 +1,27 @@
+
+\S usage \S:  Examples
+
+
+       usage
+
+    Prints a menu screen that allows users to submit a command name or request 
+    a list of commands known by \S usage \S.
+
+    ----------------------------------------------------------------------
+
+       usage ls
+
+    Prints a screen containing a syntax summary and description of the command
+    ls(1).  The screen also contains a menu from which users can request other
+    data about ls(1), data about other commands, or exit to the shell.
+
+
+    ----------------------------------------------------------------------
+
+       usage -o pr
+
+    Prints a screen listing all options to the pr(1) command, and an 
+    explanation of each.  The screen also has a menu from which the 
+    user can request other data about "pr", data about other commands, 
+    or exit to the shell.
+

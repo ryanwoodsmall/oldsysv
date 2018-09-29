@@ -1,0 +1,25 @@
+#ident	@(#)adm:sysadm	1.2
+# This file will be scheduled via the cron command
+#
+#	Format of lines:
+#min	hour	daymo	month	daywk	/etc/ckbupscd >/dev/console 2>/dev/console
+#
+#	min  - time(s) of day 
+#	hour
+#	daymo - day(s) of month (1, 2, ... 31)
+#	month - month(s) of the year (1, 2, ... 12)
+#	daywk - day(s) of week (0-6, 0 = sun)
+#
+#	Example:
+#00	17	*	*	1	/etc/ckbupscd >/dev/console 2>/dev/console
+#	
+#	At 5:00pm in the evening on mondays during any month of the year,
+#	check to see if there are any file systems that need
+#	to be backed up.
+#
+#===================================================================
+#
+#	Default backup schedule calls for checks mon through friday
+#	at 5:00pm.
+#
+00	17	*	*	1,2,3,4,5	/etc/ckbupscd >/dev/console 2>/dev/console

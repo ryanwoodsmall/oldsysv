@@ -1,0 +1,20 @@
+/* #ident	"@(#)kern-port:boot/olboot/lbld	10.4" */
+
+MEMORY	{
+	olbcode: origin = 0x0207a800, length = 0x2000
+	olbbss:  origin = 0x0207ec00, length = 0x2400
+	olbstack:origin = 0x0207c800, length = 0x2000
+	}
+SECTIONS {
+	.text:	{
+		stext = .;
+		misc.o(.text)
+		}  > olbcode
+	.data:	{} > olbcode
+	.bss:	{} > olbbss
+	.stack(NOLOAD):
+		{
+		sstack = .;
+		estack = .+0x2000;
+		}  > olbstack
+	}

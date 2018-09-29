@@ -1,0 +1,18 @@
+
+\Skill\S:  Description
+
+Syntax Summary:  kill [-signal] process_ID ...
+
+         where:  signal  is a positive integer that is a a valid signal
+                         number.
+                 process_ID  is a process identification number.
+Description:
+     Use \Skill\S to terminate a process.  \Skill\S can terminate processes
+     that are running in the background or processes that you executed with
+     nohup(1). You can only kill a process that you own.  You identify the
+     process you want to kill with its process ID number.  The ps(1) command
+     lists the process ID numbers for your active processes.  Unless you choose
+     a different signal number, \Skill\S uses the terminate signal number 15.
+     Different signals are available to terminate processes that ignore a 
+     signal number 15.  See signal(2) and glossary(1) for lists of signals. 
+     See also:  ps(1) for a command that might be used with \Skill\S.

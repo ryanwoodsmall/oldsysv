@@ -1,0 +1,276 @@
+#ident	"@(#)pkg.bnu:update.Dialers	1.3"
+#	Dialers file update script
+
+DIALERS=/usr/lib/uucp/Dialers
+	echo "
+This release contains new and updated dialer scripts for
+the following modems:
+  att2212c att2224b att2224ceo att2224g att2248a att2296a att4000 att4024
+
+It also contains an additional dialer script for use with
+uugetty on direct connections:
+  uudirect
+
+If you choose, the new entries can be appended to the 'Dialers' file
+($DIALERS) and existing entries preserved as comments.
+"
+
+chkyn -f "Do you wish these changes applied to the Dialers file?"
+if [ $? -ne 0 ]
+   then
+	exit
+fi
+
+if [ ! -f "$DIALERS" -o ! -w "$DIALERS" -o ! -r "$DIALERS" ]
+   then
+	admerr $0 "Can't write and read '$DIALERS'\nCan't do update operation!\n"
+	exit
+fi
+echo "
+
+Refer to the 'Dialers' file and the 'Release Notes'
+for additional information.
+"
+awk '
+BEGIN {
+m["att2212c"] = m["att2212C"] = "yes"
+m["att2224b"] = m["att2224B"] = "yes"
+m["att2224ceo"] = m["att2224CEO"] = "yes"
+m["att2224g"] = m["att2224G"] = "yes"
+m["att2248a"] = m["att2248A"] = "yes"
+m["att2296a"] = m["att2296A"] = "yes"
+m["att4000"] = "yes"
+m["att4024"] = "yes"
+m["uudirect"] = "yes"
+}
+{
+if ( m[$1] != "" )  print "# A new entry for the following dialer type has been appended to this file\n#"$0 
+else print $0
+}
+' <$DIALERS >/tmp/DIALERS.$$ 2>/dev/null
+cat <<! >>/tmp/DIALERS.$$
+##########
+#   AT&T Programmable 300/1200 Modem Model 4000
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=,-,		Use comma for secondary dial tone & for pause
+#	""		expect nothing
+#	ATZ\r\p\p	enter command mode, reset modem, 
+#	OK\r		expect modem to reply OK
+#	ATZ\r		enter command mode, reset modem
+#	OK\r		expect modem to reply OK
+#	\E		turn on echo check mode
+#	ATDT\T\r\c	enter command mode, tone dial the number
+#			(substitute 'P' for first 'T' for pulse dialing)
+#	\T\r\c		phone number to dial
+#	CONNECT		expect "CONNECT" from modem when connected
+##########
+att4000 =,-, ""  ATZ\r\p\p  OK\r ATZ\r OK\r\c \EATDT\T\r\c CONNECT
+
+##########
+#   AT&T Model 4024 Modem
+#
+#	For normal operation, dip switch 4 should be CLOSED.
+#	This disables ENTER INTERACTIVE WITH <CR>.
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=,-,		Use comma for secondary dial tone & for pause
+#	""		expect nothing
+#	atzod,		enter command mode, reset modem, set options to default
+#	o12=y,		set option 12 to 'y' (transparent data mode)
+#	o4=n\r\c	set option 4 to 'n' (don't disconnect on rcvd spaces)
+#	\006		expect ACK from modem
+#	atT\T\r\c	enter command mode, tone dial the number
+#	ed		expect "ed" (actually "Answered")
+#
+#			Once transparent data mode is enabled, you
+#			cannot enter the interactive mode from the data mode.
+##########
+att4024 =+-, "" atzod,o12=y,o4=n\r\c \006 atT\T\r\c ed
+
+##########
+#  AT&T DATAPHONE II 2212C Modem
+#
+#	For normal operation, dip switch 4 should be CLOSED.
+#	This disables ENTER INTERACTIVE WITH <CR>.
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=+-,		'+' for secondary dial tone, ',' for pause
+#	""		expect nothing
+#	atzod,		enter command mode, reset modem, set options to default
+#	o12=y,		set option 12 to 'y' (transparent data mode)
+#	o4=n,		set option 4 to 'n' (don't disconnect on rcvd spaces)
+#	\006		Wait for ACK
+#	atT\T\r\c	enter command mode, tone dial the number
+#	ed		expect "ed" (actually "Answered")
+#
+#			Once transparent data mode is enabled, you
+#			cannot enter the interactive mode from the data mode.
+##########
+att2212c =+-, "" atzod,o12=y,o4=n\r\c \006 atT\T\r\c ed
+att2212C =+-, "" atzod,o12=y,o4=n\r\c \006 atT\T\r\c ed
+
+##########
+#  AT&T DATAPHONE II 2224B Modem
+#
+#	For normal operation dip switch S1 switch 2 should be OPEN.
+#	This disables ENTER INTERACTIVE WITH <CR>.
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=+-,		'+' for secondary dial tone, ',' for pause
+#	""		expect nothing
+#	atT\T\r\c	enter command mode, tone dial the number
+#			(substitute 'P' for first 'T' for pulse dialing)
+#	ed		expect "ed" (actually "Answered")
+##########
+att2224b =+-, "" atT\T\r\c ed
+att2224B =+-, "" atT\T\r\c ed
+
+##########
+#  AT&T DATAPHONE II 2224CEO Modem
+#
+#	The 2224CEO Modem supports MNP error control protocol.
+#	This entry will use MNP if it is also available on the
+#	remote end.
+#
+#	For normal operation, dip switch S1 switch 3 should be UP.
+#	This disables ENTER INTERACTIVE WITH <CR>.
+#
+#	When used with an EPORTS board on a 3B2, it is recommended that
+#	hardware flow control be enabled on the board and that the
+#	corresponding second set of entries below be used.
+#	(i.e. change \\\\q0 to \\\\q3 below - use CTS/RTS flow control)
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=+-,		'+' for secondary dial tone, ',' for pause
+#	""		expect nothing
+#	atzod,		enter command mode, reset options to default values,
+#	o12=y,		set option 12 to 'y' (transparent data mode)
+#	o4=n,		set option 4 to 'n' (don't disconnect on rcvd spaces)
+#	\\\\n3		select normal operating mode
+#	\\\\c1		modem does not buffer data
+#	\\\\j0		do not autobaud modem serial port
+#	\\\\q0		no flow control
+#	\\\\g0\r\c	no modem port flow control
+#	\006		Wait for ACK
+#	atT\T\r\c	enter command mode, tone dial the number
+#			(substitute 'P' for first 'T' for pulse dialing)
+#	Connected	expect "ed" (actually "Connected")
+#
+#			Once transparent data mode is enabled, you
+#			cannot enter the interactive mode from the data mode.
+##########
+att2224ceo =+-, "" atzod,o12=y,o4=n,\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c \006 atT\T\r\c Connected
+att2224CEO =+-, "" atzod,o12=y,o4=n,\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c \006 atT\T\r\c Connected
+#att2224ceo =+-, "" atzod,o12=y,o4=n,\\\\n3\\\\c1\\\\j0\\\\q3\\\\g0\r\c \006 atT\T\r\c Connected
+#att2224CEO =+-, "" atzod,o12=y,o4=n,\\\\n3\\\\c1\\\\j0\\\\q3\\\\g0\r\c \006 atT\T\r\c Connected
+
+##########
+#  AT&T DATAPHONE II 2224G Modem
+#
+#	The 2224G Modem supports MNP error control protocol.
+#	This entry will use MNP if it is also available on the
+#	remote end.
+#
+#	For normal operation, dip switch S1 switch 3 should be RIGHT.
+#	This disables ENTER INTERACTIVE WITH <CR>.
+#
+#	When used with an EPORTS board on a 3B2, it is recommended that
+#	hardware flow control be enabled on the board and that the
+#	corresponding second set of entries below be used.
+#	(i.e. change \\\\q0 to \\\\q3 below - use CTS/RTS flow control)
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=+-,		'+' for secondary dial tone, ',' for pause
+#	""		expect nothing
+#	atzod,		enter command mode, reset options to default values,
+#	o12=y,		set option 12 to 'y' (transparent data mode)
+#	o4=n,		set option 4 to 'n' (don't disconnect on rcvd spaces)
+#	o1=n\r\c	set option 1 to 'n' (don't wait for far end sense first)
+#	\006		Wait for ACK
+#	atz		enter command mode
+#	\\\\n3		select auto-reliable operating mode
+#	\\\\c1		select auto-reliable buffering scheme 1
+#	\\\\j0		do not autobaud modem serial port
+#	\\\\q0		no flow control
+#	\\\\g0\r\c	no modem port flow control
+#	\datT\T\r\c	delay, enter command mode, tone dial the number
+#			(substitute 'P' for first 'T' for pulse dialing)
+#	Connected	expect "Connected"
+#
+#			Once transparent data mode is enabled, you
+#			cannot enter the interactive mode from the data mode.
+##########
+att2224g =+-, "" atzod,o12=y,o4=n,o1=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c "" \datT\T\r\c Connected
+att2224G =+-, "" atzod,o12=y,o4=n,o1=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c "" \datT\T\r\c Connected
+#att2224g =+-, "" atzod,o12=y,o4=n,o1=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q3\\\\g0\r\c "" \datT\T\r\c Connected
+#att2224G =+-, "" atzod,o12=y,o4=n,o1=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q3\\\\g0\r\c "" \datT\T\r\c Connected
+
+##########
+#  AT&T DATAPHONE II 2248A Modem
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=+-,		'+' for secondary dial tone, ',' for pause
+#	""		expect nothing
+#	atzod,		enter command mode, reset modem, set options to default
+#	o12=y\r\c	set option 12 to 'y' (transparent data mode)
+#	\006		Wait for ACK
+#	atT\T\r\c	enter command mode, tone dial the number
+#			(substitute 'P' for first 'T' for pulse dialing)
+#	Connected	expect "Connected"
+#
+##########
+att2248a =+-, "" atzod,o12=y\r\c \006 atT\T\r\c Connected
+att2248A =+-, "" atzod,o12=y\r\c \006 atT\T\r\c Connected
+
+##########
+#  AT&T DATAPHONE II 2296A Modem
+#
+#	Commands:	Explanation:
+#	------------	---------------------------------------------------
+#	=+-,		'+' for secondary dial tone, ',' for pause
+#	""		expect nothing
+#	atzod,		enter command mode, reset options to default values,
+#	o12=y,		set option 12 to 'y' (transparent data mode)
+#	o50=y,		set option 50 to 'y'
+#	o51=n,		set option 51 to 'n' (don't strap CTS/RTS)
+#	o55=n,		set option 55 to 'n' (CD does not indicate carrier)
+#	o69=n,\r\c	set option 69 to 'n' 
+#	\006		Wait for ACK
+#	atz		enter command mode
+#	\\\\n3		select auto-reliable operating mode
+#	\\\\c1		select auto-reliable buffering scheme 1
+#	\\\\j0		do not autobaud modem serial port
+#	\\\\q0		no flow control
+#	\\\\g0\r\c	no modem port flow control
+#	\datT\T\r\c	delay, enter command mode, tone dial the number
+#			(substitute 'P' for first 'T' for pulse dialing)
+#	Connected	expect "Connected"
+#
+#	When used with an EPORTS board on a 3B2, it is recommended that
+#	hardware flow control be enabled on the board and that the
+#	corresponding second set of entries below be used.
+#	(i.e. change \\\\q0 to \\\\q3 below - use CTS/RTS flow control)
+#
+##########
+att2296a =+-, "" atzod,o12=y,o50=y,o51=n,o55=n,o69=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c "" \datT\T\r\c Connected
+att2296A =+-, "" atzod,o12=y,o50=y,o51=n,o55=n,o69=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c "" \datT\T\r\c Connected
+#att2296a =+-, "" atzod,o12=y,o50=y,o51=n,o55=n,o69=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c "" \datT\T\r\c Connected
+#att2296A =+-, "" atzod,o12=y,o50=y,o51=n,o55=n,o69=n\r\c \006 atz\\\\n3\\\\c1\\\\j0\\\\q0\\\\g0\r\c "" \datT\T\r\c Connected
+
+##########
+#	The following entry is for use with direct connections
+#	using uugetty with the -r option on both ends.
+#
+##########
+uudirect ""	"" \r\d in:--in:
+!
+cp /tmp/DIALERS.$$ $DIALERS
+rm /tmp/DIALERS.$$

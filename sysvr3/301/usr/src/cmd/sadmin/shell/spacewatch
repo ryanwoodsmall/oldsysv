@@ -1,0 +1,96 @@
+#ident	"@(#)sadmin:shell/spacewatch	2.2"
+#	Look at file system space
+
+#!	chmod +x ${file}
+
+if [ $# -lt 1 ]
+then
+	echo >&2 "Usage:  $0 [ -w | -u ] [ -b<blocks> ] [ -i<inodes> ] file-system ..."
+	exit 1
+fi
+
+takenfs=
+blocks=500
+inodes=100
+output=stdout
+
+dfout=`df  |  sed '	s/[ ():]\{1,\}/	/g
+			s/	blocks/ blocks/
+			s/	i-nodes/ i-nodes/'`
+
+for i
+{
+	case ${i} in
+	-w )
+		output=wall
+		continue
+		;;
+	-u )
+		output=users
+		continue
+		;;
+	-b?* )
+		blocks=`expr ${i} : '..\(.*\)' \| ${blocks}`
+		continue
+		;;
+	-i?* )
+		inodes=`expr ${i} : '..\(.*\)' \| ${inodes}`
+		continue
+		;;
+	-* )
+		echo >&2 "$0:  illegal flag argument '${i}'"
+		exit 1
+		;;
+	ALL )
+		#	all the remaining file systems take the last values
+		#	of ${blocks} and ${inodes}
+		list="${list}
+		"`echo "${dfout}"  |  cut -f1  |
+			fgrep -xv "${takenfs}"  |
+			sed "s;.*;\\$1 == \"&\"  \&\&  ( \\$3 <= ${blocks}  ||  \\$5 <= ${inodes} );"`
+		break
+	esac
+	list="${list}
+		\$1 == \"${i}\"  &&  ( \$3 <= ${blocks}  ||  \$5 <= ${inodes} )"
+	takenfs="${takenfs}
+${i}"
+}
+if [ -z "${list}" ]
+then
+	exec $0
+fi
+out=`echo "${dfout}"  |  awk "${list}"`
+if [ -z "${out}" ]
+then
+	exit 0
+fi
+
+case ${output} in
+wall )
+	echo "spacewatch:  These file systems low on space!\\n${out}"  |
+		/etc/wall
+	;;
+users )
+	users=`who  |  cut -d' ' -f1`
+	msg=' is running out of room!  '
+	for fs in `echo "${out}"  |  cut -f1`
+	{
+		stats=`echo "${dfout}"  |  grep "^${fs}	"  |  cut -f3-`
+		case ${fs} in
+		/  |  /usr  |  /usr/*  |  /tmp  |  /tmp/* )
+			echo "spacewatch:  ${fs}${msg}${stats}"  |  /etc/wall
+			;;
+		* )
+			for user in `cut -d: -f1,6 /etc/passwd  |
+					grep ":${fs}/"  |  cut -d: -f1  |
+					fgrep -x "${users}"`
+			{
+				echo "spacewatch:  ${fs}${msg}${stats}"  |
+					write ${user}
+			}
+		esac
+	}
+	;;
+* )
+	echo "${out}"
+esac

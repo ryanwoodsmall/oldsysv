@@ -1,0 +1,120 @@
+.TH STLOGIN 1
+.SH NAME
+stlogin \- sign on to synchronous terminal
+.SH SYNOPSIS
+.BR "stlogin [" " delay " ]
+.SH DESCRIPTION
+The
+.I stlogin\^
+command
+is used at the beginning of each terminal session
+and allows you to identify yourself to the system.
+It is invoked by the system when a synchronous terminal requests service on a
+connected synchronous line.
+You can direct your synchronous terminal to request service
+by first hitting the
+.SM LOCAL
+key and then hitting the
+.SM S/R
+key.
+.PP
+.I Stlogin\^
+asks for your user name and
+your password.
+If you have a password,
+both must be entered before the \s-1S/R\s+1 key is hit.
+The password field is not displayed on the screen as you enter it.
+.PP
+At some installations, an option may be invoked that will require
+you to enter a second ``external'' password.
+This will occur only
+for dial-up connections, and will be prompted by the message
+``External security:''.
+Both passwords are required for a successful login.
+.PP
+If password aging has been invoked by the super-user on your behalf,
+your password may have expired.
+In this case, you will be shunted 
+into
+.IR passwd (1)
+to change it, after which you may attempt to login again.
+.PP
+If you do not complete the login successfully within the period specified by
+.I delay\^
+(e.g.,
+60 seconds), you are likely to be silently disconnected.
+.PP
+After a successful login,
+accounting files are updated,
+you will be informed of the
+existence (if any) of mail,
+and the profiles
+(i.e.,
+.BR /etc/profile " and " \s-1$HOME\s+1/.profile )
+(if any) are executed
+(see
+.IR profile (4)).
+.I Stlogin\^
+initializes the user and group \s-1ID\s+1s and the working directory,
+then executes a command interpreter (usually
+.IR sh (1))
+according to specifications found in
+the
+.B /etc/passwd
+file.
+Argument 0 of the command interpreter is
+.B \-
+followed by the last component of the interpreter's path name.
+The
+.I environment\^
+(see
+.IR environ (5))
+is initialized to:
+.RS
+.RI \s-1HOME\s+1= your-login-directory\^
+.br
+\s-1PATH\s+1=:/bin:/usr/bin
+.br
+.RI \s-1LOGNAME\s+1= your-login-name\^
+.RE
+.SH FILES
+.ta \w'/usr/mail/your-name  'u
+/etc/utmp	accounting
+.br
+/etc/wtmp	accounting
+.br
+.RI /usr/mail/ your-name "	mailbox for user\^"
+.I your-name\^
+.br
+/etc/motd	message-of-the-day
+.br
+/etc/passwd	password file
+.br
+/etc/profile	system profile
+.br
+\s-1$HOME\s+1/\s+4.\s-4profile	personal profile
+.DT
+.SH SEE ALSO
+mail(1),
+newgrp(1),
+passwd(1),
+sh(1),
+su(1),
+passwd(4),
+profile(4),
+environ(5).
+.SH DIAGNOSTICS
+.PD 0
+.TP
+.I "Login incorrect\^"
+if the user name or the password is incorrect.
+.TP
+.IR "No shell" ", " "cannot open password file" ", " "no directory" :
+consult a
+.SM UNIX 
+System programming counselor.
+.TP
+.IR "Your password has expired" ". " "Choose a new one" .
+if password aging is implemented.
+.PD
+.\"	@(#)stlogin.1	5.2 of 5/18/82

@@ -1,0 +1,20 @@
+
+\Swho\S:  Description
+
+Syntax Summary:  who [-HTabdlpqrstu] [file_name]
+                 who [am i] [am I]
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Swho\S prints information about the users currently logged in on your
+     UNIX system.  If you type \Swho\S by itself, it prints the login names,
+     tty numbers, and login times for the users who are currently logged on to
+     the system.  With options, \Swho\S prints tables containing additional
+     information about current users and the system.  \Swho\S usually gets its
+     information from /etc/utmp.  If you use a <file_name> on the command line,
+     \Swho\S examines <file_name> instead of /etc/utmp for user names, terminal
+     lines, login times, elapsed time since last activity, and process ID.
+     <file_name> is usually the /etc/wtmp file. \Swho\S with "am i" or "am I" 
+     prints the login name of the user who types it.  See also: id(1) for a
+     command with a function similar to \Swho\S.

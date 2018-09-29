@@ -1,0 +1,16 @@
+/usr/bin/cancel
+/usr/bin/disable
+/usr/bin/enable
+/usr/bin/lp
+/usr/bin/lpstat
+/usr/lib/hp2631a
+/usr/lib/accept
+/usr/lib/lpadmin
+/usr/lib/lpmove
+/usr/lib/lpsched
+/usr/lib/lpshut
+/usr/lib/pprx
+/usr/lib/prx
+/usr/lib/reject
+/usr/spool/lp
+/usr/options/lp.name

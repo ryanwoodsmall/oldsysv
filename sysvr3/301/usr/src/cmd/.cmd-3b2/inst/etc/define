@@ -1,0 +1,55 @@
+#ident	"@(#)cmd-3b2:inst/etc/define	1.7"
+#
+# define
+#
+# Define common stuff for floppy- and hard-disk based installation.
+#
+
+trap '' 2 3
+set -ue
+umask 0
+export	PATH REL TM OLDTM VOL
+
+PATH=/inst/bin:/inst/final/usr/lbin:/etc:/bin:/usr/bin
+
+REL=3.0
+OLDTM="3B2 Version 1" 	# For upgrade messages
+TM="3B2 Release 3.0"
+VOL=3.0
+
+# Define device entries for both disks
+
+HOME=/
+export FLOPPY RFLOPPY HARD HOME
+
+FLOPPY=/dev/dsk/c0d0s6
+RFLOPPY=/dev/rdsk/c0d0s6
+
+for drive in 0 1
+do
+	export	ALL_${drive}	RALL_${drive}	BOOT_${drive}	RBOOT_${drive} \
+		ROOT_${drive}	RROOT_${drive}	SWAP_${drive}	RSWAP_${drive} \
+		USR_${drive}	RUSR_${drive}	FIVE_${drive}	RFIVE_${drive} \
+		SIX_${drive}	RSIX_${drive}	EIGHT_${drive}	REIGHT_${drive}
+	eval	ALL_${drive}=/dev/dsk/c1d${drive}s \
+		RALL_${drive}=/dev/rdsk/c1d${drive}s \
+		BOOT_${drive}=/dev/dsk/c1d${drive}s7 \
+		RBOOT_${drive}=/dev/rdsk/c1d${drive}s7 \
+		ROOT_${drive}=/dev/dsk/c1d${drive}s0 \
+		RROOT_${drive}=/dev/rdsk/c1d${drive}s0 \
+		SWAP_${drive}=/dev/dsk/c1d${drive}s1 \
+		RSWAP_${drive}=/dev/rdsk/c1d${drive}s1 \
+		USR_${drive}=/dev/dsk/c1d${drive}s2 \
+		RUSR_${drive}=/dev/rdsk/c1d${drive}s2 \
+		FIVE_${drive}=/dev/dsk/c1d${drive}s5 \
+		RFIVE_${drive}=/dev/rdsk/c1d${drive}s5 \
+		SIX_${drive}=/dev/dsk/c1d${drive}s6 \
+		RSIX_${drive}=/dev/rdsk/c1d${drive}s6 \
+		EIGHT_${drive}=/dev/dsk/c1d${drive}s8 \
+		REIGHT_${drive}=/dev/rdsk/c1d${drive}s8
+done
+
+#
+# Set terminal erase "^h" and echoe
+#
+ttyset

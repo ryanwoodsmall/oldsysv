@@ -1,0 +1,20 @@
+.TH IARGC 3F
+.SH NAME
+iargc \- return the number of command line arguments
+.SH SYNOPSIS
+\f3integer i
+.br
+.sp
+i = iargc( )\fR
+.SH DESCRIPTION
+The \f2iargc\fR function returns the number of command
+line arguments passed to the program.
+Thus, if a program were invoked via
+.br
+.sp
+	foo arg1 arg2 arg3
+.br
+.sp
+\f2iargc( )\fR would return 3.
+.SH SEE ALSO
+getarg(3F).

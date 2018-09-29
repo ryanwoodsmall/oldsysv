@@ -1,0 +1,54 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 3
+	Rlist		---555 2 2	./install/sccs/Rlist.sccs
+	INSTALL		---555 2 2	./install/sccs/INSTALL
+	UNINSTALL	---555 2 2	./install/sccs/UNINSTALL
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		bin	d--775 2 2
+			admin		---555 2 2	../usr/bin/admin
+			cdc		---555 2 2	../usr/bin/cdc
+			comb		---555 2 2	../usr/bin/comb
+			delta		---555 2 2	../usr/bin/delta
+			get		---555 2 2	../usr/bin/get
+			prs		---555 2 2	../usr/bin/prs
+			rmdel		---555 2 2	../usr/bin/rmdel
+			sact		---555 2 2	../usr/bin/sact
+			sccsdiff	---555 2 2	../usr/bin/sccsdiff
+			unget		---555 2 2	../usr/bin/unget
+			val		---555 2 2	../usr/bin/val
+			vc		---555 2 2	../usr/bin/vc
+			what		---555 2 2	../usr/bin/what
+		$
+		lib	d--775 0 3
+			help	d--775 0 3
+				ad	---444 2 2	../usr/lib/help/ad
+				bd	---444 2 2	../usr/lib/help/bd
+				cb	---444 2 2	../usr/lib/help/cb
+				cm	---444 2 2	../usr/lib/help/cm
+				cmds	---444 2 2	../usr/lib/help/cmds
+				co	---444 2 2	../usr/lib/help/co
+				de	---444 2 2	../usr/lib/help/de
+				default	---444 2 2	../usr/lib/help/default
+				ge	---444 2 2	../usr/lib/help/ge
+				he	---444 2 2	../usr/lib/help/he
+				prs	---444 2 2	../usr/lib/help/prs
+				rc	---444 2 2	../usr/lib/help/rc
+				un	---444 2 2	../usr/lib/help/un
+				ut	---444 2 2	../usr/lib/help/ut
+				vc	---444 2 2	../usr/lib/help/vc
+				lib	d--775 0 3
+					help2	---555 2 2 ../usr/lib/help/lib/help2
+					help	---555 2 2 ../usr/lib/help/lib/help
+				$
+			$
+		$
+		options	d--775 0 3
+			sccs.name	---555 2 2	./install/sccs/sccs.name
+		$
+	$
+$
+$

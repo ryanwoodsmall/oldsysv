@@ -1,0 +1,39 @@
+.TH REBOOT 1M "3B20S only"
+.SH NAME
+reboot \- reboot the system
+.SH SYNOPSIS
+.B /etc/reboot
+.SH DESCRIPTION
+.I Reboot\^
+generates a Maintenance Reset Function (\s-1MRF\s+1),
+causing the processor to enter its
+system bootstrap code
+thereby rebooting the system.
+It can be used to reboot the processor remotely,
+but this is practical only if
+a terminal line is enabled
+in
+.B /etc/inittab
+for state 1
+so that the file systems can be checked
+and state 2 entered.
+.PP
+Since the boot sequence will prompt for a pathname
+at the system console if
+.SM
+.B PROMPT UNIX
+is set in the
+.SM
+.BR EAI\*S ,
+make sure that this is not the case
+by using
+.IR ipb (1M)
+beforehand.
+.PP
+.I Reboot\^
+will enter the boot sequence immediately,
+without flushing the internal system buffers.
+It must be used with extreme caution.
+.SH "SEE ALSO"
+ipb(1M), 3B20ops(8).
+.\"	@(#)reboot.1m	5.2 of 5/18/82

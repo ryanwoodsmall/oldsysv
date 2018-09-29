@@ -1,0 +1,17 @@
+/etc/prfdc
+/etc/prfld
+/etc/prfpr
+/etc/prfsnap
+/etc/prfstat
+/etc/init.d/perf
+/etc/rc2.d/S21perf
+/etc/master.d/prf
+/usr/bin/sadp
+/usr/bin/sag
+/usr/bin/sar
+/usr/bin/timex
+/usr/lib/sa/sa1
+/usr/lib/sa/sa2
+/usr/lib/sa/sadc
+/dev/prf
+/usr/options/perf.name

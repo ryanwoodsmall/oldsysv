@@ -1,0 +1,125 @@
+.TH VPMSET 1M
+.SH NAME
+vpmset, vpmstart \- connect/load \s-1VPM\s+1 drivers and programmable communication devices
+.SH SYNOPSIS
+.B /etc/vpmset
+[
+.B \-b
+] [
+.B \-d
+] [
+.B \-s
+] tdev \|pdev \|[ lineno ]
+.PP
+.B /etc/vpmstart
+[
+.B \-r
+] device \|n \|[ \|filen \|]
+.PP
+.SH DESCRIPTION
+.PP
+The
+.I vpmset
+command provides a means for associating dynamically a
+.SM VPM
+protocol driver minor device with a particular synchronous line on a
+programmable communication device (\s-1PCD\s+1).
+.I Tdev
+is the protocol driver minor device name;
+.I pdev
+is the
+.SM PCD
+minor device name; and
+.I lineno
+is the number of a synchronous line if a
+.SM DEC
+.SM KMS11
+was specified.
+Until these connections have been made,
+a user program
+cannot open the
+.SM VPM
+protocol driver minor device for reading or writing.
+.PP
+The
+.B \-b
+option causes bit zero of the protocol option
+bits to be set.
+Some protocol scripts such as
+.I cslapb.r 
+(level 2 of BX.25)
+use this bit to specify address B as the local address.
+These bits are stored by the protocol driver and passed
+to the
+.SM PCD
+when the
+.SM VPM
+protocol minor device is opened for reading and/or writing.
+These bits are available to the protocol script via the
+.I getopt
+primitive.
+.PP
+The
+.B \-d
+option disconnects the
+.SM VPM
+protocol minor device from the synchronous line on the \s-1PCD\s+1.
+This disconnect
+will fail if the
+.SM VPM
+protocol minor device is open for reading and/or writing.
+.PP
+The
+.B \-s
+option prints to
+.I stdout
+a message indicating which Common Synchronous Interface (\s-1CSI\s+1) index
+is associated with the protocol minor device. This number
+.I modulo
+16 indicates the channel number used for tracing events with the
+.IR vpmsave (1M)
+command.
+.PP
+.I Vpmstart
+writes
+.I filen
+(\fBa.out\fR
+by default) to the \s-1KMC11\s+1(\s-1DEC\s+1) or \s-1UN53\s+1(\s-13B20S\s+1) specified by
+.IR device.
+The argument
+.I n
+is a magic number that the \s-1PCD\s+1 driver saves to identify the program.
+This number is checked when the
+.SM VPM
+driver is opened
+to provide some assurance that the program loaded into the
+.SM PCD
+is the one expected.
+The magic number for any standard
+.SM VPM
+program running in the \s-1PCD\s+1 is 6  (7 indicates a \s-1V.35\s+1
+interface on the \s-13B20S\s+1).
+While
+.I filen
+may be any file that is executable by the \s-1PCD\s+1, it will normally
+have been prepared using
+.IR vpmc (1M).
+.PP
+The
+.SM PCD
+control program waits for the
+.SM VPM
+protocol minor device to be opened for reading and/or writing
+before beginning execution
+of the protocol script.
+The
+.B \-r
+option may be specified only when using a \s-1DEC\s+1 \s-1KMC11\s+1.
+When this option is specified, the queue of commands to the \s-1KMC11\s+1 driver
+is not flushed prior to starting the \s-1PCD\s+1 program.
+This option must be used to reload
+the \s-1KMC11\s+1 when recovering from a power-fail.
+.PP
+.SH SEE ALSO
+vpm(7), vpmc(1M).
+.\"	@(#)vpmset.1m	5.2 of 5/18/82

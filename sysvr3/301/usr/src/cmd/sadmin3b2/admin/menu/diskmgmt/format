@@ -1,0 +1,67 @@
+#ident	"@(#)sadmin3b2:admin/menu/diskmgmt/format	2.2"
+#menu# format new removable diskettes
+#help# 
+#help#	This command prepares a new media for use.  Once a medium is
+#help#	formatted, programs and data may be written onto it.
+#help#	Formatting removes all existing data from the medium, effectively
+#help#	erasing it.
+
+trap 'exit 0' 1 2  15
+flags="-qq -k$$"
+
+fmtcmd=/etc/fmtflop
+
+unset opt
+verified='(unverified)'
+if  chkyn ${flags} -y -h '?' -H '
+	Verification reads each medium after it is formatted to ensure that it
+	is properly formatted and usable.' \
+	"Do you want each format verified? (default: yes)"
+then
+	opt=-v
+	verified='and verified'
+fi
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+
+ddrive=`selectdevice -c $$ /dev/rSA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+disklabel -x -n "${ndrive}" $$ ${ddrive}
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+while true
+do
+	echo '\nFormatting in progress.'
+	if ${fmtcmd} ${opt} ${ddrive}
+	then
+		echo "The medium in the ${ndrive} is now formatted ${verified};
+it may be removed."
+	else
+		echo "	The medium failed to format correctly.
+	It may be write protected, or damaged,
+	or the drive heads may be dirty and need cleaning.
+
+	Remove the medium from the ${ndrive} and inspect it for
+	write protection, creases, scratches, dirt or other problems.
+	NOTE:	A damaged or dirty medium should not be used since it can
+	damage the heads in the drive.  We recommend that you throw it away."
+	fi
+
+	checklist ${flags} -f -D '' \
+	"
+Insert another medium in the ${ndrive}.
+Press <RETURN> when ready.  Type  q  to quit."  '<RETURN>' ''
+
+done
+exit 0

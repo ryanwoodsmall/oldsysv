@@ -1,0 +1,134 @@
+#ident	"@(#)sadmin3b2:admin/menu/diskmgmt/harddisk/rmdisk	1.4"
+#menu# remove a hard disk
+#help# 
+#help#	Removes a hard disk from the system configuration.  It may
+#help#	then be physically disconnected (once the machine has been
+#help#	turned off) or freshly partitioned (after the system has
+#help#	been restarted).
+
+set -u
+flags="-qq -k$$"
+trap 'rm -f /tmp/$$.*' 0
+trap 'exit 0' 1 2 15
+
+DIRPATH=${MENUTOP}/menu/diskmgmt/harddisk
+PATTERN=`ls ${DIRPATH}/rmdisk.d`
+ddrive=`selectdevice -b $$ /dev/SA ${PATTERN}`
+if [ "${ddrive}" = "" ]
+then
+	exit 0
+fi
+ndrive=`drivename ${ddrive}`
+bdrive=`basename ${ddrive}`
+
+rootdev=`/etc/devnm /`
+rootdev=`expr "${rootdev}" : '\(.*\) .*'`
+root_six=`expr "${rootdev}" : '\(.*\).'`
+root_six="${root_six}6"
+ls_root=`ls -l ${root_six}`
+root_maj=`expr "${ls_root}" : '.* [ 	*].* [ 	*].* [ 	*]\([0-9][0-9]*\),.*'`
+root_min=`expr "${ls_root}" : '.*, *\([0-9][0-9]*\)'`
+ls_select=`ls -l ${ddrive}`
+sel_maj=`expr "${ls_select}" : '.* [ 	*].* [ 	*].* [ 	*]\([0-9][0-9]*\),.*'`
+sel_min=`expr "${ls_select}" : '.*, *\([0-9][0-9]*\)'`
+if [ ${root_maj} -eq ${sel_maj} -a ${root_min} -eq ${sel_min} ]
+then
+	echo "
+The ${ndrive} contains the root file system.  It may not be removed." >&2
+	exit 1
+fi
+
+. ${DIRPATH}/rmdisk.d/`basename ${ddrive} | sed s/[0-9]*$//p`
+
+dskname=`samedev ${ddrive} /dev/dsk/c*d*s6`
+dskname=`expr "${dskname}" : '.*/\([^/]*\).$'`
+eval `basename ${dskname} | sed -e 's:^c\([0-9]*\)d\([0-9]*\).*$:slot=\1 drv=\2:'`
+slot=`expr ${slot} - 1`
+echo "
+Removing ${ndrive} from configuration (hardware slot ${slot} drive ${drv})."
+
+> /tmp/$$.lose
+> /tmp/$$.keep
+
+exec 3<&0 < /etc/fstab # Kludge to make "exit" work within while
+
+while read dev dir ronly junk
+do
+	case "${dev}" in
+	/dev/dsk/${dskname}*)
+		if [ "${dir}" = /usr ]
+		then
+			echo "
+This disk contains the /usr file system.  It may not be removed." >&2
+			exit 1
+		fi
+		echo "${dev} ${dir} ${ronly} ${junk}" >> /tmp/$$.lose
+		;;
+	*)
+		echo "${dev} ${dir} ${ronly} ${junk}" >> /tmp/$$.keep
+		;;
+	esac
+done
+
+exec <&3 3<&- # Restore stdin, close temporary fd.
+
+if [ -s /tmp/$$.lose ]
+then
+	echo "\nThis will DESTROY the contents of the following filesystems:\n"
+	while read dev dir ronly junk
+	do
+		if [ "${ronly}" = '-r' ]
+		then
+			echo "\t${dir} (${dev}) [read-only]"
+		else
+			echo "\t${dir} (${dev})"
+		fi
+	done < /tmp/$$.lose
+	echo
+	if chkyn -k $$ -h '?' -H "
+	This will DESTROY the contents of the listed filesystems; all of
+	their data will no longer be accessible." \
+	-f "Continue?"
+	then
+		:
+	else
+		echo "\nAborted."
+		exit 0
+	fi
+fi
+
+> /tmp/$$.umnt
+
+sort +1r -o /tmp/$$.lose /tmp/$$.lose
+
+exec 3<&0 < /tmp/$$.lose # Avoid "while" redirection so that exit works
+
+while read dev dir ronly junk
+do
+	if /etc/mount | grep "^[^ ]* on ${dev} " > /dev/null
+	then
+		if /etc/umount ${dev}
+		then
+			echo "${dev} ${dir} ${ronly} ${junk}" >> /tmp/$$.umnt
+			rmdir ${dir}
+		else
+			echo "\nCannot unmount ${dev} from ${dir}." >&2
+			sort +1 /tmp/$$.umnt | while read dev dir ronly junk
+			do
+				(umask 022 ; mkdir ${dir})
+				/etc/mount ${dev} ${dir} ${ronly}
+			done
+			exit 1
+		fi
+	fi
+done
+
+exec <&3 3<&- # Undo kludge
+
+cp /etc/fstab /etc/Ofstab
+cp /tmp/$$.keep /etc/fstab
+
+eval rm /dev/dsk/${dskname}? /dev/SA/${bdrive} \
+	/dev/rdsk/${dskname}? /dev/rSA/${bdrive}
+
+exit 0

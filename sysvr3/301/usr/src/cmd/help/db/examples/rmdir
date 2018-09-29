@@ -1,0 +1,6 @@
+
+\Srmdir\S:  Examples
+
+        rmdir /q5/usr/TEXT
+
+   Removes the empty sub-directory "TEXT" from the directory "/q5/usr".

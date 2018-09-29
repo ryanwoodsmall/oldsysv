@@ -1,0 +1,52 @@
+form="Folder Options for $LOGNAME"
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.h534.dir "Folder Options"
+done=`regex -v "$F1" 
+		'^long form$' 8 
+		'^name only$' 0 
+		'^name and marks$' 2000 
+		'.*' 4 | set DISPLAYMODE; 
+	regex -v "$F2" 
+		'^alphabetical$' 1 
+		'^most recent first$' 2 
+		'^least recent first$' 1002 
+		'^alphabetical by description$' 800 | set SORTMODE;
+	touch $HOME/pref`
+
+name=Folder Display Type: 
+nrow=1
+ncol=2
+rows=1
+columns=21
+frow=1
+fcol=24
+rmenu={ "name and description" "name only" "long form" }
+valid=`regex -v "$F1" 
+		'^name and description$' true 
+		'^name only$' true 
+		'^long form$' true 
+		'^name and marks$' true`
+value=const `regex -v "$DISPLAYMODE" 
+		'^0$' 'name only' 
+		'^8$' 'long form' 
+		'^2000$' 'name and marks' 
+		'.*' 'name and description'` 
+
+name=Folder Display Order: 
+nrow=3
+ncol=1
+rows=1
+columns=27
+frow=3
+fcol=24
+rmenu={ "alphabetical" "alphabetical by description" "most recent first" "least recent first" }
+menuonly=true
+value=const `regex -v "$SORTMODE" 
+		'^2$' 'most recent first' 
+		'^1002$' 'least recent first' 
+		'^800$' 'alphabetical by description' 
+		'.*' 'alphabetical'`
+
+name=RESET
+button=8
+action=reset

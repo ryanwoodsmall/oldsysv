@@ -1,0 +1,18 @@
+
+\S exit status:  return code:  false:  true \S
+
+Every command returns an integer to the shell when it terminates. This
+integer is called the exit status or return code and it indicates what
+happened when the command was executed.  If it is "true" that the command
+executed successfully, the command returns an exit code of zero.  Zero
+means that the command executed with zero problems.  If it is "false" that
+the command executed successfully, the command returns a non-zero integer.
+This integer represents the type of problem that caused the command to
+fail.  For example, the command grep(1) returns an exit status of 1 if the
+command failed because there was no pattern that matched the pattern you
+gave on the command line. grep(1) returns an exit status of 2 if the
+command failed because you made an error in the pattern or if you used file
+names that did not exist. You can find out what the exit status of your
+last command is by typing "echo $?" immediately after the command finishes
+executing.  Exit status is used most often in shell programs.
+

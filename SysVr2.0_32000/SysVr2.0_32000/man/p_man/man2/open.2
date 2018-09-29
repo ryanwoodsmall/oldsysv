@@ -1,0 +1,258 @@
+.TH OPEN 2 
+.SH NAME
+open \- open for reading or writing
+.SH SYNOPSIS
+.B #include <fcntl.h>
+.br
+.BR "int open (path, oflag" " [ " ", mode" " ] " )
+.br
+.B char \(**path;
+.br
+.B int oflag, mode;
+.SH DESCRIPTION
+.I Path\^
+points to a
+path name
+naming a file.
+.I Open\^
+opens a file descriptor for the named file
+and sets the file status flags
+according to the value of
+.IR oflag .
+.I Oflag\^
+values are constructed by or-ing flags
+from the following list (only one of the first three flags below
+may be used):
+.PP
+.TP .88i
+.SM
+.B O_RDONLY
+Open for reading only.
+.TP
+.SM
+.B O_WRONLY
+Open for writing only.
+.TP
+.SM
+.B O_RDWR
+Open for reading and writing.
+.TP
+.SM
+.B O_NDELAY
+This flag may affect subsequent reads and writes.
+See
+.IR read (2)
+and
+.IR write (2).
+.IP
+When opening a
+.SM FIFO
+with
+.SM O_RDONLY
+or
+.SM O_WRONLY
+set:
+.IP
+If
+.SM O_NDELAY
+is set:
+.RS
+.IP
+An
+.I open\^
+for reading-only will return without delay.
+An
+.I open\^
+for writing-only will return an error if no process
+currently has the file open for reading.
+.RE
+.IP
+If
+.SM O_NDELAY
+is clear:
+.RS
+.IP
+An
+.I open\^
+for reading-only will block until a process
+opens the file for writing.
+An
+.I open\^
+for writing-only will block until a process
+opens the file for reading.
+.RE
+.IP
+When opening a file associated with a communication line:
+.IP
+If
+.SM O_NDELAY
+is set:
+.RS
+.IP
+The open will return without waiting for carrier.
+.RE
+.IP
+If
+.SM O_NDELAY
+is clear:
+.RS
+.IP
+The open will block until carrier is present.
+.RE
+.TP
+.SM
+.B O_APPEND
+If set, the file pointer will be set to the end of the file
+prior to each write.
+.TP
+.SM
+.B O_CREAT
+If the file exists, this flag has no effect.
+Otherwise,
+the owner
+.SM ID
+of the file
+is set to the effective
+user
+.SM ID\*S
+of the process,
+the group
+.SM ID
+of the file
+is set to the effective group
+.SM ID\*S
+of the process,
+and
+the low-order 12 bits of the file mode are set to the value of
+.I mode\^
+modified as follows [see
+.IR creat (2)]:
+.RS
+.IP
+All bits set in the file mode creation mask of the process are cleared.
+See
+.IR umask (2).
+.IP
+The ``save text image after execution bit'' of the mode is cleared.
+See
+.IR chmod (2).
+.RE
+.TP
+.SM
+.B O_TRUNC
+If the file exists, its length is truncated to 0 and the mode and owner
+are unchanged.
+.TP
+.SM
+.B O_EXCL
+If
+.SM O_EXCL
+and
+.SM O_CREAT
+are set,
+.I open\^
+will fail if the file exists.
+.PP
+.PP
+The file pointer used to mark the current position within the file
+is set to the beginning of the file.
+.PP
+The new file descriptor is set to remain open across
+.I exec\^
+system calls.
+See
+.IR fcntl (2).
+.PP
+The named file is opened unless one or more of the following are true:
+.TP 15
+.SM
+\%[ENOTDIR]
+A component of the
+path prefix
+is not a directory.
+.TP
+.SM
+\%[ENOENT]
+.SM O_CREAT
+is not set and the named file does not exist.
+.TP
+.SM
+\%[EACCES]
+A component of the
+path prefix
+denies search permission.
+.TP
+.SM
+\%[EACCES]
+.I Oflag\^
+permission is denied for the named file.
+.TP
+.SM
+\%[EISDIR]
+The named file is a directory and
+.I oflag\^
+is write or
+read/write.
+.TP
+.SM
+\%[EROFS]
+The named file resides on a read-only file system and
+.I oflag\^
+is write or read/write.
+.TP
+.SM
+\%[EMFILE]
+Twenty (20)
+file descriptors are currently open.
+.TP
+.SM
+\%[ENXIO]
+The named file is a character special or block special file,
+and the device associated with this special file does not exist.
+.TP
+.SM
+\%[ETXTBSY]
+The file is a pure procedure (shared text) file that is being executed and
+.I oflag\^
+is write or read/write.
+.TP
+.SM
+\%[EFAULT]
+.I Path\^
+points outside the allocated address space of the process.
+.TP
+.SM
+\%[EEXIST]
+.SM O_CREAT
+and
+.SM O_EXCL
+are set,
+and the named file exists.
+.TP
+.SM
+\%[ENXIO]
+.SM O_NDELAY
+is set, the named file is a
+.SM FIFO\*S,
+.SM O_WRONLY
+is set, and no process has the file open for reading.
+.TP
+.SM
+\%[EINTR]
+A signal was caught during the
+.I open\^
+system call.
+.TP
+.SM
+\%[ENFILE]
+The system file table is full.
+.SH "RETURN VALUE"
+Upon successful completion,
+the file descriptor
+is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+chmod(2), close(2), creat(2), dup(2), fcntl(2), lseek(2), read(2), umask(2), write(2).
+.\"	@(#)open.2	6.2 of 9/6/83

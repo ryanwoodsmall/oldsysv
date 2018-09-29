@@ -1,0 +1,16 @@
+
+\Stouch\S : Options
+
+     -a   sets the access time to <mmddhhmm> for the year <yy>.  <mmddhhmm>
+          stands for month, day, hour, minute and each must be a two digit
+          number.  Single digits must be padded with a leading zero.  <yy> is
+          the last two digits of the year.  Without an argument, the current
+          time is used.
+
+     -m   sets the modification time to <mmddhhmm> for the year <yy>.
+          <mmddhhmm> stands for month, day, hour, minute and each must be a two
+          digit number.  Single digits must be padded with a leading zero.  <yy>
+          is the last two digits of the year.  Without an argument, the current
+          time is used.
+
+     -c   does not create <file_name> if it does not exist.

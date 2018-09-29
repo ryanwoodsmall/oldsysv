@@ -1,0 +1,87 @@
+.TH TC 7
+.SH NAME
+tc \- streaming tape interface
+.SH DESCRIPTION
+The format for tape files is described in
+\f2intro\fR(7).
+These files refer to streaming tape transports.
+When opened for reading or writing, the tape is assumed to
+be positioned as desired.
+When a file is closed, a double end-of-file (double tape mark)
+is written if the file was opened for writing.
+If the file was normal-rewind, the tape is rewound.
+If it is no-rewind and the file was open for writing,
+the tape is positioned before the second
+.SM EOF
+just written.
+If the file was no-rewind and opened read-only, the tape is
+positioned after the
+.SM EOF
+following the data just read.
+Once opened, reading is restricted to
+between the position when opened and the next
+.SM EOF
+or
+the last write.
+The
+.SM EOF
+is returned as a zero-length read.
+By judiciously choosing
+.B mt
+files, it is possible to read and write multi-file tapes.
+.PP
+A standard tape consists of
+several 512-byte records terminated by an
+.SM EOF\*S.
+To the extent possible, the system
+treats
+the tape like any other file.
+Seeks have their usual meaning and it is possible
+to read or write a byte at a time (although very inadvisable).
+.PP
+The
+.B mt
+files discussed above are useful
+when it is desired to access the tape in a way
+compatible with ordinary files.
+When foreign tapes are to be dealt with, and especially
+when long records are to be read or written, the
+``raw'' interface is appropriate.
+The associated files are located under the
+.BR /dev/rmt
+directory.
+Each
+.I read\^
+or
+.I write\^
+call reads or writes the next record on the tape.
+In the write case, all tape records have a length of 512 bytes
+regardless of the buffer length given.
+Larger writes are more efficient, however, in that unnecessary
+tape motion may be prevented.
+If single record writes are used, the tape may stop and then back up
+before writing the next record.
+During a read, the record size is passed
+back as the number of bytes read,
+up to the buffer size specified.
+In raw tape I/O, the buffer must begin on a word boundary
+and the count must be even.
+Seeks are ignored.
+An
+.SM EOF
+is returned as a zero-length read, with the tape positioned
+after the
+.SM EOF\*S,
+so that the next read will return the next
+record.
+.SH FILES
+/dev/mt/\(**
+.br
+/dev/rmt/\(**
+.SH BUGS
+If any non-data error is encountered, it refuses to do anything
+more until closed.
+The driver is limited to four transports.
+.SH SEE ALSO
+gt(7), intro(7), tu78(7).
+.\"	%W% of %G%

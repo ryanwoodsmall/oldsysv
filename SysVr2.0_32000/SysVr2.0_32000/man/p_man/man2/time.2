@@ -1,0 +1,38 @@
+.TH TIME 2 
+.SH NAME
+time \- get time
+.SH SYNOPSIS
+.B long time ((long \(**) 0)
+.PP
+.B long time (tloc)
+.br
+.B long \(**tloc;
+.SH DESCRIPTION
+.I Time\^
+returns the value of time in seconds since 00:00:00 \s-1GMT\s0, January 1, 1970.
+.PP
+If
+.I tloc\^
+(taken as an integer) is non-zero, the return value is also stored in the
+location to which
+.I tloc\^
+points.
+.PP
+.TP \w'[\s-1EFAULT\s+1]\ \ 'u
+.TP
+.SM
+\%[EFAULT]
+.I Time\^
+will fail if
+.I tloc\^
+points to an illegal address.
+.SH RETURN VALUE
+Upon successful completion,
+.I time\^
+returns the value of time.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+stime(2).
+.\"	@(#)time.2	6.2 of 9/6/83

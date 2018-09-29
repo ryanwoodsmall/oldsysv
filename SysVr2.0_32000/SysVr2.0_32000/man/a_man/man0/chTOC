@@ -1,0 +1,26 @@
+.so /ddo/svje/bin/cmac
+.nr sL 1
+.di xx
+.CH 1 "INTRODUCTION"
+.H 1 "INTRODUCTION"
+.CH 2 "SETUP"
+.H 1 "ADMINISTRATOR GUIDE CHANGES"
+.if n .FG 99 99 1 "Major Device Numbers"
+.if n .FG 99 99 1 "Disk Partitions (300-MB Disk)"
+.if n .FG 99 99 1 "Disk Partitions (675-MB Disk)"
+.CH 3 ""
+.H 1 "PROGRAMMING GUIDE CHANGES"
+.CH 4 ""
+.H 1 "ADMINISTRATOR REFERENCE MANUAL PAGES"
+.CH 5 ""
+.H 1 "PROGRAMMER REFERENCE MANUAL PAGES"
+.CH 6 ""
+.H 1 "USER REFERENCE MANUAL PAGES"
+.CH 7 ""
+.H 1 "ERROR MESSAGES \*(EM 3B20 COMPUTERS"
+.di
+.rn uD )U
+.rn cY TY
+.nr Oc 0
+.TC 1 1 0 0
+.so /ddo/jrd/nsc_3/man/a_man/man0/tails

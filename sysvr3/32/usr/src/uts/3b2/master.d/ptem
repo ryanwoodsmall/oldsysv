@@ -1,0 +1,9 @@
+*#ident	"@(#)kern-port:master.d/ptem	10.3"
+*
+* NTTY - Network TTY streams module
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+m	-	ptem	-	-	-
+						ptem[#C] (%0x1c)
+						ptem_cnt(%i) = { #C }
+$$

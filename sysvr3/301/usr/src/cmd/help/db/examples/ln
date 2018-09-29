@@ -1,0 +1,16 @@
+
+\S ln \S:  Examples
+
+       ln record1 record2
+
+    Links the name "record2" to the file "record1" under the current working
+    directory.
+
+    ----------------------------------------------------------------------
+
+       ln src.c SRCDIR
+
+    Links the file "src.c" under the current working directory to a new file 
+    of the same name under the subdirectory "SRCDIR" in the current working
+    directory.
+

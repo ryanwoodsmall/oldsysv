@@ -1,0 +1,64 @@
+#ident	"@(#)sadmin:admin/umountfsys	2.8"
+#	Unmount a removable medium file system.
+#help#
+#help#	Umountfsys unmounts a file system, allowing you to remove the medium.
+
+#!	chmod +x ${file}
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2 15
+
+unset disklabelarg umountit patterns
+
+while getopts p:y c 
+do
+	case "$c" in
+	p )
+		patterns=$OPTARG
+		;;
+	y )
+		disklabelarg=-y
+		umountit=yes
+		;;
+	\? )
+		echo >&2 "Usage:  `basename $0` [ -p pattern ] [ -y ]
+-y	unmount the removable medium file system without asking any questions"
+		exit 1
+		;;
+	esac
+done
+
+shift `expr $OPTIND - 1`
+if [ $# != 0 ]
+then
+	echo >&2 "Usage:  `basename $0` [ -p pattern ] [ -y ]
+-y	unmount the removable medium file system without asking any questions"
+	exit 1
+fi
+
+dir=${0}.d
+if [ -z "${patterns}"  -a  -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+mounted=`/etc/mount  |  sed -n "\\;${ddrive};s;^\([^ ]*\) on ${ddrive} .*;\1;p"`
+
+if [ -z "${mounted}" ]
+then
+	echo "No removable medium file system is mounted on the ${ndrive}."
+	exit 0
+fi
+if test ${umountit}  ||  checkyn ${flags} -f "Do you wish to unmount '${mounted}'?"
+then
+	diskumount -n "${ndrive}" ${ddrive} ${mounted}  ||
+		echo "	Correct the problem and try again."
+fi

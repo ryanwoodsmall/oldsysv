@@ -1,0 +1,10 @@
+#ident	"@(#)sadmin:etc/rc.d/setup	1.3"
+#	Reminder on how to setup up the machine the first time.
+
+echo '
+        Welcome!
+This machine has to be set up by you.  When you see the "login" message type
+                                setup
+followed by the RETURN key.  This will start a procedure that leads you through
+those things that should be done the "first time" the machine is used.
+'

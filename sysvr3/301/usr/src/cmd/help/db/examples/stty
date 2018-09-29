@@ -1,0 +1,27 @@
+
+\S stty \S:  Examples
+
+       stty
+
+    Prints the settings of capabilities associated with the terminal on the
+    standard output.
+
+    ----------------------------------------------------------------------
+
+       stty kill '^U' echo
+
+    Sets terminal capabilities to accept "^U" as the kill character, and to 
+    echo back every character you type.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       stty erase '^H' echo cr0 tab3
+
+    Sets terminal capabilities to use "^H" as the erase character, and to 
+    remove the character being erased from the display.  Also designates a
+    delay after a carriage return for the carriage return capability, 
+    and designates that tabs be expanded to spaces for the tabs capability.
+

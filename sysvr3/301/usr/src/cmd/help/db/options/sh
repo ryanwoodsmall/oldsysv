@@ -1,0 +1,44 @@
+
+\Ssh\S:  Options
+
+     -a   exports the variables that \Ssh\S modifies or creates.
+
+     -e   exits immediately if a command does not execute successfully.
+
+     -f   prohibits pattern matching for file names.  (glossary(1) describes
+          regular expressions and special characters that are used in pattern
+          matching.)
+
+     -h   locates and records commands that are in a program when you define
+          the program as a function.
+
+     -i   executes commands interactively and ignores signals to TERMINATE,
+          INTERRUPT, and QUIT.
+
+
+     -k   puts all keyword arguments in the environment, not only those that
+          precede a command.
+
+     -n   reads and checks the syntax of a shell script but does not execute it.
+     -r   uses a restricted shell.
+
+     -t   reads and executes only one command.
+
+     -u   prints a message if a shell variable is not initialized when \Ssh\S
+          attempts a variable substitution.
+
+     -v   prints shell input lines as it reads them.
+
+     -x   prints commands and arguments as \Ssh\S executes them.  This option
+          is useful when debugging shell scripts.
+
+     
+
+     -c command ...   executes the shell command or commands in the string
+                      <command>.  You must separate each command from the next
+                      with ";".
+
+     -s   creates a new shell and reads commands from standard input and sends
+          the output to standard output.  Assigns each argument on the command
+          line, up to seven arguments, to a positional parameter.  Positional
+          parameters can be used as arguments to commands.

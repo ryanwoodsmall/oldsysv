@@ -1,0 +1,58 @@
+#ident	"@(#)cmd-3b2:inst/bin/fstabmnt	1.5"
+#
+# fstabmnt
+#
+# Mount (or unmount) a list of filesystems, taken from
+# stdin in fstab format. Unmount in reverse-fstab order
+# to handle nested mount-points.
+#
+
+set -ue
+myname="${0}"
+
+root=/
+umount=n
+
+while [ $# -ne 0 ]
+do
+	case "${1}" in
+	-r)
+		root="${2}" ; shift 2 ;;
+	-u)
+		umount=y ; shift 1 ;;
+	-U)
+		dev="${2}"
+		shift 3
+		if [ $# -ne 0 ]
+		then
+			${myname} -U "$@"
+		fi
+		ignore fsys -u ${dev} 2> /dev/null
+		exit 0
+		;;
+	*)
+		echo "Usage: ${myname} [ -r rootdir ] [ -u ] < fstab" >&2 ; exit 1 ;;
+	esac
+done
+
+
+set -- ` fstab | while read dev dir ronly junk
+	do
+		echo ${dev} ${dir}
+	done`
+
+if [ ${umount} = y ]
+then
+	if [ $# -ne 0 ]
+	then
+		exec ${myname} -U "$@"
+	fi
+	exit 0
+fi
+
+while [ $# -ne 0 ]
+do
+	fsys -m ${root}/${2} ${1}
+	shift 2
+done
+exit 0

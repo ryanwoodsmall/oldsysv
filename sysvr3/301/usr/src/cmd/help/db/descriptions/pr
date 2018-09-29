@@ -1,0 +1,30 @@
+
+\Spr\S:  Description
+
+Syntax Summary:  pr [-dfprt] [-column [-wwidth] [-a]] [+page] [-eck]
+                    [-ick] [-llength] [-nck] [-ooffset] [-sseparator]
+                    [-h header] [file_name ...]
+
+                 pr [-dfprt] [-m [-wwidth]] [+page] [-eck] [-ick] [-llength] 
+                    [-nck] [-ooffset] [-sseparator] [-h header] 
+                    file_name1 file_name2 ...
+
+         where:  c and separator are characters.
+
+                 page, k, width, offset and length  are integers.
+
+                 file_name  is the name of a file.
+
+                 header  is a sequence of characters delimited by
+                         white space and/or double quotes.
+
+Description:
+     \Spr\S stands for "print".  Use \Spr\S to format and print the contents
+     of a file.  If you don't list a <file_name> or if you use "-" in place of
+     a <file_name>, \Spr\S reads and prints standard input.  Without options,
+     \Spr\S breaks the text into pages, and puts a heading on each page.  The
+     heading contains the file name, the date, and the time it was last
+     modified. The options for \Spr\S allow you to create many different
+     formats.  For example, you can change the page length and width, print the
+     file in multi-column form, print line numbers, or change the header.  See
+     also:  cat(1) and pg(1) for commands with functions similar to \Spr\S.

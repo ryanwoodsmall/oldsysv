@@ -1,0 +1,53 @@
+'\" t
+.TH MNTTAB 4
+.SH NAME
+mnttab \- mounted file system table
+.SH SYNOPSIS
+.B #include <mnttab.h>
+.SH DESCRIPTION
+.I Mnttab\^
+resides in directory
+.B /etc
+and contains a table of devices,
+mounted by the
+.IR mount (1M)
+command, in the following structure as defined by
+.BR <mnttab.h> :
+.PP
+.RS
+.nf
+.TS
+l l l.
+struct	mnttab {
+	char	mt_dev[32];
+	char	mt_filsys[32];
+	short	mt_ro_flg;
+	time_t	mt_time;
+};
+.TE
+.RE
+.fi
+.RE
+.PP
+Each entry is 70 bytes in length; the
+first 32 bytes are the null-padded name of the place where the
+.I "special file\^"
+is mounted; the next 32 bytes represent the null-padded root
+name of the mounted special file;
+the remaining 6 bytes contain the mounted
+.IR "special file" 's
+read/write permissions and the date on which it was mounted.
+.PP
+The maximum number of entries in
+.I mnttab\^
+is based on the system parameter
+.SM
+.B NMOUNT
+located in
+.BR /usr/src/uts/cf/conf.c ,
+which defines the number of allowable mounted
+special files.
+.SH SEE ALSO
+mount(1M), setmnt(1M) in the
+\f2\s-1UNIX\s+1 System V Administrator Reference Manual\fR.
+.\"	%W% of %G%

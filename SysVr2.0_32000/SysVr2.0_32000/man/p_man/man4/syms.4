@@ -1,0 +1,175 @@
+.TH SYMS 4
+.SH NAME
+syms \- common object file symbol table format
+.SH SYNOPSIS
+.B
+#include  <syms.h>
+.SH DESCRIPTION
+Common object files contain information
+to support
+.I symbolic
+software testing (see
+.IR sdb (1)).
+Line number entries,
+.IR linenum (4),
+and extensive symbolic information permit
+testing at the C
+.I source
+level.
+Every object file's symbol table is organized as shown below.
+.PP
+.RS 10
+.nf
+File name 1.
+	Function 1.
+		Local symbols for function 1.
+	Function 2.
+		Local symbols for function 2.
+	...
+	Static externs for file 1.
+
+File name 2.
+	Function 1.
+		Local symbols for function 1.
+	Function 2.
+		Local symbols for function 2.
+	...
+	Static externs for file 2.
+\&...
+
+Defined global symbols.
+Undefined global symbols.
+.fi
+.RE
+.PP
+The entry for a symbol is a fixed-length structure.
+The members of the structure hold the name (null padded),
+its value, and other information.
+The C structure is given below.
+.PP
+.if t .RS
+.ta \w'#define\ \ 'u +\w'SYMNMLEN\ \ 'u +\w'n_numaux\ ;\ \ 'u
+.nf
+.lg 0
+#define  \s-1SYMNMLEN\s+1	8
+#define  \s-1FILNMLEN\s+1	14
+.ds H1 xxxxunsignedxshortxx
+.ds H2 xxxxunsignedxshortxx*_n_nptr[2];xx
+
+struct  syment
+{
+    union\h'|\w'\*(H2'u'/\(** all ways to get symbol name \(**/
+    {
+        char\h'|\w'\*(H1'u'_n_name[\s-1SYMNMLEN\s+1]; /\(** symbol name \(**/
+        struct
+        {
+            long\h'|\w'\*(H1'u'_n_zeroes;\h'|\w'\*(H2'u'/\(** == 0L when in string table \(**/
+            long\h'|\w'\*(H1'u'_n_offset;\h'|\w'\*(H2'u'/\(** location of name in table \(**/
+        } _n_n;
+        char\h'|\w'\*(H1'u'\(**_n_nptr[2];\h'|\w'\*(H2'u'/\(** allows overlaying \(**/
+    } _n;
+    long\h'|\w'\*(H1'u'n_value;\h'|\w'\*(H2'u'/\(** value of symbol \(**/
+    short\h'|\w'\*(H1'u'n_scnum;\h'|\w'\*(H2'u'/\(** section number \(**/
+    unsigned short\h'|\w'\*(H1'u'n_type;\h'|\w'\*(H2'u'/\(** type and derived type \(**/
+    char\h'|\w'\*(H1'u'n_sclass;\h'|\w'\*(H2'u'/\(** storage class \(**/
+    char\h'|\w'\*(H1'u'n_numaux;\h'|\w'\*(H2'u'/\(** number of aux entries \(**/
+    char\h'|\w'\*(H1'u'n_env;\h'|\w'\*(H2'u'/\(** symbol interpretation environment \(**/
+    char\h'|\w'\*(H1'u'n_dummy;\h'|\w'\*(H2'u'/\(** currently unused \(**/
+};
+.ds H1 #definexxn_zeroesxx
+
+#define  n_name\h'|\w'\*(H1'u'_n._n_name
+#define  n_zeroes\h'|\w'\*(H1'u'_n._n_n._n_zeroes
+#define  n_offset\h'|\w'\*(H1'u'_n._n_n._n_offset
+#define  n_nptr\h'|\w'\*(H1'u'_n._n_nptr[1]
+.fi
+.lg
+.if t .RE
+.PP
+Meaningful values and explanations for them are given
+in both
+.B syms.h
+.RI and " Common Object File Format" .
+Anyone who needs to interpret the entries should seek
+more information in these sources.
+Some symbols require more information than a single
+entry; they are followed by
+.I "auxiliary entries"
+that are the same size as a symbol entry.
+The format follows.
+.PP
+.if t .RS
+.ta \w'struct\ 'u +\w'struct\ 'u +\w'unsigne'u +\w'd\ short\ \ 'u +\w'unsigne'u +\w'd\ short\ \ 'u
+.nf
+.lg 0
+.ne 26
+union auxent
+{
+	struct
+	{
+		long		x_tagndx;	
+		union
+		{
+			struct
+			{
+				unsigned short	x_lnno;	
+				unsigned short	x_size;	
+			} x_lnsz;
+			long	x_fsize;	
+		} x_misc;
+		union
+		{
+			struct			
+			{
+				long		x_lnnoptr;	
+				long		x_endndx;	
+				unsigned short	x_callseq;
+				unsigned short	x_level;
+			} 	x_fcn;
+			struct			
+			{
+				unsigned short	x_dimen[\s-1DIMNUM\s+1];
+			} 	x_ary;
+		}		x_fcnary;
+		unsigned short  x_tvndx;		
+	} 	x_sym;
+	struct
+	{
+		char	x_fname[\s-1FILNMLEN\s+1];
+		short	x_fdummy;
+		long	x_foff;
+	} 	x_file;
+	struct
+	{
+		long		x_scnlen;
+		unsigned short	x_nreloc;
+		unsigned short	x_nlinno;
+		long		x_linoptr;	
+	} 	x_scn;
+
+	struct
+	{
+		long		x_tvfill;
+		unsigned short	x_tvlen;	
+		unsigned short	x_tvran[2];	
+	}	x_tv;	
+};
+.fi
+.lg
+.if t .RE
+.PP
+Indexes of symbol table entries begin at
+.IR zero .
+.SH "SEE ALSO"
+a.out(4), linenum(4).
+.br
+\*psdb(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.br
+.SH "CAVEATS"
+Longs are equivalent to ints, and
+are converted to ints in the compiler to minimize the complexity of the
+compiler code generator.  Thus the information about which symbols
+are declared as longs and which, as ints, does not show up in the
+symbol table.
+.\"	%W% of %G%

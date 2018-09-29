@@ -1,0 +1,287 @@
+/*LINTLIBRARY*/
+
+/*	from file conv.c */
+#include "string.h"
+#include "errno.h"
+#include "lp.h"
+#include "filters.h"
+
+/**
+ ** s_to_filtertype() - CONVERT (char *) TO (FILTERTYPE)
+ **/
+FILTERTYPE		s_to_filtertype (str)
+	char			*str;
+{	static FILTERTYPE		 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** s_to_type() - CONVERT (char *) TO (TYPE) 
+ **/
+TYPE			s_to_type (str)
+	register char		*str;
+{	static TYPE			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** s_to_template() - CONVERT (char *) TO (TEMPLATE)
+ **/
+TEMPLATE		s_to_template (str)
+	register char		*str;
+{	static TEMPLATE		 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** sl_to_typel() - CONVERT (char **) LIST TO (TYPE *) LIST
+ **/
+TYPE			*sl_to_typel (src)
+	char			**src;
+{	static TYPE			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** sl_to_templatel() - DUPLICATE A (char **) LIST AS (TEMPLATE *) LIST
+ **/
+TEMPLATE		*sl_to_templatel (src)
+	register char		**src;
+{	static TEMPLATE		* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** type_to_s() - CONVERT (TYPE) TO (char *)
+ **/
+char			*type_to_s (t)
+	TYPE			t;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** template_to_s() - CONVERT (TEMPLATE) TO (char *)
+ **/
+char			*template_to_s (t)
+	TEMPLATE		t;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** typel_to_sl() - DUPLICATE (TYPE *) LIST AS (char **) LIST
+ **/
+char			**typel_to_sl (src)
+	TYPE			*src;
+{	static char			** _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** templatel_to_sl() - DUPLICATE A (TEMPLATE *) LIST AS (char **) LIST
+ **/
+char			**templatel_to_sl (src)
+	register TEMPLATE	*src;
+{	static char			** _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** q_strpbrk() - strpbrk() WITH BACKSLASH QUOTING
+ ** q_strdup() - strdup() WITH BACKSLASHES OMITTED
+ **/
+char			*q_strchr (sp, c)
+	register char		*sp,
+				c;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+char			*q_strdup (str)
+	char			*str;
+{	static char			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file delfilter.c */
+/**
+ ** delfilter() - DELETE A FILTER FROM FILTER TABLE
+ **/
+int			delfilter (name)
+	char			*name;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file dumpfilters.c */
+#include "stdio.h"
+
+/**
+ ** dumpfilters() - WRITE FILTERS FROM INTERNAL STRUCTURE TO FILTER TABLE
+ **/
+int			dumpfilters (file)
+	char			*file;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** q_print() - PRINT STRING, QUOTING SEPARATOR CHARACTERS
+ **/
+
+/*	from file freefilter.c */
+/**
+ ** freefilter() - FREE INTERNAL SPACE ALLOCATED FOR A FILTER
+ **/
+void			freetempl (templ)
+	register TEMPLATE	*templ;
+{
+}
+void			freefilter (pf)
+	_FILTER			*pf;
+{
+}
+
+/*	from file getfilter.c */
+/**
+ ** getfilter() - GET FILTER FROM FILTER TABLE
+ **/
+FILTER			*getfilter (name)
+	char			*name;
+{	static FILTER			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file filtertable.c */
+/**
+ ** get_and_load() - LOAD REGULAR FILTER TABLE
+ **/
+int			get_and_load ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** open_filtertable()
+ **/
+FILE			*open_filtertable (file, mode)
+	char			*file,
+				*mode;
+{	static FILE			* _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** close_filtertable()
+ **/
+void			close_filtertable (fp)
+	FILE			*fp;
+{
+}
+
+/*	from file insfilter.c */
+#include "assert.h"
+
+/**
+ ** Table of recognized keywords, with info. about them.
+ **/
+
+/**
+ ** insfilter()
+ **/
+FILTERTYPE		insfilter (
+				pipes,
+				input_type,
+				output_type,
+				printer_type,
+				printer,
+				parms,
+				flagsp
+			)
+	char			**pipes,
+				*input_type,
+				*output_type,
+				*printer_type,
+				*printer,
+				**parms;
+	unsigned short		*flagsp;
+{	static FILTERTYPE		 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** searchlist_t() - SEARCH (TYPE *) LIST FOR ITEM
+ **/
+
+/**
+ ** instantiate() - CREATE FILTER-PIPELINE KNOWING INPUT/OUTPUT TYPES
+ **/
+
+/**
+ ** instantiate()
+ **/
+int			(*ver)();
+int			(*ver)();
+
+/**
+ ** check_pipeline() - CHECK THAT PIPELINE HANDLES MODES, PAGE-LIST
+ **/
+
+/**
+ ** build_filter() - CONSTRUCT PIPELINE FROM LINKED LIST OF FILTERS
+ **/
+
+/**
+ ** build_simple_cmd()
+ **/
+
+/**
+ ** match() - TEST MATCH OF TEMPLATE/PATTERN WITH PARAMETER
+ **/
+
+/*	from file loadfilters.c */
+/**
+ ** loadfilters() - READ FILTERS FROM FILTER TABLE INTO INTERNAL STRUCTURE
+ **/
+int			loadfilters (file)
+	char			*file;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/**
+ ** getfields() - PARSE NON-COMMENT LINE FROM FILE INTO FIELDS
+ **/
+
+/**
+ ** fs_cmp() - COMPARE TWO FILTERS BY "FILTERTYPE"
+ **/
+
+/*	from file putfilter.c */
+/**
+ ** putfilter() - PUT FILTER INTO FILTER TABLE
+ **/
+int			putfilter (name, flbufp)
+	char			*name;
+	FILTER			*flbufp;
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file search.c */
+/**
+ ** search_filter() - SEARCH INTERNAL FILTER TABLE FOR FILTER BY NAME
+ **/
+_FILTER			*search_filter (name)
+	register char		*name;
+{	static _FILTER			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file trash.c */
+/**
+ ** trash_filters() - FREE ALL SPACE ALLOCATED FOR FILTER TABLE
+ **/
+void			trash_filters ()
+{
+}

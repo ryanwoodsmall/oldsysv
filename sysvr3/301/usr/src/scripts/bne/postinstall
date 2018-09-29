@@ -1,0 +1,197 @@
+#ident	"@(#)bne:postinstall	1.18"
+#	Post install for "Basic Networking Utilities"
+
+#	Carefully install new local uucp information files if non exist or
+#	old style files exist.
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/uucp.name`
+
+CRONDIR=/usr/spool/cron/crontabs
+CRONTAB=/usr/spool/cron/crontabs/root
+TEMPCRON=/usr/tmp/cron.$$
+#### These are the default crontab entries
+
+CLEAN='45 23 * * * ulimit 5000; /bin/su uucp -c "/usr/lib/uucp/uudemon.cleanup" > /dev/null 2>&1'
+HOUR='41,11 * * * * /usr/lib/uucp/uudemon.hour > /dev/null'
+POLL='1,30 * * * * /usr/lib/uucp/uudemon.poll > /dev/null'
+
+####		##########
+
+if [ -d $CRONDIR ]; then
+    if [ ! -f $CRONTAB ]; then
+	> $CRONTAB
+	chown root $CRONTAB 2>/dev/null
+	chmod 644 $CRONTAB 2>/dev/null
+    fi
+else
+	echo "**WARNING**   ${PKGNAME} cannot install crontab entries."
+	echo "Demons will not be running when installation is finished."
+	echo "They will have to be added later."
+fi
+
+#### Install crontab entries if crontab exists and entries do not exist
+if [ -f $CRONTAB ]; then
+
+    if grep "uudemon.hour" $CRONTAB >/dev/null 2>&1 ; then  :
+    else
+	crontab -l >$TEMPCRON 2>/dev/null
+	echo "$HOUR" >> $TEMPCRON 2>/dev/null
+	crontab $TEMPCRON 2>/dev/null
+    fi
+
+    if grep "uudemon.cleanup" $CRONTAB >/dev/null 2>&1 ; then :  
+    else
+	crontab -l >$TEMPCRON 2>/dev/null
+	echo "$CLEAN" >> $TEMPCRON 2>/dev/null
+	crontab $TEMPCRON 2>/dev/null
+    fi
+
+    if grep "uudemon.poll" $CRONTAB >/dev/null 2>&1 ; then :  
+    else
+	crontab -l >$TEMPCRON 2>/dev/null
+	echo "$POLL" >> $TEMPCRON 2>/dev/null
+	crontab $TEMPCRON 2>/dev/null
+    fi
+fi
+
+####			##########
+
+echo 1 > /usr/lib/uucp/Maxuuxqts
+echo 1 > /usr/lib/uucp/Maxuuscheds
+chown uucp /usr/lib/uucp/Maxuuxqts /usr/lib/uucp/Maxuuscheds 2>/dev/null
+chmod 444 /usr/lib/uucp/Maxuuxqts /usr/lib/uucp/Maxuuscheds
+
+#In case there was a uugetty - this should remove it -- ignore errors
+rm -f /usr/lib/uucp/RM-THIS-* 2>/dev/null
+
+#Restore inittab uugetty entries to preinstall state, if necessary
+if [ -f /usr/lib/uucp/inittab.save ]
+then
+	cp /usr/lib/uucp/inittab.save /etc/inittab
+	rm -f /usr/lib/uucp/inittab.save
+	/etc/init q 2>/dev/null
+fi
+
+#If the files in /usr/lib/uucp existed before installing the package
+#give the user the option of restore the files.
+#If they aren't restored they will be left in /usr/lib/uucp/OlD
+
+savefiles="Devices Dialers Systems Permissions Dialcodes Poll Maxuuxqts Maxuuscheds remote.unknown Sysfiles Devconfig"
+
+# If uucp is being installed for the first time on this machine the
+# following directory will NOT have been made by the preinstall script.
+# Therefore there are NO files to be restored.
+
+if [ -d /usr/lib/uucp/OlD ]
+then
+	if [ `ls /usr/lib/uucp/OlD | wc -l` -gt 0 ]
+	then
+		chkyn -f "Do you wish to restore the previous system files?"
+		if [ $? -eq 0 ]
+		then
+			for i in $savefiles
+			do
+				if [ -f /usr/lib/uucp/OlD/$i ]
+				then
+					mv /usr/lib/uucp/OlD/$i /usr/lib/uucp/$i
+				fi
+			done
+			rmdir /usr/lib/uucp/OlD
+		else
+			echo "The files were not restored and can be found in /usr/lib/uucp/OlD"
+		fi
+	else
+		rmdir /usr/lib/uucp/OlD
+	fi
+fi
+
+
+#########################################################################
+#									#
+#	If nlsadmin is installed and if starlan is installed,		#
+#	set up entries for ttysrv.  need this on two codes:		#
+#		1	used by 3b2's for cu and uucico			#
+#			and by 7300's for cu				#
+#		102	used by 7300's for uucico			#
+#									#
+#	cannot set up for other networks at this time because don't	#
+#	know whether they'll provide login service nor, if they do,	#
+#	what the login-server will be named				#
+#									#
+#	we do not remove these entries at uninstall, because 1) we	#
+#	have no way of knowing whether we created 'em or whether they	#
+#	were already there and 2) they don't hurt anything, anyway.	#
+#									#
+#########################################################################
+NLS=/usr/bin/nlsadmin
+if [ -x $NLS ]
+then	#	listener is installed
+
+	if nlsadmin starlan >/dev/null 2>&1
+	then	#	starlan is installed
+
+		ERRMSG="Failed to create listener database entries to allow $PKGNAME\nto use the STARLAN Network:\n\t$NLS exited with code "
+		for code in 1 102
+		do
+			#	create listener entry
+			#	must use -m flag with code 1
+			#	cannot use -m flag with code 102
+			if [ "$code" -eq 1 ]
+			then
+				cmd="${NLS} -m"
+			else
+				cmd="$NLS"
+			fi
+			$cmd -a $code -c"/usr/slan/lib/ttysrv" \
+				-y"login service" starlan >/dev/null 2>&1
+
+			#################################
+			#	check exit code		#
+			#################################
+			code=$?
+			case "$code" in
+
+			 0) ;;	# no problem
+			 2) echo "${ERRMSG}2:\tNot super user" ;;
+			 3) echo "${ERRMSG}3:\tBad usage of $NLS command" ;;
+			 5) echo "${ERRMSG}5:\tCould not open database file" ;;
+			 8) echo "${ERRMSG}8:\tBad service code" ;;
+			 9) ;; # service code already exists -- ignore
+			10) echo "${ERRMSG}10:\tError on close of file" ;;
+			24) echo "${ERRMSG}24:\tCould not find listener group entry" ;;
+			26) echo "${ERRMSG}26:\tCould not find listener passwd entry" ;;
+			*) echo "${ERRMSG}${code}" ;;	# dunno what happened
+
+			esac
+			if [ $code != 0 -a $code != 9 ]
+			then	#	something went wrong
+				echo "\tConsult the documentation for more information."
+				break
+			fi
+		done
+	fi
+fi
+
+
+
+
+#	Tell them about syadm uucpmgmt
+echo "
+
+You can use the installed $PKGNAME management menu by typing
+'sysadm packagemgmt' or 'sysadm uucpmgmt'.
+
+As part of the initial installation of $PKGNAME you
+should execute the following management commands within uucpmgmt.
+(SEE 'Basic Networking Utilities Guide' for more information).
+
+- devicemgmt:	To provide the $PKGNAME package
+		with information about the devices it can
+		use for outgoing traffic.
+- portmgmt:	To permit incoming calls on the I/O port(s) or
+		set it/them up for outgoing or bidirectional traffic.
+- systemmgmt:	To provide the $PKGNAME package
+		with the names of systems you want to contact.
+- pollmgmt:	To initiate the polling of other systems
+		by this system, '`uname`'."

@@ -1,0 +1,191 @@
+#	@(#)README	1.2
+#	3.0 SID # 	1.3
+Steps to install files in gcos:
+
+1)  Edit the file gcos.h, defining the character strings PHONE_ID
+	and FGET_ID as the 2-character station id for GCOS that
+	has been assigned to your machine.  Check the last 10
+	lines of the header file gcos.h for the definitions
+	of DEVDU, DEVDN, and NUMBERS, and change them if necessary,
+	giving the proper device names for the dataphone (or vpm)
+	and acu devices, and the appropriate phone numbers
+	for calling GCOS.
+
+2)  The makefile gcos.mk has been set up assuming that you will be
+	using a KMC11-B device to supply the GRTS protocol.  If instead
+	you will be using a du device or using a KMC11-B device
+	to simulate a du, edit gcos.mk to change the macro definition
+	at the beginning of the file from
+		GERTS = kmcgerts
+	to
+		GERTS = dugerts
+
+2.5) There now exist 3 incompatible formats for the "pw_gecos" field of the
+	/etc/passwd file.  Therefore, you must specify if your format is
+	other than UNIX 3.0 standard, by adding a cpp "-D" option
+	to the CFLAGS macro definition in the makefile.  The formats are:
+
+		RES	does not contain "dept#-name(acct#)" string in field.
+				(used by systems in 1127)
+		ISCC	field is "dept#-name(acct#)bin#[,gcosid]"
+				(is an ISCC standard for Comp Centers)
+		--	field is "dept#-name(acct#)acct#,bin#[,gcosid]"
+				(standard for UNIX 3.0 and 4.0)
+
+	For either RES or ISCC formats, you must add a define to the
+	CFLAGS macro definition.  e.g.
+
+		CFLAGS = -O -DRES
+	or
+		CFLAGS = -O -DISCC
+
+3)  Create the directory /usr/spool/dpd, writeable by everyone.
+
+4)  Create the file /usr/spool/dpd/errors, writeable by everyone,
+	if you want a record of the transactions of dpd and fget.demon.
+
+5)  Edit the makefile gcos.mk to change the first dependency
+	line from
+		all:
+	to
+		all:	spoolers daemons
+	and remove the next line
+			echo cat /usr/src/cmd/gcos/README
+
+6)  As user "daemon" and group "bin", execute the makefile:
+		make -f gcos.mk install
+    This should compile and install all the commands
+	(dpr, gcat, fget, fsend and gcosmail) into /usr/bin,
+	and all the daemons (dpd and fget.demon) into /usr/lib,
+	if they are not found elsewhere on your system.
+
+7)  Check to be sure that /usr/lib/dpd
+	is mode 4755 (set-user-id), and is owned by daemon.
+
+8)  Add the following code to /etc/rc (if it is not already there):
+		rm -f /usr/spool/dpd/lock /usr/spool/dpd/glock
+		/usr/lib/dpd
+
+9)  Add an entry to crontab to initiate fget.demon periodically.
+	e.g. every 15 minutes:
+		5,20,35,50  *  *  *  *  /usr/lib/fget.demon 20
+
+
+FOR KMC11-B USERS:
+
+First, the nodes for the vpm device and the KMC11-B must be set up
+	and connected, following the instructions for vpm(4).
+
+Then the vpmc script must be compiled and loaded into the KMC11-B.
+	There are 2 possible vpmc scripts -- the recommended one
+	that supplies most of the GRTS protocol (files kmcgerts.c
+	and kmcgerts.v) or one that makes the KMC11-B device simulate
+	a du device (files dugerts.c and dugerts.v).
+
+a)  For the daemons, check in the makefile gcos.mk that the macro
+	GERTS is defined as the appropriate gerts script (kmcgerts
+	or dugerts, as in step 2 above).  Complete steps 1-9 above.
+
+b)  Compile the appropriate vpmc script and save object in vpmdpd.o:
+
+		vpmc -m -o vpmdpd.o kmcgerts.v
+	or
+		vpmc -m -o vpmdpd.o dugerts.v
+
+c)  Load script into KMC11-B:
+
+	/etc/vpmstart /dev/kmc? 6 vpmdpd.o
+
+	where "/dev/kmc?" is the name of the KMC11-B device to be used
+	by dpd.
+
+d)  To automatically load the KMC11-B at system start-up time:
+
+	1)  Move vpmdpd.o to /lib/vpmdpd.o
+
+	2)  Create the automatic load file, /etc/dpdload,
+		by editing the file dpdload in the current
+		subdirectory, modifying the string "kmc?" in both the
+		first and last lines of dpdload to be the name
+		of the KMC11-B device to be used by dpd, as in c) above.
+		Move this file to /etc/dpdload.
+
+	3)  Add the following line to /etc/rc:
+
+		/etc/dpdload
+
+
+AUTOMATIC RECONFIGURATION:
+
+There is a facility for dpd to be able to change its configuration
+(the values set in file gcos.h in step 1 above) without recompilation.
+To enable this facility, change the definition of CONFIG in the
+makefile gcos.mk from
+		CONFIG = dumconfig
+	to
+		CONFIG = realconfig
+and remake fget, dpd and fget.demon.
+
+To change any of the configuration values that have been set in the
+file gcos.h, create the file /usr/lib/gcosconfig with one line for
+each different configuration variable that you want changed.
+Each line is interpreted as a series of tokens separated by
+one or more of the usual separators (blank, tab, comma, quote,
+equals, etc.).  The first token is the variable identifier and
+must be recognized by config as one of the configuration variables
+in the file gcos.h (e.g. PHONE_ID, FGET_ID, DEVDN, DEVDU, NUMBERS
+or CONSOLE).  Subsequent tokens are taken as the string values
+of that variable.  In the case of NUMBERS, there may be enough
+of these values to fill the allocated array or fewer.
+A backslash ("\") indicates a null value or the end of the array.
+e.g. The line to change one's phone numbers can be written,
+pseudo-C-style, as follows:
+
+	NUMBERS = {"1234", "1235", "567-8888", "\"};
+
+The following abbreviation is exactly equivalent:
+
+	NUMB 1234 1235 567-8888 \
+
+This will cause the daemons to try successively the three phone
+numbers 1234, 1235 and 567-8888 to reach GCOS before giving up.
+Note that a direct connection is indicated by a null NUMBERS list
+(NUMBERS = \), and manual dial by a null dn device name (DEVDN = \).
+
+To obtain output from config on each time this automatic reconfiguration
+is being done and for what values, create the (writeable) file
+/usr/spool/dpd/logconfig.  Once you are sure it is working as
+you expect, you may want to remove this file and shut off the
+messages.
+
+
+FGET.DEMON EXECUTE FACILITY:
+
+The fget.demon, in addition to its ability to bring files from GCOS
+to unix (upon initiation from either system), has a facility to execute
+these files, if desired.  This facility is used by the (GCOS) TSS
+commands "fcopy" and "mail".  To protect the unix system from
+indiscriminate executions by GCOS users, fget.demon executes these files
+using the restricted shell (rsh(1)), and limiting the shell PATH
+variable to a special directory /usr/lib/fgd.dir.  Therefore, any
+commands or shell scripts that unix wishes to allow GCOS users to
+execute must be copied or linked into this directory.  A suggested
+set-up for /usr/lib/fgd.dir, which will allow the free use by GCOS users
+of the TSS commands "fcopy" and "mail", contains the following files:
+
+	dr-xr-xr-x   2 daemon   bin       128 Feb 18 16:54 /usr/lib/fgd.dir
+	/usr/lib/fgd.dir:
+	total 87
+	-rwxrwxr-x   2 bin      bin     12372 Mar 27 09:48 fsend
+	-rwxrwxr-x   2 bin      bin     12752 Mar 27 09:49 gcosmail
+	-rwxrwxr-x   2 daemon   bin        34 Feb 17 13:57 mail
+	-rwxrwxr-x   2 daemon   bin        34 Feb 17 13:57 rmail
+	-rwxrwxr-x   1 daemon   bin     16220 Jan 29 15:02 sed
+
+where /usr/lib/fgd.dir/mail and /usr/lib/fgd.dir/rmail contain the
+following shell script:
+
+	PATH=:/bin:/usr/bin /bin/rmail $*
+
+and the other files are just links or copies of the standard unix
+commands of the same name.

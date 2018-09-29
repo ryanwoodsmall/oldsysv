@@ -1,0 +1,12 @@
+
+\S manual page:  section number \S
+
+A manual page is a page or pages from the UNIX System User's, Programmer's,
+or Administrator's Reference Manual that describes a command and lists its
+"arguments"\S*\S.  These manuals are divided into sections.  Each section
+has a section number and the numbering is continuous from one manual to the
+next.  Commands are commonly referred to by name and section number.  For
+example, profile(2) refers to the manual page for profile in section 2 of
+the manual.  If no section number is listed, you should assume section 1.
+
+\S*\S defined in the \Sglossary\S

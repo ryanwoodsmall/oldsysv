@@ -1,0 +1,143 @@
+.\"	@(#)errmacs	5.2 of 5/14/82
+.bd S B 3
+.nr )s 0
+.if t .if \ns .nr )s 1\"register )s=1 iff troff & small format; 0 otherwise
+.nr )t 0
+.if t .if !\ns .nr )t 1\"register )t=1 iff troff & large format; 0 otherwise
+.if \n()s \{.pl 9i
+.	     ll 4.75i
+.	     lt 4.75i
+.	     po .75i
+.	     ps 9
+.	     vs 10p\}
+.if \n()t \{.pl 11i
+.	     ll 6.5i
+.	     lt 6.5i
+.	     po .463i
+.	     ps 10
+.	     vs 12p\}
+.if n \{.pl 11i
+.	 ll 6.5i
+.	 lt 6.5i
+.	 po .463i
+'	 br \}
+.ds Dt\"
+.ds Ed\"
+.ds ET\"
+.if !\ns .ds Ed UNIX System \|System \|V
+.if !\ns .ds Dt January \|1983
+.PF ""
+.EF "'\s9\\*(Dt'- \\\\nP -'\\*(Ed\s0'"
+.OF "'\s9\\*(Ed'- \\\\nP -'\\*(Dt\s0'"
+.de )k \" Put out 3 cut marks; 2nd shows right margin
+.po 0
+.lt 7.5i
+.ps 10
+.vs 10p
+.ft 1
+.if \\n()t .tl @\l@0.25i@@@\l@0.25i@@
+.if \\n()s .tl @\l@0.25i@@@\l@0.25i@\h@1i@\l@0.25i@@
+.ft
+.vs
+.po
+.ps
+.lt
+..
+.PH ""
+.EH @\s9\\*(ET\s0@@@
+.OH @@@\s9\\*(ET\s0@
+.de TP
+.ie \\n()s 'sp 2v
+.el 'sp 3v
+.tl \\*(}t
+.if e 'tl\\*(}e
+.if o 'tl \\*(}o
+.ie \\n()s 'sp 1.5v
+.el 'sp 3v
+..
+.if \n()s .ch )f -3.5v
+.if \n()t .ch )f -6v
+.if n .ch )f -7v
+.de PP
+.if n .sp
+.if t .sp .5v
+.ne 1.1v
+..
+.hw print-out photo-type-setter
+.if t \{.ds ` ``
+.	 ds ' ''
+.	 ds d \-
+'	 br \}
+.if n \{.ds ` ""
+.	 ds ' ""
+.	 ds d " -- \"
+.	 na
+.	 rm ad \}
+.de Nm
+.HU "\\$1"
+.VL 13 5
+.if \n()s .S 9 10
+..
+.de Ds
+.LI \s-1DESCRIPTION\s+1
+.br
+..
+.de Ac
+.LI \s-1ACTION\s+1
+.br
+..
+.de Rf
+.LI \s-1REFERENCES\s+1
+.br
+..
+.ds Rl V
+.ds Eo \fR(Processor(s))\fP
+.ds Vo \fR(\s-1VAX\s+1-11 only)\fP
+.ds Po \fR(\s-1PDP\s+1-11 only)\fP
+.ds Bo \fR(3B20S only)\fP
+.ds So \fR(3B20S only - \s-1SYSBUF\s+1)\fP
+.ds Ao \fR(\s-1DEC\s+1 & 3B20S - \s-1SYSBUF\s+1)\fP
+.ds Do \fR(\s-1DEC\s+1 only)\fP
+.ds Co \fR(\s-1VAX\s+1-11/750 only)\fP
+.ds Xo \fR(\s-1VAX\s+1-11/780 only)\fP
+.ds Lo \fR(\s-1VAX\s+1-11 & 3B20S only)\fP
+.ds Mo \fR(\s-1PDP\s+1-11 & 3B20S only)\fP
+.ds Og \fI\s-1UNIX\s+1 System Operator's Guide\fP
+.ds Am  \fI\s-1UNIX\s+1 System Administrator's Manual\fP
+.ds Ag \fI\s-1UNIX\s+1 System Administrator's Guide\fP
+.ds Sb \fBSetting Up the \s-1UNIX\s+1 System\fP
+.de NM
+.if '\\$2'' \{
+.nr Hs 1 \}
+.SK
+.S +2 +2
+.HU "\\$1"
+.S -1 -1
+.B
+.if !'x\\$2'x' \{ \\$2
+.br \}
+.if !'x\\$3'x' \{ \\$3
+.br \}
+.if !'x\\$4'x' \{ \\$4
+.br \}
+.if !'x\\$5'x' \{ \\$5
+.br \}
+.if !'x\\$6'x' \\$6
+.R
+.S -1 -1
+.VL 13 5
+.if \\n()s .S 9 11
+..
+.de Ds
+.LI DESCRIPTION
+.br
+..
+.de Ac
+.LI ACTION
+.br
+..
+.de Rf
+.LI REFERENCES
+.br
+..
+.rm BL DL AL CS MT AU ND TL

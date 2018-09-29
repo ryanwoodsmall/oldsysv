@@ -1,0 +1,249 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/change_f	1.6"
+## IDOC:   SCREEN 2.39: CHANGE FORM
+#menu# Change a form
+
+##+++ (help _H111)
+#help#        You use the "change" command to change the definition  of  a
+#help#        form.  The same information you gave when you added the form
+#help#        will provide the defaults for each item  you  are  asked  to
+#help#        respecify, so you can quickly step through the definition to
+#help#        find the item you want to change.
+##--- (help _H111)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"When entering more than one answer or value,
+separate them with a space or comma.
+"
+##--- (line 3)
+
+tmpfile=${TMPDIR:-/tmp}/FRM.$$
+
+DEF_f=`cat ${TMPDIR:-/tmp}/FRM.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.39.4)
+chk_name \
+	"Name of form:${DEF_f:+ (default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of the form you  want  to
+        change.   If  you  don't know the name, enter \"q\" and select
+        the \"list\" command from the \"forms\" menu, to get a  list  of
+        known forms.  \
+"
+OPT_f=${RESP}
+##--- (2.39.4)
+
+	if [ "${OPT_f}" = "any" -o "${OPT_f}" = "all" -o "${OPT_f}" = "none" ]
+	then
+		echo "You can not use \"any\", \"all\", or \"none\". Try again."
+		continue
+	fi
+
+	   /usr/lib/lpforms -f ${OPT_f} -l >${tmpfile} \
+	&& alert=`/usr/lib/lpforms -f ${OPT_f} -A list` \
+	&& break
+done
+
+
+OPT_length=`sed -n -e '/page length: /s///p' ${tmpfile}`
+OPT_width=`sed -n -e '/page width: /s///p' ${tmpfile}`
+OPT_number_of_pages=`sed -n -e '/number of pages: /s///p' ${tmpfile}`
+OPT_lpi=`sed -n -e '/line pitch: /s///p' ${tmpfile}`
+OPT_cpi=`sed -n -e '/character pitch: /s///p' ${tmpfile}`
+OPT_character_set_choice=`sed -n -e '/character set choice: /s///p' ${tmpfile}`
+if expr "${OPT_character_set_choice}" : ".*,mandatory" >/dev/null
+then
+	OPT_mandatory=yes
+	OPT_character_set_choice=`expr "${OPT_character_set_choice}" : '\(.*\),mandatory'`
+else
+	OPT_mandatory=no
+fi
+OPT_ribbon_color=`sed -n -e '/ribbon color: /s///p' ${tmpfile}`
+if grep "comment:" ${tmpfile} >/dev/null 2>&1
+then
+	OPT_comment=`cat /usr/spool/lp/admins/lp/forms/${OPT_f}/comment`
+fi
+if grep "alignment pattern:" ${tmpfile} >/dev/null 2>&1
+then
+	OPT_alignment_pattern=same
+	OPT_type=`sed -n -e '/alignment pattern: /s///p' ${tmpfile}`
+	tmpfile_pat=${tmpfile}.
+	sed -e '1,/alignment pattern:/d' ${tmpfile} >${tmpfile_pat}
+else
+	OPT_alignment_pattern=none
+fi
+allow=/usr/spool/lp/admins/lp/forms/${OPT_f}/allow
+deny=/usr/spool/lp/admins/lp/forms/${OPT_f}/deny
+if [ -s "${allow}" ]
+then
+	OPT_allow=`tr '\012' ',' <${allow}`
+	OPT_allow=`expr "${OPT_allow}" : '\(.*\),$'`
+	OPT_deny=none
+elif [ -f "${allow}" ]
+then
+	OPT_allow=none
+	OPT_deny=all
+elif [ -s "${deny}" ]
+then
+	OPT_allow=all
+	OPT_deny=`tr '\012' ',' <${deny}`
+	OPT_deny=`expr "${OPT_deny}" : '\(.*\),$'`
+elif [ -f "${deny}" ]
+then
+	OPT_allow=all
+	OPT_deny=none
+else
+	OPT_allow=none
+	OPT_deny=all
+fi
+case "${alert}" in
+Upon*|When* )
+	OPT_Q=`expr "${alert}" : 'When \(.*\) are queued:'`
+	OPT_W=`expr "${alert}" : '.*every \(.*\) minute'`
+	if [ -z "${OPT_Q}" ]
+	then
+		OPT_Q=1
+	fi
+	if [ -z "${OPT_W}" ]
+	then
+		OPT_W=0
+	fi
+	alert=`expr "${alert}" : '.*queued: \(.*\)'`
+	case "${alert}" in
+	alert* )
+		OPT_A=`expr "${alert}" : '.*"\(.*\)".*'`
+		;;
+	write* )
+		OPT_A=`expr "${alert}" : '.*to \(.*\) *'`
+		OPT_A=`echo ${OPT_A} | cut -f1 -d" " `
+		OPT_A="write "${OPT_A}
+		;;
+	mail* )
+		OPT_A=`expr "${alert}" : '.*to \(.*\) *'`
+		OPT_A=`echo ${OPT_A} | cut -f1 -d" " `
+		OPT_A="mail "${OPT_A}
+		;;
+	esac
+	;;
+No* )
+	OPT_Q=1
+	OPT_W=0
+	OPT_A=none
+	;;
+esac
+
+OPT_install="edit"
+firsttime=yes
+rm -f ${tmpfile}
+
+while [ "edit" = "${OPT_install}" ]
+do
+
+	DEF_length=${OPT_length}
+	DEF_width=${OPT_width}
+	DEF_number_of_pages=${OPT_number_of_pages}
+	DEF_lpi=${OPT_lpi}
+	DEF_cpi=${OPT_cpi}
+	DEF_character_set_choice=${OPT_character_set_choice}
+	DEF_mandatory=${OPT_mandatory}
+	DEF_ribbon_color=${OPT_ribbon_color}
+	DEF_comment=${OPT_comment}
+	DEF_alignment_pattern=${OPT_alignment_pattern}
+	DEF_allow=${OPT_allow}
+	DEF_deny=${OPT_deny}
+	DEF_A=${OPT_A}
+	DEF_Q=${OPT_Q}
+	DEF_W=${OPT_W}
+	DEF_type=${OPT_type}
+
+	if [ "yes" != "${firsttime}" ]
+	then
+		echo "
+Edit the form definition:
+"
+	fi
+	firsttime=
+
+. ${MENUTOP}/menu/packagemgmt/lpmgmt/_S2.38
+
+	echo
+
+	if [ "${OPT_deny}" = "none" ]
+	then
+		OPT_aldeny="allow:${OPT_allow}"
+	else
+		OPT_aldeny="deny:${OPT_deny}"
+	fi
+
+	if [ "skip" = "${OPT_install}" ]
+	then
+		exit 0
+	fi
+
+	if [ "install" = "${OPT_install}" ]
+	then
+		if [ "yes" = "${OPT_mandatory}" ]
+		then
+			mand=",mandatory"
+		else
+			mand=
+		fi
+		if [ "same" = "${OPT_alignment_pattern}" ]
+		then
+			OPT_alignment_pattern=${tmpfile_pat}
+		fi
+		cat - ${OPT_alignment_pattern:-/dev/null} <<-EOF | /usr/lib/lpforms -f ${OPT_f} -u "${OPT_aldeny}" -
+page length: ${OPT_length}
+page width: ${OPT_width}
+number of pages: ${OPT_number_of_pages}
+line pitch: ${OPT_lpi}
+character pitch: ${OPT_cpi}
+character set choice: ${OPT_character_set_choice}${mand}
+ribbon color: ${OPT_ribbon_color}${OPT_comment:+
+comment:
+${OPT_comment}}${OPT_alignment_pattern:+
+alignment pattern: ${OPT_type}}
+		EOF
+
+		if [ $? -eq 0 ]
+		then
+			echo ${OPT_f} >${TMPDIR:-/tmp}/FRM.`basename \`tty\``
+			if [ -n "${OPT_A}" ]
+			then
+				/usr/lib/lpforms -f ${OPT_f} -A "${OPT_A}" -Q ${OPT_Q} -W ${OPT_W}
+			fi
+			if [ $? -eq 0 ]
+			then
+				break
+			fi
+		fi
+		OPT_install="edit"
+	fi
+
+done

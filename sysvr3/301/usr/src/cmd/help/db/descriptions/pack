@@ -1,0 +1,18 @@
+
+\Spack\S:  Description
+
+Syntax Summary:  pack [-] [-f] file_name ...
+
+         where:  file_name  is the name of a file.
+
+Description:
+     \Spack\S creates a compressed versions of files.  Use \Spack\S to recode
+     files so that they are smaller and take up less storage space. \Spack\S
+     can reduce the size of a file by between 10 and 40 percent. \Spack\S is
+     most effective when you use it on text files that are larger than three
+     blocks. \Spack\S removes the original files and renames the files by adding
+     ".z" suffix to the original file names.  \Spack\S lists the size of the
+     new files, and the names of the files that did not pack.  Use pcat(1) 
+     and unpack(1) to return the files to their original form.  The manual 
+     page for \Spack\S lists the reasons why a file might not pack.  See also:
+     pcat(1), tar(1), and unpack(1) for commands that might be used with \Spack\S.

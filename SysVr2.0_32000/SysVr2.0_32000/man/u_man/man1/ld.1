@@ -1,0 +1,320 @@
+.TH LD 1
+.SH NAME
+\*pld \- link editor for common object files
+.SH SYNOPSIS
+.nr C 0
+.nr D 0
+.nr E 0
+.nr F 0
+.nr G 0
+.nr H 0
+.if '\*p'b16' .nr C 1
+.if '\*p'x86' .nr C 1
+.if '\*p'3b' .nr C 1
+.if '\*p'b16' .nr D 1
+.if '\*p'x86' .nr D 1
+.if '\*p'3b' .nr E 1
+.if '\*p'b16' .nr F 1
+.if '\*p'x86' .nr F 1
+.if '\*p'3b' .nr F 1
+.if '\*p'm32' .nr F 1
+.if '\*p'' .nr G 1
+.if '\*p'm32' .nr H 1
+.if '\*p'' .nr H 1
+.B \*pld
+\f3[options] filename
+.SH DESCRIPTION
+The
+.I \*pld
+command
+combines several
+object files into one,
+performs relocation,
+resolves external symbols,
+and supports symbol table information
+for symbolic debugging.
+In the simplest case, the names of several object
+programs are given, and
+.I \*pld
+combines them, producing
+an object module that can either be executed or
+used as input for a subsequent
+.I \*pld
+run.
+The output of
+.I \*pld
+is left in
+.BR \*pa.out .
+By default this file is executable
+if no errors occurred during the load.
+If any input file,
+.IR filename ,
+is not an object file,
+.I \*pld
+assumes it is either an archive library or a text file containing link editor directives.
+(See the \fILink Editor User Guide\fR
+in the
+\f2\s-1UNIX\s+1 System V Support Tools Guide\fR
+for a discussion of input directives.)
+.PP
+If any argument is a library, it is searched exactly once
+at the point it is encountered in the argument list.
+Only those routines defining an unresolved external
+reference are loaded.
+The library (archive) symbol table [see
+.IR ar (4)]
+is searched sequentially with as many passes as are necessary to resolve external
+references which can be satisfied by library members.  Thus, the ordering
+of library members is unimportant.
+.PP
+The following options are recognized by
+.IR \*pld .
+.TP
+.BR \-e " epsym"
+Set the default entry point address for the output file to be that of
+the symbol
+.IR epsym .
+.if \nF \{\
+This option forces the
+.B \-X
+option to be set. \}
+.TP
+.BR \-f " fill"
+Set the default fill pattern for ``holes'' within
+an output section as well as initialized \f2bss\fR sections.
+The argument \fIfill\fP is a two-byte constant.
+.if '\*p'b16' \{\
+.TP
+.B \-i
+This option specifies that separate ``I'' and ``D'' space are to be
+generated.
+.B \-i
+has no effect if
+.B \-tv
+is given.
+This allows 64K of instructions and 64K of data.
+'br \}
+.if '\*p'x86' \{\
+.TP
+.B \-i
+This option specifies that separate ``I'' and ``D'' space is to be
+generated.
+The option
+.B \-i
+has no effect if
+.B \-tv
+is given.
+This allows up to 1 MB of text and 1 MB of data.
+'br \}
+.ie \nD \{\
+.TP
+.BR \-l "x"
+Search a library
+.BI lib x .a,
+where \fIx\fR is up to nine characters.
+A library is searched when its name is encountered,
+so the placement of a \fB\-l\fR
+is significant.
+By default, libraries are located in
+.ie '\*p''
+.BR /lib.
+.el LIBDIR.
+'br \}
+.el \{\
+.TP
+.BI \-l x
+Search a library
+.BI lib x .a,
+where \fIx\fR is up to seven characters.
+A library is searched when its name is encountered,
+so the placement of a \fB\-l\fR
+is significant.
+By default, libraries are located in
+.ie '\*p'' \fB/lib\fR and \fB/usr/lib\fR/.
+.el LIBDIR.
+'br \}
+.TP
+.B \-m
+Produce a map or listing of the input/output sections
+on the standard output.
+.TP
+.BR \-o " outfile"
+Produce an output object file by the name 
+.IR outfile .
+The name of the default object file is
+.BR \*pa.out .
+.TP
+.B \-r
+Retain relocation entries in
+the output object file.
+Relocation entries must be saved if the 
+output file is to become an input file in a
+subsequent
+.I \*pld
+run.
+The link editor will not complain about
+unresolved references, and the output file will not be executed.
+.TP
+.B \-s
+Strip line number entries and
+symbol table information
+from the output object file.
+.if \nG \{\
+.TP
+.B \-t
+Turn off the warning about multiply-defined symbols that are
+not the same size.
+'br \}
+.if \nC \{\
+.TP
+.B \-tv
+Transfer vector object files are expected.
+When libraries are searched with this option,
+component object modules with the wrong magic
+number are ignored (as are transfer vector modules
+when
+.B \-tv
+is not given).
+The default is
+.I no
+transfer vectors.
+'br \}
+.TP
+.BR \-u " symname"
+Enter \fIsymname\fP as an undefined symbol
+in the symbol table.
+This is useful
+for loading entirely from a library, since initially the symbol
+table is empty and an unresolved reference is needed
+to force the loading of the first routine.
+.if \nG \{\
+.bp
+.TP
+.B \-x
+Do not preserve local (non-.globl) symbols in the output symbol
+table; enter external and static symbols only.  This option saves
+some space in the output file.
+'br \}
+.if \nH \{\
+'br \}
+.TP
+.B \-z
+Do not bind anything to address zero. This option will allow
+runtime detection of null pointers.
+.TP
+.BR \-L " dir"
+Change the algorithm of searching for
+.BI lib x .a
+to look in
+.IR dir
+before looking in 
+.ie '\*p'' \fB/lib\fR
+.el LIBDIR
+and
+.ie '\*p'' \fB/usr/lib\fR.
+.el LLIBDIR.
+This option is effective only if it precedes the
+.B \-l
+option on the command line.
+.if \nG \{\
+.TP
+.B \-M
+Output a message for each multiply-defined external definition.
+However, if the objects being loaded include debugging information,
+extraneous output is produced [see the \f3\-g\fR option
+in \f2cc\fR(1)].
+'br \}
+.TP
+.B \-N
+Put the data section immediately following the text in the output file.
+.TP
+.B \-V
+Output a message giving information about the version of \*pld
+being used.
+.TP
+.BR \-VS " num"
+Use
+.BR num
+as a decimal version stamp
+identifying the
+.BR \*pa.out
+file that is produced.  The version
+stamp is stored in the optional header.
+.if \nF \{\
+.TP
+.B \-X
+Generate a standard UNIX system file header within the ``optional header''
+field in the output file.
+'br \}
+.DT
+.br
+.DT
+.SH FILES
+.PD 0
+.TP 25
+.ie '\*p'' /lib/lib\fIx\fR.a
+.el LIBDIR/lib\fIx\fR.a
+libraries
+.TP 25
+/usr/lib/lib\fIx\fR.a
+libraries
+.TP 25
+\*pa.out
+output file
+.PD
+.SH "SEE ALSO"
+as(1), cc(1).
+.br
+exit(2), end(3C), a.out(4), ar(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.br
+.sp
+\f2\s-1UNIX\s+1 System V Programmer Guide\fR.
+.br
+.sp
+\f2Link Editor User Guide\fR in the \f2\s-1UNIX\s+1 System V Support Tools Guide\fR.
+.SH CAVEATS
+Through its options and input directives, the common link editor gives
+users great flexibility;
+however, those who use the input directives must assume
+some added responsibilities.
+Input directives and options should insure the following properties
+for programs:
+.if '\*p'b16' \{\
+.IP \- 5
+C programs must have data
+.RB ( .data "), bss (" .bss ),
+and stack space in one 64K byte region.
+Stack space
+.I must
+be provided.
+'br \}
+.IP \- 5
+C defines a zero pointer as null.
+A pointer to which zero has been assigned must
+not point to any object.
+To satisfy this, users must not place any object
+at virtual address zero in the data space.
+.tr ~
+.IP \- 5
+When the link editor is called through
+.IR cc (1),
+a startup routine is linked with the user's program. This
+routine calls exit(~) [see
+.IR exit (2)]
+after execution of the main program. If the user
+calls the link editor directly, then the user must insure that
+the program always calls exit(~) rather than falling through the
+end of the entry routine.
+.PP
+The symbols \f2etext\fR, \f2edata\fR, and \f2end\fR
+[see \f2end\fR(3C)] are reserved and are defined by the link editor.
+It is erroneous for a user program to redefine them.
+.PP
+If the link editor does not recognize an input file as an object file,
+it will assume that it contains link editor directives and will attempt
+to parse it.
+This will occasionally produce an error message complaining about
+"syntax errors".
+'\" \%W\%
+.\"	@(#)ld.1	6.2 of 9/2/83

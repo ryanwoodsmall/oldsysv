@@ -1,0 +1,84 @@
+#ident	"@(#)sadmin:admin/menu/softwaremgmt/runpkg	2.5"
+#menu# run software package without installing it
+#help# 
+#help#	This package allows you to run software from a removable medium without
+#help#	installing it permanently on the system.  This is useful if you
+#help#	don't use the software often or do not have enough room on the system.
+#help#	WARNING:  Not all software packages have the ability to run their
+#help#	contents this way.  See the instructions which came with the medium.
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+dir=${0}.d
+if [ -d ${dir} ]
+then
+	patterns=`ls ${dir} 2>/dev/null`
+else
+	patterns=
+fi
+
+ddrive=`selectdevice -b $$ /dev/SA ${patterns}`
+ndrive=`drivename ${ddrive}`
+
+if [ -n "${patterns}" ]
+then
+	. ${dir}/`selpattern ${ddrive}`
+fi
+
+question="
+Insert the removable medium for the package you wish to run
+into the ${ndrive}.
+Press <RETURN> when ready.  Type  q  to quit."
+
+while true
+do
+	fulllabel=`disklabel -q "${question}" $$ ${ddrive}`
+	fsname=
+	eval `labelfsname "${fulllabel}"`
+	case "${fsname}" in
+	instal | install )
+		trap '	trap "" 1 2
+			cd /;  diskumount -n "${ndrive}" ${ddrive}' 0
+
+		/etc/umount ${ddrive} 2>/dev/null
+		chmod 700 /install
+		/etc/mount ${ddrive} /install -r  ||  exit 1
+		break
+		;;
+	'' )
+		echo >&2 '
+	This medium is NOT labeled and will not work.
+	Try another.'
+		;;
+	* )
+		echo >&2 "
+	This medium is labeled '${label}' and is not a package.
+	The file system name is '${fsname}'.  It should be 'install'.
+	The full label is:
+${fulllabel}
+	Try another."
+	esac
+done
+
+if [ ! -r /install/install/RUN ]
+then
+	echo >&2 '	This package does not support the "runpkg" feature.
+	This software cannot be run without installing it.
+	Consult the instructions that came with the medium.'
+	exit 0
+fi
+
+trap "	trap '' 1 2
+	rm -f /tmp/$$RUN;  cd /;  diskumount -n '${ndrive}' ${ddrive}" 0
+
+echo '
+WARNING:  Do not remove the medium until you leave the run procedure and
+are instructed that you may remove it!!!
+'
+
+cd /tmp
+cp /install/install/RUN $$RUN
+chmod +x $$RUN
+trap : 1 2
+/tmp/$$RUN ${ddrive} /install "${ndrive}"

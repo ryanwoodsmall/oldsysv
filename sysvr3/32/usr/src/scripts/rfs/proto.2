@@ -1,0 +1,73 @@
+/dev/null
+1420 310
+d--755 0 3
+    install d--755 0 0 
+    INSTALL		---555 2 2	./install/rfs/INSTALL   
+    ORDER		---555 2 2 	./install/rfs/ORDER2
+    UNINSTALL		---555 2 2	./install/rfs/UNINSTALL 
+    Rlist		---555 2 2	./install/rfs/Rlist.rfs
+    setup		---555 2 2	./install/rfs/setup
+    unsetup             ---555 2 2      ./install/rfs/unsetup
+$ 
+new d--755 0 0 
+    usr d--755 0 0 
+        options d--755 0 0 
+            rfs.name		---644 0 3 	./install/rfs/rfs.name 
+        $ 
+	lbin d--755 2 2
+            rfsrunning    ---755    0 3    ../usr/lbin/rfsrunning
+	$
+        admin    d--755    0 3
+            menu    d--755    0 3
+                packagemgmt    d--755    0 3
+                    rfsmgmt    d--755    0 3
+            		DESC    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/DESC
+                    	resrcmgmt    d--755    0 3
+            		     DESC    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/DESC
+            		     advmgmt    d--755    0 3
+            		          DESC    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/DESC
+            		          advauto    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/advauto
+            		          advnow    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/advnow
+            		          lsadv    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/lsadv
+            		          lsinuse    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/lsinuse
+            		          unadvauto    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/unadvauto
+            		          unadvnow    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/advmgmt/unadvnow
+			     $
+            		     mountmgmt    d--755    0 3
+            		          DESC    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/DESC
+            		          mntauto    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/mntauto
+            		          mntnow    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/mntnow
+            		          lsavail    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/lsavail
+            		          lsmount    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/lsmount
+            		          unmntauto    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/unmntauto
+            		          unmntnow    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/resrcmgmt/mountmgmt/unmntnow
+			     $
+			$
+            		startstop    d--755    0 3
+            		     DESC    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/startstop/DESC
+            		     isrfson    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/startstop/isrfson
+            		     setauto    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/startstop/setauto
+            		     startrfs    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/startstop/startrfs
+            		     stoprfs    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/startstop/stoprfs
+			$
+            		setuprfs    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/setuprfs
+            		confgmgmt    d--755    0 3
+            		     DESC    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/DESC
+            		     addmember    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/addmember
+            		     delmember    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/delmember
+            		     idmapping    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/idmapping
+            		     lsmember    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/lsmember
+            		     showconfg    ---644    0 3    ../usr/admin/menu/packagemgmt/rfsmgmt/confgmgmt/showconfg
+			$
+		    $
+		$
+            $
+        $
+        nserve  d--775 0 3
+            rumount         ---555 0 3      ../usr/nserve/rumount
+            rmount          ---555 0 3      ../usr/nserve/rmount
+            rmnttry         ---550 0 3      ../usr/nserve/rmnttry
+        $
+    $
+$
+$ 

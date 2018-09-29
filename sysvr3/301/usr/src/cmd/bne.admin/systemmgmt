@@ -1,0 +1,67 @@
+#ident	"@(#)bne.admin:systemmgmt	2.2"
+#menu# manage remote systems entries (list, add, delete, call)
+#help#
+#help#	This subcommand allows you to list, add, or delete
+#help#	remote systems information.
+#help#  In addition, you can try a call to one of the systems
+#help#  known to the Basic Networking Utilities.
+
+PACKAGE="Basic Networking Utilities"
+DEVICES=/usr/lib/uucp/Devices
+INITTAB=/etc/inittab
+PATH=:/bin:/usr/bin:/usr/lbin
+POLL=/usr/lib/uucp/Poll
+SYSTEMS=/usr/lib/uucp/Systems
+XDIR=$MENUTOP/menu/packagemgmt/uucpmgmt
+cd $XDIR
+
+
+cmdlist='
+	1 list
+	2 add
+	3 delete
+	4 call
+'
+flags="-qq -k$$"
+trap exit 1 2 15
+
+echo "
+This procedure is used to list, add, and delete entries in the
+$PACKAGE '$SYSTEMS' file.
+This file contains information about what remote systems
+can be called by cu and uucp commands.
+You can also try to call a remote system that appears
+in the '$SYSTEMS' file.
+
+Type 'q' at any time to quit the current operation.
+If a '?' appears as a choice, type '?' for help.
+
+If a default appears in the question, type <RETURN> for the default.
+"
+
+while true
+do
+	CMD=`chkyn ${flags} -fec -Dlist "
+Enter the operation you want to perform:
+${cmdlist}
+(default list)[q]:  " ${cmdlist}`
+
+	case "$CMD" in
+	list|1)
+		/bin/sh lssystem
+		;;
+	add|2)
+		/bin/sh addsystem
+		;;
+	delete|3)
+		/bin/sh delsystem
+		;;
+	call|4)
+		/bin/sh trysystem
+		;;
+	*)
+		break;
+		;;
+	esac
+
+done

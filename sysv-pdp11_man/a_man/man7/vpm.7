@@ -1,0 +1,519 @@
+.TH VPM 7
+.SH NAME
+vpm \- Virtual Protocol Machine
+.SH DESCRIPTION
+This entry describes the \s-1VPM\s+1 protocol driver
+and gives an introduction to the Virtual Protocol Machine (\s-1VPM\s+1).
+.PP
+.SM VPM
+is a software package for implementing
+link-level protocols on
+Programmable Communication Devices (\s-1PCD\s+1s)
+in a high-level language.
+This is accomplished by a compiler that
+runs on the
+.SM UNIX
+System and
+translates a high-level language description of a
+protocol into an intermediate language that is executed by the \s-1PCD\s+1.
+.PP
+The
+.SM VPM
+software consists of the following components:
+.PP
+.PD 0
+.RS 2
+.TP 5
+1.
+A compiler
+.RI ( vpmc (1M))
+for the protocol description language;
+it runs on the
+.SM UNIX
+System.
+.TP
+2.
+A program
+that controls the
+overall operation of the
+\s-1PCD\s+1
+and executes the
+protocol script.
+.TP
+3.
+A protocol driver.
+.TP
+4.
+.IR vpmstart :
+a
+.SM UNIX
+System command that copies a load module into the
+\s-1PCD\s+1
+and starts it.
+.TP
+5.
+.IR vpmset (1M):
+a
+.SM UNIX
+System command that logically connects
+.SM VPM
+minor devices with
+\s-1PCD\s+1 
+synchronous lines.
+.TP
+6.
+.IR vpmsave (1M):
+a
+.SM UNIX
+System command that writes unformatted trace data to its standard output.
+.TP
+7.
+.IR vpmfmt :
+a
+.SM UNIX
+System command that formats the output of
+.IR vpmsave (1M).
+.PD
+.RE
+.SS Operation of the VPM Protocol Driver
+.PP
+The
+.SM VPM
+protocol driver provides a simple user
+interface to a synchronous line controlled by a link-level
+protocol executing in a
+.SM PCD.
+It supports the following
+.SM UNIX
+system calls:
+.IR open ,
+.IR read ,
+.IR write ,
+.IR close ,
+and
+.IR ioctl.
+If higher levels of protocol are required,
+the
+.SM VPM
+protocol driver may be modified or replaced.
+.PP
+The \s-1VPM\s+1 protocol driver communicates with the level 2 protocol executing
+in the \s-1PCD\s+1 using the Common Synchronous Interface (\s-1CSI\s+1).
+.SM CSI
+is a device-independent interface between a level 3 protocol
+executing as part of the \s-1UNIX\s+1 operating system and a level 2
+protocol executing in a \s-1PCD\s+1.
+The interface consists of procedure
+calls implementing a number of commands and reports.
+.PP
+Before a \s-1VPM\s+1 protocol driver minor device can be used,
+it must be logically connected to a
+synchronous line of some \s-1PCD\s+1.
+This connection can be made by means of
+.I ioctl
+commands (see below).
+The command
+.IR vpmset (1M)
+uses these
+.I ioctl
+commands
+to make these connections.
+.PP
+This driver allows a
+.SM UNIX
+System user processes to transfer data to or from a
+remote terminal or computer system through
+.SM VPM.
+Flow control and error recovery are provided by the
+level 2 protocol executed by the \s-1PCD\s+1.
+.PP
+.PP
+The
+.SM VPM
+protocol driver
+.I open\^
+for reading-and-writing is exclusive;
+opens
+for reading-only or writing-only are not exclusive.
+The
+.I open\^
+sends a
+command to the \s-1PCD\s+1 which causes it to start
+executing the protocol.
+The protocol driver then supplies one or more 512-byte receive buffers to the \s-1PCD\s+1.
+.PP
+The
+.I read\^
+returns either the number of bytes requested or the number
+remaining in the current receive buffer, whichever is less;
+any remaining bytes in the current receive buffer are used to satisfy
+subsequent reads.
+The data from each user
+.I write
+is copied into one or more
+512-byte buffers and passed to
+the
+\s-1PCD\s+1
+for transmission.
+.PP
+The
+.I close\^
+arranges for the return of buffers and for a general cleanup
+when the last transmit buffer has been returned by the interpreter.
+It also stops the execution of the protocol.
+.PP
+The
+.SM VPM
+protocol driver 
+.I ioctl\^
+system call has the form:
+.IP
+ioctl \|(fildes, \|cmd, \|arg)
+.PP
+Possible values for the
+.I cmd
+argument are:
+.PP
+.HP 7
+\s-1VPMCMD\s+1\^\-Send a command to the protocol script.
+The first four bytes of the array pointed to by
+.I arg
+are passed to the
+\s-1PCD\s+1, which saves them and passes them to
+the protocol script when it requests them via a
+.I getcmd
+primitive.
+Only the most recent command is kept by the
+\s-1PCD\s+1.
+.HP 7
+\s-1VPMERRSET\s+1\^\-Set the maximum values for the error counters to the values
+in the array pointed to by
+.IR arg.
+The array is assumed to contain eight (short) values.
+When a
+.SM VPMERRS
+.I ioctl
+is executed the \s-1VPM\s+1 protocol driver returns the current values of the error counters
+and sets them to the values defined by the \s-1VPMERRSET\s+1 command.
+The error
+counters are then decremented when errors occur until they reach zero.
+If \s-1VPMERRSET\s+1 is not done all reset values will default to zero.
+If a reset value is zero the corresponding error counter will be ignored.
+.HP 7
+\s-1VPMERRS\s+1\^\-Get and then reset the error counters.
+The error counters are
+copied to the array pointed to by
+.IR arg ,
+which must be large enough to contain eight (short) counters.
+The error counters are then set to the values specified by a previous
+.SM VPMERRSET,
+if any, zero otherwise.
+.HP 7
+\s-1VPMRPT\s+1\^\-Get the latest script report.
+When the protocol script executes a
+.I rtnrpt
+primitive, a four-byte report is passed from the protocol script
+to the
+.SM VPM
+protocol driver which saves it for later use.
+Only the most recent script report is kept by the driver.
+If there is a script report that has not previously
+been passed to a user via this
+.I ioctl
+command, that report is copied to the
+array pointed to by
+.I arg
+and a 1
+is passed as the return value.
+If no script report is available, a zero
+is passed as the return value.
+.HP 7
+\s-1VPMSDEV\s+1\^\-Connect a protocol driver minor device to
+a synchronous line of a
+\s-1PCD\s+1.
+.I Arg
+is an \fIint\fR containing the major and minor device numbers of the \s-1PCD\s+1.
+When using a
+.SM DEC
+\s-1PCD\s+1 the synchronous line number is encoded in bits 5-7 of
+the major/minor device number.
+To invoke this
+.I ioctl
+command, the file status flag
+.SM O_NDELAY 
+must be set.
+.HP 7
+\s-1VPMDETACH\s+1\^\-Disconnect the protocol driver minor device and
+the \s-1PCD\s+1 synchronous line.
+To invoke this
+.I ioctl
+command, the file status flag
+.SM O_NDELAY 
+must be set.
+.HP 7
+\s-1VPMOPTS\s+1\^\-Set the protocol options.
+The  previous options are cleared and the options represented
+by
+.I arg
+are set.
+The protocol options may be retrieved by the protocol script using the
+.I getopt
+primitive (see
+.IR vpmc (1M)).
+When running
+.I cslapb.r
+as the level 2 protocol script, an octal 01 in
+.I arg
+will indicate to the script that it should use the
+.SM B
+address (see
+.IR vpmset (1M)).
+To invoke this
+.I ioctl
+command, the file status flag
+.SM O_NDELAY 
+must be set.
+.HP 7
+\s-1VPMPCDOPTS\s+1\^\-Set the \s-1PCD\s+1 options.
+If the \s-1PCD\s+1 requires
+options, the previous options are cleared and the option represented by
+.I arg
+are set.
+To invoke this
+.I ioctl
+command, the file status flag
+.SM O_NDELAY 
+must be set.
+The following constants, which may be combined with the OR operator to form \fIarg\fR, apply only to the \s-1HDLC\s+1 versions of the 
+.SM VPM
+interpreter as implemented on the \s-1DEC\s+1 \s-1KMC\s+1 and \s-1KMS\s+1:
+.sp
+\s-1HWLOOP\s+1\^\-This option causes the interpreter to set maintenance
+loopback mode on the synchronous line interface associated with
+a particular line.
+This option is used by
+.IR vpmtest (1M).
+.sp
+\s-1ADRSWTCH\s+1\^\-This option causes the interpreter to invert (complement)
+the address bit (bit 2 of byte 0) of each transmitted frame. 
+This allows the
+.SM BX.25
+level 2 protocol script \fIcslapb.r\fR to operate in a loopback mode.
+This option is used by
+.IR vpmtest (1M).
+.sp
+\s-1X25MODE\s+1\^\-If this option is set, the interpreter places the first
+three bytes of the data portion of each received frame into the octet
+portion of the buffer descriptor instead of into the data buffer.
+Similarly, the first three bytes of the  data portion of each transmitted
+frame are taken from the octet portion of the buffer descriptor.
+This mode is used by the \s-1PDP11\s+1 version of the \s-1BX.25\s+1
+level 3 driver.
+.HP 7
+\s-1VPMSTAT\s+1\^\-This puts into the integer variable pointed to by
+.I arg
+the \s-1CSI\s+1 index associated with the protocol minor device.
+.PP
+.SS The VPM Event Trace
+.PP
+The
+.SM VPM
+protocol driver and \s-1CSI\s+1 routines generate a number of event records
+to allow the
+activity of the protocol
+driver, the interface routines and the protocol script
+to be monitored for debugging purposes.
+If a program such as
+.IR vpmsave (1M)
+has opened minor device 0 of the trace driver and has
+enabled the appropriate channels on that device, these event records
+are queued for reading; otherwise the event records are
+discarded by the trace driver.
+Event records associated with \s-1CSI\s+1 interface index
+.I n
+.I modulo
+16 are put on the read queue for
+minor device 0 of the trace driver with
+a channel number of
+.IR n .
+Calls to the system functions
+.IR vpmopen ,
+.IR vpmread ,
+.IR vpmwrite ,
+and
+.I vpmclose\^
+generate event records identified respectively by
+.IR open ,
+.IR read ,
+.IR write ,
+and
+.IR close
+when the output of
+.I vpmsave
+is formatted and printed by
+.IR vpmfmt .
+Calls to the
+.IR vpmc (1M)
+primitive
+.IR trace ( arg1 ", " arg2 )
+cause the
+\s-1PCD\s+1 to pass
+.I arg1\^
+and
+.I arg2\^
+along with the current value of the script
+location counter to the
+.SM VPM
+driver,
+which generates an event record identified
+by
+.BR trace .
+.PP
+When the script terminates for any reason,
+the driver is notified and generates
+an event record identified by
+.BR \s-1INT\s+1term .
+This record also contains the \s-1CSI\s+1 minor device number,
+the script location counter, and a termination code;
+the code indicates the reason for termination
+as follows:
+.PP
+.PD 0
+.RS 2
+.TP 5
+\00
+Normal termination; the \s-1PCD\s+1 received a
+.SM HALT
+command from the driver.
+.TP
+\01
+Undefined virtual-machine operation code.
+.TP
+\02
+Script program counter out of bounds.
+.TP
+\03
+Interpreter stack overflow or underflow.
+.TP
+\04
+Jump address not even.
+.TP
+\05
+.SM UNIBUS
+error.
+.TP
+\06
+Transmit buffer has an odd address;
+or the driver tried to give the \s-1PCD\s+1 too many transmit buffers;
+or a
+.I get\^
+or
+.I rtnxbuf\^
+was executed while no transmit buffer was open,
+i.e.,
+no
+.I getxbuf\^
+was executed prior to the
+.I get\^
+or
+.IR rtnxbuf .
+.TP
+\07
+Receive buffer has an odd address;
+or the driver tried to give the \s-1PCD\s+1 too many receive buffers;
+or a
+.I put\^
+or
+.I rtnrbuf\^
+was executed while no receive buffer was open,
+i.e.,
+no
+.I getrbuf\^
+was executed prior to the
+.I get\^
+or
+.IR rtnxbuf .
+.TP
+\08
+The script executed an
+.IR exit
+primitive.
+.TP
+\09
+A
+.I crc16\^
+was executed without a preceding
+.I crcloc\^
+execution.
+.TP
+10
+The \s-1PCD\s+1 detected loss of the modem-ready signal at the modem interface.
+.TP
+11
+Transmit-buffer sequence-number error (internal error).
+.TP
+12
+Command error: an invalid command or an improper
+sequence of commands was received from the driver.
+.TP
+13
+Not used.
+.TP
+14
+Invalid transmit state (internal error).
+.TP
+15
+Invalid receive state (internal error).
+.TP
+16
+Not used.
+.TP
+17
+.I Xmtctl\^
+or
+.I setctl\^
+attempted while transmitter was still busy.
+.TP
+18
+Not used.
+.TP
+19
+Same as error code 6.
+.TP
+20
+Same as error code 7.
+.TP
+21
+Script too large.
+.TP
+22
+Used for debugging the \s-1PCD\s+1.
+.TP
+23
+The driver's
+.SM OK\*S-check
+has timed out.
+.TP
+24
+The array specified as an argument to a
+.I getcmd
+primative is too close to end of user's data space in the \s-1PCD\s+1.
+.TP
+25
+\s-1PCD\s+1 driver unable to accept command.
+.TP
+26
+The \s-1PCD\s+1's
+\s-1OK\s+1-check has timed out.
+.TP
+27
+No such line number on \s-1PCD\s+1.
+.RE
+.PD
+.SH SEE ALSO
+vpmc(1M),
+vpmsave(1M),
+vpmset(1M),
+trace(7),
+x25(7).
+.\"	@(#)vpm.7	5.2 of 5/18/82

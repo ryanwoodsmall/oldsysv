@@ -1,0 +1,24 @@
+menu="Help Facility: Preferences"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=current
+begcol=current
+
+name="Preferences Overview"
+action=OPEN TEXT OBJECTS/Text.help T.h531.pref 'Preferences Overview'
+
+name="change password"
+action=OPEN TEXT OBJECTS/Text.help T.h532.pass 'change password'
+
+name="folder options"
+action=OPEN TEXT OBJECTS/Text.help T.h534.dir 'folder options'
+
+name="office preferences"
+action=OPEN TEXT OBJECTS/Text.help T.h537.off 'office preferences'
+
+name="permissions"
+action=OPEN TEXT OBJECTS/Text.help T.h535.perm 'permissions'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

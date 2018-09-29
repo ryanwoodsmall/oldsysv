@@ -1,0 +1,22 @@
+
+\Sxargs\S:  Description
+
+Syntax Summary:
+      xargs [-ptx] [-estring] [-ireplace] [-llines] [-nnumber] [-ssize]
+            [command]
+
+         where:  lines, numbers and size  are integers.
+
+                 replace and string  are sequences of characters separated
+                                     by white space and/or double quotes.
+                 command  is a UNIX system command, a shell program, or an
+                          executable file and any arguments they might take.
+
+Description:
+     \Sxargs\S stands for "execute using arguments."  Use \Sxargs\S to
+     execute <command> one or more times using arguments from the command line
+     and arguments from standard input.  Use the options for \Sxargs\S to
+     determine how many arguments \Sxargs\S takes from standard input for each
+     execution of <command>.  If you omit <command>, \Sxargs\S executes the
+     echo(1) command.  Check the options and examples, and see the manual page
+     for more information on \Sxargs\S.

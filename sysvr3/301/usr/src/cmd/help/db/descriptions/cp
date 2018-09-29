@@ -1,0 +1,21 @@
+
+\Scp\S:  Description
+
+Syntax Summary:  cp original_file destination_file
+                 cp original_file ... destination_dir
+
+         where:  original_file and destination_file  are names of files.
+
+                 destination_dir  is the name of a directory.
+
+Description:
+     \Scp\S is shorthand for "copy." Use \Scp\S to copy one file to another
+     file without removing the contents of the first file.  You can copy
+     <original_file> to a file in your current working directory, or you can
+     copy it to a new directory.  \Scp\S will create a file by the same name
+     in <destination_dir> if one does not already exist.  If a file by the same
+     name does exist, <original_file> will overwrite the contents.
+     <destination_dir> must be an existing directory, and you must have
+     permission to write into the <destination_dir> and <destination_file>
+     before you can use \Scp\S.  See also:  mv(1), and ln(1) for commands with
+     functions similar to \Scp\S.

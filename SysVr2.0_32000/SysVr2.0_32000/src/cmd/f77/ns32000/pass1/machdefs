@@ -1,0 +1,62 @@
+/*	@(#)machdefs	1.4	*/
+#ifndef TARGET
+TARGET NOT DEFINED !!!
+#endif
+#if TARGET!=NSC
+Target= TARGET OUT OF RANGE!!
+#endif
+
+#ifndef FAMILY
+FAMILY NOT DEFINED!!!
+#endif
+#if FAMILY!=PCC && FAMILY!=DMR
+Family = FAMILY OUT OF RANGE
+#endif
+
+#define SDB 1
+#define TYLENG	TYLONG
+
+#define TYINT	TYLONG
+#define SZADDR	4
+#define SZSHORT	2
+#define SZINT	4
+
+#define SZLONG	4
+#define SZLENG	SZLONG
+
+#define ALIADDR SZADDR
+#define ALISHORT SZSHORT
+#define ALILONG 4
+#define ALIDOUBLE 4
+#define ALIINT	ALILONG
+#define ALILENG	ALILONG
+
+#define BACKAUTO		/* stack grows toward low memory */
+
+#define AUTOREG 9
+#define ARGREG 8
+#define CARGREG 8
+#define ARGOFFSET 8
+#define SAVESPACE 40
+
+
+#define FUDGEOFFSET 1
+#define BITSPERCHAR 8
+#define XL 8
+
+#define USETEXT	"\t.text"
+#define USECONST	"\t.data"
+#define USEBSS	"\t.data"
+#define USEINIT	"\t.data"
+
+#define BLANKCOMMON "_BLNK_"
+
+#define LABELFMT "%s:\n"
+
+#define MAXREGVAR 4
+#define TYIREG TYLONG
+#define MSKIREG  (M(TYSHORT)|M(TYLONG))
+
+#define NPERLINE 16
+#define NO2PERLINE 8
+#define NO4PERLINE 4

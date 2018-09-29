@@ -1,0 +1,24 @@
+#ident	"@(#)pkg.rfs:rfs/unsetup	1.7"
+#
+# Issue a warning message if RFS is running.
+#
+rfadmin >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "WARNING: RFS is still running."
+fi
+#
+# Deinstall RFS "drivers"
+#
+DRVPATH=/etc/master.d
+/etc/drvinstall -u -f -m $DRVPATH/dufst -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/du -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/sp -v 1.0
+
+rm /etc/rc0.d/K50fumounts
+rm /etc/rc0.d/K60rumounts
+rm /etc/rc0.d/K65rfs
+rm /etc/rc2.d/K30fumounts
+rm /etc/rc2.d/K40rumounts
+rm /etc/rc2.d/K50rfs
+rm /etc/rc3.d/S21rfs

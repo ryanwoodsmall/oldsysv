@@ -1,0 +1,33 @@
+   The  SEND MAIL  form allows you to  write and send mail messages to
+   other users.  The following  list defines  the  fields  included in
+   this form:
+
+      - TO - This  field allows you  to enter in the  name(s) of valid
+        recipients of the mail message.
+
+
+      Function Keys active  for  this  form (in  addition to PREV-FRM,
+      NEXT-FRM, HELP, and CMD-MENU) are:
+
+           - CANCEL -- Cancels  the form  without saving the new field
+             values  entered  in  the  form,  closes  the  frame,  and
+             returns you to the point in the interface that  you  were
+             at prior to accessing the form.
+
+           - CHOICES  --  For  the  field  where  the  cursor  resides
+             pressing  CHOICES  either  toggles  between  the possible
+             values for the  field,  or  displays  a  pop-up  menu  of
+             available  choices.  For fields requiring you to set your
+             own values, a definition of the  field  requirement  will
+             appear on the message line.
+
+           - SAVE -- Saves all the field values entered in  the  form,
+             closes  the  frame,  and  returns you to the point in the
+             interface that you were at  prior to  accessing the form.
+	     Saving  this form causes  the message  to be  sent to the
+	     recipients  entered in  the TO field. In case the message
+	     cannot be  sent, you  will be told  in full screen ,
+	     and the mail message will be sent back to you.
+
+           - RESET - resets the field back to the value(s)  in  effect
+             at the beginning of the current editing session.

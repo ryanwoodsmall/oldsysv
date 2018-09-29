@@ -1,0 +1,9 @@
+#ident	"@(#)sadmin:admin/menu/syssetup/setup	1.2"
+#menu# set up your machine the very first time
+#help# 
+#help#     Setup allows the user to define  the  first  login,  to  set  the
+#help#     passwords  on the other user-definable administration logins, and
+#help#     to set the timezone for your location.
+
+cd ${MENUTOP:?}
+exec ./setup

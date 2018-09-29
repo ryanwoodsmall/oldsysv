@@ -1,0 +1,130 @@
+.TH VARARGS 5
+.SH NAME
+varargs \- handle variable argument list
+.SH SYNOPSIS
+.B #include <varargs.h>
+.P
+.B va_alist
+.P
+.B va_dcl
+.P
+.B void va_start(pvar)
+.br
+.B va_list pvar;
+.P
+.B \fItype\fB va_arg(pvar, \fItype\fB)
+.br
+.B va_list pvar;
+.P
+.B void va_end(pvar)
+.br
+.B va_list pvar;
+.SH DESCRIPTION
+This set of macros allows portable procedures that accept variable
+argument lists to be written.
+Routines that have variable argument lists (such as
+.IR printf (3S))
+but do not use 
+.I varargs\^
+are inherently nonportable, as different
+machines use different argument-passing conventions.
+.PP
+.B va_alist
+is used as the parameter list in a function header.
+.PP
+.B va_dcl
+is a declaration for 
+.IR va_alist .
+No semicolon should follow
+.IR va_dcl .
+.PP
+.B va_list
+is a type defined for the variable
+used to traverse the list.
+.PP
+.B va_start
+is called to initialize
+.I pvar
+to the beginning of the list.
+.PP
+.B va_arg
+will return the next argument in the list
+pointed to by
+.IR pvar .
+.I Type
+is the type the argument is expected to be.
+Different types can be mixed, but it is up
+to the routine to know what type of argument is
+expected, as it cannot be determined at runtime.
+.PP
+.B va_end
+is used to clean up.
+.PP
+Multiple traversals, each bracketed by
+.I va_start
+\&...
+.I va_end,
+are possible.
+.SH EXAMPLE
+This example is a possible implementation of 
+.IR execl (2).
+.P
+.nf
+	#include <varargs.h>
+	#define MAXARGS	100
+
+	/\(**	execl is called by
+			execl(file, arg1, arg2, ..., (char \(**)0);
+	\(**/
+	execl(va_alist)
+	va_dcl
+	{
+		va_list ap;
+		char \(**file;
+		char \(**args[MAXARGS];
+		int argno = 0;
+
+		va_start(ap);
+		file = va_arg(ap, char \(**);
+		while ((args[argno++] = va_arg(ap, char \(**)) != (char \(**)0)
+			;
+		va_end(ap);
+		return execv(file, args);
+	}
+.fi
+.SH SEE ALSO
+exec(2), printf(3S).
+.SH BUGS
+It is up to the calling routine to specify how many arguments
+there are, since it is not always possible to determine this from the
+stack frame.  For example,
+.I execl
+is passed a zero pointer to signal the end of the list.
+.I Printf
+can tell how many arguments are there by the format.
+.br
+It is non-portable to specify a second argument of
+.IR char ,
+.IR short ,
+or
+.IR float
+to 
+.IR va_arg ,
+since arguments seen by the called function are not
+.IR char ,
+.IR short ,
+or
+.IR float .
+C converts 
+.I char
+and 
+.I short
+arguments to 
+.I int
+and
+converts
+.I float
+arguments to
+.IR double 
+before passing them to a function.
+.\"	@(#)varargs.5	6.3 of 9/6/83

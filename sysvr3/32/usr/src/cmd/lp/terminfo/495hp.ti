@@ -1,0 +1,46 @@
+#ident	"@(#)nlp:terminfo/495hp.ti	1.6"
+#01-09-88
+
+495hp|att495hp|AT&T 495 hp emulation,
+
+
+	bufsz#1024,
+	cols#80,
+	lines#60,
+	orc#12,
+	orhi#120,
+	orl#8,
+	orvi#48,
+	cps#800,
+
+	cr=^M,
+	cpi=%?%p1%{10}%=%t\E&k0S%e%p1%{17}%=%t\E&k2S%;,
+	chr=%?%p1%{0}%>%p1%{127}%<%t\E&k%p1%dH%;,
+	cud1=^J,
+	cuf1=\s,
+	cud=\E&a+%p1%dR,
+	cuf=\E&a+%p1%dC,
+	cvr=%?%p1%{0}%>%p1%{127}%<%t\E&l%p1%dC%;,
+	ff=^L,
+	hpa=\E&a%p1%dC,
+	is2=\E[0~\E[10~\E&k0S,
+	lpi=%?%p1%{1}%=%t\E&l1D%e%p1%{2}%=%t\E&l2D%e%p1%{3}%=%t\E&l3D%e%p1%{4}%=%t\E&l4D%e%p1%{6}%=%t\E&l6D%e%p1%{8}%=%t\E&l8D%e%p1%{12}%=%t\E&l12D%e%p1%{16}%=%t\E&l16D%e%p1%{24}%=%t\E&l24D%e%p1%{48}%=%t\E&l48D%;,
+	mgc=\E9,
+	rmul=\E&d\100,
+	ritm=\E(s0S,
+	smul=\E&dD,
+	sitm=\E(s1S,
+	smgtp=\E&l%p1%{1}%+%dE,
+	smgbp=\E&l%p1%{1}%+%dF,
+	smglp=\E&a%p1%dL,
+	smgrp=\E&a%p1%dM,
+
+#Set page length
+	u9=\E&l%p1P,
+	vpa=\E&a%p1%dR,
+	
+#Set top margin at +2 offset
+	smgtp=\E&l%p1%dE,
+
+hplaserjet|hplaser,
+	use=495hp,

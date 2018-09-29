@@ -1,0 +1,7 @@
+#ident	"@(#)kern-port:boot/sys/README	10.1"
+The header files in this directory are unmodified versions
+of the kernel header files from the P4 load of release 2.0p,
+the load our 3B2 3.0 fsd/du/b+ development work began with.
+The boot stuff is compiled with these old versions instead
+of with the current 3.0 versions in ../../sys,
+thereby avoiding the necessity of revamping the source code.

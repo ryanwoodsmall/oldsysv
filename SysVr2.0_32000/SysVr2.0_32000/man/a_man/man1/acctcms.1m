@@ -1,0 +1,123 @@
+.TH ACCTCMS 1M
+.SH NAME
+acctcms \- command summary from per-process accounting records
+.SH SYNOPSIS
+.B /usr/lib/acct/acctcms
+[\^options\^] files
+.SH DESCRIPTION
+.I Acctcms\^
+reads one or more
+.IR files ,
+normally in the form described in
+.IR acct (4).
+It adds all records for processes that
+executed identically-named commands,
+sorts them,
+and writes them to the standard output,
+normally using an internal summary format.
+The \fIoptions\fP are:
+.PP
+.PD 0
+.TP
+.B \-a
+Print output in
+.SM ASCII
+rather than in the internal summary format.
+The output includes command name,
+number of times executed,
+total kcore-minutes,
+total
+.SM CPU
+minutes,
+total real minutes,
+mean size (in K),
+mean
+.SM CPU
+minutes per invocation,
+``hog factor'',
+characters transferred, and blocks read and written, as in
+.IR acctcom (1).
+Output is normally sorted by total kcore-minutes.
+.TP
+.B \-c
+Sort by total
+.SM CPU
+time, rather than total kcore-minutes.
+.TP
+.B \-j
+Combine all commands invoked only once under ``\(**\(**\(**other''.
+.TP
+.B \-n
+Sort by number of command invocations.
+.TP
+.B \-s
+Any file names encountered hereafter are already in internal summary format.
+.TP
+.B \-t
+Process all records as total accounting records.
+The default internal summary format splits
+each field into prime and non-prime
+time parts.
+This option combines the prime and non-prime time parts into a
+single field that is the total of both,
+and provides upward compatibility with old
+(i.e., UNIX System V)
+style
+.B acctcms
+internal summary format records.
+.PD
+.PP
+The following options may be used only with
+the
+.B -a
+option.
+.TP
+.B \-p 
+Output a prime-time-only command summary.
+.TP
+.B \-o
+Output a non-prime (offshift) time only command summary.
+.PD
+.PP
+When
+.B \-p
+and
+.B \-o
+are used together,
+a combination prime and non-prime time report
+is produced.  All the output summaries will
+be total usage except
+number of times executed, CPU minutes,
+and real minutes which will
+be split into prime and non-prime.
+.PP
+A typical sequence for performing daily command accounting and
+for
+maintaining a running total is:
+.PP
+.RS
+.nf
+acctcms \|file \|.\|.\|. \|>today
+cp \|total \|previoustotal
+acctcms \|\-s \|today \|previoustotal \|>total
+acctcms \|\-a \|\-s \|today
+.fi
+.RE
+.SH SEE ALSO
+acct(1M),
+acctcon(1M),
+acctmerg(1M),
+acctprc(1M),
+acctsh(1M),
+fwtmp(1M),
+runacct(1M),
+acctcom(1),
+acct(2),
+acct(4),
+utmp(4).
+.SH BUGS
+Unpredictable output results if
+.B \-t
+is used on new style internal summary format files,
+or if it is not used with old style internal summary format files.
+.\"	@(#)acctcms.1m	6.3 of 9/2/83

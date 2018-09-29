@@ -1,0 +1,118 @@
+.TH AR 4 "not on PDP-11"
+.SH NAME
+ar \-  common archive file format
+.SH DESCRIPTION
+The archive command
+.I ar\^
+is used to combine several files into
+one.
+Archives are used mainly as libraries to be searched
+by the link editor
+.IR ld (1).
+.PP
+Each archive begins with an archive file header which is made up of the
+following components:
+.nf
+
+#define	 ARMAG	"<ar>"
+#define	 SARMAG	4
+
+
+struct	ar_hdr {			/\(** archive header \(**/
+	char	ar_magic[SARMAG];	/\(** magic number \(**/
+	char	ar_name[16];		/\(** archive name \(**/
+	char	ar_date[4];		/\(** date of last archive modification \(**/
+	char	ar_syms[4];		/\(** number of ar_sym entries \(**/
+};
+
+.fi
+.PP
+Each archive which contains common object files (see
+.IR a.out (4))
+includes an archive symbol table.  This symbol table is used by the link
+editor 
+.IR ld (1)
+to determine which archive members must be loaded during the link
+edit process.
+The archive file header described above is followed by a number of symbol
+table entries.  The number of symbol table entries is indicated in the
+.IR ar_syms
+variable.  Each symbol table entry has the following format:
+.nf
+
+struct	ar_sym {			/\(** archive symbol table entry \(**/
+	char	sym_name[8];		/\(** symbol name, recognized by ld \(**/
+	char	sym_ptr[4];		/\(** archive position of symbol \(**/
+};
+
+.fi
+The archive symbol table is automatically created and/or updated by
+the
+.IR ar (1)
+command.
+.PP
+Following the archive header and symbol table are the archive file members.
+Each file member is preceded by a file member header which is of the following
+format:
+.nf
+
+struct	arf_hdr {			/\(** archive file member header \(**/
+	char	arf_name[16];		/\(** file member name \(**/
+	char	arf_date[4];		/\(** file member date \(**/
+	char	arf_uid[4];		/\(** file member user identification \(**/
+	char	arf_gid[4];		/\(** file member group identification \(**/
+	char	arf_mode[4];		/\(** file member mode \(**/
+	char	arf_size[4];		/\(** file member size \(**/
+};
+
+.fi
+.PP
+All information in the archive header, symbol table and file member headers is
+stored in a machine independent fashion.  All character data is automatically
+portable.  The numeric information contained in the headers is also stored
+in a machine independent fashion.  All numeric data is stored as four bytes
+and is accessed by the special archive I/O functions described in
+.IR sputl (3X)
+functions of the \fIlibld.a\fR library.
+Common format archives can be moved from system to system as long as the
+portable archive command
+.IR ar (1)
+is used.  Conversion tools such as
+.IR arcv (1)
+and
+.IR convert (1)
+exist to aid in the transportation
+of non-common format archives to this format.
+.PP
+Each archive file member begins on a word boundary;
+a null byte is inserted between files if necessary.
+Nevertheless the size given reflects the
+actual size of the file exclusive of padding.
+.PP
+Notice there is no provision for empty areas in an archive
+file.
+.SH SEE ALSO
+ar(1),
+arcv(1),
+convert(1),
+ld(1),
+sputl(3X).
+.SH BUGS
+The common archive structure is not compatible between the
+.SM PDP\*S-11
+and the
+.SM IBM\*S-370,
+due to the different file formats.
+See
+.IR arcv (1)
+and
+.IR convert (1)
+to convert between machines.
+.PP
+.IR Strip (1)
+will remove all archive symbol entries from the header.  The archive symbol
+entries must be restored via the \fBs\fR option of the
+.IR ar (1)
+command before the archive can be used with the link editor
+.IR ld (1).
+.\"	@(#)ar.4	5.2 of 5/18/82

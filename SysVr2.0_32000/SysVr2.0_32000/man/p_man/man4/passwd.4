@@ -1,0 +1,104 @@
+.TH PASSWD 4
+.SH NAME
+passwd \- password file
+.SH DESCRIPTION
+.I Passwd\^
+contains for each user the
+following information:
+.RS
+.PP
+login name
+.br
+encrypted password
+.br
+numerical user
+.SM ID
+.br
+numerical group
+.SM ID
+.br
+.SM GCOS
+job number, box number, optional
+.SM GCOS
+user
+.SM ID
+.br
+initial working directory
+.br
+program to use as Shell
+.RE
+.PP
+This is an \s-1ASCII\s0 file.
+Each field within each user's entry
+is separated from the next by a colon.
+The \s-1GCOS\s0 field is used only when communicating with that
+system, and in other installations can contain
+any desired information.
+Each user is separated from the next by a new-line.
+If the password field is null, no password is demanded;
+if the Shell field is null, the Shell itself
+is used.
+.PP
+This file resides in directory
+.BR /etc .
+Because of the encrypted
+passwords, it can and does have general read
+permission and can be used, for example,
+to map numerical user \s-1ID\s0s to names.
+.PP
+The encrypted password consists of 13 characters chosen from a 64-character 
+alphabet
+.RB ( . ", " / ,
+.BR 0\-9 ", " A\-Z ", " a\-z ),
+except when the password is null,
+in which case the encrypted
+password is also null. 
+Password aging is effected for a particular user
+if his encrypted password in the password file is followed by a comma and a non-null string
+of characters from the above alphabet.
+(Such a string must be introduced in
+the first instance by the super-user.)
+.PP
+The first character of the age,
+.IR M " say,"
+denotes the maximum number of weeks for which a password is valid.
+A user who attempts to login after his password has expired will be
+forced to supply a new one.
+The next character,
+.IR m " say,"
+denotes the minimum period in weeks which
+must expire before the password may be changed.
+The remaining characters
+define the week (counted from the beginning of 1970) when the password was
+last changed.
+(A null string is equivalent to zero.)
+\fIM\fR and \fIm\fR have numerical values in the range 0\-63
+that correspond to the 64-character alphabet shown above
+(i.e.,
+.B /
+= 1 week;
+.B z
+= 63 weeks).
+If
+.IR "m " = " M " "= 0"
+(derived from
+the string
+.B .
+or
+.BR .. )
+the user will be forced to change his password the
+next time he logs in (and the ``age'' will disappear from his entry in the password file).
+If
+.IR "m " > " M"
+(signified, e.g., by the string
+.BR ./ )
+only the super-user
+will be able to change the password.
+.SH FILES
+/etc/passwd
+.SH "SEE ALSO"
+a64l(3C), crypt(3C), getpwent(3C), group(4).
+.br
+login(1), passwd(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.\"	%W% of %G%

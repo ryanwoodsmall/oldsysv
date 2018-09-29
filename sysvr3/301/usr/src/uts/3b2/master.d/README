@@ -1,0 +1,63 @@
+*#ident	"@(#)kern-port:master.d/README	10.6"
+
+* EXTERNAL MAJOR NUMBERS
+*
+*
+* The external major numbers (the major number used in the special file
+* for the device) is determined in either of two ways.  If the device is
+* a real hardware device, then the major number is the board slot.
+*
+* If the "device" is a software driver (flag contains "s"), then the major
+* number is explicitly assigned in the /etc/master.d file for that driver;
+* i.e. /etc/master.d/<driver>. Note that the number used should not be one
+* that could correspond to a hardware device, and it must also not exceed
+* 127. Also, the following numbers are RESERVED for the specified drivers
+* for various reasons and should not be used:
+*
+*		DEVICE	MAJOR#
+*		------	------
+*		iuart	   0
+*		hdelog	  16
+*		idisk     17
+*		memory	  19
+*		tty	  20
+*		clone	  63
+
+
+* INTERNAL MAJOR NUMBERS
+*
+*
+* For 3B2 UNIX, the internal major number is assigned by the self configuring
+* boot program at the time the drivers are loaded.  In general, these numbers
+* will be different after each boot.  Since the internal major number is the
+* number used to index into the [cb]devsw table, a driver may need some way
+* to determine this number.  The internal major number may be obtained in two
+* ways.  First, it appears in the MAJOR[] translation table built by the boot
+* program:
+*
+*		unsigned char MAJOR[127];
+*
+* This table is indexed by the external major number.  Thus, the internal
+* major number which corresponds to the external major number "X" is just:
+*
+*		internal_major = MAJOR[X]
+*
+* or the major() macro from sys/sysmacros.h may be used with the entire external
+* device number:
+*
+*		internal_major = major(external_device)
+*
+* The second means is via the capability of the master file syntax for
+* expressions.  The builtin function `#M' is used to refer to the internal
+* major number for the current driver.  An optional argument of the name
+* of a driver will refer to the internal major number for that driver. Thus,
+* for driver X, `#M' is the internal major number for X, and `#M(Y)' is the
+* internal major number for driver Y.
+
+
+* MODULES
+*
+*
+* A module is a configurable object file that is not a driver (flag contains
+* "x").  All driver related data is ignored, such as #vectors, major, ipl, etc.
+* Only flag, prefix, dependencies and routine/variable definitions are used.

@@ -1,0 +1,22 @@
+
+\Sumask\S:  Description
+
+Syntax Summary:  umask [octal_code]
+
+         where:  octal_code  is a three digit code, each digit
+                             between zero and seven, inclusive.
+
+Description:
+     \Sumask\S stands for "user file-creation mode mask." Use \Sumask\S to
+     change the mode, or access permissions, for the files you create. The
+     contents of the files are not effected by \Sumask\S.  To use \Sumask\S
+     you must include it in your .profile file.  \Sumask\S sets the mode of a
+     file by subtracting the value of the octal code for \Sumask\S from the
+     octal code that defines access permissions.  Your system, for example,
+     might set access permissions to 666, which gives read and write permission
+     to you the owner, your group, and the other system users. The code removes
+     either read permission, write permission, or both for all or one of the
+     types of users.  Without arguments, \Sumask\S prints the value of your
+     octal code.  For a discussion of the octal codes see the manual pages for
+     chmod(1). See glossary(1) for an explanation of access permissions.  See
+     also: chmod(1) for a command with a function similar to \Sumask\S.

@@ -1,0 +1,24 @@
+#ident	"@(#)sadmin3b2:etc/rc.d/autoconfig	1.3"
+#  if a self configuration occurred during the boot
+#  sequence, the following must be done:
+#
+#     run mkunix to generate an absolute UNIX file
+#
+#  ckauto -- is a program that is used to determine if an
+#   	     auto configuration took place
+#
+
+if [ -x /etc/ckauto ]
+then
+	/etc/ckauto
+	if [ $? -eq 1 ]
+	then
+		if [ -x /etc/mkunix ]
+		then
+			echo 'Generating a new /unix.'
+			/etc/mkunix -o /unix > /dev/null
+		else
+			echo 'Cannot generate a new /unix.  /etc/mkunix is not found or not executable.'
+		fi
+	fi
+fi

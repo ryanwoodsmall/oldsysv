@@ -1,0 +1,18 @@
+
+\Scomm\S:  Description
+
+Syntax Summary:  comm [-123] file_name1 file_name2
+
+         where:  file_names  are names of files.
+
+Description:
+     \Scomm\S stands for "common." \Scomm\S compares the contents of two
+     files.  Use \Scomm\S to identify the lines that files have in common and
+     those that they do not.  \Scomm\S reports the results of the comparison
+     in three columns. Column one lists the lines only in <file_name1>, column
+     two lists those only in <file_name2>, and column three lists the lines 
+     that are common to both files. The options suppress any or all of the 
+     columns.  \Scomm\S can compare one file to standard input if you replace 
+     either file name with "-".  See also:  bdiff(1), comp(1), diff(1), 
+     diff3(1), dircmp(1), and sdiff(1) for commands with functions similar to
+     \Scomm\S.

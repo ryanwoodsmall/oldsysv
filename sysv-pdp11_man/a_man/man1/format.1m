@@ -1,0 +1,104 @@
+.TH FORMAT 1M "VAX stand-alone only"
+.SH NAME
+format \- format and/or check \s-1RP\s+106 and \s-1RM\s+105 disk packs
+.SH DESCRIPTION
+.I Format\^
+will format new \s-1RP\s+106 or \s-1RM\s+105
+packs and check used packs (with write inhibited).
+The program reports the location and type of errors encountered, including
+.SM ECC
+correctable error burst sizes.
+.SH EXECUTION
+.PP
+The following example shows how to load
+.I format\^
+on a \s-1VAX\s+1-11/780 with a 
+.SM UNIX
+updated floppy disc:
+.PP
+.RS
+.if n .ds > >>>
+.if t .ds > \s-2>\h@-.2m@>\h@-.2m@>\s+2
+.B \*>\H<cr>
+.RS
+.SM HALTED AT
+.I nnnnnnnn\^
+.RE
+.PP
+.B \*>\B<cr>
+.RS
+.SM CPU HALTED
+.br
+.SM INIT SEQ DONE
+.br
+.SM HALT INST EXECUTED
+.br
+.SM HALTED AT
+.I nnnnnnnn\^
+.br
+.SM LOAD DONE\*S,
+.I nnnnnnnnn\^
+.SM BYTES LOADED
+.RE
+.PP
+.B $$
+.RE
+.PP
+To execute 
+.IR format ,
+type
+.B /stand/format
+after the standalone shell prompt
+.BR  $$ .
+The formatter will print out its command vocabulary, and
+proceed inter-actively.
+If one wishes to format a pack on disk drive 1, for example,
+the command is
+.BR d1f .
+The program will double check format requests, as pack
+contents will be destroyed.
+.SH COMMANDS
+.PD 0
+.TP .5i
+.RI "m " n\^
+\s-1MBA\s+1 with drive doing the format is
+.IR n .
+(defaults to 0)
+.TP
+.RI "d " n\^
+drive with the pack to be formatted or checked is
+.IR n .
+(drive number must be between 1 and 7)
+.TP
+f
+format pack
+.TP
+c
+check pack format
+.TP
+q
+quit
+.TP
+v
+print vocabulary
+.TP
+.SM
+.RI "R\*S " n\^
+set the error report level to
+.IR n .
+.TP
+.SM X
+will tell you about the available report levels.
+.fi
+.PD
+.PP
+The \fB\s-1X\s+1\fP command will explain the Report Level options
+the first time it is executed.
+Subsequent execution by the operator or by the program
+during error logging, will merely print the information
+defined by the current report level.
+.SH FILES
+/stand/format
+.SH "SEE ALSO"
+780ops(8).
+.\"	@(#)format.1m	5.2 of 5/18/82

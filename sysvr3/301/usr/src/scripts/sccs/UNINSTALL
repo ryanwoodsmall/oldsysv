@@ -1,0 +1,32 @@
+#ident "@(#)pkg.sccs:sccs/UNINSTALL	1.2"
+# Remove the Source Code Control System package
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/sccs.name`
+
+echo "Removing the ${PKGNAME}."
+echo "The following files are being removed:"
+
+# 
+# Make sure the help facility isn't installed before
+# removing the help command
+#
+
+if 
+	test -s /usr/options/help.name
+then
+	for i in `cat /install/install/Rlist | grep -v '/usr/bin/help' `
+	do
+		echo $i
+		rm -f $i
+	done
+else
+	for i in `cat /install/install/Rlist`
+	do
+		echo $i
+		rm -f $i
+	done
+fi
+echo "The ${PKGNAME} has been uninstalled."
+

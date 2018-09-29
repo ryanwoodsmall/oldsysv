@@ -1,0 +1,13 @@
+
+\Srmdir\S:  Description
+
+Syntax Summary:  rmdir dir_name ...
+
+         where:  dir_name  is the name of a directory.
+
+Description:
+     \Srmdir\S stands for "remove directory." Use \Srmdir\S to remove the
+     directories that are named.  The \Srmdir\S command can remove a directory
+     only if it is empty.  You must own a directory to remove it, and you must
+     have write permissions for the directory. See also:  rm(1) for a command
+     with a function similar to \Srmdir\S.

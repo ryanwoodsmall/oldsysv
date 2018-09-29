@@ -1,0 +1,34 @@
+#ident	"@(#)sadmin3b2:admin/menu/diskmgmt/harddisk/display	1.5"
+#menu# display hard disk partitioning
+#help# 
+#help#	Display the partitioning of a hard disk.  Also shows the
+#help#	hardware location of the selected disk.
+
+flags="-qq -k$$"
+trap 'exit 0' 1 2  15
+
+DIRPATH=$MENUTOP/menu/diskmgmt/harddisk
+PATTERN=`ls $DIRPATH/display.d`
+ddrive=`selectdevice -c $$ /dev/rSA $PATTERN`
+if [ "$ddrive" = "" ]
+then
+	exit 0
+fi
+ndrive=`drivename ${ddrive}`
+
+. $DIRPATH/display.d/`basename $ddrive | sed s/[0-9]*$//p`
+
+dskname=`samedev ${ddrive} /dev/rdsk/c*d*s6`
+eval `basename ${dskname} | sed -e 's:^c\([0-9]*\)d\([0-9]*\).*$:slot=\1 drv=\2:'`
+slot=`expr ${slot} - 1`
+
+echo "Displaying ${ndrive} partitioning (hardware slot ${slot} drive ${drv}):\n"
+
+if /etc/prtvtoc ${ddrive}	
+then
+	:
+else
+	admerr $0 hard disk partitioning display failed.
+	exit 1
+fi
+exit 0

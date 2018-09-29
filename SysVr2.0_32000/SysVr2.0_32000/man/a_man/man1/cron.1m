@@ -1,0 +1,48 @@
+.TH CRON 1M
+.SH NAME
+cron \- clock daemon
+.SH SYNOPSIS
+.B /etc/cron
+.SH DESCRIPTION
+.I Cron
+executes commands at specified dates and times.
+Regularly scheduled commands can be specified according
+to instructions found in crontab files; users can
+submit their own crontab file via the
+.I crontab
+command.
+Commands which are to be executed only once may be
+submitted via the
+.I at
+command.
+Since
+.I cron
+never exits, it should only be executed once.
+This is best done by running
+.I cron
+from the initialization process through the file
+.BR /etc/rc .
+.P
+.I Cron
+only examines crontab files and at command files during process
+initialization and when a file changes.
+This reduces the overhead of checking for new or
+changed files at regularly scheduled intervals.
+.SH FILES
+.PD 0
+.TP \w'/usr/lib/cron/log\ \ \ \ 'u
+/usr/lib/cron
+main cron directory
+.TP
+/usr/lib/cron/log
+accounting information
+.TP
+/usr/spool/cron
+spool area
+.PD
+.SH "SEE ALSO"
+at(1), crontab(1), sh(1).
+.SH DIAGNOSTICS
+A history of all actions taken by cron are recorded in
+.B /usr/lib/cron/log.
+.\"	@(#)cron.1m	6.3 of 9/2/83

@@ -1,0 +1,187 @@
+'\" tc
+.TH PRM 8 "3B20S only"
+.SH NAME
+prm \- 3B20S Processor Recovery Messages
+.SH DESCRIPTION
+This manual page describes the Processor Recovery Messages (\s-1PRM\s+1's)
+produced by the \s-13B20S\s+1 processor.
+.SH SEE ALSO
+3B20boot(8),
+eai(8),
+ldtape(8).
+.SH DIAGNOSTICS
+These code words appear in the following list of \s-1PRM\s+1's:
+.PP
+.TS
+cI lI
+l l.
+Code	Meaning
+cc	\s-1DFC\s+1 job completion code
+dcod	3/6 code for disk device
+dfca	High order 16 bits of \s-1DFC\s+1 2nd status word
+dmpct	Number of failed tries necessary to get a dump
+dopcnt	\s-1DFC\s+1 operation count for this stage
+flag	Root or backup root filesystem flag
+g	DFC Firmware Generic number
+resp	\s-1IOP\s+1 command completion response
+	00FF - interrupt timed out
+s	\s-1DFC\s+1 processing stage:
+	1 - Firmware Generic determination
+	2 - Sysgen \s-1DFC\s+1
+	3 - Bring \s-1DFC\s+1 in service
+	4 - Bring Disk in service
+	5 - Read/write the Disk
+	6 - Format the Disk
+sect	Tape section number
+stat	Channel status
+tape	Tape reel number
+tcod	3/6 code for tape device
+.TE
+.PP
+Non-error \s-1PRM\s+1's:
+.TS
+cI s s s lI
+lB1 lB1 lB1 lB l.
+PRM	Meaning
+E000	0000	0000	0000	\s-1MRF\s+1 entered
+E000	0100	0000	0000	\s-1MRF\s+1 successfully exited to \s-1PINIT\s+1
+E000	0200	0000	0000	\s-1MRF\s+1 successfully exited to \s-1STOP\s+1 & \s-1SWITCH\s+1
+E000	0300	0000	0000	Successful exit from microboot
+E000	0400	0000	0000	\s-1MRF\s+1 exited to \s-1POWER\s+1 \s-1CLEAR\s+1 halt
+E000	0500	0000	0000	Pump successfully exited to \s-1PINIT\s+1
+E000	0600	0000	0000	Successful exit from tapeboot ucode
+E000	0000	0070	\fIdmpct\fP	Completed dump
+.TE
+.PP
+Failure \s-1PRM\s+1's:
+.TS
+cI s s s lI
+lB1 lB1 lB1 lB l.
+PRM	Meaning
+F000	0800	0000	0000	Microboot\-lboot job\-channel init failed
+F000	0900	0000	0000	Microboot\-vtoc job\-dma setup failed
+F000	0A00	0000	0000	Microboot\-vtoc job\-bic init failed
+F000	0B00	0000	0000	Microboot\-vtoc job\-pic init failed
+F000	0C00	0000	0000	Microboot\-vtoc job\-boot command failed
+F000	0D00	0000	0000	Microboot\-vtoc job\-disk job timed out
+F000	0E00	0000	0000	Microboot\-vtoc job\-disk job error
+\&
+F000	1000	0000	0000	Microboot\-ucode pump\-channel init failed
+F000	1100	0000	0000	Microboot\-ucode pump\-dma setup failed
+F000	1200	0000	0000	Microboot\-ucode pump\-bic init failed
+F000	1300	0000	0000	Microboot\-ucode pump\-pic init failed
+F000	1400	0000	0000	Microboot\-ucode pump\-boot command failed
+F000	1500	0000	0000	Microboot\-ucode pump\-disk job timed out
+F000	1600	0000	0000	Microboot\-ucode pump\-disk job error
+F000	1700	0000	0000	Microboot\-ucode pump\-error in ucode file
+\&
+F000	1800	0000	0000	Microboot\-lboot job\-channel init failed
+F000	1900	0000	0000	Microboot\-lboot job\-dma setup failed
+F000	1A00	0000	0000	Microboot\-lboot job\-bic init failed
+F000	1B00	0000	0000	Microboot\-lboot job\-pic init failed
+F000	1C00	0000	0000	Microboot\-lboot job\-boot command failed
+F000	1D00	0000	0000	Microboot\-lboot job\-disk job timed out
+F000	1E00	0000	0000	Microboot\-lboot job\-disk job error
+\&
+F000	2100	0000	0000	\s-1LDFT\s+1\-channel or bic init failed
+F000	2200	0000	0000	\s-1LDFT\s+1\-pic init failed
+F000	2300	0000	0000	\s-1LDFT\s+1\-dma setup for tape failed
+F000	2400	0000	0000	\s-1LDFT\s+1\-quick sysgen for tape failed
+F000	2500	0000	0000	\s-1LDFT\s+1\-tape rewind failed
+F000	2600	0000	0000	\s-1LDFT\s+1\-tape read of ucode header failed
+F000	2700	0000	0000	\s-1LDFT\s+1\-bad ucode header
+F000	2800	0000	0000	\s-1LDFT\s+1\-tape read of ucode failed
+F000	2900	0000	0000	\s-1LDFT\s+1\-invalid ucode file
+F000	2A00	0000	0000	\s-1LDFT\s+1\-tape read of \s-1LDFT\s+1 header failed
+F000	2B00	0000	0000	\s-1LDFT\s+1\-invalid \s-1LDFT\s+1 header
+F000	2C00	0000	0000	\s-1LDFT\s+1\-tape read of \s-1LDFT\s+1 failed
+F000	2D00	0000	0000	\s-1LDFT\s+1\-bic init for disk failed
+F000	2E00	0000	0000	\s-1LDFT\s+1\-pic init for disk failed
+\&
+F100	0100	0000	\fIstat\fP	Can't initialize \s-1DMAC\s+1
+F100	0200	0000	\fIstat\fP	Can't initialize \s-1DSCH\s+1
+F100	0300	0000	\fIstat\fP	Can't enable \s-1DMA\s+1 access to \s-1MAS\s+1
+F100	1000	0000	\fIstat\fP	Can't write \s-1DMAC\s+1 ram
+F100	1100	0000	0000	Can't clear \s-1DBS\s+1
+F100	1200	0000	\fIstat\fP	Can't initialize \s-1BIC\s+1
+F100	1300	0000	\fIstat\fP	Can't enable \s-1BIC\s+1/\s-1PIC\s+1 interface
+F100	1400	0000	\fIstat\fP	Can't enable \s-1BIC\s+1 interrupts
+\&
+F100	15\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't send \s-1GIDPIO\s+1 to \s-1DFC\s+1
+F100	16\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't sysgen the \s-1DFC\s+1
+F100	17\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't bring the \s-1DFC\s+1 into service
+F100	20\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't bring the disk into service
+F100	31\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't read \s-1DFC\s+1 status (read/write)
+F100	32\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't read \s-1DFC\s+1 status (format)
+F100	33\fIg s\fP	\fIdopcnt\fP	0000	Invalid \s-1DFC\s+1 software parameters
+F100	34\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't wakeup \s-1DFC\s+1
+F100	40\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't reset \s-1BIC\s+1 interrupt
+F100	41\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't send status command to \s-1DFC\s+1
+F100	42\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't read 1st \s-1DFC\s+1 status word
+F100	43\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't read 2nd \s-1DFC\s+1 status word
+F100	44\fIg s\fP	\fIcc\fP	\fIdfca\fP	Bad \s-1DFC\s+1 response
+F100	45\fIg s\fP	\fIdopcnt\fP	\fIstat\fP	Can't enable \s-1BIC\s+1 interrupt
+F100	46\fIg s\fP	\fIdopcnt\fP	0000	\s-1DFC\s+1 interrupt timed out
+\&
+F100	5000	0000	\fIstat\fP	Can't write \s-1DMAC\s+1 ram
+F100	5001	0000	\fIstat\fP	Can't clear \s-1DDBS\s+1
+F100	5002	0000	\fIstat\fP	Can't send \s-1BIC\s+1 command
+F100	5003	0000	\fIstat\fP	Can't send \s-1BIC\s+1 command
+F100	5004	0000	\fIstat\fP	Can't enable \s-1IOP\s+1 interrupts
+F100	5005	0000	\fIstat\fP	Can't send \s-1IOP\s+1 sysgen
+F100	5006	0000	0000	\s-1IOP\s+1 sysgen failed
+\&
+F100	5011	0000	\fIstat\fP	Can't sense \s-1DDBS\s+1 status
+F100	5012	0000	\fIstat\fP	\s-1DDBS\s+1 status error
+F100	5013	0000	\fIstat\fP	Can't reset \s-1BIC\s+1 interrupt
+F100	5020	0000	\fIstat\fP	Can't sense \s-1BIC\s+1 status
+F100	5021	0000	\fIstat\fP	Can't sense \s-1BIC\s+1 status
+F100	5022	0000	\fIstat\fP	\s-1BIC\s+1 status error
+F100	5023	0000	\fIstat\fP	Can't send \s-1PIC\s+1 command
+F100	5030	0000	\fIresp\fP	Tape read failed
+F100	5040	0000	\fIresp\fP	Tape rewind failed
+\&
+F100	5060	0000	\fIresp\fP	\s-1PC\s+1 community configure failed
+F100	5061	0000	\fIresp\fP	Clear \s-1PC\s+1 micro failed
+F100	5062	0000	\fIresp\fP	Console failed to come into service
+F100	5063	0000	\fIresp\fP	Console pump failed
+F100	5064	0000	\fIresp\fP	Console exec failed
+F100	5065	0000	\fIresp\fP	Console restore failed
+F100	5066	0000	\fIresp\fP	Console connect failed
+F100	5070	0000	\fIresp\fP	Console I/O failed
+F100	5080	0000	\fIresp\fP	\s-1PC\s+1 community failed to come into service
+F100	5081	0000	\fIresp\fP	Clear \s-1PC\s+1 micro failed
+F100	5082	0000	\fIresp\fP	Tape \s-1PC\s+1 failed to come into service
+\&
+F100	7200	\fItcod\fP	0000	Bad 3/6 code for tape from microboot
+F100	7300	\fIdcod\fP	0000	Bad 3/6 code for disk from microboot
+F100	7400	\fIsect\fP	\fItape\fP	Bad tape section header
+F100	8000	0000	\fIflag\fP	\s-1VTOC\s+1 has no entry for filesystem
+F100	C000	0000	0000	File size too big
+\&
+0000	\fIdmpct\fP	DDDD	0002	Dump can't initialize \s-1DSCH\s+1
+0000	\fIdmpct\fP	DDDD	0003	Dump can't initialize \s-1DMA\s+1
+0000	\fIdmpct\fP	DDDD	0005	Dump can't enable \s-1DMA\s+1 interupts
+0000	\fIdmpct\fP	DDDD	0006	Dump can't load \s-1DMAC\s+1 ram
+0000	\fIdmpct\fP	DDDD	0007	Dump can't clear dual bus selector
+0000	\fIdmpct\fP	DDDD	0008	Dump can't initialize \s-1BIC\s+1
+0000	\fIdmpct\fP	DDDD	0009	Dump can't enable \s-1BIC\s+1 interface
+0000	\fIdmpct\fP	DDDD	0010	Dump can't enable device interupts
+0000	\fIdmpct\fP	DDDD	0011	Dump can't send \s-1GIDPIO\s+1 to \s-1DFC\s+1
+0000	\fIdmpct\fP	DDDD	0012	Dump can't sysgen the \s-1DFC\s+1
+0000	\fIdmpct\fP	DDDD	0013	Dump can't bring \s-1DFC\s+1 into service
+0000	\fIdmpct\fP	DDDD	0014	Dump can't bring disk into service
+0000	\fIdmpct\fP	DDDD	0015	Dump can't reset \s-1BIC\s+1 interupts
+0000	\fIdmpct\fP	DDDD	0016	Dump can't get job states
+0000	\fIdmpct\fP	DDDD	0017	Dump can't job completion word
+0000	\fIdmpct\fP	DDDD	0018	Dump can't get job error word
+0000	\fIdmpct\fP	DDDD	0019	Dump \s-1DFC\s+1 job failed
+0000	\fIdmpct\fP	DDDD	0020	Dump can't enable \s-1BIC\s+1 interupts
+0000	\fIdmpct\fP	DDDD	0021	Dump can't send job pending command
+0000	\fIdmpct\fP	DDDD	0022	Dump \s-1DFC\s+1 interrupt timed out
+\&
+F200	DEAD	DEAD	DEAD	Panic in \s-1UNIX\s+1
+F300	FFFF	FFFF	FFFF	\s-1UNIX\s+1 System can't execute /etc/init
+.TE
+ 
+.\"	%W%

@@ -1,0 +1,18 @@
+
+\S high-level language:  machine language:  interpreted language \S
+
+High-level languages are languages like C, FORTRAN, COBOL, and PASCAL that
+allow you to create programs with English-like statements.  High-level language
+programs are easy for people to read but the computer cannot understand 
+the statements.  Machine language can be understood by the computer, and 
+in UNIX systems machine language is "octal code"\S*\S.  You create machine 
+language using a "compiler"\S*\S" to compile a high-level language program.
+
+Interpreted languages are languages that do not have to be compiled before
+the computer can understand them. Interpreted languages are high-level
+languages because they have English-like statements but they do not have to
+be translated to machine language.  An "interpreter"\S*\S executes each line 
+of the program one at a time.  Shell is the UNIX system interpreted language.
+(see also:  compiler, source code.)
+
+\S*\S defined in the \Sglossary\S

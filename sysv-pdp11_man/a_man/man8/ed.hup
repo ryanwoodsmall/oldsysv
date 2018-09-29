@@ -1,0 +1,98 @@
+.TH "DISK BOOT" 8 "PDP-11 only"
+.SH NAME
+diskboot \- disk bootstrap programs
+.SH DESCRIPTION
+There are several programs available to accomplish
+bootstraps off of a variety of disks.
+These programs reside in the directory
+.BR /stand .
+.PP
+The program must be located in block 0 of the disk pack.
+The space available for the program is thus only one block (256 words)
+which severely constrains the amount of error handling.
+Block 0 is unused by the
+.SM UNIX
+file system, so this
+does not affect normal file system operation.
+To boot, the program must be read into memory
+starting at address 0 and started at address 0.
+This may be accomplished by standard
+.SM DEC ROM
+bootstraps,
+special
+.SM ROM
+bootstraps, or manual procedures.
+.PP
+After initial load, the program relocates itself to high
+core as specified when assembled (typically 24K words,
+maximum of 28K).
+Next, memory below the program is cleared and the prompt
+.B #
+is typed on the console.
+A one digit field specifying the disk drive is expected.
+For example, 2 would correspond to
+drive 2, starting at cylinder 0.
+The last word in the boot block contains
+a cylinder offset, initially zero, which may be changed
+to access another
+section of the disk pack.
+No error checking is done on this field; invalid data will
+cause unpredictable results.
+Also, there is no error checking on disk reads.
+.PP
+After the file system select, the program prompts with
+.BR = .
+The user must then enter the
+.SM UNIX
+System path name of the desired file.
+The
+.B #
+character will erase the last character typed, the
+.B @
+character will kill the entire line, and
+.B A
+through
+.B Z
+is translated to
+.B a
+through
+.BR z .
+Also, carriage return (\s-1CR\s+1) is mapped into
+line-feed (\s-1LF\s+1) on input, and
+\s-1LF\s+1 is output as \s-1CR\s+1-\s-1LF\s+1.
+The upper-case to lower-case conversion is used
+to handle upper-case-only terminals such as
+the
+.SM TELETYPE\*S\*R
+Terminal Model 33
+or the
+.SM DEC
+\s-1LA\s+1\&30.
+Therefore, a file name with upper case characters cannot be
+booted using this procedure.
+.PP
+After the name has been completely entered by typing \s-1CR\s+1 or \s-1LF\s+1,
+the program searches the file system specified for the path name.
+Note, the path name may be any valid
+.SM UNIX
+System file path name.
+If the file does not exist, or if the file is a directory or special file,
+the bootstrap starts over and prompts with
+.BR # .
+Otherwise, the file is read into memory starting at address 0.
+If address 0 contains 000\ 407, a
+.SM UNIX
+.B a.out
+program is assumed and the first 8 words are stripped off by
+relocating the loaded program toward address 0.
+Finally, a jump to address 0 is done by executing \fBjsr\ \|pc,\(**$0\fP.
+.SH FILES
+.TP "\w'/usr/src/stand\ \ 'u"
+/usr/src/stand
+source directory
+.SH SEE ALSO
+a.out(4),
+fs(4),
+tapeboot(8),
+unixboot(8).
+.\"	@(#)diskboot.8	5.2 of 5/18/82

@@ -1,0 +1,161 @@
+.TH CHMOD 1
+.SH NAME
+chmod \- change mode
+.SH SYNOPSIS
+.B chmod
+mode files
+.SH DESCRIPTION
+The permissions of
+the named
+.I files\^
+are changed
+according to
+.IR mode ,
+which may be absolute or symbolic.
+An absolute
+.I mode\^
+is an octal
+number constructed
+from the \s-1OR\s+1 of the
+following modes:
+.PP
+.PD 0
+.RS
+.TP 10
+4000
+set user
+.SM ID
+on execution
+.TP 10
+2000
+set group
+.SM ID
+on execution
+.TP 10
+1000
+sticky bit, see
+.IR chmod (2)
+.TP 10
+0400
+read by owner
+.TP 10
+0200
+write by owner
+.TP 10
+0100
+execute (search in directory) by owner
+.TP 10
+0070
+read, write, execute (search) by group
+.TP 10
+0007
+read, write, execute (search) by others
+.RE
+.PD
+.PP
+A symbolic
+.I mode\^
+has the form:
+.IP
+.RI [ " who " ] " op permission " [ " op permission " ]
+]
+.PP
+The
+.I who\^
+part is a combination
+of the letters
+.B u
+(for user's permissions),
+.B g
+(group)
+and
+.B o
+(other).
+The letter
+.B a
+stands for
+.BR ugo ,
+the default if
+.I who\^
+is omitted.
+.PP
+.I Op\^
+can be
+.B +
+to add
+.I permission\^
+to the file's mode,
+.B \-
+to take away
+.IR permission ,
+or
+.B =
+to assign
+.I permission\^
+absolutely
+(all other bits will
+be reset).
+.PP
+.I Permission\^
+is any combination of the letters
+.B r
+(read),
+.B w
+(write),
+.B x
+(execute),
+.B s
+(set owner or group \s-1ID\s0)
+and
+.B t
+(save text, or sticky);
+.BR u ,
+.BR g ,
+or
+.B o
+indicate that
+.I permission\^
+is to be taken
+from the current
+mode.
+Omitting
+.I permission\^
+is only useful
+with
+.B =
+to take away
+all permissions.
+.PP
+Multiple symbolic modes separated by commas may be given.
+Operations are performed
+in the order specified.
+The letter
+.B s
+is only useful
+with
+.B u
+or
+.B g
+and
+.B t
+only works
+with
+.BR u .
+.PP
+Only the owner of a file (or the super-user) may change its mode.
+Only the super-user may set the sticky bit.
+In order to set the group \s-1ID\s+1, the group of the
+file must correspond to your current group \s-1ID\s+1.
+.SH EXAMPLES
+The first example denies write permission to others,
+the second makes a file executable:
+.IP
+chmod o\-w file
+.IP
+chmod +x file
+.PP
+.SH "SEE ALSO"
+ls(1).
+.br
+chmod(2) in the \f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)chmod.1	6.2 of 9/2/83

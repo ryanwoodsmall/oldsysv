@@ -1,0 +1,12 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/printers/DESC	1.3"
+## IDOC:   SCREEN 2.9: PRINTER MANAGEMENT MENU
+#menu# Printer management menu
+
+#head#                   PRINTER MANAGEMENT MENU
+
+#help#        The "printers" menu gives you several commands:  for  adding
+#help#        new  printers to the print service; for changing the printer
+#help#        configurations; for enabling  and  disabling  printers;  for
+#help#        turning  on  or  off  the acceptance status of printers; for
+#help#        adjusting the alerting schedule for printers in trouble; and
+#help#        for examining the printer configuration.

@@ -1,0 +1,37 @@
+
+   Upon  invoking PRINT  and chosing the  Change  Print  Option, the
+   Print  Options  form will  be displayed.  The form presents three
+   fields to  edit so  you can later choose  one of three  different
+   print options when submitting a print request.
+
+   Edit the form to reflect the changes you want.  The fields are as
+   follows:
+	
+	- Print  Command: Specify the  print command you want to use
+	when  printing  a file.  The  default is  set to lp. You can
+        override  the default by specifying  another print facility,
+        but it  must exist on your system.  You  can specify options
+        along  with the command.  See  the manual page for lp(1), or
+        check with your  system administrator  for options which can
+        be set.
+
+   The print commands and options specified are saved.
+
+   The  Function Keys  provided  with this  form are (in addition to
+   PREV-FRM, NEXT-FRM, HELP and CMD-MENU):
+
+        - CANCEL - cancels changes  to  the print command and closes
+        the form.
+
+        - CHOICES - toggles  between  the   choices   available   or
+        presents  a pop-up  frame  of choices for the current field.
+        If  choices  are not available, displays a definition of the
+        field on the message line.
+
+        - SAVE - saves  all entries,  and presents a Menu so you can
+        select  which  print  command to  invoke when submitting the
+        print job.
+  
+        - RESET - resets  the  current  field  back to the value  in
+        effect at the beginning of the current editing session.
+

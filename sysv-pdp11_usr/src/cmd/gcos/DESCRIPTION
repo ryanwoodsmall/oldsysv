@@ -1,0 +1,111 @@
+#	@(#)DESCRIPTION	1.2
+The dpd package consists of eight commands (or "spoolers") and
+two daemons to send jobs from a unix over a dataphone or vpmc device to
+GCOS, and possibly to bring files back from GCOS.
+
+Communication with GCOS can be via one of 2 different hardware
+devices, a DU11 or a KMC11-B, coupled with either a hardwired link
+to GCOS or a high-speed line connected to an ACU and DN11 or to a
+phone to be dialed manually.
+
+The spoolers are:
+	dpr		print a file on GCOS printer
+	fget		get files from a GCOS directory
+	fsend		send files to a GCOS directory
+	gcat		send troff output to the phototypesetter
+	gcosmail	send mail to a userid on GCOS
+	ibm		send an off-line job to HO IBM 370
+	labmake		print address labels on GCOS
+	tekstare	convert tektronix picture to hard copy graphics
+
+These spoolers create temporary files in a spooling directory,
+and then activate one or more daemons to communicate between
+the spooling directory and GCOS. 
+The daemons are:
+	dpd		sends jobs from unix to GCOS
+	fget.demon	"gets" files from GCOS to unix.  This
+			daemon is used only by fget.
+
+The spoolers reside in /usr/bin.  The daemons reside in /usr/lib.
+The spooling directory is /usr/spool/dpd.  To change the spooling directory
+pathname, do a global edit (with printing) of all spoolers and daemons.
+To change the pathnames of the daemons, only the spoolers and the
+dpd daemon need to be edited.
+
+Also included in this package are manual pages for ibm, labmake,
+and tekstare (all in section 1c), a README file, and a make file,
+gcos.mk, to install the package.
+
+
+INSTALLATION
+
+To install this package, follow the instructions in the README file.
+Only 5 of the spoolers mentionned above (dpr, fget, fsend, gcat and
+gcosmail) are officially supported.  If you want to use any of the
+other spoolers (ibm, labmake or tekstare), you must add their names
+to the dependency line
+
+	spoolers:	dpr fget fsend gcat gcosmail
+
+in the file gcos.mk before executing the make.
+
+
+DESCRIPTION OF NORMAL WORKING OF DPD
+
+Successful execution of any of the spoolers will produce (temporarily)
+a file in /usr/spool/dpd with a name beginning with 'df' and ending with
+the user's process-id, plus possible additional files with names
+beginning with 'cf', 'lf', 'yf' or 'zf' and ending with the same process-id.
+The dpd daemon will be automatically invoked also before the
+spooler exits.  After dpd has sent this job to GCOS, all of the
+df, cf, lf and yf files should disappear, and the success of the transaction
+recorded by a line in the "errors" file. 'zf' files are generated only
+by fget, and remain after dpd has sent the job until the fget.demon
+has successfully retrieved the files from GCOS.  All successful transactions
+and all errors are recorded in the errors file, /usr/spool/dpd/errors,
+by both daemons. This file should be housecleaned occasionally,
+to prevent it growing too large.
+
+To fully automate the daemons, changes should be made to /etc/rc
+to clean up the lock files from the spooling directory in case either
+daemon was running when the system last went down, and to reinitiate
+the dpd daemon in case there is any work left for it..
+
+	rm -f /usr/spool/dpd/lock /usr/spool/dpd/glock
+	/usr/lib/dpd
+
+To automatically initiate the fget.demon periodically to check
+if there are any files waiting to come over from GCOS, an entry
+should be made in /usr/lib/crontab to initiate fget.demon every
+so often (say 15 minutes), to run for a short period of time
+just to check if there is anything to do..
+
+	fget.demon 0
+
+The argument to fget.demon tells it how many seconds to hang around
+waiting for work, checking every minute or so.
+The 0 makes it try only once.  A value of 20 makes it
+wait 20 seconds, or 2 tries.  The default value is 6 minutes,
+which is used by the fget spooler.
+
+Files that will occasionally appear in the spooling directory
+include:
+
+	errors	log of all transactions; should be there always.
+	snumb	latest GCOS snumb number used; should be there always,
+			but it will be automatically
+			recreated if it disappears.
+	lock	lock file for dpd daemon; means dpd is running.
+	glock	lock file for fget.demon; means fget.demon is running.
+	logconfig  log of all changes of configuration, if automatic
+			re-configuring is being used.  (See README file
+			under AUTOMATIC RECONFIGURATION).
+
+	dfWXXXXX  control file for a job waiting to be sent to GCOS.
+			W is a letter identifying the spooler
+			XXXXX is a process-id
+	cfWXXXXX  copies of user files to be sent to GCOS.
+	lfWXXXXX  links to user files to be sent to GCOS.
+	yfWXXXXX  data from a tekstare job to be sent to GCOS.
+	zfWXXXXX  links to user files to be retrieved from GCOS.
+	tfWXXXXX  dfWXXXXX while it is still in the process of being made.

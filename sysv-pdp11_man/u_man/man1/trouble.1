@@ -1,0 +1,109 @@
+.TH TROUBLE 1
+.SH NAME
+trouble \- log a trouble report
+.SH SYNOPSIS
+trouble
+.SH DESCRIPTION
+The
+.I trouble
+command is a front end for the Piscataway
+Change Management Tracking System
+(\s-1CMTS\s+1).
+It is used to log trouble reports on, or request enhancements to the
+U\s-1NIX\s+1 System.
+Trouble reports will be forwarded to Piscataway via
+.IR uucp (1C),
+where they are transformed into Modification Requests
+(\s-1MR\s+1s).
+.PP
+The command will prompt for the following mandatory fields:
+.PP
+.RS
+.PD 0
+.TP "\w'Date required:  'u"
+Name:
+The originator's name
+(F. M. Last, F. Last, or First Last);
+(3 to 6 letter \s-1ID\s+1, if they are in the \fBnames\fP file)
+.TP
+Location:
+The external or internal mailing address
+.TP
+Phone:
+The telephone number (aaaa, aaa-bbb-cccc, 8aaa-bbbb, or
+aaa-bbb-cccc xdddd)
+.TP
+Type:
+\fBsw\fP (software), \fBhdw\fP (hardware), \fBdoc\fP (documentation),
+\fBenh\fP (enhancement), \fBunk\fP (unknown)
+.TP
+System:
+The product under discussion (usually \fBunix\fP)
+.TP
+Machine:
+The \s-1CPU\s+1 on which the trouble was found;
+\fBna\fP if not applicable
+.TP
+Release:
+The product release number;
+\fBna\fP if not applicable
+.TP
+Severity:
+\fB1\fP (out of commission, no circumvention),
+\fB2\fP (severity 1 if not fixed by due date (mo/da/yr)),
+\fB3\fP (needed), \fB4\fP (can be deferred)
+.TP
+Date required:
+The due date for a severity \fB2\fP trouble report
+.TP
+Trouble Area:
+The command or area in which the trouble was found
+.TP
+Abstract:
+A one-line summary of the problem
+.TP
+Description:
+The exact description of the problem;
+.IR ed (1)
+is the entry mechanism, so an \fBa\fP (append) must first
+be typed.
+Once the description has been entered and edited,
+a \fBw\fP (write) followed by a \fBq\fP (quit) is required.
+Since
+.I nroff\^
+is used to format these reports, all
+examples can be enclosed within the \s-1\fB.ES\fP\s+1 and \s-1\fB.EE\fP\s+1
+formatter macros that are supplied by
+.IR trouble .
+In addition, any backslashes should be entered using the \fB\ee\fP
+construct.
+.RE
+.PD
+.PP
+A response of \fB?\fP will cause the expected format of the response
+to be displayed.
+.PP
+Unless the description states otherwise, the trouble
+report may be selected to appear in the
+\fI\s-1MINI-SYSTEM NEWSLETTER\s+1\fP\^.
+.SH FILES
+.PD 0
+.TP "\w'/usr/lib/trouble/instruct  'u"
+/usr/lib/trouble/tr.a
+archived trouble reports
+.TP
+/usr/lib/trouble/instruct
+instructions
+.TP
+/usr/lib/trouble/trsh
+trouble report shell
+.TP
+/usr/lib/trouble/trxmit
+re-transmission shell
+.TP
+/usr/lib/trouble/names
+letter \s-1ID\s+1 data base
+.PD
+.SH "SEE ALSO"
+uucp(1C).
+.\"	@(#)trouble.1	5.2 of 5/18/82

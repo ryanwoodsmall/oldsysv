@@ -1,0 +1,82 @@
+#	@(#):mksyshead	1.7
+
+cd /usr/include
+mkdir vax vax/sys pdp11 pdp11/sys 2>&-
+chgrp bin vax vax/sys pdp11 pdp11/sys 
+chown bin vax vax/sys pdp11 pdp11/sys 
+chmod 775 vax vax/sys pdp11 pdp11/sys 
+
+: ${SRC:=/usr/src}
+if [ "$1" ]
+then systems=$*
+else systems="pdp11 vax"
+fi
+
+cd $SRC/uts/sys
+rm -f sys.mk
+ls > sys.mk
+chmod 664 sys.mk
+chown bin sys.mk
+chgrp bin sys.mk
+ed - sys.mk <<!
+g/sys\.mk/d
+w
+q
+!
+all=`cat sys.mk`
+export all
+ed -  sys.mk <<!
+1,\$s;.*;\$(INC)/&: \$(SRC)/&\\
+	\$(CPLN) \$(SRC)/& \$(INC);
+0a
+SRC=.
+INC=/usr/include/sys
+CPLN=cp
+$all
+.
+4,.s;.*;\$(INC)/& \\\\;
+s; \\\\;;
+4s/^/all: /
+w
+q
+!
+make -f sys.mk
+for sys in $systems
+	do
+	make -f sys.mk SRC=/usr/include/sys INC=/usr/include/$sys/sys CPLN=ln
+	done
+export sys
+for sys in $systems
+	do
+	cd $SRC/uts/$sys/sys
+	rm -f ${sys}.mk
+	ls > ${sys}.mk
+	chmod 664 ${sys}.mk
+	chown bin ${sys}.mk
+	chgrp bin ${sys}.mk
+	ed - ${sys}.mk <<!
+g/${sys}\.mk/d
+w
+q
+!
+	all=`cat ${sys}.mk`
+	ed - ${sys}.mk <<!
+1,\$s%.*%/usr/include/$sys/sys/&: &\\
+	cp & /usr/include/$sys/sys\\
+	set +e; if $sys; then rm -f /usr/include/sys/&; ln /usr/include/$sys/sys/& /usr/include/sys; fi%
+0a
+$all
+.
+1,.s;.*;/usr/include/$sys/sys/& \\\\;
+s; \\\\;;
+1s/^/all: /
+w
+q
+!
+	make -f ${sys}.mk
+	done
+
+cd /usr/include
+chgrp bin sys sys/* vax/sys/* pdp11/sys/*
+chown bin sys sys/* vax/sys/* pdp11/sys/*
+chmod 755 sys sys/* vax/sys/* pdp11/sys/*

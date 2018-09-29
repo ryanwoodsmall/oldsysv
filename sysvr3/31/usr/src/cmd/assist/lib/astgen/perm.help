@@ -1,0 +1,52 @@
+0
+This line specifies that the user input must be one of the following:
+
+ directory:         user input is to be a directory name
+ file:              user input is to be a file (non-directory) name
+ file or directory: either is allowed
+
+Each time you hit the ^G key, the value for this line will be 
+toggled.  Keep hitting it until the value that you want appears.
+1
+This line is used to specify what should happen if the user input
+does not conform to your specification above.  You may either specify
+that an error message be given (in which case the user must correct
+the problem before executing the command form) or a warning message
+may be given.  In this case, the user will receive a warning, but be
+allowed to execute the command form.
+2
+You may specify that the user must have read permission on the file
+or directory, must not have read permission, or you may indicate that
+read permission is irrelevant.  Hitting ^G will toggle between the 
+three possible values.
+3
+This line is used to specify what should happen if the user input
+does not conform to your specification above.  You may either specify
+that an error message be given (in which case the user must correct
+the problem before executing the command form) or a warning message
+may be given.  In this case, the user will receive a warning, but be
+allowed to execute the command form.
+4
+You may specify that the user must have write permission on the file
+or directory, must not have write permission, or you may indicate that 
+write permission is irrelevant.  Hitting ^G will toggle between the
+three possible values.
+5
+This line is used to specify what should happen if the user input
+does not conform to your specification above.  You may either specify
+that an error message be given (in which case the user must correct
+the problem before executing the command form) or a warning message
+may be given.  In this case, the user will receive a warning, but be
+allowed to execute the command form.
+6
+You may specify that the user must have execute permission on the file,
+must not have execute permission, or you may indicate that execute
+permission is irrelevant.  Hitting ^G will toggle between the three
+possible values.
+7
+This line is used to specify what should happen if the user input
+does not conform to your specification above.  You may either specify
+that an error message be given (in which case the user must correct
+the problem before executing the command form) or a warning message
+may be given.  In this case, the user will receive a warning, but be
+allowed to execute the command form.

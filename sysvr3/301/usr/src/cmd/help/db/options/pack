@@ -1,0 +1,12 @@
+
+\Spack\S:  Options
+
+     -   reports details of the packed files: reports the percent that the
+         file was compressed, the savings in bytes, the structure of the
+         recoded file, the number of different characters in the input, the
+         number of characters used to recode the file, the number of bits of
+         information that are coded in every byte, and the theoretical number
+         of bits that could have been coded per byte.
+
+     -f   forces a files to pack when they are smaller than three blocks.
+

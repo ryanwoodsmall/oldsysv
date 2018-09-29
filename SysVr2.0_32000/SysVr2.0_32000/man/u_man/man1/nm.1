@@ -1,0 +1,180 @@
+.TH NM 1
+.SH NAME
+\*pnm \- print name list of common object file
+.SH SYNOPSIS
+.B \*pnm
+.RB [ \-o ]
+.RB [ \-x ]
+.RB [ \-h ]
+.RB [ \-v ]
+.RB [ \-n ]
+.RB [ \-e ]
+.RB [ \-f ]
+.RB [ \-u ]
+.RB [ \-V ]
+.RB [ \-T ]
+file-names
+.SH DESCRIPTION
+The
+.I \*pnm\^
+command
+displays the symbol table of each
+common object file
+.IR file-name .
+.I File-name\^
+may be a relocatable or absolute common object file;
+or it may be an archive of relocatable or absolute common object files.
+For each symbol, the following information will be printed:
+.PP
+.TP 9
+.B Name
+The name of the symbol.
+.TP 9
+.B Value
+Its value expressed as an offset or an address
+depending on its storage class.
+.TP 9
+.B Class
+Its storage class.
+.nr C 1
+.if '\*p'n3b' .nr C 0
+.if '\*p'm32' .nr C 0
+.if \nC \{\
+.TP 9
+.B Type
+Its type and derived type.
+If the symbol is an instance of a structure or of a union then the structure
+or union tag will be given following the type (e.g., struct-tag).
+If the symbol is an array, then the array dimensions will be given 
+following the type (eg.,
+.BR char[ n ][ m ] ).
+Note that the object file must have been compiled with the \fB\-g\fR
+option of the
+.IR cc (1)
+command for this information to appear.
+.TP 9
+.B Size
+Its size in bytes, if available.
+Note that the object file must have been compiled with the \fB\-g\fR
+option of the
+.IR cc (1)
+command for this information to appear.
+.TP 9
+.B Line
+The source line number at which it is defined, if available.
+Note that the object file must have been compiled with the \fB\-g\fR
+option of the
+.IR cc (1)
+command for this information to appear.
+.TP 9
+.B Section
+For storage classes static and external,
+the object file section containing the symbol (e.g., text, data or bss).
+.DT
+.br
+.PP
+The output of
+.I \*pnm
+may be controlled using the following options:
+.PP
+.TP 9
+.B \-o
+Print the value and size of a symbol in octal instead of decimal.
+.PP
+.TP 9
+.B \-x
+Print the value and size of a symbol in hexadecimal instead of decimal.
+.PP
+.TP 9
+.B \-h
+Do not display the output header data.
+.PP
+.TP 9
+.B \-v
+Sort external symbols by value before they are printed.
+.PP
+.TP 9
+.B \-n
+Sort external symbols by name before they are printed.
+.PP
+.TP 9
+.B \-e
+Print only external and static symbols.
+.PP
+.TP 9
+.B \-f
+Produce full output.  Print redundant symbols (.text, .data and .bss),
+normally suppressed.
+.TP 9
+.B \-u
+Print undefined symbols only.
+.PP
+.TP 9
+.B \-V
+Print the version of the \*pnm command executing on the standard error output.
+.PP
+.TP 9
+.B \-T
+By default,
+.I \*pnm\^
+prints the entire name of the symbols listed.
+Since object files can have symbols names with an arbitrary number of 
+characters, a name that is longer than the width of the column set aside
+for names will overflow its column, forcing every column after the name
+to be misaligned.  The 
+.B \-T
+option causes
+.I \*pnm\^
+to truncate every name which would otherwise overflow its column and
+place an asterisk as the last character in the displayed name to mark
+it as truncated.
+.DT
+.br
+.PP
+Options may be used in any order, either singly or in combination,
+and may appear anywhere in the command line.
+Therefore, both 
+.B "\*pnm name \-e \-v"
+and
+.B "\*pnm \-ve name"
+print the static and external symbols in
+.IR name ,
+with external symbols sorted by value.
+.SH "FILES"
+/usr/tmp/nm??????
+.SH "CAVEATS"
+When all the symbols are printed, they must be printed in the order they
+appear in the symbol table in order to preserve scoping information.
+Therefore, the
+.B \-v
+and
+.B \-n
+options should be used only in conjunction with the
+.B \-e 
+option.
+.SH "SEE ALSO"
+\*pas(1),
+\*pcc(1),
+\*pld(1).
+.br
+a.out(4),
+ar(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH "DIAGNOSTICS"
+.TP 9
+``\*pnm:  name:  cannot open''
+if
+.I name
+cannot be read.
+.PP
+.TP 9
+``\*pnm:  name:  bad magic''
+if
+.I name
+is not an appropriate common object file.
+.PP
+.TP 9
+``\*pnm:  name:  no symbols''
+if the symbols have been stripped from
+.IR name .
+.\"	@(#)nm.1	6.2 of 9/2/83

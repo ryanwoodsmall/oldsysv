@@ -1,0 +1,18 @@
+
+\S full pathname : pathname \S
+
+A full pathname or pathname is a way of identifying a file or
+directory. A pathname is a sequenced list of the directory names
+between the "root directory"\S*\S and the file or directory being
+identified. The pathname begins with the root directory, which is 
+represented by a slash (/). Directory names and/or a "file name"\S*\S
+follows, each separated from the next by a slash (/).  The last name
+is the name of the file or directory being identified. For example,
+a file called "temp" in a directory called "project", which is owned
+by a person with the  login name "sandy" on "system1", has the
+following full pathname:
+			   /system1/sandy/project/temp
+
+(see also:  relative pathname)
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,35 @@
+0
+Select this item to change the way the menu or command form appears 
+to the user.  You will be placed in the editor and may add, delete,
+or change lines.
+1
+Once you have defined the layout of the screen as it will appear to
+the user, you need to specify the attributes of each field or item.
+For example, you may want to specify whether a user may enter more than
+one value for a certain field, or you may want to define a help 
+message for that field.  All field or item specific attributes are 
+set by selecting this item.
+2
+Certain attributes of a command form or menu are not specific to one
+field.  For example, menu or form help (what the ASSIST user sees by
+typing ^O or f7).  Select this item to specify all attributes that 
+pertain to the entire menu or form.
+3
+After creating or changing your command form or menu, you may wish to try
+them out in ASSIST.  Select this item to try out what you have currently
+specified.  No changes are made to your current file; a temporary file
+is used.  If you are satisfied you should be sure to update your file
+by selecting "Write" from this menu.
+4
+None of the changes you specify in "astgen" will be saved unless
+you request that the data file be updated.  You may want to try your
+menu or command form first with the "Try ASSIST" item above, and if
+you are satisfied, then save your specifications in a file by selecting
+this item.
+5
+Select this item to exit the "astgen" program.  If you have made changes
+to the command form or menu specification, and have not saved those
+changes, you will be asked whether you want to save them.  You can also
+terminate the program at any point by hitting the DELETE key, but in 
+this case, the program will exit without giving you the chance to
+update your data file.

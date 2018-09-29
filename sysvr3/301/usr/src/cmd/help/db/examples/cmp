@@ -1,0 +1,26 @@
+
+\Scmp\S:  Examples
+
+        cmp prog1 prog2
+
+   Compares the contents of two executable files "prog1" and "prog2".  Prints
+   the line number and byte number of the first difference between the files.
+
+   ---------------------------------------------------------------------------
+
+        cmp - data2
+
+   Compares standard input to the text file "data2".  The user signals the end
+   of standard input by holding down the control key and striking the letter
+   "d" simultaneously.  The output is the byte number where the first non-
+   identical character occurs.
+
+
+   ---------------------------------------------------------------------------
+
+        cmp -l troff /usr/bin/troff
+
+   Compares the file "troff" to "/usr/bin/troff" and lists the differences
+   between the files in three columns of output.  The first column of output is
+   a list of the bytes where the differences occur, and the second two are the
+   octal representations of the characters that are different.

@@ -1,0 +1,10 @@
+ed - ex_tune.h << !
+31,37c
+#define LBSIZE		512		/* Line length */
+#define ESIZE		128		/* Size of compiled re */
+.
+w
+q
+!
+
+

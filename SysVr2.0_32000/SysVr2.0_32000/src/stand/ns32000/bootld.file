@@ -1,0 +1,7 @@
+SECTIONS {
+	.text	0x0	: {}
+	GROUP	ALIGN(0x200) : {
+		.data : {}
+		.bss : {}
+	}
+}

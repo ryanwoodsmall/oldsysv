@@ -1,0 +1,68 @@
+#ident	"@(#)core:setup.core1	1.7"
+#
+#	Sets up "3B2 Core UNIX Part 1" file system on floppy 
+#
+
+echo "Setting up the \"3B2 Core UNIX Part 1\" floppy"
+
+set -u
+export PATH
+PATH=/bin:/usr/bin:/etc
+ROOT=/install
+
+if [ ! -f /COREunix ]
+then
+	echo "\07
+The corresponding \"3B2 Core UNIX Part 6\" floppy must be set up
+before this one may be done." >&2
+	exit 1
+fi
+
+ln ${ROOT}/etc/init ${ROOT}/etc/telinit
+ln ${ROOT}/bin/ln ${ROOT}/bin/mv
+ln ${ROOT}/bin/ln ${ROOT}/bin/cp
+ln ${ROOT}/bin/sh ${ROOT}/bin/rsh
+ln ${ROOT}/inst/bin/fsys ${ROOT}/etc/fsys
+ln ${ROOT}/inst/hard/etc/inittab ${ROOT}/inst/hard/etc/inittab_rm
+
+for r in r ''
+do
+	for s in 0 1 2 3 4 5 6 7
+	do
+		ln ${ROOT}/dev/${r}dsk/c0d0s${s} ${ROOT}/dev/${r}ifdsk0${s}
+	done
+	for s in 0 1 2 3 4 5 6 7 8 9 a b c d e f
+	do
+		ln ${ROOT}/dev/${r}dsk/c1d0s${s} ${ROOT}/dev/${r}idsk0${s}
+	done
+done
+
+ln ${ROOT}/dev/console ${ROOT}/dev/syscon
+ln ${ROOT}/dev/console ${ROOT}/dev/systty
+ln ${ROOT}/dev/dsk/c0d0s6 ${ROOT}/dev/install
+ln ${ROOT}/dev/rdsk/c0d0s6 ${ROOT}/dev/rinstall
+ln ${ROOT}/dev/dsk/c0d0s6 ${ROOT}/dev/diskette
+ln ${ROOT}/dev/rdsk/c0d0s6 ${ROOT}/dev/rdiskette
+ln ${ROOT}/dev/rdsk/c0d0s6 ${ROOT}/dev/rsave
+ln ${ROOT}/dev/dsk/c0d0s6 ${ROOT}/dev/save
+ln ${ROOT}/dev/dsk/c0d0s6 ${ROOT}/dev/SA/diskette1
+ln ${ROOT}/dev/rdsk/c0d0s6 ${ROOT}/dev/rSA/diskette1
+ln ${ROOT}/dev/dsk/c1d0s6 ${ROOT}/dev/SA/disk1
+ln ${ROOT}/dev/rdsk/c1d0s6 ${ROOT}/dev/rSA/disk1
+ln ${ROOT}/dev/dsk/c1d1s6 ${ROOT}/dev/SA/disk2
+ln ${ROOT}/dev/rdsk/c1d1s6 ${ROOT}/dev/rSA/disk2
+ln ${ROOT}/dev/mem ${ROOT}/dev/mainstore
+ln ${ROOT}/bin/false ${ROOT}/bin/u3b
+ln ${ROOT}/bin/false ${ROOT}/bin/pdp11
+ln ${ROOT}/bin/false ${ROOT}/bin/vax
+ln ${ROOT}/bin/false ${ROOT}/bin/u370
+ln ${ROOT}/bin/false ${ROOT}/bin/u3b5
+ln ${ROOT}/bin/false ${ROOT}/bin/u3b15
+ln ${ROOT}/bin/true ${ROOT}/bin/u3b2
+
+${ROOT}/inst/bin/pnewboot ${ROOT}/lib/olboot ${ROOT}/lib/mboot /dev/dsk/c0d0s7
+
+cp /COREunix ${ROOT}/unix
+TZ=GMT0 touch -am 0101000070 ${ROOT}/unix
+
+rm ${ROOT}/setup

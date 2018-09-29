@@ -1,0 +1,12 @@
+*#ident	"@(#)kern-port:master.d/disp	10.3"
+*
+* DISP - process dispatcher.
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+orx
+						slice_size(%i) = {MAXSLICE}
+$$$
+*
+* Tunable parameter
+*
+MAXSLICE = 100

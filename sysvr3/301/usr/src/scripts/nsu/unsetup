@@ -1,0 +1,17 @@
+#ident	"@(#)pkg.nsu:unsetup	1.1"
+#
+#	Unsetup script for AT&T NSU Package for AT&T 3B2 Computer.
+#
+
+#
+# Remove the NSU self-configuring drivers.
+#
+
+DRVPATH=/etc/master.d
+/etc/drvinstall -u -f -m $DRVPATH/clone -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/log -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/timod -v 1.0
+/etc/drvinstall -u -f -m $DRVPATH/tirdwr -v 1.0
+
+rm -rf /dev/log
+

@@ -1,0 +1,33 @@
+############################################################
+# ININSTALL Script
+#
+
+PKGNAME=`cat ${INSPATH}/usr/options/windowing.name`
+
+#############################################################
+# Call a unsetup script
+#
+
+/install/install/unsetup
+
+
+#############################################################
+# Remove files found in the Rlist from the hard disk
+#
+
+echo "Removing the ${PKGNAME}"
+echo "The following files are being removed."
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -f $i
+done
+echo "The ${PKGNAME} has been removed."
+echo '
+NOTE:
+You will have to reboot the system to delete the
+driver. You can do this with the simple administration
+command "shutdown -g0 -y -i6".
+'
+exit
+

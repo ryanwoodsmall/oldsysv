@@ -1,0 +1,6 @@
+#ident	"@(#)sadmin:shell/ncpio	1.2"
+#	ncpio is surplanted with cpio, which has all of its functionality now.
+
+#!	chmod +x ${file}
+
+exec cpio "$@"

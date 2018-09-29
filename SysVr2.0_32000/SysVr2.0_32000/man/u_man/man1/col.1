@@ -1,0 +1,116 @@
+.TH COL 1
+.SH NAME
+col \- filter reverse line-feeds
+.SH SYNOPSIS
+.B col
+[
+.B \-bfpx
+]
+.SH DESCRIPTION
+.I Col\^
+reads from the standard input and writes onto the standard output.
+It performs the line overlays implied by reverse line
+feeds (\s-1ASCII\s+1 code \%\fB\s-1ESC\s+1-7\fP),
+and by forward and reverse half-line feeds (\fB\s-1ESC\s+1-9\fP and \fB\s-1ESC\s+1-8\fP).
+.I Col\^
+is particularly useful for filtering multicolumn
+output made with the
+.B \&.rt
+command of
+.I nroff
+and output resulting from use of the
+.IR tbl (1)
+preprocessor.
+.PP
+If the
+.B \-b
+option is given,
+.I col\^
+assumes that the output device in use is not capable of backspacing.
+In this case, if two or more characters are to appear in the same place,
+only the last one read will be output.
+.PP
+Although
+.I col\^
+accepts half-line motions in its input, it normally does not
+emit them on output.
+Instead, text that would appear between lines is moved to the next lower
+full-line boundary.
+This treatment can be suppressed by the
+.B \-f
+(fine) option; in this case,
+the output from
+.I col\^
+may contain forward half-line feeds (\fB\s-1ESC\s+1-9\fP), but will still never contain
+either kind of reverse line motion.
+.PP
+Unless the
+.B \-x
+option is given,
+.I col\^
+will convert white space to tabs on output
+wherever possible to shorten printing time.
+.PP
+The \s-1ASCII\s+1 control characters \s-1\fBSO\fP\s+1 (\e016) and \s-1\fBSI\fP\s+1 (\e017) are assumed by
+.I col\^
+to start and end text in an alternate character set.
+The character set to which each input character belongs is remembered,
+and on output \s-1\fBSI\fP\s+1 and \s-1\fBSO\fP\s+1 characters are generated as appropriate to ensure
+that each character is printed in the correct character set.
+.PP
+On input, the only control characters accepted are space, backspace,
+tab, return, new-line, \s-1\fBSI\fP\s+1, \s-1\fBSO\fP\s+1, \s-1\fBVT\fP\s+1 (\e013),
+and \fB\s-1ESC\s+1\fP followed by
+.BR 7 ,
+.BR 8 ,
+or
+.BR 9 .
+The \s-1\fBVT\fP\s+1 character is an alternate form of full reverse line-feed,
+included for
+compatibility with some earlier programs of this type.
+All other non-printing characters are ignored.
+.PP
+Normally,
+.I col\^
+will ignore any unknown to it escape sequences found in its input;
+the
+.B \-p
+option may be used to cause
+.I col\^
+to output these sequences as regular characters, subject to overprinting
+from reverse line motions.
+The use of this option is highly discouraged unless the user
+is fully aware of the textual position of the escape sequences.
+.SH SEE ALSO
+nroff(1), tbl(1).
+.SH NOTES
+The input format accepted by
+.I col\^
+matches the output produced by
+.I nroff
+with either the
+.B \-T37
+or
+.B \-Tlp
+options.
+Use
+.B \-T37
+(and the
+.B \-f
+option of
+.IR col )
+if the ultimate disposition of the output of
+.I col\^
+will be a device
+that can interpret half-line motions, and
+.B \-Tlp
+otherwise.
+.SH BUGS
+Cannot back up more than 128 lines.
+.br
+Allows at most 800 characters, including backspaces, on a line.
+.br
+Local vertical motions that would result in backing up over the first
+line of the document are ignored.
+As a result, the first line must not have any superscripts.
+.\"	%W% of %G%

@@ -1,0 +1,11 @@
+
+\S parent process:  child process \S
+
+Processes have a hierarchical structure like file systems.  Each process
+has a parent process and it might also have a child process.  For example,
+the shell that started when you logged in is the parent of the commands you
+execute.  These commands are in turn child processes of the shell.  When
+you execute a program that you wrote, it is a child process of your login
+shell.  If you execute a command in the program, the program is a parent
+and the command becomes a child process.
+

@@ -1,0 +1,60 @@
+.TH MOUNT 1M
+.SH NAME
+mount, umount \- mount and dismount file system
+.SH SYNOPSIS
+.B /etc/mount
+[ special directory [
+.B \-r
+] ]
+.PP
+.B /etc/umount
+special
+.SH DESCRIPTION
+.I Mount\^
+announces to the system that a removable file system
+is present on the device
+.IR special .
+The
+.I directory\^
+must exist already; it
+becomes the name of the root of the newly mounted
+file system.
+.PP
+These commands
+maintain a table of mounted devices.
+If invoked with no arguments,
+.I mount\^
+prints the table.
+.PP
+The optional last argument indicates that the file
+is to be mounted read-only.
+Physically write-protected and magnetic tape file
+systems must be mounted in this way
+or errors will occur when access times are updated,
+whether or not any explicit write is attempted.
+.PP
+.I Umount\^
+announces to the system that the removable file system previously
+mounted on device
+.I special\^
+is to be removed.
+.SH FILES
+/etc/mnttab	mount table
+.SH "SEE ALSO"
+setmnt(1M),
+mount(2),
+mnttab(4).
+.SH DIAGNOSTICS
+.I Mount\^
+issues a warning if the file system to be mounted
+is currently mounted under another name.
+.PP
+.I Umount\^
+complains if
+the special file is not mounted or if it is busy.
+The file system is busy if
+it contains an open file or some user's working directory.
+.SH BUGS
+Some degree of validation is done on the file system; however,
+it is generally unwise to mount garbage file systems.
+.\"	@(#)mount.1m	6.2 of 9/2/83

@@ -1,0 +1,18 @@
+
+\S parity:  parity bit:  even parity:  odd parity \S
+
+Many systems add an extra "bit"\S*\S to each character to check that bits
+are not being added or lost because of noise on the "transmission line"\S*\S.
+This extra bit is a parity bit and its value is either 0 or 1.  If your a 
+system is designated as having odd parity, the parity bit will be added so 
+the number of 1 bits for each character is odd.  For example, without a 
+parity bit, the character 0100010 has an even number of 1 bits.  When this 
+character is transmitted from a system with odd parity, the system adds a 
+1 bit to the end so that the number of 1 bits is odd.  The character is 
+transmitted as 01000101.  If the transmitting system had even parity, the 
+parity bit would be 0, and the number of 1 bits would be even.  The 
+character would be transmitted as 01000100.  If your system has odd parity
+and it transmits a character with even parity, the receiving system or 
+terminal knows that a bit has been added or dropped during transmission.
+
+\S*\S defined in the \Sglossary\S

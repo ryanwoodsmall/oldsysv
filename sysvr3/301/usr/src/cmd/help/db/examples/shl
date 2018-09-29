@@ -1,0 +1,46 @@
+
+\Sshl\S:  Example
+    
+    The following example shows how to create two shells using \Sshl\S.
+    Highlighted lines mark the user's input.  First, you type \Sshl\S and a
+    carriage return.
+    
+        \Sshl\S
+    
+    The \Sshl\S command prints ">>>" which is its prompt.  This prompt shows
+    that \Sshl\S is waiting for a command.  On the same line as the prompt,
+    you type "create" followed by a name for the new shell and a carriage
+    return.
+    
+        >>> \S create venus \S
+    
+    The system uses the name you choose for the new shell, that is "venus",
+    as the prompt.  You type the commands you want to execute after the prompt.
+    If you want to format a file "book.1", you could type:
+    
+        venus \S mm book.1 > book.1m \S
+    
+    If you do not want to wait for the file "book.1" to be formatted, you can
+    create a new shell layer.  To create a new layer, you type a control
+    character and the letter "z" simultaneously.  This moves you out of the
+    shell called "venus".  \Sshl\S prompts you again with the three right
+    arrows.  They you type "create" followed by the name you choose for the
+    second shell.
+    
+        \S control-z >>> \S create mars \S
+    
+    \Sshl\S prompts you with the name of the new shell:
+    
+        mars
+   
+ 
+    Now you can execute commands in the shell called "mars" without disturbing
+    the command that is executing in "venus".  \Sshl\S prints the name of the
+    shell where "book.1" was formatting when it is finished.  In this example,
+    \Sshl\S would print "venus".  If you had not redirected the formatted
+    version of "book.1", \Sshl\S would have printed the entire file on the 
+    terminal screen.  To exit the shell layer called "mars" you type control-z.
+    \Sshl\S returns the ">>>" prompt and you type "quit" to terminate the
+    \Sshl\S command.  This also deletes the "venus" and "mars" shell layers.
+    
+        \S control-z \S >>> \S quit \S

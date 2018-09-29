@@ -1,0 +1,47 @@
+
+This is version 2.15 of the editor. It is the same as 2.14 with a 
+number of bugs fixed. Two enhancements that didn't make ex any bigger
+were also added: allowing "%" to mean "1,$", and allowing the next
+command to take a + argument like the edit command does.
+
+Version 2.15 corresponds to version 3.7 without the enhancements in 3.7.
+There is no reason to use 2.7 unless you have a pdp-11 that does not
+have overlay software (type=ov insted of id), since 3.7 contains all
+the bug fixes and some new features.
+
+Note that the C source has been moved into the directory SCCS, and
+a new tool has been added to `get' the files.
+
+Special installation notes for 2.15:
+
+1) The include file ../local/uparm.h does not need to be installed
+anywhere.  
+   
+   The contents of this include file can be modified if you wish to 
+   place the editor (and its string, recover tools) in a nonstandard 
+   location.
+
+2) Be sure to use the new termlib that goes with this version of 
+the editor.
+
+3) Be sure to use the new termcap.
+
+
+Conditional compilation flags:
+	-DTRACE		for debugging (wont then fit on an 11)
+	-DV6		for version 6, using raw (v7 uses cbreak)
+	-DVFORK		for UCB Vax/Unix with the vfork system call.
+	-DCHDIR		compile in undocumented old chdir (cd) command
+	-DLISP		compile in lisp hacks
+	-DUCVISUAL	compile in code to handle \ escapes for
+			visual on upper case only terminals.  gross.
+	***** (see the makefile for more)
+
+Ex means to avoid stdio like the plague. If any of stdio other than the
+ctype.h functions or str* get pulled in, it is a mistake.
+
+Ex is very large, but should fit (barely) on an 11/70.  There are only
+a few bytes of room left in version 2.15 unless you take out some of
+CHDIR, LISP, or UCVISUAL. This assumes the new termlib (which knows
+about the tc= capability, 1024 byte entries, and @ cancellation of
+capabilities.

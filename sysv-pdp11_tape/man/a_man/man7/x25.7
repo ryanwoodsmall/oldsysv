@@ -1,0 +1,691 @@
+'\" t
+.TH X25 7
+.SH NAME
+x25 \- \s-1BX\s+1.25 network interface
+.SH DESCRIPTION
+The
+.SM X\*S25
+driver provides multiplexed channels
+over one or more synchronous communications lines
+using the Bell System standard \s-1BX\s+1.25 Level 3 protocol.
+The current implementation supports permanent virtual circuits
+(\s-1PVC\s+1s)
+only;
+the call set-up features needed to support virtual calls
+have not yet been implemented.
+There is a separate and independent Level 3 interface
+for each communications line.
+Point-to-point connections between hosts
+are supported as well as connections via an
+.SM X\*S.25
+network.
+.PP
+The
+.SM X\*S25
+uses the
+.I "Common Synchronous Interface"
+(\s-1CSI\s+1)
+to access communications lines controlled by various
+kinds of programmable communications devices
+(\s-1PCD\s+1s).
+Level 2 of
+.SM BX\*S.25,
+the link level,
+is implemented by software or firmware in the
+\s-1PCD\s+1.
+On
+.SM DEC
+machines,
+the
+.SM PCD
+is a
+.SM DEC
+\s-1KMC\s+111-\s-1B\s+1
+microprocessor, using the
+.SM UNIX
+System Virtual Protocol Machine
+(\s-1VPM\s+1)
+software package.
+On the 3B20S,
+the
+.SM PCD
+is a
+\s-1TN\s+175\s-1B\s+1
+or
+\s-1TN\s+182
+peripheral controller.
+.PP
+The special files
+.BI /dev/x25/s ?
+refer to the minor devices of the
+.SM X\*S25
+driver.
+Each such minor device,
+also referred to as a
+.IR slot ,
+can be connected by means of a
+.I network control
+device
+(see
+.IR nc (7))
+to an arbitrary logical channel (1-4095)
+on a specified
+.SM X\*S25
+interface.
+Provided the other end of the logical channel
+has been connected in an analogous fashion,
+each slot so connected
+is the terminus of a \f2permanent virtual circuit\fP,
+which is a full-duplex connection
+between a set of user processes on the local host
+and another set of user processes on a remote host.
+A logical channel is a connection which may be multiplexed with other
+channels over a physical link
+to a remote host or
+an \s-1X\s+1.25 network.
+Each
+.SM X\*S25
+interface
+(also referred to as a
+.IR link )
+must be connected via the
+network-control
+device to a particular synchronous line.
+.PP
+The \s-1X\s+1.25 driver includes the
+.SM BX\*S.25
+link backup facility.
+This facility provides for automatic changeover to a backup
+synchronous line which
+may be configured for any 
+.SM X\*S25
+interface.
+A changeover could occur for several reasons:
+if there is a failure on the link, i.e. physical
+severing of the link (Level 1) or
+a failure at Level 2;
+the link is noisy and produces too many errors;
+a changeover to the backup link is requested via the
+.I nc
+device; 
+or the remote end of the link initiates a changeover. 
+Level 3 will be unaware of the changeover and any lost
+packets will be recovered by the Level 3 recovery procedures. 
+The procedures for configuring backup links
+and requesting a changeover to the backup link are described in
+the manual entries for x25pvc(1M) and nc(7).
+.PP
+A user process accesses a \s-1BX\s+1.25 minor device (slot) using
+\f2open\fP,
+\f2close\fP,
+\f2read\fP,
+\f2write\fP,
+and
+.I ioctl
+system calls.
+.PP
+There are several internal flags that are maintained by
+the
+.SM X\*S25
+driver for each slot.
+The values of these flags can be read
+and in some cases modified
+by means of the
+.I ioctl
+system call
+(see below).
+.PP
+An \f2open\fP 
+and return the error
+.SM ENXIO
+if the specified slot is not configured, 
+.SM ENODEV 
+if the slot is not
+currently
+connected to a logical channel on some link,
+or
+.SM EL3HLT 
+if the link to which the slot is connected is not currently active.
+The user may request the normal \f2open\fP options
+\s-1O_RDONLY\s+1,
+\s-1O_WRONLY\s+1,
+and \s-1O_RDWR\s+1.
+The
+user may also request that reads with no data available should not sleep by 
+using the
+.SM O_NDELAY
+\f2open\fP flag,
+or that the \f2open\fP is to be exclusive by 
+using the
+.SM O_EXCL
+\f2open\fP flag.
+If an exclusive \f2open\fP is requested and
+the slot is already in use,
+the error \s-1EACCES\s+1 will be returned.
+A successful \f2open\fP will clear the \f2isreset\fP status bit
+(see the discussion of \f2ioctl\fP below).
+.PP
+An \f2open\fP may or may not block until the far end is also
+open,
+depending on the session-establishment protocol requested.
+The choice of 
+session-establishment protocol
+is made by means of the
+network-control device
+at the time the permanent virtual circuit is installed.
+There are three possibilities:
+the first mode,
+referred to as the ``no-protocol'' session mode,
+is for the \f2open\fP to return immediately.
+This puts the burden on the user program
+to determine whether the far end is actually open.
+The reset session mode,
+intended only for compatibility with certain non-\s-1UNIX\s+1
+System implementations of \s-1BX\s+1.25,
+uses a \s-1RESET\s+1 in-order packet to indicate to the far end that
+the slot has been opened
+and a \s-1RESET\s+1 out-of-order packet to indicate to the far end
+that the slot has been closed.
+In the current implementation,
+the \s-1RESET\s+1 in-order and \s-1RESET\s+1 out-of-order packets are recognized
+when they are received,
+but are not transmitted
+(so-called ``passive'' mode).
+To avoid data loss with this mode,
+the application on the non-\s-1UNIX\s+1 System side must wait until it receives
+data from the \s-1UNIX\s+1 System side (allow the \s-1UNIX\s+1 System side to perform the
+first write) before it sends any data to the \s-1UNIX\s+1 System.
+The third mode,
+which is the one recommended for most applications,
+uses
+\s-1BX\s+1.25
+session-layer
+.I Connect/Accept
+qualified data messages
+to indicate that a slot has been opened
+and session-layer \f2Disconnect\fP qualified data messages to indicate that
+a \f2close\fP has occurred.
+In the last two modes,
+an \f2open\fP will block until the indication
+that the far end is open has been received,
+unless the \s-1O_NDELAY\s+1 \f2open\fP option was specified,
+in which case the status of the far end of the
+.SM PVC
+must be obtained by using
+.I ioctl
+(see below).
+.PP
+Regardless of the session-establishment protocol in effect,
+data which is received while a slot is not open
+will be acknowledged and silently discarded.
+However, if the session-layer
+.IR open / close
+protocol is selected,
+no data can be transmitted
+until both ends of the \s-1PVC\s+1 have been opened.
+.PP
+The data specified by each \f2write\fP is
+transmitted as a single \s-1BX\s+1.25 message,
+possibly multi-packet.
+The user has the
+option of waiting for acknowledgement of the last packet of each message before
+the \f2write\fP returns;
+this feature is called
+.IR "delivery confirmation"
+(see the discussion of \f2ioctl\fP below).
+Even if the \s-1O_NDELAY\s+1 mode was requested,
+the user process will be put to sleep
+if the amount of data in the transmit queue for the slot
+exceeds some high-water mark;
+the process will be given a wake-up when the transmit queue
+has been drained to the low-water mark.
+If the slot is not open for writing and a
+.I write
+system call
+is issued,
+the error
+.SM EBADF
+is returned. 
+.PP
+A user reads
+in
+record
+mode,
+which means that each \f2read\fP will return
+data from a single message only.
+If the slot is not open for reading and a
+.I read
+system call is issued,
+the error
+.SM EBADF
+is returned.
+If the
+count specified on the
+read
+request is not large enough to accommodate the entire message,
+the remainder of the message will be returned
+on subsequent
+.IR reads .
+The
+message-continued flag
+(\f2messcont\fP)
+will be set when a partial read occurs;
+this flag will be cleared when the
+last byte of the message is finally
+read.
+If no data is available,
+the user process
+will be put to sleep,
+unless the
+.SM O_NDELAY
+option was specified on the
+\f2open\fP
+or the equivalent mode was set via an \f2fcntl\fP system call.
+If
+.SM O_NDELAY
+was specified and no data is available,
+the
+\f2read\fP
+will return zero bytes.
+If a partial message is available and
+.SM O_NDELAY
+has been set,
+the
+.I read
+will return zero until the end of the message has been received
+or the count can be filled.
+However, if the channel is flow-controlled,
+the read will return the partial message even if
+.SM O_NDELAY
+is set.
+If
+.SM O_NDELAY
+is not set, the
+.I read
+will sleep until the entire message has been received or
+the count has been satisfied.
+.PP
+Zero-length messages will be sent and received as such
+(but see
+.I BUGS 
+below).
+.PP
+If the
+.I faropen
+flag (described below) is not set,
+a
+.I write
+will return immediately with a count of zero.
+A
+\f2read\fP
+will return a zero-length record (indicating end-of-file)
+if
+.I faropen
+is not set
+and the receive queue is empty.
+If the end of a message is on the input queue,
+a
+\f2read\fP
+will \f2not\fP return a zero
+indicating end-of-file,
+regardless of the state of the slot.
+Note that this means that the flags returned by
+.IR ioctl ,
+indicating that the far end has closed or a
+.SM RESET
+has occurred,
+may be set before they take effect on user
+reads.
+.PP
+Except as just noted,
+once a \s-1RESET\s+1 has occurred
+(indicating possible data loss),
+all reads and writes will fail,
+returning the error \s-1EL3RST\s+1,
+until the \f2isreset\fP flag is cleared by an \f2ioctl\fP
+or a successful
+\f2open\fP.
+.PP
+If the state of the channel is halted, 
+all calls to the \s-1BX\s+1.25 subsystem for
+that channel will
+fail with error \s-1EL3HLT\s+1.
+This occurs when a link dies or a severe error causes
+the protocol to be stopped on the channel or link.
+If the channel is not in the halted state but level 2
+has lost synchronization,
+the error
+.SM EL2NSYNC
+is returned. 
+.PP
+Signals
+will cause reads and writes to return the amount actually read
+or written,
+unless it was zero bytes,
+in which case the error
+.SM EINTR
+will be returned.
+However,
+if \s-1O_NDELAY\s+1 was specified,
+the amount actually read or written will be returned,
+whether zero or greater.
+If a \f2write\fP is interrupted by a signal,
+the data already packetized will be transmitted as a \s-1BX\s+1.25 message;
+that is,
+a subsequent \f2write\fP will always begin a new message.
+The return value from the
+.I write
+will indicate the number of bytes actually queued for transmission.
+.PP
+When the last user closes,
+any unread data in the receive queue
+will be discarded.
+Data in the transmit queue will \f2not\fP be discarded,
+but will be transmitted normally.
+When the transmit queue has been drained,
+the session take-down protocol,
+if any,
+is then followed
+(either to send a
+session-layer
+.I Disconnect
+message or to mark the channel as being out of use,
+so that incoming packets
+can be discarded).
+.PP
+Several options and actions can be requested via the
+.I ioctl
+system call,
+which takes three arguments:
+.IR fildes ,
+.IR request ,
+and
+.IR arg .
+To use this
+.I ioctl
+system call,
+the line
+.PP
+.RS
+#include	<sys/x25user.h>
+.RE
+.PP
+must be included in the user program.
+Possible values for the
+.I request
+argument are:
+.RS
+.TP 10
+\s-1X\s+125\s-1SET\s+1
+Set the flags and options for the slot or channel.
+.TP 10
+\s-1X\s+125\s-1GET\s+1
+Return the status information for the channel and its associated link.
+The structure
+pointed to by
+.I arg
+will receive the values
+described below.
+.RE
+.PP
+The structure pointed to by
+\f2arg\fP for \s-1X\s+125\s-1SET\s+1 is:
+.PP
+.RS
+.br
+.ne 6v
+.TS
+l1 l1 l1 l1 l.
+struct	x25sctl {
+	ushort
+		c_delconf: 1,	/\(** delivery confirmation \(**/
+		c_isreset : 1,	/\(** channel reset not cleared \(**/
+		c_ndelay : 1;	/\(** no delay requested \(**/
+};
+.TE
+.RE
+.PP
+Only the
+.I delconf
+and
+.I isreset
+flags can be changed by
+.IR ioctl .
+.PP
+The flag bits are further explained as follows:
+.TP 5
+.I c_delconf
+While this bit is set,
+each
+.I write
+system call will block until the last packet of the corresponding message
+has been acknowledged;
+another writer,
+if one exists,
+will also be blocked
+until the
+previous writer's message is acknowledged.
+If this bit is not set,
+a user
+.I write
+can return immediately after the message has been completely packetized and
+queued for transmission,
+possibly allowing several out-going messages to be unacknowledged at
+the same time.
+.TP 5
+.I c_isreset
+This flag if set indicates that a
+.SM RESET
+has occurred.
+The user may clear this flag
+by setting the corresponding flag bit to 1
+in the value passed by \s-1X\s+125\s-1SET\s+1.
+(The user may not set
+this flag).
+If the value for this flag passed by \s-1X\s+125\s-1SET\s+1 is 0,
+the internal
+value of this flag will \f2not\fP be changed.
+This flag is always cleared by a successful
+\f2open\fP.
+.TP 5
+.I c_fndelay
+This flag if set indicates that the
+.SM O_NDELAY
+flag has been set.
+If this flag is not set on an
+.I open
+system call, it can be set or cleared on the
+.I fcntl
+system call.
+The value of this bit may not be changed by
+using the
+.I ioctl
+system call.
+.PP
+The structure pointed to by
+.I arg
+for
+\s-1X\s+125\s-1GET\s+1 
+is:
+.PP
+.RS
+.br
+.ne 10v
+.TS
+l1 l1 l1 l.
+struct	x25gctl {
+	struct t_state	c_t_state;	/\(** tab state structure \(**/
+	struct l_state	c_l_state;	/\(** link state structure \(**/
+	struct s_flags	c_s_flags;	/\(** slot flags structure \(**/
+	unsigned char	c_xmtq;	/\(** length of lev 3 xmtq \(**/
+	unsigned char	c_recvq;	/\(** length of lev 3 recvq \(**/
+	unsigned char	c_rststate;	/\(** restart state of link \(**/
+	struct l_line	c_primline;	/\(** primary line info \(**/
+	struct l_line	c_bckline;	/\(** backup line info \(**/
+};
+.TE
+.RE
+.PP
+The structure returned contains information about the channel
+and its associated link.
+Macros are provided to
+obtain some of the more useful information.
+These macros are especially useful in determining the conditions
+of the channel and link when a system call to a
+.SM BX\*S.25
+minor device returns an error indicating an abnormal situation.
+To use the macros, a user must issue an
+.I ioctl
+using the file descriptor of the
+.SM BX\*S.25
+minor device.
+Each macro has an argument
+.I arg
+which is a pointer to an
+.I x25gctl
+structure.
+The following macros are provided:
+.RS
+.TP 14
+.SM X25LRDY
+true if the link has completed restart procedures
+.TP 14
+.SM X25LHLT
+true if the link is halted
+.TP 14
+.SM X25L2FUL
+true if the level 2 queue of the link is full
+.TP 14
+.SM X25ABNHLTP
+true if the link is halted because of an abnormal condition on the primary device
+.TP 14
+.SM X25NRMHLTP
+true if the link is halted because of a normal halt command on the primary device
+.TP 14
+.SM X25L2ERRP
+the value of the error code returned by the primary device when it last halted
+.TP 14
+.SM X25L2RDYP
+true if level 2 is synchronized on the primary device
+.TP 14
+.SM X25L2FCP
+the number of times the level 2 retry counter reached its maximum
+.TP 14
+.SM X25LATCHP
+true if the link is attached to a primary device
+.TP 14
+.SM X25CHLT
+true if the state of the channel is halted
+.TP 14
+.SM X25CRDY
+true if the channel is in the data transfer state
+.TP 14
+.SM X25FAROPN
+true if the far end of the channel is open
+.TP 14
+.SM X25ISRESET
+true if the channel has just completed reset procedures
+.TP 14
+.SM X25MSGCON
+true if the message was not completely consumed by last user read
+.TP 14
+.SM X25L3XQFUL
+true if the level 3 transmit queue is full
+.TP 14
+.SM X25L3RQFUL
+true if the level 3 receive queue is full
+.RE
+.PP
+In order to access information not obtained using the macros,
+the user may look at the structures declared in
+.I "/usr/include/sys/x25u.h"
+and
+.I "/usr/include/sys/x25.h"
+to determine how to access the desired values directly.
+.P
+The following is an example of a situation where an
+.I ioctl
+call would be useful.
+Assume that only a primary device has been attached to the link
+associated with the channel being used.
+If the error
+.SM EL3HLT
+is returned when a system call is issued,
+an
+.I ioctl
+call would then be issued.
+The
+.SM EL3HLT
+error return indicates that the link is in the
+halted state and the macros can provide more useful
+information.
+The macro
+\s-1UABNHLTP\s+1(\fIarg\fP)
+will return true if the link halted abnormally.
+The macro
+\s-1UL2ERRP\s+1(\fIarg\fP)
+will then return the value of the error code returned
+by the primary device.
+The manual entry
+.IR vpm (7)
+describes what the error codes mean
+and the file
+.I "/usr/include/sys/csierrs.h"
+contains defines for these errors.
+If the link halted normally,
+this indicates that someone entered a command
+to halt the link.
+.SH "SEE ALSO"
+x25pvc(1M),
+fcntl(2),
+ioctl(2),
+open(2),
+read(2),
+write(2),
+nc(7),
+vpm(7).
+.br
+.IR "Operations Systems Network Protocol Specification: BX.25 Issue 2" .
+.SH BUGS
+.PP
+The multiplicity of options for the \f2open\fP/\f2close\fP protocol
+reflects a lack of standardization and a certain amount of confusion.
+However, in the near future, the session layer will be
+implemented and will handle this problem
+so that the user will not have to select an option or
+have to worry about 
+\fIopen\fP/\fIclose\fP synchronization.
+.PP
+It is not clear that the treatment of the \s-1O_NDELAY\s+1 flag is correct;
+this is an area that is particularly likely to change.
+In particular, the read partial message/return zero
+dilemma for
+.I read
+.SM O_NDELAY
+calls is puzzling.
+One would like to return zero until the entire message has been
+received,
+but a long, multi-packet message could deadlock such a scheme.
+Thus, the ``read something if flow-controlled'' method was used.
+.PP
+At present,
+there is no way to tell whether a return value of zero
+for a no-delay
+\f2read\fP
+is due to a zero-length message
+or to the lack of anything to read.
+.PP
+It would be dangerous to assume that zero-length messages
+will be propagated correctly through an
+.SM X\*S25
+network
+or that they will be treated in a compatible manner by
+other implementations of \s-1BX\s+1.25.
+.PP
+There is no way to send an
+.SM INTERRUPT
+packet.
+An
+.SM INTERRUPT
+packet received from the far end will be confirmed and discarded.
+.\"	@(#)x25.7	5.2 of 5/18/82

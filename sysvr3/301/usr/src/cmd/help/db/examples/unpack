@@ -1,0 +1,9 @@
+
+\Sunpack\S:  Examples
+
+
+        unpack text.z
+
+    Unpacks the file "text.z" that you compressed with pack(1).  It renames the
+    unpacked file "text".
+

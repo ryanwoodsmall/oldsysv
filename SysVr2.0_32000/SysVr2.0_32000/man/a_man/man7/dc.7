@@ -1,0 +1,60 @@
+'\" t
+.TH DC 7
+.SH NAME
+dc \- moving-head disk
+.SH DESCRIPTION
+The format for disk files is described in
+\f2intro\fR(7).
+The origin and size of the sections on each drive are defined
+by the partition table on the drive, which is initialized by
+.I mkpt(1M).
+There may be up to 8 sections, each of which must start on
+a cylinder boundary.
+The default sections are as follows:
+.PP
+.RS
+.TS
+cI cI cI
+c n n.
+section	start	length
+0	0	29880
+1	332	5040
+2	0	34920
+.TE
+.RE
+.PP
+The start address is a cylinder address,
+with each cylinder containing 90 blocks.
+.PP
+The
+.B dsk
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly
+one
+I/O
+operation
+and therefore, raw
+I/O
+is considerably more efficient when
+many words are transmitted.
+.PP
+In raw
+I/O
+the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)\^
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/dsk/\(**, /dev/rdsk/\(**
+.SH SEE ALSO
+lseek(2),
+.\"	%W% of %G%

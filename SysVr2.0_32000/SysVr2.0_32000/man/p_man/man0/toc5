@@ -1,0 +1,13 @@
+.xx "intro" "introduction to miscellany"
+.xx "ascii" "map of ASCII character set"
+.xx "environ" "user environment"
+.xx "fcntl" "file control options"
+.xx "math" "math functions and constants"
+.xx "prof" "profile within a function"
+.xx "regexp" "regular expression compile and match routines"
+.xx "stat" "data returned by stat system call"
+.xx "term" "conventional names for terminals"
+.xx "types" "primitive system data types"
+.xx "values" "machine-dependent values"
+.xx "varargs" "handle variable argument list"
+.bp

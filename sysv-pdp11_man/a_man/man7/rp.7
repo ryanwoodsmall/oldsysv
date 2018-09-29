@@ -1,0 +1,72 @@
+'\" t
+.TH RP 7 "PDP-11 only"
+.SH NAME
+rp \- \s-1RP-11/RP03\s0 moving-head disk
+.SH DESCRIPTION
+The files
+.BR rp0 ", " ... ", " rp7
+refer to sections of the \s-1RP03\s0 disk drive 0.
+The files
+.BR rp10 ", " ... ", " rp17
+refer to drive 1, etc.
+This slicing allows the pack
+to be broken up
+into more manageable pieces.
+.PP
+The origin and size of the sections on each drive are
+as follows:
+.PP
+.RS
+.TS
+cI cI cI
+c n n.
+section	start	length
+0	0	10000
+1	50	71200
+2	203	40600
+3	\-	\-
+4	\-	\-
+5	\-	\-
+6	\-	\-
+7	0	81200
+.TE
+.RE
+.PP
+The start address is a cylinder address, with each cylinder
+containing 200 blocks.
+It is extremely unwise for all of these files to be present in one installation,
+since there is overlap in addresses and protection becomes
+a sticky matter.
+.PP
+The
+.B rp
+files
+access the disk via the system's normal
+buffering mechanism
+and may be read and written without regard to
+physical disk records.
+There is also a ``raw'' interface
+which provides for direct transmission between the disk
+and the user's read or write buffer.
+A single read or write call results in exactly one \s-1I/O\s0 operation
+and therefore raw \s-1I/O\s0 is considerably more efficient when
+many words are transmitted.
+The names of the raw \s-1RP\s0 files
+begin with
+.B rrp
+and end with a number which selects the same disk
+section as the corresponding
+.B rp
+file.
+.PP
+In raw I/O the buffer must begin on a word boundary,
+and counts should be a multiple of 512 bytes
+(a disk block).
+Likewise
+.IR lseek (2)\^
+calls should specify a multiple of 512 bytes.
+.SH FILES
+/dev/rp\(**, /dev/rrp\(**
+.SH SEE ALSO
+hp(7).
+.\"	@(#)rp.7	5.2 of 5/18/82

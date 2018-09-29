@@ -1,0 +1,41 @@
+.TH PRM 1M "3B20S only"
+.SH NAME
+prm \- send a Processor Recovery Message
+.SH SYNOPSIS
+.B /etc/prm
+message
+.SH DESCRIPTION
+.I Prm\^
+sends a Processor Recovery Message (\s-1PRM\s+1) to
+the Emergency Action Interface (\s-1EAI\s+1).
+.PP
+.I Message\^
+is converted to a 16 nibble sequence
+and must therefore contain only the digits
+.B 1
+through
+.B 9
+and the characters
+.B a
+through
+.BR f .
+After the command,
+.I message
+will appear in the
+.SM
+.B PRM
+field of the
+.SM EAI
+display.
+.SH "SEE ALSO"
+3B20ops(8).
+.SH BUGS
+Because of the design of the
+.SM EAI
+it is possible to miss a
+.SM
+.B PRM
+if insufficient time has passed
+since the last message.
+
+.\"	@(#)prm.1m	5.2 of 5/18/82

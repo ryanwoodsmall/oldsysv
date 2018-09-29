@@ -1,0 +1,52 @@
+/*LINTLIBRARY*/
+
+/*	from file anyrequests.c */
+#include "sys/types.h"
+#include "lp.h"
+#include "fs.h"
+
+/**
+ ** anyrequests() - SEE IF ANY REQUESTS ARE ``QUEUED''
+ **/
+int			anyrequests ()
+{	static int			 _returned_value;
+	return _returned_value;
+}
+
+/*	from file freerequest.c */
+#include "requests.h"
+
+/**
+ ** freerequest() - FREE STRUCTURE ALLOCATED FOR A REQUEST STRUCTURE
+ **/
+void			freerequest (reqbufp)
+	register REQUEST	*reqbufp;
+{
+}
+
+/*	from file getrequest.c */
+#include "stdio.h"
+#include "string.h"
+#include "errno.h"
+
+/**
+ ** getrequest() - EXTRACT REQUEST STRUCTURE FROM DISK FILE
+ **/
+REQUEST			*getrequest (file)
+	char			*file;
+{	static REQUEST			* _returned_value;
+	return _returned_value;
+}
+
+/*	from file putrequest.c */
+#include "sys/utsname.h"
+
+/**
+ ** putrequest() - WRITE REQUEST STRUCTURE TO DISK FILE
+ **/
+int			putrequest (file, reqbufp)
+	char			*file;
+	REQUEST			*reqbufp;
+{	static int			 _returned_value;
+	return _returned_value;
+}

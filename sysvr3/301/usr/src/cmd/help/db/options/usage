@@ -1,0 +1,9 @@
+
+\Susage\S: Options
+
+     -d   prints a syntax summary and command description.  This option is the
+          default.
+
+     -o   prints a list of command options, and an explanation of each option.
+
+     -e   prints a set of examples showing typical uses.

@@ -1,0 +1,44 @@
+#ident	"@(#)bne.admin:_initprint	2.3"
+#	This internal program prints inittab entries in
+#	user readable form
+
+LINE="$*"
+
+DIRECTION=`echo $LINE  |
+	sed -n '/^[^:]\{1,\}:[^:]\{1,\}:/ {
+			s///
+			/^off:/s/.*/outgoing/p
+			/^respawn:.*uugetty/s/.*/bidirectional/p
+			/^respawn:.*getty/s/.*/incoming/p
+			q
+		}'`
+
+set `echo $LINE  |
+	sed '
+		s/^[^ 	]*[ 	]//
+		s/[ 	]*#.*//
+		s/^.*\([ 	][^ 	]\{1,\}\).*\([ 	][^ 	]\{1,\}\)$/\1 \2/
+	'`
+
+PORT=$1
+SPEED=$2
+# if SPEED ends in H, eliminate the H
+if [ 0 != `expr $SPEED : "[0-9]\{1,\}H"` ]
+then
+	SPEED=`expr $SPEED : "\(.*\)H"`
+fi
+
+if [ -n "$PORT" -a -n "$SPEED" -a -n "$DIRECTION" ]
+then
+	echo "
+PORT:		$PORT
+SPEED:		$SPEED
+DIRECTION:	$DIRECTION
+"
+
+else
+	echo "
+**WARNING** Non-Standard I/O port line:
+'$LINE'
+"
+fi

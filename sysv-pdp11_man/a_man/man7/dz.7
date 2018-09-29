@@ -1,0 +1,41 @@
+.TH DZ 7 "DEC only"
+.SH NAME
+dz, dzb, dh \- \s-1DZ-11, DZ-11/KMC-11B, DH-11\s0 asynchronous multiplexers
+.SH DESCRIPTION
+Each line attached to a
+.SM DH-11
+or
+.SM DZ-11
+communications multiplexer
+behaves as described in
+.IR termio (7).
+Input and output for each line may independently
+be set to run at any of 16 speeds;
+see
+.IR termio (7)
+for the encoding.
+(For \s-1DZ-11\s0 lines, output speed is always the same as input speed.
+The
+.IR 200
+speed and the two externally clocked speeds
+.RI ( exta ,
+.IR extb )
+are missing on the \s-1DZ-11\s0.)
+The behavior of
+.IR dzb
+lines is indistinguishable from that of
+.IR dz
+lines, except that on the
+.IR dzb
+backspace delays are implemented using fill characters
+(rubouts)
+instead of timed delays.
+.PP
+Note that the
+.SM DH-11
+is considered obsolete and is not supported on the \s-1VAX\s0-11/780.
+.SH FILES
+/dev/tty\(**
+.SH "SEE ALSO"
+kmc(7), termio(7).
+.\"	@(#)dz.7	5.2 of 5/18/82

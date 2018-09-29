@@ -1,0 +1,678 @@
+705 0 0 68
+                  INTRODUCTION TO FILES AND DIRECTORIES
+
+	In this walkthru, you will learn about UNIX System files 
+and directories, and some of the commands that act on them.  
+Commands to be covered include:
+
+     ls .... list the names of files in a directory
+    cat .... display the contents of a file
+    pwd .... print the name of the current directory
+     cd .... change directory
+  mkdir .... make a new directory
+
+	During the remainder of the walkthru, the top left portion
+of your screen will simulate a UNIX System session.  You will be 
+entering commands there, and the output of the commands will also 
+appear there.  The top right side of the screen will be used to 
+present diagrams to help explain concepts.  You will see explanatory 
+text on the bottom half of your screen, and on occasion, you will 
+see the instruction to type a command.  
+706 
+520 arrow
+520 clearall
+2 13 0
+34 alt
+700 r79
+35 alt
+30 
+8 14 25  FILE BASICS
+31 
+2 15 0
+19 
+2 0 0
+18 
+705 3000 3001 71
+    An understanding of the file and directory structure is fundamental 
+to understanding the UNIX System.  There are a great many commands that 
+act on files in one way or another.  
+706 
+520 arrow
+520 3files
+520 clearbot
+705 3000 3001 75
+Files are simply collections of characters.  As far as the UNIX System 
+is concerned, a file can contain a business letter, C language source code, 
+or nothing but 1's and 0's.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+As you go through this walkthru,  each time you see the word "file," think 
+of an envelope with papers inside of it.  Just as with UNIX System files, the 
+papers may say anything.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 75
+The most important thing you would find on the outside of the envelope is 
+the name of the contents.  Without this, you would have to look inside each 
+envelope to find out if it contained what you wanted.  
+706 
+30 
+8 0 1 myletter
+8 0 25 main.c
+8 0 50 datafile3
+31 
+520 arrow
+520 clearbot
+705 3000 3001 76
+The UNIX System provides the "ls" command (short for "list") to tell you 
+the names of your files.  Think of the "ls" command as equivalent to reading 
+the name label on the outside of each envelope.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 75
+The way you use the "ls" command is to type ls, and then hit the RETURN key.
+
+Try typing the ls command now.
+706 
+520 cleartop
+8 0 0 $
+520 instruct
+3 Get a list of your files
+2 0 2
+253 %0ls%0
+254 ls
+520 shansloop
+8 1 0 datafile3
+8 2 0 main.c
+8 3 0 myletter
+8 4 0 $
+520 clearbot
+705 3000 3001 76
+These are the names of the files found by "ls."  Once you find the file
+in which you are interested, you can use the "cat" command (short for 
+"catenate and print") to see the contents of the file.  Think of the 
+"cat" command as equivalent to opening the envelope and reading the contents.
+706 
+520 instruct
+3 Look at the contents of the main.c file
+2 4 2
+18 
+253 %0cat%1main.c%0
+254 cat main.c
+520 shansloop
+705 5 0 17
+main()
+{
+  printf("hi, ");
+  printf("world");
+  printf("\n");
+}
+$
+706 
+520 clearbot
+30 
+8 14 25  DIRECTORIES
+31 
+705 3000 3001 78
+    You have learned that files are identified by name; in order to use a file,
+you need to know its name.  What would happen if you wanted to give two files 
+the same name?  Obviously, the UNIX System would not know which of the two 
+files you were referencing.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+For this reason, every file must have a unique name.  However, you can give two
+different files the same name once you understand the concept of UNIX system
+directories.  Let's return to our office analogy.
+706 
+520 arrow
+520 cleartop
+520 3cabinets
+520 clearbot
+705 3000 3001 76
+When you are looking for a envelope in an office, you have to make several 
+decisions.  First, you need to decide which file cabinet it is in.  Imagine 
+that you are looking for a memo you wrote in 1985.  Since your file cabinets 
+are arranged by year, your memo should be in the Cabinet 2 (1985).
+706 
+520 arrow
+30 
+8 0 23 >CABINET 2<
+31 
+520 clearbot
+705 3000 3001 78
+Once you decide in which file cabinet to look, you must decide in which drawer 
+of the cabinet the memo is located.  Since one of the drawers is labelled 
+"memos" you would look there.
+706 
+520 arrow
+30 
+8 6 25 >memos<
+31 
+520 clearbot
+705 3000 3001 78
+What we have described is a "hierarchical" system.  You first decide in which 
+cabinet to look, then decide in which drawer of the cabinet to look.  Once you 
+have picked the cabinet and drawer, you can look for your envelope.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 74
+Note that we could have made even more decisions:  In a building with many 
+rooms you might first have to decide in which room to look for the correct 
+cabinet.  In a large company, you might first have to determine in which 
+building to look.
+706 
+520 arrow
+520 cleartop
+520 clearbot
+705 3000 3001 76
+We can represent this set of decisions graphically.  You first need to decide
+in which building of your company you are interested.
+706 
+30 
+8 0 44 >BUILDING<
+31 
+34 alt
+8 1 38
+2 2 30
+700 u1 r36 d1
+35 alt
+8 2 28 ROOM 1
+8 2 64 ROOM 2
+34 alt
+2 3 30
+50 602 3
+2 4 16
+700 u1 r24 d2
+35 alt
+8 5 12 CABINET 1
+8 5 26 CABINET 2
+8 5 37 CABINET 3
+2 6 30
+34 alt
+50 602 3
+2 8 10
+700 u1 r40 d2
+2 8 20
+50 602 1
+2 8 40
+50 602 1
+2 8 29
+50 602 1
+35 alt
+8 9 6 DRAWER 1
+8 9 16 DRAWER 2
+8 9 26 DRAWER 3
+8 9 36 DRAWER 4
+8 9 46 DRAWER 5
+520 arrow
+520 clearbot
+8 3000 3001 Next you would decide about the room.
+30 
+8 2 27 >ROOM 1<
+31 
+520 arrow
+520 clearbot
+8 3000 3001 Next you would decide about the cabinet.
+30 
+8 5 25 >CABINET 2<
+31 
+520 arrow
+520 clearbot
+8 3000 3001 Finally, you would decide about the drawer.
+30 
+8 9 25 >DRAWER 3<
+31 
+520 arrow
+520 clearbot
+705 3000 3001 78
+Just as files can be grouped together in an office, they can also be grouped in
+the UNIX System.  UNIX System directories serve the same role as buildings,
+rooms, file cabinets, and drawers in the office.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+The hierarchy that we discussed in the office analogy is appropriate here as 
+well.  Each file is located in a particular directory.  That directory can be
+located within a directory, and so on.
+706 
+520 arrow
+520 cleartop
+520 clearbot
+520 tree
+705 3000 3001 68
+For example, the file "memo" is in the "papers" directory (as is the 
+file "proposal").
+706 
+30 
+8 10 46 >memo<
+8 8 49 >papers<
+31 
+520 arrow
+520 clearbot
+8 3000 3001 The "papers" directory is in the "user1" directory.
+30 
+8 4 62 >user1<
+31 
+520 arrow
+520 clearbot
+8 3000 3001 The "user1" directory is in the "usr" directory.
+30 
+8 0 53 >usr<
+31 
+520 arrow
+2 8 49
+7 32 1
+8 8 50 papers 
+2 4 62
+7 32 1 
+8 4 63 user1 
+2 0 53
+7 32 1
+8 0 54 usr 
+520 clearbot
+705 3000 3001 73
+An important point to note:  you would be permitted to have only one file 
+called "memo" in the "papers" directory, but you could have another file 
+called "memo" in a different directory.
+706 
+520 arrow
+30 
+8 10 69 >memo<
+31 
+520 clearbot
+705 3000 3001 77
+Your UNIX System has many directories.  Some of these are found on all UNIX 
+systems, others have been created by users on your machine, and you can also 
+create your own.  Directories are used in the UNIX System for the same reason 
+that file cabinets are used in offices:  They group related files.
+706 
+520 arrow
+520 clearbot
+520 clearbot
+705 3000 3001 77
+In order to use a file, you have to know the directory in which it resides.
+For this reason, a "complete file name" consists of a list of the hierarchy of
+directories in which the file exists, followed by the file name itself.
+706 
+520 arrow
+520 cleartop
+520 tree
+520 clearbot
+705 3000 3001 74
+For example, the file "memo" is in the "papers" directory, which is in the 
+"user1" directory, which is in the "usr" directory.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+In the UNIX System, directory names are separated by slashes "/."  Therefore, 
+the full name for the "memo" file is /usr/user1/papers/memo.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+If file names include the directory names as well, how was the system able to 
+find the files on which you issued the "cat" and "ls" commands earlier?  
+The answer has to do with current directories.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+Going back to the file cabinet analogy, in the UNIX System you are standing in
+front of a particular cabinet, with a particular drawer open.  You are working
+in that drawer.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+The UNIX System is based on a similar concept. At all times, you are working
+within a particular directory: your "current" directory.  When you do not tell
+the system otherwise, it assumes that you are referring to files in the current
+directory.
+706 
+520 arrow
+520 clearbot
+30 
+8 8 68 >programs<
+31 
+705 3000 3001 77
+Imagine that you are in the "programs" directory, and you want to display the 
+contents of the "memo" file.  Note that "memo" is in another directory.
+706 
+520 instruct
+3 Issue the command "cat memo"
+8 0 0 $
+2 0 2
+18 
+253 %0cat%1memo%0
+254 cat memo
+520 shansloop
+8 1 0 cat: cannot open memo
+8 2 0 $
+520 clearbot
+705 3000 3001 77
+This is a UNIX System error message, telling you that the "cat" command could 
+not find the "memo" file.  Now try the same command using the full path name 
+of the "memo" file.
+706 
+520 instruct
+3 Use the full path to look at "memo"
+2 2 2
+18 
+253 %0cat%1/usr/user1/papers/memo%0
+254 cat /usr/user1/papers/memo
+520 shansloop
+520 clearbot
+705 3 0 19
+This paper proposes
+development of a new
+program.  ...
+$
+706 
+520 clearbot
+520 clearbot
+705 3000 3001 77
+Since most UNIX System commands will assume that files are in the current 
+directory (unless you specify otherwise), it is useful to know what your 
+current directory is.  The "pwd" command (short for "print working directory")
+prints out your current directory name.
+706 
+520 instruct
+3 Find out the name of your current directory
+2 6 2
+18 
+253 %0pwd%0
+254 pwd
+520 shansloop
+8 7 0 /usr/user1/programs
+8 8 0 $
+520 clearbot
+705 3000 3001 74
+You will find numerous times in which you want to refer to a file in a 
+directory other than your current directory.  You can always specify a full
+pathname, but this can become tedious.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+For this reason, the UNIX System allows you to change your current directory.
+In effect, you are moving from one directory to another (or from one file 
+cabinet to another).  The command is "cd" (short for "change directory").
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+To move to another directory, type "cd" and the name of the directory to which 
+you want to move.  For now, let's use a full pathname.
+706 
+520 instruct
+3 Move to the "user1" directory
+2 8 2
+18 
+253 %0cd%1/usr/user1%2/%0
+254 cd /usr/user1
+520 shansloop
+8 9 0 $
+2 8 68
+7 32 1
+3 programs 
+30 
+8 4 62 >user1<
+31 
+520 clearbot
+705 3000 3001 77
+Although the UNIX System gave you no confirmation, you are now in the "user1" 
+directory.  Use the "pwd" command to confirm this.
+706 
+520 instruct
+3 Determine your current directory name
+2 9 2
+18 
+253 %0pwd%0
+254 pwd
+520 shansloop
+8 10 0 /usr/user1
+8 11 0 $
+520 clearbot
+520 arrow
+520 clearbot
+520 cleartop
+520 tree
+30 
+8 4 62 >user1<
+31 
+705 3000 3001 70
+Using full path names with the cd command, you can reach any directory.
+Now let's consider two shortcuts.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+You are currently in the /usr/user1 directory, but want to be in the "programs"
+directory.  One way to get there is to type "cd /usr/user1/programs."  
+However, there is a simpler way to do this.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 77
+When you want to move to a directory that is directly "below" the one you are 
+in, you can simply name the directory.  For example, to move to the "programs"
+directory from your current directory of "/usr/user1," type "cd programs."  
+706 
+520 instruct
+3 Move to the "programs" directory
+8 0 0 $
+2 0 2
+18 
+253 %0cd%1programs%0
+254 cd programs
+520 shansloop
+2 4 62
+7 32 1
+3 user1 
+30 
+8 8 68 >programs<
+31 
+8 1 0 $
+520 clearbot
+705 3000 3001 74
+You have now moved to the "programs" directory.  Confirm this for yourself.
+706 
+520 instruct
+3 Find out the name of your current directory
+2 1 2
+18 
+253 %0pwd%0
+254 pwd
+520 shansloop
+8 2 0 /usr/user1/programs
+8 3 0 $
+520 clearbot
+705 3000 3001 77
+To move, you can use the shortcut of ".." (two periods), which stands for the 
+directory immediately above the current one.  Try moving back to the "user1" 
+directory, using this method.
+706 
+520 instruct
+3 Move to the "user1" directory, using ".."
+253 %0cd%1..%2/%0
+254 cd ..
+2 3 2
+18 
+520 shansloop
+2 8 68
+7 32 1
+3 programs 
+30 
+8 4 62 >user1<
+31 
+8 4 0 $
+520 clearbot
+520 instruct
+3 Now move back to the "programs" directory.
+253 %0cd%1programs%0
+254 cd programs
+2 4 2
+18 
+520 shansloop
+2 4 62
+7 32 1
+3 user1 
+30 
+8 8 68 >programs<
+31 
+8 5 0 $
+520 clearbot
+520 instruct
+3 Now move to "papers," using ".."
+253 %0cd%1../papers%0
+254 cd ../papers
+2 5 2
+18 
+520 shansloop
+2 8 68
+7 32 1
+3 programs 
+30 
+8 8 49 >papers<
+31 
+8 6 0 $
+520 clearbot
+520 instruct
+3 Verify that you moved to "papers"
+253 %0pwd%0
+254 pwd
+2 6 2
+18 
+520 shansloop
+8 7 0 /usr/user1/papers
+8 8 0 $
+520 clearbot
+520 arrow
+520 cleartop
+520 clearbot
+520 tree
+30 
+8 8 49 >papers<
+31 
+705 3000 3001 72
+You have now learned why directories are useful: They allow you to group 
+related files.  You also know how to move between directories.
+Now it is time to learn how to create your own directories.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 76
+First, move once more to the "user1" directory.  For a little more practice, 
+use the shortcut method.
+706 
+520 instruct
+3 Move to the "user1" directory
+8 0 0 $
+2 0 2
+18 
+253 %0cd%1..%2/
+254 cd ..
+520 shansloop
+2 8 49
+7 32 1
+3 papers 
+30 
+8 4 62 >user1<
+31 
+8 1 0 $
+520 clearbot
+705 3000 3001 74
+Remember that with the commands we have discussed (ls, cat, cd), the UNIX 
+System assumes that you are referring to the current directory unless you 
+specify otherwise.  The same is true of creating sub-directories within the
+current directory with the "mkdir" (make directory) command.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 78
+For example, typing "mkdir src" will create a new directory called src in your 
+current directory, which happens to be "/usr/user1." Try typing this command.
+706 
+520 instruct
+3 Create a directory called "src"
+2 1 2
+18 
+253 %0mkdir%1src%0
+254 mkdir src
+520 shansloop
+8 2 0 $
+2 6 53
+34 alt
+700 l10
+2 7 44
+7 602 1
+35 alt
+2 8 43
+3 src 
+520 clearbot
+705 3000 3001 78
+Note that the graphic representation of your directory structure shows your new
+directory in your current directory; this is the default.  However, you are 
+still in "user1."
+706 
+520 arrow
+520 clearbot
+705 3000 3001 74
+The "mkdir" command makes a new directory, but it does not move you to the 
+directory.  Only the "cd" command does that.
+706 
+520 arrow
+520 clearbot
+705 3000 3001 75
+Before we finish up with files and directories, try one more thing.
+Create a directory called "doc" in the "usr" directory.  Just so you don't
+forget about full pathnames, use one here.  Remember that you don't need to 
+be in a directory to create a sub-directory -- just use full pathnames.
+706 
+520 instruct
+3 Create "doc" in the "usr" directory
+2 2 2
+18 
+253 %0mkdir%1/usr/doc%0
+254 mkdir /usr/doc
+520 shansloop
+8 4 54 doc
+34 alt
+2 3 55
+7 602 1
+35 alt
+8 3 0 $
+520 clearbot
+705 3000 3001 77
+As you see in the picture above, a new directory called "doc" has been created
+in the "usr" directory.  You have not changed directories with this command.
+706 
+520 arrow
+520 clearall
+705 0 0 57
+                              SUMMARY
+
+You have learned about some fundamentals of UNIX System 
+files and directories.  The commands we have covered are:
+
+     ls .... list the names of files in a directory
+    cat .... display the contents of a file
+    pwd .... print the name of the current directory
+     cd .... change directory
+  mkdir .... make a new directory
+
+There are other commands that also act on files and
+directories.  As you explore ASSIST's menus, you will come
+across many of these. 
+706 
+520 arrow
+520 clearall

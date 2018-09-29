@@ -1,0 +1,2 @@
+#ident	"@(#)sadmin3b2:etc/fstab	1.1"
+/dev/dsk/c1d0s2	/usr

@@ -1,0 +1,8 @@
+#ident	"@(#)sadmin:admin/menu/diskmgmt/checkfsys	2.3"
+#menu# check a removable medium file system for errors
+#help# 
+#help#	Checkfsys checks a file system on a removable medium for errors.
+#help#	If there are errors, this procedure attempts to repair them.  It
+#help#	is usually successful.
+
+. ${MENUTOP:?}/checkfsys

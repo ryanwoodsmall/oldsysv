@@ -1,0 +1,100 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/forms/list_f	1.4"
+## IDOC:   SCREEN 2.41: LIST FORMS
+#menu# List available forms
+
+##+++ (help _H116)
+#help#        You  use  the  "list"  command in the  "forms" menu  to  see
+#help#        the  definitions  of  one  or more forms.  You can examine a
+#help#        particular form, or can see all the forms on the system.
+##--- (help _H116)
+
+##+++ (general)
+echo "
+Whenever you want to quit, type \"q\".
+If you are not sure how to answer any prompt, type \"?\" for help,
+or see the System Administrator's Guide.
+
+If a default appears in the question, press the return key to use it.
+"
+##--- (general)
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+##+++ (functions)
+chk_form_list () {
+# listof: form-name
+    while true; do
+	RESP=`checkre ${flags} -fe \
+		-H "$3" \
+		"$1${SyStSt:+!form-list!}" \
+		$4 \
+		'.*' ''`
+	RESP=`echo "${RESP}" | tr ',' ' '`
+	if [ -z "${RESP}" ]; then : ${RESP:="$2"}; fi
+	if [ -z "${RESP}" ]; then :; else  if ( set -- ${RESP}
+		flags="-m1"
+		while [ $# -gt 0 ]; do
+			echo "$1" \
+			| chk_name >/dev/null 2>&1 || exit 1
+			shift
+		done; exit 0
+	); then return 0; fi
+	fi
+	echo '	You did not give a valid form name.
+	Separate multiple items with a comma or blank.'
+    done
+}
+chk_name () {
+	RESP=`checkre ${flags} -fe $4 \
+		${2:+"-D$2"} -H "$3" \
+		"$1${SyStSt:+!name!}" \
+		'^[a-zA-Z0-9_]\{1,14\}$' \
+			'A name can contain only 1 to 14 letters, digits, and underscores.' \
+	`
+}
+##--- (functions)
+
+##+++ (line 1)
+echo \
+"Enter the names of the forms for which you
+want to see a complete description.
+Separate multiple names with a space or comma."
+##--- (line 3)
+
+DEF_f=`cat ${TMPDIR:-/tmp}/FRM.\`basename \\\`tty\\\`\` 2>/dev/null`
+while true
+do
+##+++ (2.41.4)
+chk_form_list \
+	"Enter form names: ${DEF_f:+(default: ${DEF_f})}" \
+	"${DEF_f}" \
+	"\
+        You are expected to enter the name of the form you'd like to
+        examine.   You  can  enter  the  names  of  several forms by
+        separating their names with spaces or commas.  \
+"
+OPT_f=${RESP}
+##--- (2.41.4)
+
+	repeat=no
+	for form in ${OPT_f}
+	do
+		if [ "all" = "${form}" ]
+		then
+			echo "
+All forms:"
+		else
+			echo "
+Form: ${form}"
+		fi
+		/usr/lib/lpforms -f ${form} -l || repeat=yes
+	done
+
+	if [ "no" = "${repeat}" ]
+	then
+		break
+	else
+		echo
+	fi
+done

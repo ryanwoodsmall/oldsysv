@@ -1,0 +1,298 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/adduser	2.4"
+#menu# add a user to the system
+#help# 
+#help#	Adduser installs a new login ID on the machine.  You are asked
+#help#	a series of questions about the user and then the new entry is
+#help#	made.  You can enter more than one user at a time.  Once this
+#help#	procedure is finished, the new login ID is available.
+
+# Implementation note:
+#	Tack an X onto expr expressions because it will treat a slash (/)
+#	as a division operation, colon (:) as a separator, etc.
+
+defgroup=1	# Default group, "other"
+defparent=/usr	# Default parent of login directory
+loginlen=8	# Maximum login ID length
+minid=100	# Minimum user and group ID
+maxid=50000	# Maximum user and group ID (not the absolute max, but safe)
+
+if [ -r ${MENUTOP:?}/defadduser ]
+then	# This file allows easy modification of the defaults.
+	. ${MENUTOP}/defadduser
+fi
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+defunamef=
+defuname=
+deflidf=
+deflid=
+defuid=
+defgidf=
+defgid=
+
+echo '\nAnytime you want to quit, type "q".
+If you are not sure how to answer any prompt, type "?" for help,
+or see the Owner/Operator Manual.
+\nIf a default appears in the question, press <RETURN> for the default.
+'
+
+while  true
+do
+	username=`checkre ${flags} -H'
+	This is the name of the person who owns the login.' \
+		-fe"${defunamef}" "Enter user's full name${defuname} [?, q]: " \
+		'^[ -z]*$' 'Answer contains an illegal character.
+	Only numbers, spaces, punctuation marks, and letters are permitted.' \
+		'[a-zA-Z]' 'You must enter a value.' \
+		'^[^:]*$' "The user's name cannot contain a colon (:).  Try again."`
+
+	while true
+	do
+		loginid=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the user.
+	It also is used to identify data that belongs to the user.
+	The login ID may be any combination of numbers and letters not already
+	used by someone else.  Typically, people choose their initials,
+	first or last name, or nickname.
+	See the GETTING STARTED chapter of the Owner/Operator Manual for more
+	information.' \
+			-fe"${deflidf}" "Enter user's login ID${deflid} [?, q]:  " \
+			'.' "You must enter a value, not more than ${loginlen} characters long." \
+			'^[a-z0-9]*$' 'Answer contains an illegal character.
+	Only numbers and lower case letters are permitted.' \
+			"^.\{1,${loginlen}\}$" "Answer is too long.
+	No more than ${loginlen} characters are permitted."`
+		if  grep "^${loginid}:" /etc/passwd >/dev/null
+		then
+			echo "\\tLogin ID '${loginid}' already exists.  Choose another."
+			continue
+		fi
+		break
+	done
+
+	if [ -z "${defuid}" ]
+	then
+		# Sort 3rd field in /etc/passwd then cut 3rd field
+		# from last line.  Increment this field by 1 to
+		# come up with a unique new user ID number.
+
+		defuid=`sort -t: +2n /etc/passwd  |  tail -1  |
+			cut -d: -f3`
+		defuid=`expr ${defuid} + 1`
+
+		# don't allow user ID numbers less than minid
+		if [ ${defuid} -lt ${minid} ]
+		then
+			defuid=${minid}
+		fi
+	fi
+
+	while true
+	do
+		userid=`checkre ${flags} -fe -D ${defuid} -H"
+	This number is used inside the computer to associate data files
+	with your login ID.  It can be any unique number at least ${minid}
+	and no more than ${maxid}.  The computer will use ${defuid} if you
+	just press <RETURN>." \
+			"Enter user ID number (default ${defuid}) [?, q]: " \
+			'^[0-9]\{1,\}$' 'Answer must be only digits or <RETURN>.'`
+		if [ ${userid} -eq ${defuid} ]
+		then
+			break
+		fi
+		if [ "${userid}" -le ${maxid}  -a  "${userid}" -ge ${minid} ]
+		then
+			# Look for logins that already use specified
+			# user ID number.  Consider IDs with leading zeros.
+
+			x=`sed -n "/^[^:]*:[^:]*:0*${userid}:/ s/\([^:]*\):.*/\1/p" /etc/passwd`
+			if [ -n "${x}" ]
+			then
+				echo \\t\'${x}\' "already uses that ID number.
+	Normally that is not desirable."
+				if  checkyn ${flags} -f "	Do you want to pick another?"
+				then
+					continue
+				fi
+			fi
+			break	# Got it!
+		fi
+		echo "\\tUser ID must be all digits, at least ${minid} and not larger than ${maxid}.
+	q  for quit"
+	done
+
+	while true
+	do
+		groupid=`checkre ${flags} -D "${defgidf:-${defgroup}}" -H"
+	This is the number or name used by the computer to identify users
+	belonging to the same group that share common files and directories.
+	If you enter a number instead of a name, it must be at least
+	${minid} and no more than ${maxid}.  The computer will pick an
+	appropriate value if you just press <RETURN>.
+	See the GETTING STARTED chapter of the Owner/Operator Manual
+	for more information on how to assign group numbers." \
+			-fe "Enter group ID number or group name
+${defgid:-(default $defgroup)} [?, q]: " \
+			'^[0-9a-z]*$' 'Answer contains an illegal character.'`
+		x=`grep "^${groupid}:" /etc/group  |  cut -d: -f3`
+		if [ -n "${x}" ]
+		then
+			if [ "${x}" -lt ${minid}  -a  "${x}" -ne 1 ]
+			then
+				echo "\\t${groupid} has group ID ${x} which is less than ${minid}.
+	q  for quit"
+				continue
+			else
+				groupname="${groupid}"
+				groupid=${x}
+				break
+			fi
+		fi
+		if  num "${groupid}"
+		then
+			if [ "${groupid}" -le ${maxid}  -a  \
+			\( "${groupid}" -ge ${minid} -o "${groupid}" -eq 1 \) ]
+			then
+				groupname=`cut -d: -f1,3 /etc/group  |
+					grep ":${groupid}$"  |  cut -d: -f1`
+				break
+			fi
+			echo "\\tGroup ID must be all digits.  Permitted values are
+	1, or at least ${minid} and not larger than ${maxid}.
+	q  for quit"
+		else
+			echo "\\t${groupid} is not a known group name.  Known groups (group ID):" \
+			"\\n`cut -d: -f1,3 /etc/group  |  sort  |
+				sed 's/:\(.*\)/	(\1)/'  |  pr -o4 -t -3`" \
+			'\nq  for quit'
+		fi
+	done
+
+	deflogindir=${defparent}/${loginid}
+	while true
+	do
+		logdir=`checkre ${flags} -D "${deflogindir}" -H'
+	This is the directory where your files are kept.' \
+			-fe "Enter user's login (home) directory name.
+(default '${deflogindir}') [?, q]: " \
+			'^/' 'Login directory name must begin with a "/".' \
+			'^/[^/]\{1,\}/' 'Login directory must not be in the "/" directory.' \
+			'^/[^/]\{1,14\}/' 'No more than 14 characters in each part of the directory name.' \
+			'/[^/]\{1,14\}$' '' \
+			'^[-./a-zA-Z0-9]*$' "Login directory name contains an illegal character.
+	Only letters, numbers, '.', '-', and '/' are permitted."`
+		if [ -f "${logdir}" ]
+		then
+			echo "\\t${logdir} is already a file name.  Choose another."
+			continue
+		fi
+		if [ -d "${logdir}" ]
+		then
+			echo "\\t${logdir} directory already exists.  Choose another."
+			continue
+		fi
+
+		# Grab characters beginning with the first slash (/) up to
+		# but not including the second slash -- assume this is a
+		# file system.
+
+		fs=`expr "X${logdir}" : 'X\(/[^/]*\)'`
+		x=`/etc/mount  |  grep "^${fs} "`
+		case "${x}" in
+		*'read only'* )
+			echo "\\tFile system ${fs} is not writable.  Choose another.
+	Possible file systems --
+	" `/etc/mount  |  cut -d' ' -f1  |  egrep -v '^/$|^/tmp$'`
+			continue
+			;;
+		'/ '*  |  '/tmp '* )
+			echo "\\tCannot put login directories into / or /tmp.  Choose another."
+			continue
+			;;
+		'' )
+			echo "\\t${fs} is not a file system.  Choose another.
+	Possible file systems --
+	" `/etc/mount  |  cut -d' ' -f1  |  egrep -v '^/$|^/tmp$'`
+			continue
+			;;
+		esac
+		if [ ! -d `dirname "${logdir}"` ]
+		then
+			echo "\\tThe parent directory for ${logdir} does not exist.
+	Choose another."
+			continue
+		fi
+		break
+	done
+	if [ -n "${groupname}" ]
+	then
+		groupname="(${groupname})"
+	fi
+	echo "\\nThis is the information for the new login:
+	User's name:	${username}
+	login ID:	${loginid}
+	user ID:	${userid}
+	group ID:	${groupid}	${groupname}
+	home directory:	${logdir}"
+	case `checklist ${flags} -fep 'Do you want to install, edit, or skip this entry [i, e, s, q]?' install edit skip` in
+	install )
+		export loginid userid groupid username logdir
+		/bin/sh -c '
+			trap "" 1 2 3 15
+			set -e
+			echo "${loginid}::${userid}:${groupid}:${username}:${logdir}:" >>/etc/passwd
+			umask 002
+			mkdir ${logdir}
+			chgrp ${groupid} ${logdir}
+			chown ${userid} ${logdir}
+			if [ -r /etc/stdprofile ]
+			then
+				/bin/su ${loginid} -c "
+					cd ${logdir}
+					cp /etc/stdprofile .profile
+					chmod 644 .profile"
+			else
+				echo "\\tNo /etc/stdprofile, no .profile created in user'\''s home directory."
+			fi
+			echo Login installed.
+			if  checkyn -f "Do you want to give the user a password?"
+			then
+				/bin/su ${loginid} -c "
+					exec /bin/passwd ${loginid}"  ||  exit 0
+			fi
+			exit 0
+		'  ||  {
+			admerr $0 'Failure in attempting to create new user.'
+			exit 1
+		}
+		;;
+	edit )
+		defunamef="D${username}"
+		defuname="  (default \"${username}\")"
+		deflidf="D${loginid}"
+		deflid="  (default \"${loginid}\")"
+		defuid="${userid}"
+		defgidf="${groupid}"
+		defgid="  (default ${groupid} ${groupname})"
+		continue
+		;;
+	skip )
+		;;
+	esac
+	defunamef=
+	defuname=
+	deflidf=
+	deflid=
+	defuid=
+	defgidf=
+	defgid=
+
+
+	if  checkyn ${flags} -f 'Do you want to add another login?'
+	then
+		continue
+	fi
+	break
+done

@@ -1,0 +1,110 @@
+.TH ST 1M
+.SH NAME
+st \- synchronous terminal control
+.SH SYNOPSIS
+.B /etc/stload
+.br
+.B /etc/stcntrl
+control action
+.br
+.B /etc/stprint\^
+line device
+.SH DESCRIPTION
+The
+.I stload\^
+command file is used to load the synchronous terminal
+prototype script,
+.BR /lib/stscr ,
+into the designated
+\s-1VPM\s+1 hardware, and
+start execution of the script.
+As supplied,
+.I stload\^
+uses
+\s-1VPM\s+1 hardware unit 0
+and
+.BR /dev/st0 ;
+it will need local modification to use a different hardware unit
+or to start more than one synchronous communications line.
+.PP
+The
+.I stcntrl\^
+command is used to activate and deactivate synchronous communications lines.
+The line that will be acted on is specified by
+.IR control ,
+(e.g.
+.BR /dev/st0 ).
+The
+.I action\^
+argument may be either
+.BR on ,
+to activate the line,
+or
+.BR off ,
+to deactivate the line.
+The activation of a started line
+or the deactivation of a stopped line
+will result in an error.
+Note that
+.I stload\^
+activates the lines associated with the scripts that it loads.
+.PP
+The
+.B /etc/rc
+file should contain the following multi-user entry:
+.PP
+.RS
+/etc/stload
+.RE
+.PP
+while each active synchronous line should be deactivated in
+.B /etc/shutdown
+by a line similar to the following:
+.PP
+.RS
+/etc/stcntrl /dev/st0 \|off
+.RE
+.PP
+The
+.I stprint\^
+command associates a
+.B /dev/sp\(**
+file with a printer on synchronous communication line
+.I line\^
+with the \s-1ASCII\s+1 device address character
+.IR device .
+The
+.I stprint\^
+command prints the associated file name on its standard output.
+.SH FILES
+.PD 0
+.TP 15
+/lib/stscr
+synchronous terminal prototype script
+.TP 15
+/dev/un53.?
+.SM TN82/UN53
+peripheral controller pair
+(3B20S only)
+.TP 15
+/dev/kmc?
+.SM KMC11-B
+microprocessor
+(\s-1DEC\s+1 only)
+.TP 15
+/dev/st?
+synchronous communications line control channels
+.TP 15
+/dev/tty\(**
+synchronous terminal user channels
+.TP 15
+/dev/sp\(**
+synchronous printer user channels
+.PD
+.SH SEE ALSO
+kmc(7),
+st(7),
+trace(7),
+un53(7),
+vpm(7).
+.\"	@(#)st.1m	5.2 of 5/18/82

@@ -1,0 +1,113 @@
+* @(#)master	1.8
+*
+* The following devices are those that can be specified in the system
+* description file.  The name specified must agree with the name shown.
+*
+da11b	4	36	7	da	8	0	11	1	5	da
+dh11	8	277	6	dh	16	0	1	16	5	tty
+dz11	8	277	6	dz	8	0	1	8	5	tty
+dzb	8	277	46	dzb	8	0	1	8	5	tty
+dm11	4	0	2	dm	4	0	0	16	4	inter
+dmk	8	71	46	dmk	8	0	23	1	4
+rp03	4	76	15	rp	24	0	7	8	5
+rp06	4	76	15	hp	48	0	7	8	5
+disk	4	76	15	gd	48	0	7	1	5
+rk05	4	76	15	rk	14	0	7	8	5
+rl01	4	76	15	rl	8	0	7	4	5
+tu10	4	36	15	tm	12	1	6	4	5
+tu16	4	36	15	ht	32	1	6	4	5
+dr11c	8	32	6	cat	8	0	8	1	5
+nsc	4	77	5	nsc	8	0	10	1	5	ndb ct
+du11	8	36	6	du	8	0	3	1	5	du
+lp11	4	73	5	lp	4	0	14	1	4
+dn11	4	32	6	dn	8	0	4	4	5
+rf11	4	6	15	rf	16	3	12	8	5
+rs04	4	36	15	hs	32	2	12	8	5
+dl11	8	277	6	kl	8	0	0	1	5	tty
+vp	4	33	5	vp	16	0	14	1	5	vp
+kmc11	8	37	6	kmc	8	0	18	1	5
+dmc11	8	37	6	dmc	8	0	19	1	5
+dmb	8	37	6	dmb	8	0	19	1	5
+dmr	8	37	6	dmr	8	0	19	1	5
+vpm	0	37	206	vpm	0	0	15	24	0
+trace	0	35	206	tr	0	0	16	24	0
+csi	0	40	206	csi	0	0	17	24	0
+nc	0	31	206	nc	0	0	22	1	0
+x25	0	37	206	x25	0	0	21	64	0
+prf	0	7	204	prf	0	0	25	1	0
+pcl11b	8	77	7	pcl	32	0	33	8	5	pcl
+pclctrl	0	34	4	pclc	0	0	34	1	0
+st	0	37	204	st	0	0	30	255	0	st
+stc	0	31	204	stc	0	0	35	32	0	stc
+*
+* The following devices must not be specified in the system description
+* file.  They are here to supply information to the config program.
+*
+memory	0	6	324	mm	0	0	2	1	0
+tty	0	27	324	sy	0	0	13	1	0
+errlog	0	34	324	err	0	0	20	1	0
+$$$
+*
+* The following entries form the alias table.
+*
+rp11	rp03
+la36	dl11
+kl11	dl11
+tm11	tu10
+rp05	rp06
+rp04	rp06
+rl02	rl01
+rl11	rl01
+rs03	rs04
+te16	tu16
+tu45	tu16
+tu77	tu16
+$$$
+*
+* The following entries form the tunable parameter table.
+*
+buffers	NBUF
+inodes	NINODE
+iblocks	NIBLOCK	(NINODE-4)
+files	NFILE
+mounts	NMOUNT
+coremap	CMAPSIZ
+swapmap	SMAPSIZ
+calls	NCALL
+procs	NPROC
+texts	NTEXT
+clists	NCLIST
+sabufs	NSABUF	8
+power	POWER	0
+maxproc	MAXUP	25
+* hashbuf must be a power of 2
+hashbuf	NHBUF	64
+physbuf	NPBUF	4
+maus	MAUS	0
+vpmbsz	VPMBSZ	8192
+x25links	X25LINKS	1
+x25bufs	X25BUFS	256
+x25bytes	X25BYTES	(16*1024)
+mesg	MESG	0
+msgmap	MSGMAP	100
+msgmax	MSGMAX	8192
+msgmnb	MSGMNB	16384
+msgmni	MSGMNI	10
+msgssz	MSGSSZ	8
+msgtql	MSGTQL	40
+msgseg	MSGSEG	1024
+sema	SEMA	0
+semmap	SEMMAP	10
+semmni	SEMMNI	10
+semmns	SEMMNS	60
+semmnu	SEMMNU	30
+semmsl	SEMMSL	25
+semopm	SEMOPM	10
+semume	SEMUME	10
+semvmx	SEMVMX	32767
+semaem	SEMAEM	16384
+stibsz	STIBSZ	8192
+stobsz	STOBSZ	8192
+stihbuf	STIHBUF	(ST_0*4)
+stohbuf	STOHBUF	(ST_0*4)
+stnprnt	STNPRNT	(ST_0>>2)

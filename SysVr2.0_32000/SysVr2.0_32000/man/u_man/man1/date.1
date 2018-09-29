@@ -1,0 +1,140 @@
+.TH DATE 1
+.SH NAME
+date \- print and set the date
+.SH SYNOPSIS
+.B date
+[ mmddhhmm[yy] ]
+[ \fB+\fPformat ]
+.SH DESCRIPTION
+If no argument is given,
+or if the argument begins with \fB+\fP,
+the current date and time are printed.
+Otherwise, the current date is set.
+The first
+.I mm\^
+is the month number;\fR
+.I dd\^
+is the day number in the month;\fR
+.I hh\^
+is the hour number (24 hour system);\fR
+the second
+.I mm\^
+is the minute number;\fR
+.I yy\^
+is the last 2 digits of the year number and is optional.
+For example:
+.PP
+.RS
+date\| 10080045
+.RE
+.PP
+sets the date to Oct 8, 12:45 \s-1AM\s+1.
+The current year is the default if no year is mentioned.
+The system operates in \s-1GMT\s0.
+.I Date\^
+takes care of the conversion to and from
+local standard and daylight time.
+.PP
+If the argument begins with \fB+\fP,
+the output of
+.I date\^
+is under the control of the user.
+The format for the output is similar to that of
+the first argument to
+.IR printf (3S).
+All output fields are of fixed size (zero padded
+if necessary).
+Each field descriptor is preceded by \fB%\fP
+and will be replaced in the output by
+its corresponding value.
+A single \fB%\fP is encoded by \fB%%\fP.
+All other
+characters are copied to the output without change.
+The string is always terminated with a new-line character.
+.PP
+Field Descriptors:
+.RS
+.PD 0
+.TP 5
+.B  n
+insert a new-line character
+.TP 5
+.B  t
+insert a tab character
+.TP 5
+.B  m
+month of year \- 01 to 12
+.TP 5
+.B  d
+day of month \- 01 to 31
+.TP 5
+.B  y
+last 2 digits of year \- 00 to 99
+.TP 5
+.B D
+date as mm/dd/yy
+.TP 5
+.B  H
+hour \- 00 to 23
+.TP 5
+.B  M
+minute \- 00 to 59
+.TP 5
+.B  S
+second \- 00 to 59
+.TP 5
+.B T
+time as \s-1HH:MM:SS\s+1
+.TP 5
+.B  j
+day of year \- 001 to 366
+.TP 5
+.B  w
+day of week \- Sunday = 0
+.TP 5
+.B  a
+abbreviated weekday \- Sun to Sat
+.TP 5
+.B  h
+abbreviated month \- Jan to Dec
+.TP 5
+.B  r
+time in
+.SM AM/PM 
+notation
+.RE
+.ne 8
+.SH EXAMPLE
+.RS
+date\| \(fm+DATE: %m/%d/%y%nTIME: %H:%M:%S\(fm
+.RE
+.PP
+would have generated as output:
+.PP
+.RS
+DATE: 08/01/76
+.br
+TIME: 14:45:05
+.RE
+.PP
+.SH DIAGNOSTICS
+.TP "\w'\fIbad\ format\ character\ \ \fP'u"
+.I No permission\^
+if
+you are not the super-user and you try to change the date;
+.TP
+.I bad conversion\^
+if the date set is syntactically incorrect;
+.TP
+.I bad format character\^
+if the field
+descriptor is not recognizable.
+.SH FILES
+/dev/kmem
+.SH "SEE ALSO"
+printf(3S) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH WARNING
+It is a bad practice to change the date while the system is
+running multi-user.
+.\"	@(#)date.1	6.2 of 9/2/83

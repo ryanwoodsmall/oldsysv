@@ -1,0 +1,7 @@
+*#ident	"@(#)kern-port:master.d/iuart	10.2"
+*
+*  IUART
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+orcst13	  1	  iu	 0	 2	13	
+						iu_tty[2] (%0x58)

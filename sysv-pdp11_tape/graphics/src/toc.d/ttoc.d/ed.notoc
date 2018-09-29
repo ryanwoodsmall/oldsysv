@@ -1,0 +1,12 @@
+g/SCCSID @(#)ed.notoc	1.2/
+g/^.nr Cl/d
+g/^.hy/d
+1i
+.nr Cl 7
+.nr Hy 0
+.
+$a
+.TC 1 1 0 0 "Table of Contents"
+.
+1,$p
+Q

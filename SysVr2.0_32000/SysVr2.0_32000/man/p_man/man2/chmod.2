@@ -1,0 +1,125 @@
+'\" t
+.TH CHMOD 2 
+.SH NAME
+chmod \- change mode of file
+.SH SYNOPSIS
+.B int chmod (path, mode)
+.br
+.B char \(**path;
+.br
+.B int mode;
+.SH DESCRIPTION
+.I Path\^
+points to a
+path name
+naming a file.
+.I Chmod\^
+sets the access permission portion of the named file's mode
+according to the bit pattern contained in
+.IR mode .
+.PP
+Access permission bits are interpreted as follows:
+.br
+.sp
+.ti -10
+.RS
+.TS
+center;
+l l
+l l.
+04000	Set user \s-1ID\s+1 on execution.
+02000	Set group \s-1ID\s+1  on execution.
+01000	Save text image  after execution.
+00400	Read by owner.
+00200	Write by owner.
+00100	Execute (search if a directory) by owner.
+00070	Read, write, execute  (search) by group.
+00007	Read, write, execute  (search) by others.
+.TE
+.RE
+.PP
+The effective user
+.SM ID
+of the process must match the
+owner of the file or be
+super-user
+to change the mode of a file.
+.PP
+If the effective user
+.SM ID
+of the process is not
+super-user,
+mode bit 01000 (save text image on execution) is cleared.
+.PP
+If the effective user
+.SM ID
+of the process is not
+super-user
+and the effective group
+.SM ID
+of the process does not match the
+group
+.SM ID
+of the file,
+mode bit 02000 (set group
+.SM ID
+on execution)
+is cleared.
+.PP
+If an executable file is prepared for sharing
+then mode bit 01000 prevents the system from
+abandoning the swap-space image of the program-text portion
+of the file when its last user
+terminates.
+Thus, when the next user of the file executes it,
+the text need not be read from the file
+system but can simply be swapped in,
+saving time.
+.PP
+.I Chmod\^
+will fail and the file mode will be unchanged
+if one or more of the following are true:
+.TP 15
+.SM
+\%[ENOTDIR]
+A component of
+the
+path prefix
+is not a directory.
+.TP
+.SM
+\%[ENOENT]
+The named file does not exist.
+.TP
+.SM
+\%[EACCES]
+Search permission is denied on a
+component of the
+path prefix.
+.TP
+.SM
+\%[EPERM]
+The effective user
+.SM ID
+does not match the owner of the file
+and the effective user
+.SM ID
+is not super-user.
+.TP
+.SM
+\%[EROFS]
+The named file resides on a read-only file system.
+.TP
+.SM
+\%[EFAULT]
+.I Path\^
+points outside the allocated address space of the process.
+.SH "RETURN VALUE"
+Upon successful completion, a value of 0
+is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+chown(2), mknod(2).
+.\"	@(#)chmod.2	6.2 of 9/6/83

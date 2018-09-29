@@ -1,0 +1,178 @@
+.ig
+@(#)errfile.4	1.2	10/17/84
+@(#)Copyright (C) 1984 by National Semiconductor Corp.
+..
+'\" t
+.TH ERRFILE 4
+.SH NAME
+errfile \- error-log file format
+.SH DESCRIPTION
+When hardware errors are detected by the system,
+an error record is generated and passed to the
+error-logging daemon for recording in the error log for
+later analysis.
+The default error log is
+.BR /usr/adm/errfile .
+.ta +5n,+\w'struct errhdr\ \ \ \ 'u,+\w'e_parreg[4];\ \ 'u,+3.6m,+3.6m
+.PP
+The format of an error record depends on the
+type of error that was encountered.
+Every record, however, has a header with the
+following format:
+.PP
+.ne 5
+.RS +5
+.nf
+struct errhdr {
+	short	e_type;	/\(** record type \(**/
+	short	e_len;	/\(** bytes in record (inc hdr) \(**/
+	time_t	e_time;	/\(** time of day \(**/
+};
+.fi
+.RE
+.PP
+The permissible record types are as follows:
+.PP
+.ne 10
+.RS +5
+.nf
+#define \s-1E_GOTS\s+1	010	/\(** start for \s-1UNIX\s+1 System 
+			 * Release 3.0\(**/
+#define \s-1E_GORT\s+1	011	/\(** start for \s-1UNIX\s+1 system/\s-1RT\s+1 \(**/
+#define \s-1E_STOP\s+1	012	/\(** stop \(**/
+#define \s-1E_TCHG\s+1	013	/\(** time change \(**/
+#define \s-1E_CCHG\s+1	014	/\(** configuration change \(**/
+#define \s-1E_BLK\s+1	020	/\(** block device error \(**/
+#define \s-1E_STRAY\s+1	030	/\(** stray interrupt \(**/
+#define \s-1E_PRTY\s+1	031	/\(** memory parity \(**/
+.fi
+.RE
+.PP
+Some records in the error file are of
+an administrative nature.
+These include the startup record that is entered into
+the file when logging is activated,
+the stop record that is written if the daemon is
+terminated ``gracefully'',
+and the time-change record that is used to account for
+changes in the system's time-of-day.
+These records have the following formats:
+.PP
+.ne 12
+.RS +5
+.nf
+struct estart {
+	short	e_cpu;	/\(** \s-1CPU\s+1 type \(**/
+	struct utsname	e_name;	/\(** system names \(**/
+	short	e_mmr3;	/\(** contents mem mgmt reg 3 \(**/
+	long	e_syssize;	/\(** system memory size \(**/
+	short	e_bconf;	/\(** block dev configuration \(**/
+};
+.fi
+.RE
+.PP
+.RS +5
+.nf
+#define eend errhdr	/\(** record header \(**/
+.fi
+.RE
+.PP
+.RS +5
+.nf
+struct etimchg {
+	time_t	e_ntime;	/\(** new time \(**/
+};
+.fi
+.RE
+.br
+.ne 10
+.PP
+Stray interrupts cause a record with the
+following format to be logged:
+.PP
+.ne 4
+.RS +5
+.nf
+struct estray {
+	physadr	e_saddr;	/\(** stray loc or device addr \(**/
+	short	e_sbacty;	/\(** active block devices \(**/
+};
+.fi
+.RE
+.PP
+Memory subsystem errors on SYS32 processors cause the
+following record to be generated:
+.PP
+.ne 6
+.RS +5
+.nf
+struct ememory {
+	int	e_sbier;
+	int	e_memcad;
+};
+.fi
+.RE
+.PP
+Error records for block devices have the following format:
+.PP
+.RS +5
+.nf
+.ne 20
+struct eblock {
+	dev_t	e_dev;	/\(** "true" major + minor dev no \(**/
+	physadr	e_regloc;	/\(** controller address \(**/
+	short	e_bacty;	/\(** other block \s-1I/O\s+1 activity \(**/
+	struct iostat {
+	   long	io_ops;	/\(** number read/writes \(**/
+	   long	io_misc;	/\(** number "other" operations \(**/
+	   ushort	io_unlog;	/\(** number unlogged errors \(**/
+	}	e_stats;
+	short	e_bflags;	/\(** read/write, error, etc \(**/
+	short	e_cyloff;	/\(** logical dev start cyl \(**/
+	daddr_t	e_bnum;	/\(** logical block number \(**/
+	ushort	e_bytes;	/\(** number bytes to transfer \(**/
+	paddr_t	e_memadd;	/\(** buffer memory address \(**/
+	ushort	e_rtry;	/\(** number retries \(**/
+	short	e_nreg;	/\(** number device registers \(**/
+};
+.fi
+.RE
+.PP
+The following values are used in the
+.I e_bflags\^
+word:
+.PP
+.ne 6
+.RS +5
+.nf
+#define \s-1E_WRITE\s+1	0	/\(** write operation \(**/
+#define \s-1E_READ\s+1	1	/\(** read operation \(**/
+#define \s-1E_NOIO\s+1	02	/\(** no \s-1I/O\s+1 pending \(**/
+#define \s-1E_PHYS\s+1	04	/\(** physical \s-1I/O\s+1 \(**/
+#define \s-1E_MAP\s+1	010	/\(** Unibus map in use \(**/
+#define \s-1E_ERROR\s+1	020	/\(** \s-1I/O\s+1 failed \(**/
+.fi
+.RE
+.br
+.ne 15
+.PP
+The ``true'' major device numbers that identify the failing device
+are as follows:
+.PP
+.ne 10
+.RS +5
+.nf
+.TS
+cI s
+l n .
+NSC SYS32
+#define \s-1DC\s+10	0
+#define \s-1TC\s+10	0
+.TE
+.fi
+.RE
+.SH SEE ALSO
+errdemon(1M) in the
+\f2\s-1UNIX\s+1 System V
+Administrator Reference Manual\fR.
+.\"	@(#)errfile.4	1.2 of 10/17/84

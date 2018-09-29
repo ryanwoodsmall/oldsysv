@@ -1,0 +1,10 @@
+
+\S .profile \S
+
+.profile is the name of a file in your "HOME directory"\S*\S.  It
+contains a shell program that is executed whenever you log on.  This
+program usually sets your "environmental variables"\S*\S, and the
+capabilities for the terminal you are using.  You can use it for other
+things that you would like to have done whenever you log on.
+
+\S*\S defined in the \Sglossary\S

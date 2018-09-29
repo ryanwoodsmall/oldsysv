@@ -1,0 +1,64 @@
+.TH UMOUNT 2
+.SH NAME
+umount \- unmount a file system
+.SH SYNOPSIS
+.B int umount (spec)
+.br
+.B char \(**spec;
+.SH DESCRIPTION
+.I Umount\^
+requests that a previously mounted file system contained on the
+block special device identified by
+.I spec\^
+be unmounted.
+.I Spec\^
+is a pointer to a path name.
+After unmounting the file system,
+the directory upon which the file system was mounted reverts to its ordinary
+interpretation.
+.PP
+.I Umount\^
+may be invoked only by the super-user.
+.PP
+.I Umount\^
+will fail if one or more of the following are true:
+.TP 15
+.SM
+\%[EPERM]
+The process's effective user
+.SM ID
+is not super-user.
+.TP
+.SM
+\%[ENXIO]
+.I Spec\^
+does not exist.
+.TP
+.SM
+\%[ENOTBLK]
+.I Spec\^
+is not a block special device.
+.TP
+.SM
+\%[EINVAL]
+.I Spec\^
+is not mounted.
+.TP
+.SM
+\%[EBUSY]
+A file on
+.I spec\^
+is busy.
+.TP
+.SM
+\%[EFAULT]
+.I Spec\^
+points to an illegal address.
+.SH "RETURN VALUE"
+Upon successful completion a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno\^
+is set to indicate the error.
+.SH "SEE ALSO"
+mount(2).
+.\"	@(#)umount.2	6.2 of 9/6/83

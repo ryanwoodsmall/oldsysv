@@ -1,0 +1,539 @@
+'\" e
+.hw other-wise
+.EQ
+delim @@
+.EN
+.if t .ds ^ \s+4\v'.3m'^\v'-.3m'\s-4
+.if t .ds ~ \s+4\v'.3m'~\v'-.3m'\s-4
+.if n .ds ^ ^
+.if n .ds ~ ~
+.TH VPMC 1M "3B20S only"
+.SH NAME
+vpmc \- compiler for the virtual protocol machine
+.SH SYNOPSIS
+.B vpmc
+.RB "[\ " \-m "\ ]"
+.RB "[\ " \-c "\ ]"
+.RB "[\ " \-s "\ sfile\ ]"
+.RB "[\ " \-l "\ lfile\ ]"
+.RB "[\ " \-o "\ ofile\ ]"
+file
+.SH DESCRIPTION
+.I Vpmc\^
+is the compiler used for C programs written
+to describe communications link protocols.
+The output of
+.I vpmc\^
+is a load module for the virtual protocol machine
+(\s-1VPM\s+1),
+which is a software construct for implementing communications link
+protocols
+(e.g.,
+.SM BISYNC\*S)
+on the
+.SM UN\*S53)
+device.
+.SM VPM
+is implemented by a program in the
+.SM UN\*S53
+which cooperates with a driver in the
+.SM UNIX
+System host computer to transfer data over a communications link
+in accordance with a specified link protocol.
+The
+.SM UNIX
+System user processes transfer data to or from a remote terminal or computer
+system
+through
+.SM VPM
+using normal
+.SM UNIX
+System
+.IR open ,
+.IR read ,
+.IR write ,
+and
+.I close\^
+operations.
+The
+.SM VPM
+program in the
+.SM UN\*S53
+provides error control and flow control using the conventions
+specified in the protocol.
+.SS Options
+.PP
+The meanings of the command-line options are:
+.PP
+.PD 0
+.TP 10
+.B \-m
+Use
+.IR m4 (1)
+instead of
+.I cpp\^
+as the macro preprocessor.
+.TP
+.B \-c
+Compile only (suppress the assembly and linking phases).
+.TP
+.BI \-s " sfile\^"
+Save the generated
+assembly language on file
+.IR sfile .
+.TP
+.BI \-l " lfile\^"
+Produce an
+assembly-language listing on file
+.IR lfile .
+.TP
+.BI \-o " ofile\^"
+Write the executable object file on file
+.I ofile\^
+(default
+.BR a.out ).
+.PD
+.PP
+These options may be given in any order.
+.SS Programs
+.PP
+Input to
+.I vpmc\^
+consists of a
+C program with one or more
+function definitions.
+The first defined function is invoked
+(on command from the
+.SM UNIX
+System
+.SM VPM
+driver)
+to begin
+program execution.
+.SS System Calls
+.PP
+A
+.SM VPM
+program interacts with a communications device
+and a driver in the host computer
+by means of system calls (primitives).
+.PP
+The following primitives are available:
+.TP
+.BI atoe( primary )
+Translate \s-1ASCII\s+1 to \s-1EBCDIC\s+1.
+The returned value is the \s-1EBCDIC\s+1 character that corresponds to
+the \s-1ASCII\s+1 character represented by the value of the primary expression.
+The translation tables
+reflect the prejudices of a particular installation.
+.TP
+.BI crc16( primary )
+The value of the primary expression is combined with
+the cyclic redundancy check-sum at the location passed
+by a previous
+.B crcloc
+system call.
+The
+.SM CRC\*S-16
+polynomial
+@(x sup 16 + x sup 15 + x sup 2 + 1)@
+is used for the check-sum calculation.
+.TP
+.BI crcloc( name )
+The two-byte array
+starting at the location specified by
+.I name\^
+is cleared.
+The address of the array is recorded as the location
+to be updated by subsequent
+.B crc16
+system calls.
+.TP
+.BI etoa( primary )
+Translate \s-1EBCDIC\s+1 to \s-1ASCII\s+1.
+The returned value is the \s-1ASCII\s+1 character that corresponds to
+the \s-1EBCDIC\s+1 character represented by the value of the primary expression.
+The translation tables
+reflect the prejudices of a particular installation.
+.TP
+.BI get( lvalue )
+.br
+Get a byte from the current
+.I transmit\^
+buffer.
+The next available byte, if any, is copied into the location
+specified by
+.IR lvalue .
+The returned value is zero if a byte was obtained,
+otherwise it is non-zero.
+.TP
+.BI getrbuf( name )
+Get (open) a
+.I receive\^
+buffer.
+The returned value is zero
+if a buffer is available, otherwise it is non-zero.
+If a buffer is obtained, the buffer parameters are copied
+into the array specified by
+.IR name .
+The array should be large enough to hold at least three bytes.
+The meaning of the buffer parameters is driver-dependent.
+If a receive buffer has previously been opened via a
+.B getrbuf
+call but has not yet been closed via a call to
+.BR rtnrbuf ,
+it is reinitialized and remains the current buffer.
+.TP
+.BI getxbuf( name )
+Get (open) a
+.I transmit\^
+buffer.
+The returned value is zero
+if a buffer is available, otherwise it is non-zero.
+If a buffer is obtained, the buffer parameters are copied
+into the array specified by
+.IR name .
+The array should be large enough to hold at least three bytes.
+The meaning of the buffer parameters is driver-dependent.
+If a transmit buffer has previously been opened via a
+.B getxbuf
+call but has not yet been closed via a call to
+.BR rtnxbuf ,
+it is reinitialized and remains the current buffer.
+.TP
+.BI put( primary )
+.br
+Put a byte into the current
+.I receive\^
+buffer.
+The value of the primary expression is inserted into the next
+available position, if any, in the current receive buffer.
+The returned value is zero if a byte was transferred,
+otherwise it is non-zero.
+.TP
+.BI rcv( lvalue )
+.I Receive\^
+a character.
+The process delays until a character is available
+in the input silo.
+The character is then moved to the location
+specified by
+.I lvalue\^
+and the process is reactivated.
+.TP
+.BI rsom( constant )
+Skip to the beginning of a new
+.I receive\^
+frame.
+The receiver hardware is cleared and the value of
+.I constant\^
+is stored as the receive sync character.
+This call is used to synchronize the local receiver
+and remote transmitter when the process is ready to accept
+a new receive frame.
+.TP
+.BI rtnrbuf( name )
+Return a
+.I receive\^
+buffer.
+The original values of the buffer parameters for the current
+receive buffer
+are replaced with values from the array specified by
+.IR name .
+The current receive buffer is then released to the driver.
+.TP
+.BI rtnxbuf( name )
+Return a
+.I transmit\^
+buffer.
+The original values of the buffer parameters for the current
+transmit buffer
+are replaced with values from the array specified by
+.IR name .
+The current transmit buffer is then released to the driver.
+.TP
+.BI xeom( constant )
+Transmit end-of-message.
+The value of the constant is transmitted,
+then the transmitter is shut down.
+.TP
+.BI xmt( primary )
+Transmit a character.
+The value of the primary expression is transmitted over the communications
+line.
+If the output silo is full, the process waits until there is room
+in the silo.
+.TP
+.BI xsom( constant )
+Transmit start-of-message.
+The transmitter is cleared, then the value of
+.I constant\^
+is transmitted six times.
+This call is used to synchronize the local transmitter
+and the remote receiver at the beginning of a frame.
+.TP
+.B dsrwait(\|)
+Wait for modem-ready and then set modem-ready mode.
+The process delays until the modem-ready signal from the modem
+interface is asserted.
+If the modem-ready signal subsequently drops,
+the process is terminated.
+If
+.B dsrwait
+is never invoked, the modem-ready signal is ignored.
+.TP
+.BI exit( primary )
+Terminate execution.
+The process is halted
+and the value of the primary expression
+is passed to the driver.
+.TP
+.BI getcmd( name )
+Get a command from the driver.
+If a command has been received from the driver since the last
+call to
+.BR getcmd ,
+four bytes of command information are copied into the array specified by
+.I name\^
+and a value of
+.B true
+(non-zero)
+is returned.
+If no command is available,
+the returned value is
+.B false
+(zero).
+.TP
+.B pause(\|)
+Return control to the dispatcher.
+This primitive
+informs the dispatcher that the virtual process may be suspended
+until the next occurrence of an event that might affect the state of
+the protocol for this line.
+Examples of such events are:
+(1) completion of an output transfer,
+(2) completion of an input transfer,
+(3) timer expiration,
+and
+(4) a buffer-in command from the driver.
+In a multi-line implementation,
+the
+.B pause
+primitive allows the process for a given line to give up control
+to allow the processor to service another line.
+In a single-line implementation
+this primitive has no effect.
+.TP
+.BI snap( name )
+Create a
+.I snap
+event record.
+Four bytes from the array specified by
+.I name
+are passed to the driver,
+which prefixes a time stamp and sequence number
+and creates a trace event record
+containing the data.
+If minor device 1 of the trace driver is currently open,
+the record is placed on the read queue for that device;
+otherwise the event record is discarded.
+The information passed via the
+.I snap
+primitive can be displayed using
+the
+.I vpmsnap
+command
+(see
+.IR vpmstart ).
+.TP
+.BI rtnrpt( name )
+Return a report to the driver.
+Four bytes from the array specified by
+.I name\^
+are transferred to the driver.
+The process delays until the transfer is complete.
+.TP
+.BI testop( primary )
+Test for odd parity.
+The returned value is
+.B true
+(non-zero)
+if the value of the primary expression has odd parity,
+otherwise the returned value is
+.B false
+(zero).
+.TP
+.BI timeout( primary )
+Schedule or cancel a timer interrupt.
+If the value of the
+primary expression
+is non-zero,
+the current values of
+the program counter and stack pointer are saved
+and a timer is loaded with the value of
+the primary expression.
+The system call then returns immediately
+with a value of
+.B false
+(zero)
+as the returned value.
+The timer is decremented
+each tenth of a second thereafter.
+If the timer is decremented to zero,
+the saved values of the program counter and stack pointer are restored
+and the system call returns with a value of
+.B true
+(non-zero).
+The effect of the timer interrupt is to return control
+to the code immediately following the
+.B timeout
+system call,
+at which point a non-zero return value
+indicates that the timer has expired.
+The
+.B timeout
+system call with a non-zero argument is normally written as
+the condition part of an
+.B if
+statement.
+A
+.B timeout
+system call with a zero argument value
+cancels all previous
+.B timeout
+requests,
+as does a
+.B return
+from the function in which the
+.B timeout
+system call was made.
+A
+.B timeout
+system call with a non-zero argument value
+overrides all previous
+.B timeout
+requests.
+The maximum permissible value for the argument is 255,
+which gives a timeout period of 25.5 seconds.
+.br
+.ne 4v
+.TP
+.BI timer( primary )
+Start a timer or test for timer expiration.
+If the value of the
+primary expression
+is non-zero,
+a software timer is loaded with the value of the
+primary expression
+and a value of
+.B true
+(non-zero)
+is returned.
+The timer is decremented each tenth of a second thereafter
+until it reaches zero.
+If the value of the
+primary expression
+is zero,
+the returned value is
+the current value of the timer;
+this will be
+.B true
+(non-zero)
+if the value of the timer is currently non-zero,
+otherwise
+.B false
+(zero).
+The timer used by this primitive is different from the timer used by the
+.B timeout
+primitive.
+.TP
+.BI trace( primary [,\^ primary ])
+The values of the two primary expressions
+and the current value of the script location counter
+are passed to the driver,
+which prefixes a sequence number
+and creates a trace event record
+containing the data.
+If minor device 0 of the trace driver is currently open,
+the record is placed on the read queue for that device;
+otherwise the event record is discarded.
+The information passed via the
+.I trace
+primitive can be displayed using the
+.I vpmtrace
+command
+(see
+.IR vpmsave ).
+If the second
+argument
+is omitted,
+a zero is used instead.
+The process delays until the values have been accepted by the host computer.
+.br
+.ne 3v
+.RE
+.SS Preprocessor Commands
+.PP
+If the
+.B \-m
+option is omitted,
+comments, macro definitions, and file inclusion statements
+are written as in C.
+Otherwise, the following rules apply:
+.TP 4
+1.
+If the character
+.B #
+appears in an input line,
+the remainder of the line is treated as a comment.
+.TP
+2.
+A statement of the form:
+.sp \n(PDu
+.ti +\n(INu
+.RI define( name , text )
+.sp \n(PDu
+causes every subsequent appearance
+of
+.I name\^
+to be replaced by
+.IR text .
+The defining text includes everything after
+the comma up to the balancing right parenthesis;
+multi-line definitions are allowed.
+Macros may have arguments.
+Any occurrence of
+.BI $ n\^
+within the replacement text for a macro
+will be replaced by the
+.IR n th
+actual argument when the macro is invoked.
+.TP
+3.
+A statement of the form:
+.sp \n(PDu
+.ti +\n(INu
+.RI include( file )
+.sp \n(PDu
+inserts the contents of
+.I file\^
+in place of the
+.B include
+command.
+The contents of the included file is often a set of definitions.
+.br
+.ne 6v
+.SH SEE ALSO
+m4(1),
+vpmset(1M).
+.br
+.I "C Reference Manual\^"
+by D. M. Ritchie.
+.br
+.I "The M4 Macro Processor\^"
+by B. W. Kernighan and D. M. Ritchie.
+.br
+.I "Software Tools\^"
+by B. W. Kernighan and P. J. Plauger
+(pp. 28-30).
+.\"	@(#)vpmc.u3b.1m	5.2 of 5/18/82

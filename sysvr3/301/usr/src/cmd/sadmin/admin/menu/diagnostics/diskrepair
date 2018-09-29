@@ -1,0 +1,69 @@
+#ident	"@(#)sadmin:admin/menu/diagnostics/diskrepair	2.4"
+#menu#	advice on repair of built-in disk errors
+#help#
+#help#	This subcommand advises you on how to go about repairing errors that
+#help#	occur on built-in disks.
+#help#
+#help#	WARNING:  Because this is a repair function, it should only be
+#help#	performed by qualified service personnel.
+#help#	NOTE:  Reports of disk errors most probably result in the loss of
+#help#	files and/or damage to data.  It will be necessary to restore the
+#help#	repaired disk from backup copies.
+
+flags="-qq -k$$"
+trap exit 1 2 15
+
+if [ ! -x /etc/hdefix ]
+then
+	echo '
+	This machine does not have the necessary command, /etc/hdefix, to
+	repair bad blocks.  Hence, this feature is not available.'
+	exit 0
+fi
+
+echo '
+	WARNING:  Because this is a repair function, it should only be
+	performed by qualified service personnel.
+	NOTE:  Reports of disk errors most probably result in the loss of
+	files and/or damage to data.  It will be necessary to restore the
+	repaired disk from backup copies.
+
+To repair a disk without causing unnecessary damage, the system must be as
+inactive as we can make it.  This state, traditionally known as "single user",
+can be entered by logging in as "root" on the console terminal, and typing:
+
+				init 1
+
+Note that this is not the traditional way to get to "single user" state.
+'
+checklist -f ${flags} 'Press RETURN to continue. [q]' '' '<RETURN>'
+echo '
+When you get the "#" prompt on the console, use "/etc/mount" to be sure that
+only the "/" file system is mounted and "ps" to be sure that the only
+processes are:
+			Process ID 0
+			Process ID 1
+			-su
+			ps
+If there is more than the "/" file system or more than these processes,
+something has gone wrong.  Be sure all other processes are killed
+and all file systems other than "/" are unmounted before going further.
+'
+checklist -f ${flags} 'Press RETURN to continue. [q]' '' '<RETURN>'
+echo '
+Now, with the system quiet, you may run the program that repairs the disk.
+Type:
+			/etc/hdefix -a
+The program will repair each of the reported bad blocks.
+
+As a result of this repair, some file system damage may occur.  This damage
+may be detected by the "/etc/fsck" program used during the start up sequence.
+"/etc/fsck" may report damage and its repair.
+NOTE:  Even if "/etc/fsck" does not report any damage, some files within
+the file system may be corrupted.  (After all, bad blocks get reported when
+attempts to access them fail.)  Ideally, the file systems should be emptied
+and restored from the most recent backups to ensure that there are no damaged
+files.  Use the command
+			sysadm restore
+to restore the file systems.
+'

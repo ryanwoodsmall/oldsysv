@@ -1,0 +1,41 @@
+menu="Create $ARG2"
+altslks
+
+help=OPEN TEXT OBJECTS/Text.mfhelp create 'Create New Object'
+begrow=any
+begcol=any
+lifetime=longterm
+
+name="File folder"
+action=`run -s /bin/mkdir $ARG1/$ARG2; shell test -d $ARG1/$ARG2 && message "File folder $ARG2 created in $ARG3" || message "File folder $ARG2 not created in $ARG3"`return close
+
+name="Standard file"
+action=`run -e -t"Suspended $EDITOR $ARG2" ${EDITOR:-vi} $ARG1/$ARG2;shell test -f $ARG1/$ARG2 && message "Standard file $ARG2 created in $ARG3" || message "Standard file $ARG2 not created in $ARG3"`return close
+
+name=CANCEL
+button=9
+action=return cancel
+
+name=""
+button=10
+action=return nop
+
+name=""
+button=11
+action=return nop
+
+name=""
+button=12
+action=return nop
+
+name=""
+button=13
+action=return nop
+
+name=""
+button=15
+action=return nop
+
+name=""
+button=16
+action=return nop

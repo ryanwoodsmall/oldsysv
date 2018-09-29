@@ -1,0 +1,10 @@
+#ident	"@(#)sadmin3b2:etc/rc.d/disks	1.2"
+#
+# Create "/dev" entries for new disk(s).
+#
+
+if [ ! -x /etc/disks ]
+then
+	echo '/etc/disks is missing or not executable.'
+fi
+exec /etc/disks

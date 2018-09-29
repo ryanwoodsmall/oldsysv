@@ -1,0 +1,76 @@
+.TH USAGE 1
+.SH NAME
+usage \- retrieve a command description and usage examples
+.SH SYNOPSIS
+[
+.B help
+]
+.B usage
+[
+.B \-d
+]
+[
+.B \-e
+]
+[
+.B \-o
+]
+[
+.I command_name
+]
+.SH DESCRIPTION
+The UNIX System \fIhelp\fP Facility command 
+.I usage
+retrieves information about UNIX system commands.
+With no argument,
+.I usage
+displays a menu screen prompting the user for the name of a
+command,
+or allows the user to retrieve a list of commands supported
+by
+.I usage.
+The user may also exit to the shell by typing \fBq\fP (for ``quit'').
+.PP
+After a command is selected,
+the user is asked to choose among a description of the command,
+examples of typical usage of the command, or descriptions of the command's
+options.  Then, based on the user's request, the appropriate information
+will be printed.
+.PP
+A command name may also be entered at shell level as an
+argument to \fIusage\fP.  To receive information on the command's
+description, examples, or options, the user may use the \fB-d\fP, \fB-e\fP,
+or \fB-o\fP options respectively. (The default option is \fB-d\fP.)
+.PP
+From any screen in the facility, a user may execute a command via the
+shell (\fBsh(1)\fP) by typing a \fB!\fP and the command to be executed.
+The screen will be redrawn if the command that was executed
+was entered at a first level prompt.
+If entered at any other prompt level, only the prompt will be redrawn.
+.PP
+By default, the \fIhelp\fP facility scrolls the data that is
+presented to the user.  If a user prefers to have
+the screen clear before printing the data (non-scrolling), 
+a variable must be defined in the user's \fB.profile\fP file called
+\fBSCROLL\fP.  The variable \fBSCROLL\fP must be set to \fBno\fP and exported
+for non-scrolling to occur.
+If the user later decides that scrolling is desired, the variable \fBSCROLL\fP
+must be set to \fByes\fP or deleted from the user's \fB.profile\fP file.
+.PP
+Further information on the UNIX System \fIhelp\fP Facility can be found
+on the
+.IR help (1),
+.IR locate (1),
+.IR starter (1),
+and
+.IR glossary (1)
+manual pages.
+.SH SEE ALSO
+help(1), locate(1), starter(1), glossary(1).
+.SH WARNINGS
+.PP
+If the \fBTERM\fP variable is not set in the user's \fB.profile\fP file,
+then \fBTERM\fP will default to the terminal value type \fB450\fP 
+( a hardcopy terminal ).  For a list of valid terminal types, refer to
+\fIterm(5)\fP in the UNIX Programmer's Manual.
+The \fIhelp\fP facility assumes that tabs are set on the user's terminal.

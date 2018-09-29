@@ -1,0 +1,332 @@
+.TH CU 1C
+.SH NAME
+cu \- call another \s-1UNIX\s+1 system
+.SH SYNOPSIS
+.B cu
+.RB [\| \-s speed\|]
+.RB [\| \-l line\|]
+.RB [\| \-h \|]
+.RB [\| \-t \|]
+.RB [\| \-d \|]
+.RB [\| \-m \|]
+.RB [\| \-o \|]
+.RB [\| \-e \|]
+.RB [\| \-n \|]
+.B telno \(bv
+.B systemname \(bv \|
+.B dir
+.SH DESCRIPTION
+.I Cu\^
+calls up another \s-1UNIX\s+1 system,
+a terminal,
+or possibly a non-\s-1UNIX\s+1 system.
+It manages an interactive conversation with possible
+transfers of
+.SM ASCII
+files.
+.TP
+.B cu
+accepts the following options and arguments.
+.TP
+.B \-sspeed
+Specifies the transmission speed (110, 150, 300, 600, 1200, 4800, 9600);
+300 is the default value. Most modems are either 300 or 1200
+baud. Directly connected lines may be set to a speed higher than 1200
+baud.
+.TP
+.B \-lline
+Specifies a device name to use as the communication line. This can be 
+used to override searching for the first available line having the right
+speed. When the \f3\-l\f1 option is used without the -s option, the speed of a line is taken from the file
+\fB/usr/lib/uucp/L\f3\-d\f1evices\fR. When the \f3\-l\f1 and \f3\-s\f1 options are used simultaneously,
+cu will search the L-devices file to check if the requested speed for the
+requested line is available. If so, the connection will be made at the
+requested speed; otherwise an error message will be printed and the call
+will not be made. 
+The specified device is generally a directly connected asynchronous line
+(e.g., \fB/dev/ttyab\fR), in this case a phone number is not required but the 
+string dir may be use to specify a null acu. If the specified device
+is associated with an auto dialer, a phone number must be 
+provided. 
+.TP
+.B \-h
+Emulates local echo, supporting calls to other computer systems
+which expect terminals to be set to half-duplex mode.
+.TP
+.B \-t
+Used when dialing an ASCII terminal which has been set to auto answer.
+Appropriate mapping of carriage-return to carriage-return-line-feed
+pairs is set.
+.TP
+.B \-d
+Causes diagnostic traces to be printed.
+.TP
+.B \-e
+Designates that even parity is to be generated for data sent to the 
+remote.
+.TP
+.B \-o
+Designates that odd parity is to be generated for data sent to the remote.
+.TP
+.B \-m
+Designates a direct line which has modem control.
+.TP
+.B \-n
+Will request the phone number to be dialed from the user rather than 
+taking it from the command line. 
+.TP
+.B \ telno
+When using an automatic dialer the argument
+is the telephone number with equal signs for secondary dial tone or minus
+signs for delays, at appropriate places.
+.TP
+.B \ systemname
+A
+.B uucp
+system name may be used rather than a phone number; in this case,
+cu will obtain an appropriate direct line or 
+phone number from
+.B \%/usr/lib/uucp/L.sys 
+(the appropriate baud rate is also read along with phone numbers). 
+Cu will try each phone number or direct line for
+.B systemname 
+in the L.sys file until a connection is made or all the entries are tried.
+.TP
+.B \ dir
+Using 
+.B dir
+insures that cu will use the line specified by the \f3\-l\f1 option.
+.P
+After making the connection,
+.I cu\^
+runs as two processes:
+the
+.I transmit\^
+process reads data from the standard input and,
+except for lines beginning with
+.BR ~ ,
+passes it to the remote system;
+the
+.I receive\^
+process accepts data from the remote system and,
+except for lines beginning with
+.BR ~ ,
+passes it to the standard output.
+Normally, an automatic \s-1DC\s+1\&3/\s-1DC\s+1\&1 protocol
+is used to control input from the remote so the buffer is
+not overrun.
+Lines beginning with \f3~\fP have special meanings.
+.PP
+The
+.I transmit\^
+process interprets the following:
+.TP 20
+.B ~.
+terminate the conversation.
+.TP
+.B ~!
+escape to an interactive shell on the local system.
+.TP
+.BI ~! cmd\|.\|.\|.
+run
+.I cmd\^
+on the local system
+(via
+.BR "sh \-c" ).
+.TP
+.BI ~$ cmd\|.\|.\|.
+run
+.I cmd\^
+locally and send its output
+to the remote system.
+.TP
+\&\f3~%cd\fP
+change the directory on the local system.
+.B \s-1NOTE\s+1:
+\&\f3~!cd
+will cause the command to be run by a sub-shell;
+probably not what was intended.
+.TP
+\&\f3~%take\fP \|\f2from\fP \|[ \|\f2to\fP \|]
+copy file
+.I from\^
+(on the remote system)
+to file
+.I to\^
+on the local system.
+If
+.I to\^
+is omitted,
+the
+.I from\^
+argument is used in both places.
+.TP
+\&\f3~%put\fP \|\f2from\fP \|[ \|\f2to\fP \|]
+copy file
+.I from\^
+(on local system)
+to file
+.I to\^
+on remote system.
+If
+.I to\^
+is omitted, the
+.I from\^
+argument is used in both places.
+.TP
+.BR ~~ .\|.\|.
+send the line
+.BR ~ ".\|.\|."
+to the remote system.
+.TP
+\&\f3~%break\fP
+transmit a 
+.B BREAK
+to the remote system.
+.TP
+.B ~%nostop
+toggles between \s-1DC\s+1\&3/\s-1DC\s+1\&1
+input control protocol and no input control.
+This is useful in case the remote system is one which does
+not respond properly to the \s-1DC\s+1\&3 and \s-1DC\s+1\&1 characters.
+.PP
+The
+.I receive\^
+process normally copies data from the remote system to its standard
+output.
+A line from the remote that begins with \f3~>\fP initiates
+an output diversion to a file.
+The complete sequence is:
+.PP
+.RS
+\&\f3~>\fP\^[\^\f3>\fP\^]\^\f3:\fP\^\|\f2file\fP
+.br
+zero or more lines to be written to
+.I file\^
+.br
+.B ~>
+.RE
+.PP
+Data from the remote is diverted (or appended, if
+.B >>
+is used) to
+.IR file .
+The trailing \f3~>\fP terminates the diversion.
+.PP
+The use of
+.B ~%put
+requires
+.IR stty (1)
+and
+.IR cat (1)
+on the remote side.
+It also requires that the
+current erase and kill characters on the remote
+system be identical to the current ones on the local system.
+Backslashes are inserted at appropriate places.
+.PP
+The use of
+.B ~%take
+requires the existence of
+.IR echo (1)
+and
+.IR cat (1)
+on the remote system.
+Also,
+.B stty tabs
+mode should be set on the remote system if
+tabs are to be copied without expansion.
+.bp
+.PP
+When  
+.B cu
+is used on system X to connect to system Y and
+subsequently used on system Y to connect to
+system Z, commands on system Y can be executed
+by using ~~. For example, uname can be executed
+on Z, X, and Y as follows:
+.br
+.sp
+uname
+.br
+Z
+.br
+~!uname
+.br
+X
+.br
+~~!uname
+.br
+Y
+.br
+In general,
+.B ~
+causes the command to be executed on the original machine,
+.B ~~
+causes the command to be executed on the next machine in
+the chain.
+.SH EXAMPLES
+.RE
+.PP
+To dial a system whose number is 9 201 555 1212 using 1200 baud:
+.RS
+cu  -s1200   9=2015551212
+.RE
+.PP
+If the speed is not specified, 300 is the default value.
+.RE
+.PP
+To login to a system connected by a direct line:
+.RS
+cu  -l  /dev/ttyXX  dir
+.RE
+.PP
+To dial a system with the specific line and a specific speed:
+.RS
+cu  -s1200  -l  /dev/ttyXX  dir
+.RE
+.PP
+To dial a system using a specific line:
+.RS
+cu  -l  /dev/culXX  2015551212 
+.RE
+.PP
+To use a system name:
+.RS
+cu  YYYZZZ
+.br
+.SH FILES
+.br
+/usr/lib/uucp/L.sys
+.br
+/usr/lib/uucp/L-devices
+.br
+/usr/spool/uucp/\s-1LCK\s+1..(tty-device)
+.br
+/dev/null
+.SH SEE ALSO
+cat(1), ct(1C), echo(1), stty(1), uname(1), uucp(1C).
+.SH DIAGNOSTICS
+Exit code is zero for normal exit,
+non-zero (various values) otherwise.
+.SH BUGS
+.I Cu\^
+buffers input internally.
+.br
+There is an artificial slowing of transmission by
+.I cu\^
+during the
+.B ~%put
+operation so that loss of data is unlikely.
+.br
+Since the
+.SM
+NSC
+.SM
+SYS32
+processor does not support
+ACU hardware you can only
+use
+.B cu
+with a hardwired line.
+.\"	@(#)cu.1c	6.3 of 9/2/83

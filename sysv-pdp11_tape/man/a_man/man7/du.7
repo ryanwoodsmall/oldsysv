@@ -1,0 +1,43 @@
+.TH DU 7 "PDP-11 only"
+.SH NAME
+du \- \s-1DU-11\s0 synchronous line interface
+.SH DESCRIPTION
+The files
+.BR du0 ,
+.BR du1 ,
+etc.,
+represent interfaces to synchronous modems
+such as the
+Bell System
+200-series
+synchronous
+.SM DATA-PHONE\*S\*R
+sets.
+.I Read\^
+and
+.I write\^
+calls
+to
+.B du?
+are unlimited, but work best when restricted to less than 512 bytes.
+Each
+.I write\^
+call is sent as a single record.
+Seven bits from each byte
+are written, along with an eighth, odd-parity,
+bit.
+The ``sync'' characters must be supplied by the user.
+Each
+.I read\^
+call returns the characters read from a
+single record.
+Seven bits are returned unaltered; the eighth bit
+is set if the byte was not received in odd parity.
+An error is returned if
+.I "data-set ready\^"
+is not present.
+.SH FILES
+/dev/du?
+.SH "SEE ALSO"
+acu(7).
+.\"	@(#)du.7	5.2 of 5/18/82

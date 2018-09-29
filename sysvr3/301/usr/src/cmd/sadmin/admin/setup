@@ -1,0 +1,117 @@
+#ident	"@(#)sadmin:admin/setup	2.6"
+#help#
+#help#	This procedure serves to set up the machine the very first time
+#help#	it is used.  It allows the user to define the first logins,
+#help#	set the passwords on the other user-definable administration logins,
+#help#	set system passwords, set the node name, and set the date,
+#help#	time and timezone.
+
+#!	chmod +x ${file}
+
+MENUTOP=`pwd`
+export MENUTOP
+
+#	"Hide" the first time check routine.
+if [ -f /etc/rc2.d/S00firstcheck ]
+then
+	mv /etc/rc2.d/S00firstcheck /etc/rc2.d/.00firstcheck
+fi
+#	/etc/rc.d was an early version of /etc/rc2.d and this provides
+#	compatibility.
+if [ -f /etc/rc.d/0_firstcheck ]
+then
+	mv /etc/rc.d/0_firstcheck /etc/rc.d/.0_firstcheck
+fi
+
+echo '
+			      Setup Procedure
+Setup establishes this machine as yours and can make sure that no one else
+uses it without your permission.  We assume that you have read about
+"initial setup" in the GETTING STARTED chapter of the Owner/Operator Manual.'
+eval `find . -print  |
+	sed -n '
+		/\/adduser$/s/^/adduser=/p
+		/\/admpasswd$/s/^/admpasswd=/p
+		/\/datetime$/s/^/datetime=/p
+		/\/nodename$/s/^/nodename=/p
+		/\/syspasswd$/s/^/syspasswd=/p'`
+echo '
+	The first step is to set the timezone, date, and time of the system
+clock.'
+
+if [ -z "${datetime}" ]
+then
+	admerr $0 Could not find datetime under `pwd`.
+else
+	sh ${datetime}
+fi
+
+echo '
+	The next step is to set up logins.
+The first one you make should be for yourself.
+'
+if [ -z "${adduser}" ]
+then
+	admerr $0 Could not find adduser under `pwd`.
+else
+	sh ${adduser}
+fi
+
+echo '
+NOTE:  Your password is very important.  It is the way that the computer
+verifies that someone who attempts to login as you is indeed you.  If you
+give it away to someone, they can do anything you can do and the machine does
+not know the difference.  Please read the chapter on SECURITY in the
+Owner/Operator Manual.
+
+	The next step is to establish passwords for the administrative logins
+and commands.
+'
+
+if [ -z "${admpasswd}" ]
+then
+	admerr $0 Could not find admpasswd under `pwd`.
+else
+	sh ${admpasswd}
+fi
+
+echo '
+	The next step is to establish passwords for the system logins that
+do not already have them.  Once set, these passwords can only be changed by
+the login or "root".
+'
+
+if [ -z "${syspasswd}" ]
+then
+	admerr $0 Could not find syspasswd under `pwd`.
+else
+	sh ${syspasswd}
+fi
+
+echo '
+	The next step is to set the node name of this machine.  This is the
+name by which other machines know this one.
+'
+
+if [ -z "${nodename}" ]
+then
+	admerr $0 Could not find nodename under `pwd`.
+else
+	sh ${nodename}
+fi
+
+echo '
+This completes your initial set up of the machine.
+You may now log into your login.
+'
+#	"Hide" the 'Welcome ... setup up your machine' message.
+if [ -f /etc/rc2.d/startlist/setup ]
+then
+	mv /etc/rc2.d/startlist/setup /etc/rc2.d/startlist/.setup
+fi
+#	/etc/rc.d was an early version of /etc/rc2.d and this provides
+#	compatibility.
+if [ -f /etc/rc.d/setup ]
+then
+	mv /etc/rc.d/setup /etc/rc.d/.setup
+fi

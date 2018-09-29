@@ -1,0 +1,12 @@
+#ident	"@(#)nlp.admin:menu/packagemgmt/lpmgmt/DESC	1.2"
+## IDOC:   SCREEN 2.7: LP MANAGEMENT MENU
+#menu# LP print service management menu
+
+#head#                   LP PRINT SERVICE MANAGEMENT MENU
+
+#help#        The commands in this menu help you set up and control the LP
+#help#        Print  Service  system.  You  can use this menu to start and
+#help#        stop the print  service,  and  check  its  status;  add  new
+#help#        printers  and change the configuration of existing printers;
+#help#        add, change, and mount forms; add and  change  filters;  and
+#help#        monitor user print requests.

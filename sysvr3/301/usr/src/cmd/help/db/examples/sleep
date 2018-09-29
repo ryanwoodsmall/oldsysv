@@ -1,0 +1,14 @@
+
+\S sleep \S:  Examples
+
+       sleep 60; date
+
+     Waits about 60 seconds, then executes the date(1) command.
+
+    ----------------------------------------------------------------------
+
+       while true; do ps -a; sleep 10; done &
+
+    Executes the ps(1) command approximately every 10 seconds. Prints
+    information about all processes associated with the terminal except for
+    process group leaders.

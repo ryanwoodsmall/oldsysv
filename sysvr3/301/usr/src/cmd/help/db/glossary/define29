@@ -1,0 +1,15 @@
+
+\Sgroup ID: numeric group ID: group ID number \S
+
+A group ID is a name or an integer that is assigned to a number of people
+by the system administrator.  A group ID is called a numeric group ID or
+group ID number when it is an integer.  People who share a group ID are
+members of the same group.  A single group ID is usually assigned to
+people who participate in related work.  This gives the group members the
+ability to use each other's files according to the group-level "access
+permissions"\S*\S for each file.  A group ID may be assigned arbitrarily
+if it is not important for an individual to share his work with a group of
+people. Each user's group ID is listed in the /etc/passwd and /etc/group
+files.
+
+\S*\S defined in the \Sglossary\S

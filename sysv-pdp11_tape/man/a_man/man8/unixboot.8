@@ -1,0 +1,42 @@
+.tr |
+.TH "UNIX BOOT" 8 "PDP-11 only"
+.SH NAME
+unixboot \- \s-1UNIX\s+1 System startup and boot procedures
+.SH DESCRIPTION
+.IR "How to start the \s-1UNIX\s+1 System" .
+The
+.SM UNIX
+System is started by placing it in core
+at location zero and transferring to zero.
+Since the system is not reenterable,
+it is necessary to read it in from disk or tape.
+See
+.IR diskboot (8)
+or
+.IR tapeboot (8).
+.PP
+.IR "The switches" .
+On systems with console switches,
+the switches are
+examined 60 times per second,
+and the contents of the address specified by the switches
+are displayed in the display register.
+If the switch address is even,
+the address is interpreted in kernel (system)
+space;
+if odd,
+the rounded-down address is interpreted in
+the current user space.
+.PP
+.IR "Init" .
+The operating system invokes
+.IR init (1M)
+as process number 1.
+It comes up conventionally in
+single-user mode.
+.SH FILES
+/unix	The \s-1UNIX\s+1 System code
+.SH "SEE ALSO"
+init(1M), 70boot(8), diskboot(8), romboot(8), tapeboot(8).
+.tr ||
+.\"	@(#)unixboot.8	5.2 of 5/18/82

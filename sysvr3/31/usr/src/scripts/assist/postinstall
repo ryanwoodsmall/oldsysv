@@ -1,0 +1,24 @@
+
+#ident	"@(#)assist.pkg:postinstall	1.2"
+#######################################################################
+#
+#       Postinstall Script
+#
+#	ASSIST Software	
+#
+#
+###############################################################
+#
+#	If the system is <= 3.0 then use vi.3.0 for vi.fs
+#
+#
+FORMS=/usr/lib/assist/lib/forms
+release=`uname -r`
+case "${release}" in 
+	2.0|2.0.4|2.0.5|2.1|2.1.0|3.0)
+	mv $FORMS/vi.3.0 $FORMS/vi.fs 
+	;;
+	*)
+	break
+	;;
+esac

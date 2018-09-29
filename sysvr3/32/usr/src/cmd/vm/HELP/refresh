@@ -1,0 +1,8 @@
+
+   The REFRESH command will  redraw  the  screen.   This  function  is
+   useful  if  strange  characters  appear  on your screen causing the
+   interface to be garbled.
+
+      - Command Menu - Select REFRESH + RETURN
+
+      - Typed Command - Type refresh + RETURN

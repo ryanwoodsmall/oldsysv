@@ -1,0 +1,38 @@
+.TH SYSTEM 3S 
+.SH NAME
+system \- issue a shell command 
+.SH SYNOPSIS
+.B #include <stdio.h>
+.PP
+.B int system (string)
+.br
+.B char \(**string;
+.SH DESCRIPTION
+.I System\^
+causes the
+.I string\^
+to be given to
+.IR  sh (1)
+as input, as if the string had been typed as a command
+at a terminal.
+The current process waits until the shell has
+completed, then returns the exit status of the shell.
+.SH FILES
+\fB/bin/sh\fR
+.SH "SEE ALSO"
+exec(2).
+.br
+sh(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.SH DIAGNOSTICS
+.I System\^
+forks to create a child process
+that in turn exec's
+.B /bin/sh\^
+in order to execute
+.IR string .
+If the fork or exec fails,
+.I system\^
+returns a negative value and sets
+.IR errno .
+.\"	%W% of %G%

@@ -1,0 +1,30 @@
+This directory contains source for the troff postprocessor
+for the Imagen Imprint-10 laser printer.  It also contains
+the source for the font tables and DESC file for that device.
+
+di10:
+	interprets output of device-independent troff, converts
+	it into canon format.  Not smart about typesetters
+	for which the character set doesn't match the troff
+	character set well.  Creates an output file in /tmp/dcana* and
+	calls ipr to put its output in spool directory.
+	ipr and its subsidiary programs are supplied by Imagen.
+
+makei10:
+	Reads the binary '.out' files for the 202 or i10, and the ASCII
+	font and device files for the APS, and writes a new
+	set of ASCII files for the APS into a directory called
+	devaps in the directory with the raster files.  Makei10
+	expects to find the ASCII font files for the APS in
+	directory devaps below the parent of the working directory.
+	Only "di10" will read the new set of font tables for the APS.
+	Troff will still use the files in the original devaps directory.
+	Once you've run 'makei10' you'll still have to run
+	makedev before 'di10' will be happy.
+	Was written with tabs set to every fourth column, so
+	things will look a little funny unless your tabs are
+	set the same way.
+
+	N.B.  It is not necessary to run this program if you are
+	content with the distributed set of font files in 
+	devi10/rasti10/devaps.

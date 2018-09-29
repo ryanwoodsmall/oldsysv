@@ -1,0 +1,239 @@
+#ident	"@(#)xenv:m32/pted.native	1.21"
+#
+#	3b15/3b5/3b2 native pathedit
+#
+#
+#	This script is called by master pathedit when building native
+#	3b15/3b5/3b2 SGS. The format of the call is
+#		pted.native <machine>
+#	where machine is 3b15, 3b5 or 3b2.
+#
+
+
+__MACH=u$1
+
+BASE=`cd ../../../../../..; pwd`
+
+cont="T"
+echo "Do you want the SGS built with the default parameters? (y or n): \c"
+while [ "$cont" = "T" ]
+do
+	x=`line`
+	if [ "$x" = "y" ]
+	then
+		stdparam="T"
+		cont="F"
+	elif [ "$x" = "n" ]
+	then
+		stdparam="F"
+		cont="F"
+	else
+		echo "Please type 'y' or 'n': \c"
+	
+	fi
+done
+
+if [ "$stdparam" = "T" ]
+then
+	__BINDIR=/bin
+	__LIBDIR=/lib
+	__USRLIB=/usr/lib
+	__USRINC=/usr/include
+	__MAC=ABWRMAC
+	__PREFIX=
+	__OWN=bin
+	__GRP=bin
+else
+
+	echo "Are you building WE32100 ONLY SGS(y or n):  \c"
+	x=`line`
+	if [ "$x" = "y" ]
+	then
+		__MAC=BMAC
+		echo "Warning: the code produced by this SGS will not run on WE32001 based processors."
+		echo "If you do not want to continue hit break and restart."
+	else
+		__MAC=ABWRMAC
+	fi
+	echo "Enter absolute directory for run-time binaries:  \c"
+	x=`line`
+	__BINDIR=${x:=/bin}
+
+	echo "Enter absolute directory for run-time libraries:  \c"
+	x=`line`
+	__LIBDIR=${x:=/lib}
+
+	echo "Enter absolute directory for run-time usr libraries:  \c"
+	x=`line`
+	__USRLIB=${x:=/usr/lib}
+
+	echo "Enter absolute directory for header files:  \c"
+	x=`line`
+	__USRINC=${x:=/usr/include}
+
+	echo "Enter generic prefix for names:  \c"
+	__PREFIX=`line`
+
+	echo "Enter owner of executables:  \c"
+	x=`line`
+	__OWN=${x:=bin}
+
+	echo "Enter group of executables:  \c"
+	x=`line`
+	__GRP=${x:=bin}
+fi
+
+echo "Do you want the CCS built with shared libraries (y or n)? \c"
+x=`line`
+if [ "$x" = "y" ]
+then
+	__LDLIBS="-lc_s"
+else
+	__LDLIBS=""
+fi
+
+__PROOT=""
+__INCDIR=/tmp
+__TMPDIR=/tmp
+__DBO=FBO
+__ARCH=AR32W
+__CPP=$__LIBDIR/cpp
+
+if [ ! -d $__BINDIR ]
+then
+	mkdir $__BINDIR
+fi
+if [ ! -d $__LIBDIR ]
+then
+	mkdir $__LIBDIR
+fi
+if [ ! -d $__USRINC ]
+then
+	mkdir $__USRINC
+fi
+if [ ! -d $__USRINC/sys ]
+then
+	mkdir $__USRINC/sys
+fi
+
+echo "\n These parameters are used for your SGS:\n"
+echo "BINDIR:		$__BINDIR"
+echo "LIBDIR:		$__LIBDIR"
+echo "USRLIB:		$__USRLIB"
+echo "USRINC:		$__USRINC"
+echo "PREFIX:		$__PREFIX"
+echo "OWN:		$__OWN"
+echo "GRP:		$__GRP"
+echo "LDLIBS:		$__LDLIBS"
+
+echo "Do you want the CCS built with these parameters (y or n): \c"
+x=`line`
+if [ "$x" != "y" ]
+then
+	echo "run pathedit again."
+	exit
+fi
+
+cp paths.h ../../inc/m32/paths.h
+cp sgs.h ../../inc/m32/sgs.h
+chmod 0644 ../../inc/m32/paths.h ../../inc/m32/sgs.h
+echo "\n ******** Making paths.h ********"
+ed ../../inc/m32/paths.h <<!
+1,\$s|SGS|$__PREFIX|g
+1,\$s|M32BINDIR|$__BINDIR|
+1,\$s|M32LIBDIR|$__LIBDIR|
+1,\$s|M32USRLIB|$__USRLIB|
+1,\$s|M32INCDIR|$__INCDIR|
+1,\$s|M32TMPDIR|$__TMPDIR|
+1,\$s|M32CPP|$__CPP|
+w
+q
+!
+echo "\n ******** Making sgs.h ********"
+
+if [ "$__LDLIBS" = "" ]
+then
+ed ../../inc/m32/sgs.h <<Y
+g|SGS|s|".*"|"$__PREFIX"|
+1,\$s|FBOMAGIC|${__DBO}MAGIC|
+w
+q
+Y
+
+else
+ed ../../inc/m32/sgs.h <<Y
+g|SGS|s|".*"|"$__PREFIX"|
+1,\$s|FBOMAGIC|${__DBO}MAGIC|
+1,\$s|RELEASE.*[0-9]|& (shared)|
+w
+q
+Y
+fi
+
+if [ -s ../../sgs.mk ]
+then
+	chmod 0644 ../../sgs.mk
+fi
+echo "\n ******** Making global makefile ********"
+ed ../../sgs.mk.um32 <<X
+1,\$s|lib; .*make|lib; make|
+1,\$s|-f \"\$(BINDIR).*|true ] ; \\\|
+g|BINDIR|d
+g|^libs:|.+2d
+1,\$s|xenv/m32; make install|xenv/m32; make BINDIR=\$(ROOT)$__BINDIR LIBDIR=\$(ROOT)$__LIBDIR install|
+w ../../sgs.mk
+q
+X
+echo "\n ******** Making SGS makefile ********"
+ed template.mk <<X
+1,\$s|^BINDIR.*|BINDIR=$__BINDIR|
+1,\$s|^LIBDIR.*|LIBDIR=$__LIBDIR|
+1,\$s|^LDLIBS.*|LDLIBS=$__LDLIBS|
+1,\$s|^INCDIR.*|INCDIR=$__INCDIR|
+1,\$s|^SGS.*|SGS=$__PREFIX|
+1,\$s|^ARCH.*|ARCH=$__ARCH|
+1,\$s|^DBO.*|DBO=$__DBO|
+1,\$s|^ROOT.*|ROOT=$__PROOT|
+1,\$s|^MAC=.*|MAC=$__MAC|
+1,\$s|^MACH.*|MACH=$__MACH|
+1,\$s|^USRINC.*|USRINC=$__USRINC|
+1,\$s|^MAKE.*|MAKE=make|
+1,\$s|^OWN.*|OWN=$__OWN|
+1,\$s|^GRP.*|GRP=$__GRP|
+g|make.mk|d
+g|	cp |d
+w makefile
+q
+X
+chmod 0644 makefile
+#
+chmod 0644 ../../../../lib/libmk.template
+echo "\n ******** Making library makefile ********"
+if [ "$__LIBDIR" = "/lib" ]
+then
+	cp ../../../../lib/libmk.template ../../../../lib/lib.mk
+else
+ed ../../../../lib/libmk.template <<X
+1,\$s|^LIB=.*|LIB=$__LIBDIR|
+1,\$s|^USRLIB=.*|USRLIB=$__LIBDIR/../usr/lib|
+1,\$s|^LIBP=.*|LIBP=$__USRLIB/libp|
+1,\$s|^SHLIB=.*|SHLIB=$__LIBDIR/shlib|
+1,\$s|^SGS.*|SGS=$__PREFIX|
+w ../../../../lib/lib.mk
+q
+X
+fi
+chmod 0644 ../../../../lib/lib.mk
+#
+#
+#
+echo "\n ******** Modifying optimizer makefile ********"
+echo "Your optimizer will be optimized \n"
+ed ../../optim/m32/makefile <<W
+1,\$s|^CFLAGS=.*|CFLAGS=-c -O|
+w
+q
+W
+echo "\n ******** Linking shared library source files ********"
+find ../../../../lib/shlibc -links 2 -type f -exec rm -f {} \;
+pted.shlink

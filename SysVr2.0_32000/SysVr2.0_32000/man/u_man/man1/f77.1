@@ -1,0 +1,300 @@
+.TH F77 1
+.SH NAME
+f77 \- \s-1FORTRAN\s+1 77 compiler
+.SH SYNOPSIS
+.B f77
+[ options ] files
+.SH DESCRIPTION
+.I F77\^
+is the
+.SM UNIX
+System \s-1FORTRAN\s+1 77 compiler;
+it accepts several types of
+.I file\^
+arguments:
+.RS
+.PP
+Arguments whose names end with
+.B \&.f
+are taken to be
+\s-1FORTRAN\s+1 77 source programs;
+they are compiled and
+each object program is left in the current directory
+in a file
+whose name is that of the source, with
+.B \&.o
+substituted
+for
+.BR \&.f .
+.PP
+Arguments whose names end with
+.B \&.r
+or
+.B \&.e
+are taken to be
+.SM RATFOR
+or
+.SM EFL
+source programs, respectively.
+These are first transformed by the
+appropriate preprocessor, then compiled by
+.IR f77 ,
+producing
+.B \&.o
+files.
+.PP
+In the same way,
+arguments whose names end with
+.B \&.c
+or
+.B \&.s
+are taken to be
+C
+or assembly source programs
+and are compiled or assembled, producing
+.B \&.o
+files.
+.RE
+.PP
+The following
+.I options\^
+have the same meaning as in
+.IR cc (1)
+[see
+.IR ld (1)
+for link editor options]:
+.PP
+.PD 0
+.TP 12
+.B \-c
+Suppress link editing and produce
+.B \&.o
+files for each source
+file.
+.TP
+.B \-f
+In systems without floating-point hardware,
+use a version of
+.I f77\^
+that handles floating-point
+constants and
+links the object program with the floating-point interpreter.
+.TP
+.B \-g
+Generate additional information needed for the use of
+.IR sdb (1).
+.TP
+.BI \-o "output\^"
+Name the final output file
+.IR output ,
+instead of
+.BR a.out .
+.TP
+.B \-p
+Prepare object files for profiling [see
+.IR prof (1)].
+.TP
+.B \-\s-1O\s+1
+Invoke an
+object-code optimizer.
+.TP
+.B \-\s-1S\s+1
+Compile the named programs and leave the
+assembler-language output in corresponding files whose names are suffixed
+with
+.BR \&.s .
+(No
+.B \&.o
+files are created.)
+.PD
+.PP
+The following
+.I options\^
+are peculiar to
+.IR f77 :
+.PP
+.PD 0
+.TP 12
+.B \-1
+Same as
+.BR \-onetrip .
+.TP
+.B \-66
+Suppress extensions which enhance \s-1FORTRAN\s+1 66 compatibility.
+.TP
+.B \-m
+Apply the M4 preprocessor to each
+.SM EFL
+or
+.SM RATFOR
+source file before transforming
+with the
+.IR ratfor (1)
+or
+.IR efl (1)
+processors.
+.TP
+.B \-onetrip
+Compile
+.SM DO
+loops that are performed at least once if reached.
+(\s-1FORTRAN\s+1 77
+.SM DO
+loops are not performed at all if the upper limit is smaller than the lower limit.)
+.TP
+.B \-u
+Make the default type of a variable
+.IR undefined ,
+rather than using the default \s-1FORTRAN\s+1 rules.
+.TP
+.B \-v
+.I Verbose
+mode.
+Provide diagnostics for each process during compilation.
+.TP
+.B \-w
+Suppress all warning messages.
+If the option is
+.BR \-w66 ,
+only \s-1FORTRAN\s+1 66 compatibility warnings are suppressed.
+.TP
+.B \-\s-1C\s+1
+Generate code for run-time subscript range-checking.
+.TP
+.B \-\s-1E\s+1
+The remaining characters in the argument are used as an
+.SM EFL
+flag argument whenever processing
+a
+.B \&.e
+file.
+.TP
+.B \-\s-1F\s+1
+Apply
+.SM EFL
+and
+.SM RATFOR
+preprocessor to relevant files, put the result in files
+whose names have their suffix changed to
+.BR \&.f .
+(No
+.B \&.o
+files are created.)
+.bp
+.TP
+.BR \-\s-1N\s+1 "[qxscnl] nnn"
+Change size of table [qxscnl] to nnn.
+The compiler will provide a diagnostic when a table overflows.
+The tables and corresponding default values for nnn are:
+.br
+.sp
+.TS
+l l l.
+'q'	150	(equivalences)
+'x'	200	(common blocks, subroutine and function names)
+'s'	401	(statement numbers)
+'s'	201	(symbol table)
+'c'	20	(depth of loops or if-then-elses)
+'n'	401	(variable names and common block names)
+'l'	125	labels for computed and assigned gotos
+		and the number of alternate returns
+.TE
+.br
+.sp
+.TP
+.B \-\s-1R\s+1
+The remaining characters in the argument are used as a
+.SM RATFOR
+flag argument whenever
+processing a
+.B \&.r
+file.
+.TP
+.B \-\s-1U\s+1
+Do not "fold" cases.
+.I F77
+is normally a no-case language (i.e.,
+.B a
+is equal to
+.BR A ).
+The
+.B \-U
+option
+causes
+.I f77
+to treat upper and lowercases separately.
+.PD
+.PP
+Other arguments
+are taken
+to be either link-editor option arguments or
+.IR f77 -compilable
+object programs (typically produced by an earlier
+run),
+or libraries of
+.IR f77 -compilable
+routines.
+These programs, together with the results of any
+compilations specified, are linked (in the order
+given) to produce an executable program with the default name
+.B a.out .
+.SH FILES
+.PD 0
+.TP 28
+file.[fresc]
+input file
+.TP
+file.o
+object file
+.TP
+a.out
+linked output
+.TP
+/usr/tmp/F77AAAa[\fIpid\fP].?
+temporary
+.TP
+/usr/lib/f77pass1
+compiler
+.TP
+/usr/lib/f77pass2
+pass 2
+.TP
+/lib/c2
+optional optimizer (VAX computers)
+.TP
+/usr/lib/f77optim
+optional optimizer
+.TP
+\&
+(AT&T 3B20, 3B5, 3B2 computers)
+.TP
+/usr/lib/libF77.a
+intrinsic function library
+.TP
+/usr/lib/libI77.a
+\s-1FORTRAN\s+1 I/O library
+.TP
+/lib/libc.a
+C library; see Section 3 of this Manual.
+.PD
+.SH SEE ALSO
+as(1),
+asa(1),
+cc(1),
+ef\&l(1),
+fsplit(1),
+ld(1),
+m4(1),
+prof(1),
+ratfor(1),
+sdb(1).
+.SH DIAGNOSTICS
+The diagnostics produced by
+.I f77\^
+itself are intended to be
+self-explanatory.
+Occasional messages may be produced by the link editor
+.IR ld (1)
+or the assembler
+.IR as (1).
+.\"	@(#)f77.1	6.2 of 9/2/83

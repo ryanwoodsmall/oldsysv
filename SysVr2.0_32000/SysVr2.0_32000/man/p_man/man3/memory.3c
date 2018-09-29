@@ -1,0 +1,116 @@
+.TH MEMORY 3C
+.SH NAME
+memccpy, memchr, memcmp, memcpy, memset \- memory operations
+.SH SYNOPSIS
+.nf
+.B #include <memory.h>
+.PP
+.B char \(**memccpy (s1, s2, c, n)
+.B char \(**s1, \(**s2;
+.B int c, n;
+.PP
+.B char \(**memchr (s, c, n)
+.B char \(**s;
+.B int c, n;
+.PP
+.B int memcmp (s1, s2, n)
+.B char \(**s1, \(**s2;
+.B int n;
+.PP
+.B char \(**memcpy (s1, s2, n)
+.B char \(**s1, \(**s2;
+.B int n;
+.PP
+.B char \(**memset (s, c, n)
+.B char \(**s;
+.B int c, n;
+.fi
+.SH DESCRIPTION
+These functions operate as efficiently as possible on memory areas
+(arrays of characters bounded by a count, not terminated by a null character).
+They do not check for the overflow of any receiving memory area.
+.PP
+.I Memccpy\^
+copies characters from memory area
+.B s2\^
+into
+.BR s1 ,
+stopping after the first occurrence of character
+.B c\^
+has been copied, or after
+.B n\^
+characters have been copied, whichever comes first.
+It returns a pointer to the character after
+the copy of
+.B c\^
+in
+.BR s1 ,
+or a
+.SM NULL
+pointer if
+.B c\^
+was not found in the first
+.B n\^
+characters of
+.BR s2 .
+.PP
+.PP
+.I Memchr\^
+returns a pointer to the first
+occurrence of character 
+.B c\^
+in the first
+.B n\^
+characters of memory area
+.BR s,
+or a
+.SM NULL
+pointer if
+.B c\^
+does not occur.
+.PP
+.I Memcmp\^
+compares its arguments, looking at the first
+.B n\^
+characters only, and returns an integer
+less than, equal to, or greater than 0,
+according as
+.B s1\^
+is lexicographically less than, equal to, or
+greater than
+.BR s2 .
+.PP
+.I Memcpy\^
+copies
+.B n\^
+characters from memory area
+.B s2\^
+to
+.BR s1 .
+It returns
+.BR s1 .
+.PP
+.I Memset\^
+sets the first
+.B n\^
+characters in memory area
+.B s\^
+to the value of character
+.BR c .
+It returns
+.BR s .
+.SH NOTE
+For user convenience, all these functions are declared in the optional
+.I <memory.h>
+header file.
+.SH BUGS
+.I Memcmp\^
+uses native character comparison, which is signed
+on the
+SYS32.
+Thus the sign of the value returned when one of the
+characters has its high-order bit set is negative.
+.PP
+Character movement is performed differently in different implementations.
+Thus overlapping moves may yield surprises.
+.\"	@(#)memory.3c	1.2 of 10/17/84

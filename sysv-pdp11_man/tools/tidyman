@@ -1,0 +1,37 @@
+#
+# This procedure prepares the manual for export.
+# It:
+#	cleans out the tmp directories
+#	changes the owner and group to bin
+#	changes the mode on files to 664
+#	changes the mode on directories to 775
+#
+# It uses the installation directory node for the manual for
+# the variable $MANDIR, for example: /usr/man.
+#
+set x $*
+. .param
+
+MANDIR=`dirname $MANDIR`
+cd $MANDIR
+#rm -f *tmp/*
+
+chmod 775 *
+chown 2 *
+chgrp 2 *
+
+for man in u_man a_man 
+do
+	cd $MANDIR/$man
+	chmod 775 *
+	chown 2 *
+	chgrp 2 *
+	for section in man?
+	do
+		cd $MANDIR/$man/$section
+		chmod 664 *
+		chown 2 *
+		chgrp 2 *
+	done
+done
+#	@(#)tidyman	5.2 of 5/19/82

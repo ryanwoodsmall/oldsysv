@@ -1,0 +1,24 @@
+
+\Smv\S:  Description
+
+Syntax Summary:  mv [-f] original_file destination_file
+                 mv [-f] original_file ... destination_dir
+                 mv [-f] original_dir ... destination_dir
+
+         where:  original_file and destination_file  are names of files.
+
+                 original_dir and destination_dir  are names of directories.
+
+Description:
+     \Smv\S stands for "move."  Use \Smv\S to move one or more files from
+     one location to another.  The <original_file> no longer exists after you
+     move it to the <destination file> or <destination_dir>.  If
+     <destination_file> already exists, the <original_file> will over write its
+     contents. \Smv\S can move more than one file as long as the destination
+     is a directory.  \Smv\S can also move directories, but the <original_dir>
+     and the <destination_dir> must have the same parent directory.  In effect,
+     using \Smv\S on a directory really just renames the directory.  To use
+     \Smv\S, you must have write permission in the directory where you're moving
+     the file from as well as the directory you're moving the file to. See
+     also:  cp(1) and ln(1) for commands with functions similar to \Smv\S.
+

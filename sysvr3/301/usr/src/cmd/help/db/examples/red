@@ -1,0 +1,15 @@
+
+\Sred\S:  Examples
+
+        red chapter.1
+
+   If you have a file "chapter.1" in your current directory, \Sred\S copies it
+   into a buffer where you can edit it using ed(1) commands.
+
+   ---------------------------------------------------------------------------
+
+        red - chapter.2
+
+   If you have a file "chapter.2" in your current directory, \Sred\S copies
+   the file into a buffer.  You can edit the file using ed(1) commands, but
+   \Sred\S does not print character counts or diagnostics.

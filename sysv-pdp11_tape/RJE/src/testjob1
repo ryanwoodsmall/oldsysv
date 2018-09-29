@@ -1,0 +1,22 @@
+//testjob job (6270,r840),rje1
+//*    usr=(rje1,job)
+//iebgener exec pgm=iebgener
+//sysprint dd dummy
+//sysin dd dummy
+//sysut2 dd sysout=a
+//sysut1 dd *
+~-f
+
+
+
+This job tests the IBM link.
+
+% ls -l /
+~!ls -l /
+
+The test has apparently been successful!
+
+
+
+/*
+//

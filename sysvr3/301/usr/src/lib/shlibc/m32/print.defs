@@ -1,0 +1,156 @@
+
+.ident	"@(#)libc-m32:print.defs	1.6"
+#
+	.set	.Rcnt,6			# Number of registers to save on entry.
+#
+# Register definitions
+#
+_m4_define_(`fmt', %fp)#	Points to current pos. in printf format string.
+_m4_define_(`buff_end', %r8)#	_bufend(iop), or, for calls to sprintf, -1.
+_m4_define_(`ptr', %r7)#	Next unused position in output buffer.
+_m4_define_(`bp', %r6)#		Ptr to first character of value to be printed.
+_m4_define_(`p', %r5)#		(1) Ptr to pos. beyond value or (2) Its length.
+_m4_define_(`flags', %r4)#	Bit-coded flags pertaining to format.
+
+# The significance of registers %r3, %r2, %r1, and %r0 varies locally.
+# In addition, the other registers may be used for other purposes than
+# those designated above:  when this is done, the registers are saved before
+# their alternate use and restored afterwards, except at ".return", where
+# such care is unnecessary.
+# For example, register %r5 is used in this way:
+
+_m4_define_(`iop', %r5)#	FILE structure pointer for printf, fprintf
+
+
+#
+# bit positions for flags used in doprnt flagword (register "flags")
+#
+	.set	DOTSEEN,1	# dot appeared in format specification
+	.set	WIDTH,2		# minimum width was specified in format.
+	.set	FMINUS,4	# '-' found between % and conversion character
+	.set	FPLUS,16	# '+' found between % and conversion character
+	.set	FBLANK,32	# ' ' found between % and conversion character
+	.set	FSHARP,64	# '#' found between % and conversion character
+	.set	LZERO,8		# there will be leading zeroes in output
+	.set	RZERO,128	# there will be trailing zeroes in output
+	.set	SUFFIX,256	# a suffix is to appear in the output
+	.set	RPAD,512	# pad to the right of output
+	.set	PADZERO,1024	# padding zeroes requested via '0'
+	.set	FLZERO,2048	# the value to convert is floating zero
+
+#
+# Maximum number of pad characters (blanks or zeroes) which can be generated
+# in one move.
+#
+	.set	PADMAX,40
+
+#
+# Ascii constants
+#
+	.set	NEWLINE,10
+	.set	BLANK,32
+	.set	PERCENT,37
+	.set	PLUSSGN,43
+	.set	MINUSSGN,45
+	.set	DECPOINT,46
+	.set	ASCII_0,48
+	.set	UPPER_E,69
+	.set	LOWER_e,101
+
+#-----------------------------------------------------------------------#
+# #include file definitions.						#
+#-----------------------------------------------------------------------#
+
+#
+# Conversion constants -- from "print.h"
+#
+	.set	MAXDIGS,11	# Maximum length of any integer representation
+	.set	MAXECVT,17	# Maximum length of E format conversion
+	.set	MAXFCVT,60	# Maximum places after decimal in F format
+	.set	MAXFSIG,17	# Maximum significant places in floating rep.
+	.set	MAXESIZ,5	# Maximum number of chars in exponent
+	.set	MAXEXP,310	# Maximum (positive) exponent.
+
+#
+# Relevant bits of character type table entries -- from <ctype.h>
+#
+	.set	ISDIGIT,4	# This bit is set if character is digit
+
+#
+# Definition of fields in FILE struct -- from <stdio.h>
+#
+	.set	_cnt,0
+	.set	_ptr,4
+	.set	_base,8
+	.set	_flag,12
+	.set	_file,13
+
+#
+# Relevant bits in the "_flag" byte of the FILE struct -- from <stdio.h>
+#
+	.set	_IOWRT,02
+	.set	_IONBF,04
+	.set	_IOERR,040
+	.set	_IOLBF,0100
+	.set	_IORW,0200
+
+#
+# FILE structure pointer for standard output -- from <stdio.h>
+#
+_m4_define_(`stdoutoff', 16)
+
+#
+# EOF indicator and its two's complement -- EOF is defined in <stdio.h>
+#
+	.set	EOF,-1
+	.set	EOFN,1
+
+
+
+#-----------------------------------------------------------------------#
+# Local stack variables for doprnt					#
+#									#
+# Note that changes to the constants defined above may affect the 	#
+# amount of space needed for some of the buffers defined here.		#
+# It is assumed that the end of the buffers "sbuf" and "expbuf"		#
+# is equal to the stack pointer.					#
+#-----------------------------------------------------------------------#
+
+	.set	sbuf,-MAXDIGS	# Integer values are developed in this buffer.
+	.set	expbuf,-MAXESIZ	# Buffer to create exponent.  (Overlaps sbuf)
+	.set	apsave,-16	# Value of %ap on entry.
+	.set	wcount,-20	# Count of output chars prior to most recent
+				# update of iop->_ptr (printf, fprintf only).
+	.set	outstart,-20	# Start of output buffer (sprintf only).
+	.set	iophold,-24	# iop save area.
+	.set	width,-28	# Field width given after %, as in %width.prec
+	.set	prec,-32	# Precision given after dot, as in %width.prec
+	.set	lzero,-36	# Number of padding zeroes required on left.
+	.set	rzero,-40	# Number of padding zeroes required on right.
+	.set	prefix,-44	# Pointer to sign, "0x", or "0X".
+	.set	suffix,-48	# Pointer to exponent if any.
+	.set	prefixle,-52	# Length of prefix (number of characters).
+	.set	suffixle,-56	# Length of suffix (number of characters).
+	.set	rpad,-60	# Number of padding blanks to right of value.
+	.set	tab,-64		# Ptr to translate table for octal/hex digits.
+	.set	letter_e,-68	# The letter 'e' or 'E', for exponent.
+	.set	dval,-76	# The value being converted, if real.
+	.set	dec_pt,-80	# Decpt position from fcvt/ecvt.
+	.set	sign,-84	# Sign from fcvt/ecvt.
+	.set	hold,-88	# temporary hold for reg with multiple uses.
+	.set	aflag,-92	# Flag used when checking for NaN and Infinity
+	.set	NaN,-96		# If a NaN is seen, this flag is set to 5, the
+				# the length of the string ``NAN0X'' (``nan0x'')
+	.set	buf,-468	# Floating values are developed in this buffer.
+	.set	.locals,468
+
+# The above offsets are relative to the stack pointer at its normal position
+# during the execution of doprnt.  When the stack pointer has been altered
+# because data has been pushed or because a jsb has been executed, those
+# offsets must be adjusted accordingly:
+
+	.set	SA1,-4		# Adjust stack offset for one pushed word/jsb.
+	.set	SA2,-8		# Adjust stack offset for two pushed words.
+	.set	SA3,-12		# Etc.
+	.set	SA4,-16
+	.set	SA5,-20

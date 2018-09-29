@@ -1,0 +1,11 @@
+
+\S byte:  bit:  byte number:  character number \S
+
+A byte is a unit of storage in the computer.  One byte represents one
+character.  Files contain characters and each character requires one byte
+of storage. In UNIX systems a byte is composed of eight binary bits.  
+That means that each byte is eight digits and each digit is either a 
+zero or one. The position that each character is in, relative to the 
+other characters in the file, is called the character number or byte 
+number.
+

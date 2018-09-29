@@ -1,0 +1,80 @@
+.TH NEWGRP 1
+.SH NAME
+newgrp \- log in to a new group
+.SH SYNOPSIS
+.B newgrp
+.RB [ \|\-\| ]
+[ group ]
+.SH DESCRIPTION
+.I Newgrp\^
+changes a user's group identification.
+The user remains logged in
+and the current directory is unchanged,
+but calculations of access permissions to files are
+performed with respect to the
+new real and effective group
+.SM IDs\*S.
+The user is always given a new shell, replacing the current shell,
+by
+.IR newgrp ,
+regardless of whether it terminated successfully or
+due to an error condition (i.e., unknown group).
+.PP
+Exported variables retain their values after invoking
+.IR newgrp ;
+however, all unexported variables are either reset to their
+default value or set to null.
+System variables (such as PS1, PS2, PATH, MAIL, and HOME),
+unless exported by the system
+or explicitly exported by
+the user, are reset to default values.
+For example, a user has a primary prompt string (\fBPS1\fP) other
+than \fB$\fP (default) and has not exported \fBPS1\fP.
+After an invocation of
+.I newgrp ,
+successful or not,
+their \fBPS1\fP will now be set to the default prompt string \fB$\fP.
+Note that the shell command
+.I export
+(see \fIsh\fP(1))
+is the method to export variables so
+that they retain their assigned value when invoking new shells.
+.PP
+With no arguments,
+.I newgrp\^
+changes the group identification back to
+the group specified in the user's password file entry.
+.PP
+If the first argument to
+.I newgrp
+is a
+.BR \- ,
+the environment is changed to what would be expected if the
+user actually logged in again.
+.PP
+A password is demanded if the group has
+a password and the user does not,
+or if the group has a password and the user is not listed
+in
+.B /etc/group
+as being
+a member of that group.
+.SH FILES
+/etc/group		system's group file
+.br
+/etc/passwd		system's password file
+.SH SEE ALSO
+login(1),
+sh(1).
+.br
+group(4),
+passwd(4),
+environ(5) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH BUGS
+There is no convenient way to enter a password into
+.BR /etc/group .
+Use of group passwords is not encouraged, because,
+by their very nature, they encourage poor security practices.
+Group passwords may disappear in the future.
+.\"	@(#)newgrp.1	6.3 of 9/2/83

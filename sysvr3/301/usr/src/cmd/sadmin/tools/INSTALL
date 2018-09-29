@@ -1,0 +1,108 @@
+#ident	"@(#)sadmin:tools/INSTALL	1.2"
+#	installation procedure for command packages
+
+#	Command packages are shipped on a file system '/install'.
+#	Below that point are the following directories and files:
+#	/install/install/		contains the installation procedure
+#	/install/install/INSTALL	actually installs the commands
+#	/install/install/packagename	(optional) package identification
+#	/install/install/preinstall	(optional) actions performed before
+#					files are copied.
+#	/install/install/postinstall	(optional) actions performed after
+#					files are copied.
+#	/install/new			the "root" of the files to be installed
+#	/install/new/root		top of files going to / file system
+#	/install/old	(optional)	where existing files are copied before
+#					overwriting them.
+
+pn=/install/install/packagename
+if [ -r ${pn} ]
+then
+	chkyn -f "This diskette contains:
+`cat ${pn}`
+Do you want to install it?"  ||  exit 0
+fi
+
+trap exit 1 2 15
+trap "rm -f /tmp/$$INSTALLlist" 0
+
+#	Check for enough file system space.
+cd /install/new
+exit=0
+for dir in *
+{
+	if [ ! -d ${dir} ]
+	then
+		continue
+	fi
+	newsize=`du -s ${dir}  |  sed 's/\([0-9]\{1,\}\).*/\1/'`
+	if [ ${dir} = root ]
+	then
+		dir=/
+	else
+		dir=/${dir}
+	fi
+	spaceleft=`df ${dir}  |  sed 's/.* \([0-9]\{1,\}\) block.*/\1/'`
+	if [ ${newsize} -gt ${spaceleft} ]
+	then
+		echo >&2 "	This package needs ${newsize} blocks in file system  ${dir}  and
+there is only ${spaceleft} blocks left."
+		exit=1
+	fi
+}
+if [ ${exit} -ne 0 ]
+then
+	echo >&2 "Installation is not possible."
+	exit 0
+fi
+
+#	Develop list of files to be installed.
+find * -print  |  sort >/tmp/$$INSTALLlist
+
+#	Do special work before files are copied in.
+cd /install/install
+if [ -f preinstall ]
+then
+	. ./preinstall
+fi
+
+#	Save original files if that is allowed for, i.e. /install/old exists.
+if [ -d /install/old ]
+then
+	cd /
+	for f in `cat /tmp/$$INSTALLlist`
+	{
+		if [ -f ${f}  -a  ! -f /install/old/${f} ]
+		then
+			echo ${f}
+		fi
+	}  |
+		cpio -pdlmv /install/old/ 2>/dev/null  |
+		sed '	1i\
+	These files, that are going to be replaced, are being saved:
+			s;^//*;/;
+			s;/install/old/;;'
+fi
+
+#	Copy new files in.
+cd /install/new
+echo '
+These files are being installed:'
+
+grep -v '^root/' /tmp/$$INSTALLlist  |  cpio -pdlumv / 2>/dev/null
+if [ -d root ]
+then
+	cd root
+	sed -n '/^root\//s///p' /tmp/$$INSTALLlist  |
+		cpio -pdlumv / 2>/dev/null
+fi
+
+#	Do special work after files are copied in.
+cd /install/install
+if [ -f postinstall ]
+then
+	. ./postinstall
+fi
+
+echo '
+Installation complete.'

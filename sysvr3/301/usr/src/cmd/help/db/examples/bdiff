@@ -1,0 +1,15 @@
+
+\Sbdiff\S:  Examples
+
+        bdiff book.1 book.2
+
+    Identifies the differences between "book.1" and "book.2" and lists line
+    numbers and changes that you need to make for the files to be identical.
+
+    ---------------------------------------------------------------------------
+
+        bdiff book.1 book.2 300
+
+    Divides each file into segments that contain 300 lines and compares
+    "book.1" to "book.2", segment by segment.  Lists the changes that you must
+    make for the files to be identical.

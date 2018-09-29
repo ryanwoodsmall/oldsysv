@@ -1,0 +1,31 @@
+.TH GT 7  "DEC only"
+.SH NAME
+gt \- general driver for tape drives
+.SH DESCRIPTION
+.PP
+.I Gt
+provides a general interface to the
+.SM TE\*S16
+and
+.SM TU\*78
+tape drives.
+In addition to the capability of mixing these mediums on the
+same controller, the driver will handle up to two controllers.
+.PP
+The driver reads the tape hardware drive-type register to determine
+drive dependent attributes.
+Thus, the manual entries describing the above tape drives should be
+used for information regarding that particular drive.
+.PP
+The configuration name of
+.B tu1678
+should be specified when generating a system with
+.IR config (1M).
+.SH FILES
+/dev/mt\(**, /dev/rmt\(**
+.SH SEE ALSO
+config(1M),
+master(4),
+ht(7),
+tu78(7).
+.\"	@(#)gt.7	5.2 of 5/18/82

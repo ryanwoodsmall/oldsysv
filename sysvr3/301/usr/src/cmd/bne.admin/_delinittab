@@ -1,0 +1,53 @@
+#ident	"@(#)bne.admin:_delinittab	2.2"
+#	This is an internal shell script used by the
+#	Basic Networking Utilities package to remove
+#	an entry from /etc/inittab.
+#	It takes one argument and possible one option, the port to delete.
+#	The -k options means just kill the process, don't delete the
+#	line from inittab.
+#	NOTE - minimal error checking is done since this is called
+#	internally.
+#	It deletes the entry from /etc/inittab, executes
+#	an "init q" to rescan inittab and kills removed uugettys
+
+PACKAGE="Basic Networking Utilities"
+INITTAB=/etc/inittab
+trap 'exit 0' 1 2  15
+
+delete="yes"
+if [ "$1" = "-k" ]; then
+	delete=
+	shift
+fi
+portname=$1
+
+if [ -z "${portname}" ]; then	# this will never happen - 
+	exit 1
+fi
+
+if [ -f "$INITTAB" -a \( ! -w "$INITTAB" -o ! -r "$INITTAB" \) ]; then
+	admerr $0   "Can't write and read '$INITTAB'\nCan't do delete operation!\n"
+	exit
+fi
+
+if [ -n "${delete}" ]; then
+	ed - $INITTAB <<-! > /dev/null 2>&1
+		H
+		g/${portname}/s/respawn/off/
+		g/${portname}/s/-r//
+		g/${portname}/s;/usr/lib/uucp/uugetty;/etc/getty;
+		w
+		q
+	!
+
+	if [ $? != 0 ]; then
+		admerr $0 Could not edit $INITTAB
+		exit 1
+	fi
+	echo "*** ${portname} has been turned off in '$INITTAB'. ***"
+fi
+
+
+# execute init to reread inittab
+/etc/init q 2>/dev/null
+

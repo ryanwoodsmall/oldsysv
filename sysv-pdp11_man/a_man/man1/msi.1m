@@ -1,0 +1,87 @@
+.TH MSI 1M "3B20S only"
+.SH NAME
+msi \- memory system diagnostic interface
+.SH SYNOPSIS
+.B /etc/msi
+.br
+.B /etc/msi rmv
+c a p
+.br
+.B /etc/msi rst
+c a p
+.br
+.B /etc/msi clr
+c a p
+.br
+.B /etc/msi enb
+.br
+.B /etc/msi dis
+.br
+.B /etc/msi find
+c a p
+.br
+.B /etc/msi kill
+c a p
+.SH DESCRIPTION
+.I Msi\^
+provides the facility for controlling the memory system
+of the processor.
+The granularity for memory management is a 2K page.
+A physical memory board (or array) can contain
+from 64 to 512 pages, depending on board type.
+There can be 16 arrays on a memory controller and 2
+controllers on a system.
+Hence, to completely specify a memory page requires
+the controller number, array number and page number
+indicated by
+.IR c ,
+.IR a ,
+and
+.I p\^
+respectively,
+in the argument list.
+These numbers are supplied by the operating system in the event
+of a memory system error.
+.PP
+.I Msi\^
+will become interactive
+if invoked without arguments.
+Valid arguments are:
+.RS
+.PP
+.B Rmv\^
+will queue the addressed page for removal.
+The page cannot be removed immediately if it is currently in use,
+but must be delayed until the process claiming it moves or terminates.
+Certain memory system errors will automatically queue
+a page for removal.
+.PP
+.B Rst\^
+will return a previously removed page back to the system
+for re-use.
+.PP
+.B Clr\^
+will clear the addressed page, typically removing
+any parity errors in the page at the expense of
+lost data.
+.PP
+.B Enb\^
+will enable the hardware refresh and correctable parity error
+detection for the entire memory system.
+.PP
+.B Dis\^
+will disable the hardware error detection.
+This must be done before a new array is installed
+to prevent a flood of refresh parity errors before
+the new pages are cleared.
+.PP
+.B Find\^
+will search for the first process claiming the
+addressed page.
+.PP
+.B Kill\^
+will terminate all processes using the addressed page.
+.RE
+.SH "SEE ALSO"
+3B20ops(8).
+.\"	@(#)msi.1m	5.2 of 5/18/82

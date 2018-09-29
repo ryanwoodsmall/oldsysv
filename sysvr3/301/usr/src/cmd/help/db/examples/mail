@@ -1,0 +1,31 @@
+
+\S mail \S:  Examples
+
+       mail
+
+    Allows you to read your own mail.
+
+    ----------------------------------------------------------------------
+
+       mail -t xyz abc root
+
+    Sends a message to the users with the login names "xyz", "abc", and "root".
+    \S mail \S takes the message from standard input and adds a header to it
+    that lists all the people who received the mail.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       mail xxyyzz!root < mailfile
+
+    Sends the message in "mailfile" to the login "root" on the computer system
+    "xxyyzz".
+
+    ----------------------------------------------------------------------
+
+       mail -F "system1!jgp, mrl"
+
+    Forwards mail sent to you to the user "jgp" on the remote system "system1!"
+    and to user "mrl" on your local system.

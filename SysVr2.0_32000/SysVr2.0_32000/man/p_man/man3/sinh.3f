@@ -1,0 +1,24 @@
+.TH SINH 3F
+.SH NAME
+sinh, dsinh \- \s-1FORTRAN\s+1 hyperbolic sine intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.P
+.B "r2 = sinh(r1)"
+.P
+.B "dp2 = dsinh(dp1)"
+.B "dp2 = sinh(dp1)"
+.SH DESCRIPTION
+.I Sinh\^
+returns the real hyperbolic sine of its real argument.
+.I Dsinh\^
+returns the double-precision hyperbolic sine of its double-precision argument.
+The generic form
+.I sinh\^
+may be used to return a double-precision value when given
+a double-precision argument.
+.SH SEE ALSO
+sinh(3M).
+.\"	%W% of %G%

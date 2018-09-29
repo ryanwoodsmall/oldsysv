@@ -1,0 +1,47 @@
+#ident	"@(#)nlp:terminfo/477ibmc.ti	1.5"
+#01-06-88
+
+477ibmc|att477ibmc|AT&T 477 IBM color printer emulation,
+
+	cpix,
+
+	bufsz#8192,
+#We lose column 0 because we can't send out null to set left margin
+	cols#135,
+	it#8,
+	lines#66,
+	orc#15,
+	orhi#150,
+	orl#30,
+	orvi#180,
+	cps#80,
+
+	cr=^M,
+	cpi=%?%p1%{10}%=%t^R%e%p1%{12}%=%t\E:%e%p1%{17}%=%t\017%;,
+	csnm=%?%p1%{0}%=%p1%{1}%=%O%tcharacter_set_1%e%p1%{2}%=%tcharacter_set_2%;,
+	cud1=^J,
+	cuf1=\s,
+	ff=^L,
+	ht=^I,
+#DC1 selects printer;CAN clears all unprinted characters on current line
+
+	is1=^Q^X,
+
+#Reset tabs,CRON,LFON;Set 10 cpi and 6 lpi; Emphasize,double strike and width,super and subscript,ovverscore, and underline off. margins 1,132, select band 4
+
+	is2=\ER\E50^R\EA^L\E2\EH\EW0\ET\E-n\EM0\EX\001\210\Eb\EC\102,
+	lpi=%?%p1%{2}%=%t\EA$\E2%e%p1%{3}%=%t\EA^X\E2%e%p1%{4}%=%t\EA^R\E2%e%p1%{6}%=%t\EA^L\E2%e%p1%{8}%=%t\E0%e%p1%{12}%=%t\EA^F\E2%;,
+	rmul=\E-0,
+	rsubm=\ET,
+	rsupm=\ET,
+	rwidm=\EW0,
+	swidm=\EW1,
+	smul=\E-1,
+	ssubm=\ES1,
+	ssupm=\ES0,
+	scs=%?%p1%{0}%=%p1%{1}%=%O%t\E7%e%p1%{2}%=%t\E6%;,
+#Both margins are set with one command
+	smglp=\EX%p1%{1}%+%c%p2%{2}%+%c,
+	smgt=\E4,
+#Set form length, this also sets top margin at current position.
+	u9=%?%p1%{0}%>%p1%{128}%<%&%t\EC%p1%c,

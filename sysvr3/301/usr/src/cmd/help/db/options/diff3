@@ -1,0 +1,15 @@
+
+\Sdiff3\S:  Options
+
+     -3   creates a script that ed(1) uses to make <file_name1> identical to
+          <file_name3> when <file_name1> and <file_name2> are the same and
+          <file_name3> is different.
+
+     -e   creates a script of commands that ed(1) uses to make <file_name1>
+          identical to <file_name3> when <file_name1>, <file_name2> and
+          <file_name3> are different from one another, or <file_name3> is
+          different from <file_name1> and <file_name2>.
+
+     -x   creates a script that ed(1) uses to change <file_name1> to be
+          identical to <file_name3> when <file_name1>, <file_name2>, and
+          <file_name3> are different from each other.

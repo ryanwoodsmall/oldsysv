@@ -1,0 +1,95 @@
+.TH DCOPY 1M
+.SH NAME
+dcopy \- copy file systems for optimal access time
+.SH SYNOPSIS
+.B /etc/dcopy
+.RB [ \-s X]
+.RB [ \-a n]
+.RB [ \-d ]
+.RB [ \-v ]
+.RB [ \-f fsize[ : isize]]
+inputfs outputfs 
+.SH DESCRIPTION
+.I Dcopy
+copies file system
+.I inputfs
+to
+.IR outputfs .
+.I Inputfs
+is the existing file system;
+.I outputfs
+is an appropriately sized file system, to hold the reorganized result.
+For best results
+.I inputfs
+should be the raw device and
+.I outputfs
+should be the block device.
+.I Dcopy
+should be run on unmounted file systems
+(in the case of the root file system, copy to a new pack).
+With no arguments,
+.I dcopy
+copies files from
+.I inputfs
+compressing directories by removing vacant entries, and spacing consecutive
+blocks in a file by the optimal rotational gap.
+The possible options are
+.TP 10
+.BI \-s X
+supply device information for creating an optimal
+organization of blocks in a file.
+The forms of
+.I X
+are the same as the 
+.B \-s
+option of
+.IR fsck (1M).
+.TP 10
+.BI \-a n
+place the files not accessed in
+.I n
+days after the free blocks of the 
+destination file system
+(default for
+.I n
+is 7).
+If no
+.I n 
+is specified then no movement occurs.
+.TP 10
+.B \-d
+leave order of directory entries as is
+(default is to move sub-directories to the beginning of directories).
+.TP 10
+.B \-v
+currently reports how many files were processed, and how big
+the source and destination freelists are.
+.TP 10
+.BI \-f fsize \fR[\fP: isize \fR]\fP
+specify the
+.I outputfs
+file system and inode list sizes (in blocks).
+If the option (or
+\fB:\fP\fIisize\fP)
+is not given, the values from the
+.I inputfs
+are used.
+.P
+.I Dcopy
+catches interrupts and quits and reports on its progress.
+To terminate
+.IR dcopy
+send a quit signal, and
+.I dcopy
+will no longer catch interrupts or quits.
+.ig
+.I Dcopy
+also attempts to modify its command line arguments so its 
+progress can be monitored with
+.IR ps (1).
+..
+.SH SEE ALSO
+fsck(1M),
+mkfs(1M),
+ps(1).
+.\"	@(#)dcopy.1m	6.5 of 9/2/83

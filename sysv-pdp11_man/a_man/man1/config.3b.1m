@@ -1,0 +1,52 @@
+.TH CONFIG 1M "3B20S only"
+.SH NAME
+config \- configure a \s-1UNIX\s+1 System
+.SH SYNOPSIS
+.B /etc/config
+[ system [ master ] ]
+.SH DESCRIPTION
+.I Config\^
+is a program that takes a description of a
+.SM UNIX
+system and
+generates the necessary configuration information
+for the operating system.
+This includes hardware, driver and parameter specifications.
+.I System\^
+is used for the description file.
+The default file is
+.BR /etc/system .
+Information defining the allowable configuration
+is kept in the
+.I master\^
+file.
+The default file is
+.BR /etc/master .
+.PP
+The user must supply
+the system definition file;
+the supplied version contains the minimal configuration
+for the processor.
+.SH FILES
+.PD 0
+.TP 15
+/etc/system
+default system description file
+.TP
+/etc/master
+default input master device table
+.TP
+conf\f3.\fPc
+output configuration table file
+.PD
+.SH "SEE ALSO"
+sysdef(1M), master(4), system(4).
+.br
+Setting up the \s-1UNIX\s+1 System in the
+.IR "\s-1UNIX\s+1 System Administrator's Guide" .
+.SH DIAGNOSTICS
+Diagnostics are routed to the standard error output and are
+self-explanatory.
+
+.\" <@(#)config.1m	1.2>
+.\"	@(#)config.3b.1m	5.2 of 5/18/82

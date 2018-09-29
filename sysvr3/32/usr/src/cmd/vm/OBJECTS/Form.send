@@ -1,0 +1,28 @@
+form="$ARG1 Mail"
+help=OPEN TEXT OBJECTS/Text.mfhelp T.smail "$ARG1 Mail"
+
+close=`message ""`
+
+done=`	message "Sending mail to \"$F1\" Invoking mailx(1).  Please wait."; sleep 3;run  sh -c "/usr/bin/mailx \"${F1}\""`
+
+
+name=To:
+nrow=0
+ncol=1
+frow=0
+fcol=12
+rows=1
+columns=48
+rmenu=const { `regex '^([^:][^:]*)$0:[^:]*:[0-9][0-9][0-9][0-9]*:[^:][^:]*:([^:]*)' '$m0' < /etc/passwd` }
+choicemsg=const "These are the user logins available on this computer."
+valid=`regex -v "$F1" '^$' false '.*' true`
+invalidmsg=vary `message -b;
+	regex -v "$F1"
+		'^$'	'This is a required field.'
+		'.*'	'Invalid value.  Press F3 CHOICES for valid choices.'`
+scroll=true
+value=$ARG2
+
+name=RESET
+button=8
+action=reset

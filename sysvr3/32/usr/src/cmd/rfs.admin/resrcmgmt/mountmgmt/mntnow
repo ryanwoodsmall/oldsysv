@@ -1,0 +1,266 @@
+#ident	"@(#)rfs.admin:resrcmgmt/mountmgmt/mntnow	1.9"
+#menu# mount remote resources immediately (if RFS is running)
+
+#help# 	
+#help#	To access remote resources you must first mount them on 
+#help#	directories in your local file system.  After a resource 
+#help#	is mounted it can be accessed just like a local resource.
+#help#
+#help#	The subcommand "mntnow" lets you mount remote resources on 
+#help#	directories of your local file system.  You can do this only 
+#help#	when RFS is running.  The mount takes effect immediately and 
+#help#	the resource will be available to local users.
+#help#
+#help#	This subcommand does NOT add the remote resources to the 
+#help#	Automatic Mount List.  Use the subcommand "mntauto" to add
+#help#	resources to this list.
+#help#
+
+# set trap
+trap '/bin/rm -f /usr/tmp/syms$$ /usr/tmp/avail$$ /usr/tmp/ismnt$$ /usr/tmp/mntnow$$; trap 0; exit' 0 1 2 3 15
+
+# definition of messages and questions/prompts
+INTRO="
+To use remote resources that have been made available to you from
+other machines you mount the resources on local directories.
+Users on your machine can then access the resources as if they were local.
+
+This subcommand lets you immediately mount remote resources when RFS is
+running on your machine.  
+
+NOTE:  This subcommand will not add resources to the Automatic Mount List.
+Use the subcommand \"mntauto\" to add resources to this list."
+
+QUEST3="
+Enter the full pathname of the local directory to be
+used as the mount point [?, q]:"
+
+QUEST4="
+Enter the resource identifier of the remote resource 
+to be mounted [?, q]:"
+
+QUEST5="
+Select 
+    r) if the resource is to be mounted as read-only.
+    w) if the resource is to be mounted as read-write.
+[r, w, ?, q (default w)]:"
+
+QUEST6="
+Resource is currently advertised as read-only.
+Do you want to mount the resource as read-only?"
+
+DEF_PATH="
+Enter the full pathname of the local directory you want to use as
+a mount point.  The full pathname must start with \"/\".  The pathname
+you enter will be checked to see if it exists.  If it does not exist, 
+the system will give you the option of creating it."
+
+DEF_SYM_RES="
+Enter the resource identifier of the remote resource to be mounted.  
+The resource identifier is the name the resource was assigned when it 
+was advertised."
+
+DEF_PERM="
+If a resource is mounted as read-only, users will not be able to write
+to the resource. If the resource is mounted as read-write, users may
+be able to both read and write depending on the ID mappings and file 
+permissions that have been established by the remote machine administrator.
+
+If the machine owning the resource has advertised it as read-only, you
+can only mount the resource as read-write."
+
+VQ="
+Is this information correct?"
+
+REDOQ="
+Do you want to mount another remote resource?"
+
+# initialization
+cflags="-qq -k$$"
+
+# print heading
+echo '\n\nIf you are not sure how to answer any prompt, type "?" for HELP.'
+echo 'If you want to quit the subcommand at any time, type "q".'
+echo "\n\n              MOUNT REMOTE RESOURCES IMMEDIATELY"
+
+# Print description
+echo "$INTRO\n"
+# Determine if RFS is running.  If RFS is not running, then print the appropriate
+# error message.
+if  /usr/lbin/rfsrunning
+then
+	: OK!!
+else
+	echo "\nRFS is not running on your machine. "
+	echo "Resources can NOT be mounted immediately.\n"
+	exit
+fi
+
+# Determine if there any remote resources currently available for mounting.  If not,
+# then print appropriate message.
+echo "Now checking for available remote resources.  Please wait ..."
+/usr/bin/nsquery -h `/bin/uname -n` >/usr/tmp/syms$$
+/usr/bin/nsquery -h | /usr/bin/fgrep -v -f/usr/tmp/syms$$ >/usr/tmp/avail$$ 2>/dev/null
+
+if [ ! -s /usr/tmp/avail$$ ]
+then
+	echo "\nThere are no remote resources available for mounting.\n"
+	exit
+fi
+
+while /bin/true
+do
+	while /bin/true
+	do
+		# Get the directory path the resource is to be mounted under.  If the
+		# input is not a directory and is does not already exist on the file
+		# system, then ask the user as to whether or not to create the
+		# directory.  If the user does not wish to create the directory
+		# then ask the user to enter anther directory.  If the input does
+		# exist on the file system (but is not a directory), then print the
+		# appropriate message, and ask the user to input another directory.
+		path=`/usr/lbin/checkre $cflags -fe				\
+		-H"$DEF_PATH" \
+		"$QUEST3"						\
+		'^[^ ]*$' 'The pathname must not contain a space.'		\
+		'^/.*$' 'You must specify a full pathname starting from /.'`
+
+		#remove special meaning of "." (just in case it exist)
+		path2=`echo $path | /bin/sed 's/\./\\\./g'`
+
+		if [ ! -d $path ]
+		then
+			echo "\n$path is not a directory in your file system.\n"
+			if [ ! -r $path ]
+			then
+				if /usr/lbin/checkyn $cflags -f "Do you want to create the directory $path?"
+				then
+					/bin/mkdir -p $path >/dev/null 2>&1
+					if [ "$?" = "0" ]
+					then
+						echo "\n$path has been created.\n"
+						break
+					else
+						echo "\nUnable to create $path."
+					fi
+				fi
+				continue
+			else
+				echo "WARNING: $path already exists.\n"
+			fi
+		fi
+
+		# Determine if the directory already exists.  If so, then print
+		# appropriate message and ask the user to input another directory.
+		/etc/mount >/usr/tmp/ismnt$$
+		/bin/grep "^$path2 " /usr/tmp/ismnt$$ >/dev/null 2>&1
+		if [ "$?" = "0" ]
+		then
+			echo "\n $path is already being used as a mount point."
+			echo "Only one remote resource may be mounted on any one mount point."
+			continue
+		fi
+		break
+	done
+
+	#Get the resource's symbolic name.  Determine if the resource is remotely
+	# advertised.  If is not then print resources that can be mounted and ask
+	# the user to enter another resource.  Determine if the resource is currently
+	# mounted.  If it is, then print appropriate message and ask the user to enter
+	# another resource to be mounted.
+	while /bin/true
+	do
+		res=`/usr/lbin/checkre $cflags -fe				\
+		-H"$DEF_SYM_RES" \
+		"$QUEST4"						\
+		'^.\{1,14\}$' 'The resource identifier must be 1 to 14 printable characters.' \
+		'^[^ \.\/:]*$'  'The resource identifier must not contain a space, ":", "." or a "/".'`
+
+		/bin/grep "^$res " /usr/tmp/avail$$ >/dev/null 2>&1
+		if [ "$?" != "0" ]
+		then
+			echo "Resource \"$res\" is not currently available.\n"
+			if [ -s /usr/tmp/avail$$ ]
+			then
+				echo "         The following remote resources are available:\n"
+				/bin/sed "s/^/	/p" /usr/tmp/avail$$ | /usr/bin/pg -e -p"Enter <RETURN> to continue:"
+			fi
+			continue
+		fi
+		/bin/grep "on $res read" /usr/tmp/ismnt$$ >/dev/null 2>&1
+		if [ "$?" = "0" ]
+		then
+			echo "\n \"$res\" is already locally mounted."
+			echo "You may only mount a resource once on your local system.\n"
+			continue
+		fi
+		break
+	done
+
+	# Determine if the resource is advertised as read-only or with read/write
+	# permissions, and print the appropriate prompt for the type of permissions
+	# that the resource can be mounted with; i.e get the proper permission
+	/usr/bin/nsquery -h | /bin/grep "^$res " | /bin/grep " read-only " >/dev/null
+	if [ "$?" != "0" ]
+	then
+		rw=`/usr/lbin/checkre $cflags -fe	-D "w"				\
+		-H"$DEF_PERM" \
+		"$QUEST5"						\
+		'^[rw]$' 'You must type r, w, or <RETURN>.' `
+	else
+		if /usr/lbin/checkyn $cflags -f "$QUEST6"
+		then
+			rw=r
+		else
+			echo "\n\"$res\" was NOT mounted.\n"
+			if /usr/lbin/checkyn $cflags -f "$REDOQ"
+			then
+				continue
+			else
+				break
+			fi
+		fi
+	fi
+
+	if [ "$rw" = "w" ]
+	then
+		rw="-d"
+		perm="read-write"
+	else
+		rw="-dr"
+		perm="read-only"
+	fi
+
+
+	# Verify input.  If the input is not correct, then start all over again.
+	echo "\nLocal mount point: $path"
+	echo "Resource identifier: $res"
+	echo "Local access permissions: $perm"
+
+	if /usr/lbin/checkyn $cflags -f "$VQ"
+	then
+		: OK!
+	else
+		echo "\"$res\" will NOT be mounted."
+		continue
+	fi
+
+	# Mount the resource on the given directory with the given permissions and
+	# print the appropriate message for success or failure.
+	/etc/mount $rw $res $path 2>/usr/tmp/mntnow$$
+	if [ "$?" != "0" ]
+	then
+		echo "\nWARNING: \c"
+		/bin/sed "s/^.*mount://" /usr/tmp/mntnow$$
+	else
+		echo "\n\"$res\" has been mounted on $path and is available to local users."
+	fi
+
+	#  Ask the user whether are not to repeat the sequence.
+	if /usr/lbin/checkyn $cflags -f "$REDOQ"
+	then
+		continue
+	else
+		break
+	fi
+done

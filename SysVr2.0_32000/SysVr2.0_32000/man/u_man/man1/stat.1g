@@ -1,0 +1,389 @@
+.TH STAT 1G
+.SH NAME
+stat \- statistical network useful with graphical commands
+.SH SYNOPSIS
+node-name [options] [files]
+.SH DESCRIPTION
+.I Stat\^
+is a collection of command level functions
+(nodes) that can be interconnected using
+.IR sh (1)
+to form a statistical network.
+The nodes reside in
+.B /usr/bin/graf
+[see
+.IR graphics (1G)].
+Data is passed
+through the network as sequences of
+numbers (vectors), where a number is of the form:
+.PP
+.RS 5
+[sign](digits)(.digits)[\fBe\fR[sign]digits]
+.RE
+.PP
+evaluated in the usual way.
+Brackets and parentheses surround fields.  All
+fields are optional, but at least one of the
+fields surrounded by parentheses must be present.
+Any character input to a node that is not part of
+a number is taken as a delimiter.
+.PP
+.I Stat\^
+nodes are divided into four classes.
+.RS 5n
+.TP 20
+\fITransformers\fR,
+which map input vector elements into
+output vector elements;
+.TP 20
+\fISummarizers\fR,
+which calculate statistics of a vector;
+.TP 20
+\fITranslators\fR,
+which convert among formats; and
+.TP 20
+\fIGenerators\fR,
+which are sources of definable vectors.
+.RE
+.PP
+Below is a list of synopses for
+.I stat\^
+nodes.  Most nodes accept options indicated by
+a leading minus (\fB\-\fR).  In general, an option is
+specified by a character followed by a value, such as \fBc5\fR.
+This is interpreted as \fBc\fR := 5 (\fBc\fR is
+assigned 5).  The following keys are used to designate the expected type
+of the value:
+.RS 5n
+.TP 8
+\fIc\fR
+characters,
+.TP 8
+\fIi\fR
+integer,
+.TP 8
+\fIf\fR
+floating point or integer,
+.TP 8
+\fIfile\fR
+file name, and
+.TP 8
+.I string\^
+string of characters, surrounded by quotes to include a \fIShell\fR argument delimiter.
+.RE
+.PP
+Options without keys are flags.
+All nodes except
+.I generators\^
+accept files as input, hence it is
+not indicated in the synopses.
+.PP
+.IR Transformers :
+.RS 5n
+.TP 10
+.B abs
+[\|\fB\-c\fIi\fR\|] \c
+\- absolute value
+.br
+\fBc\fRolumns     (similarly for \-\fBc\fR options that follow)
+.TP 10
+.B af
+[\|\fB\-\c
+.BI c i\^
+.B "t v"\c
+\|\|] \c \c
+\- arithmetic function
+.br
+.BR t "itled output, " v erbose
+.TP 10
+.B ceil
+[\|\fB\-c\fIi\fR\|] \c
+\- round up to next integer
+.TP 10
+.B cusum
+[\|\fB\-c\fIi\fR\|] \c
+\- cumulative sum
+.TP 10
+.B exp
+[\|\fB\-c\fIi\fR\|] \c
+\- exponential
+.TP 10
+.B floor
+[\|\fB\-c\fIi\fR\|] \c
+\- round down to next integer
+.TP 10
+.B gamma
+[\|\fB\-c\fIi\fR\|] \c
+\- gamma
+.TP 10
+.B list
+[\|\fB\-c\fIi\fB d\fIstring\fR\|] \c
+\- list vector elements
+.br
+.BR d elimiter(s)
+.TP 10
+.B log
+[\|\fB\-c\fIi\fB b\fIf\fR\|\|] \c
+\- logarithm
+.br
+\fBb\fRase
+.TP 10
+.B mod
+[\|\fB\-c\fIi\fB m\fIf\fR\|\|] \c
+\- modulus
+.br
+\fBm\fRodulus
+.TP 10
+.B pair
+[\|\fB\-c\fIi\fB F\fIfile\fB x\fIi\fR\|] \c
+\- pair elements
+.br
+\fBF\fRile containing base vector, \fBx\fR group size
+.TP 10
+.B power
+[\|\fB\-c\fIi\fB p\fIf\fR\|\|] \c
+\- raise to a power
+.br
+\fBp\fRower
+.TP 10
+.B root
+[\|\fB\-c\fIi\fB r\fIf\fR\|\|] \c
+\- take a root
+.br
+\fBr\fRoot
+.TP 10
+.B round
+[\|\fB\-\c
+.BI c i\| p i\| s i\^\c
+\|\|] \c
+\- round to nearest integer, .5 rounds to 1
+.br
+.BR p laces\ after\ decimal\ point,
+.BR s ignificant\ digits
+.TP 10
+.B siline
+[\|\fB\-\c
+.BI c i\| i f\| n i\^\c
+.BI s f\^\c
+\|\|] \c
+\- generate a line given slope and intercept
+.br
+.BR i "ntercept, " n "umber of positive integers, " s "lope"
+.TP 10
+.B sin
+[\|\fB\-c\fIi\fR\|] \c
+\- sine
+.TP 10
+.B subset
+[\|\fB\-a\fIf \fBb\fIf \fBc\fIi \fBF\fIfile \fBi\fIi \fBl\fIf
+\fBnl np p\fIf \fBs\fIi \fBt\fIi\fR\|] \c
+\- generate a subset
+.br
+\fBa\fRbove, \fBb\fRelow, \fBF\fRile with master vector, \fBi\fRnterval, \fBl\fReave,
+.RB "master contains element " n "umbers to " l eave,
+.RB "master contains element " n "umbers to " p ick,
+\fBp\fRick, \fBs\fRtart, \fBt\fRerminate
+.RE
+.PP
+.IR Summarizers :
+.RS 5n
+.TP 10
+.B bucket
+[\|\fB\-a\fIi \fBc\fIi \fBF\fIfile \fBh\fIf \fBi\fIi \fBl\fIf\fB n\fIi\fR\|] \c
+\- break into buckets
+.br
+\fBa\fRverage size, \fBF\fRile containing bucket boundaries,
+\fBh\fRigh, \fBi\fRnterval, \fBl\fRow, \fBn\fRumber
+.br
+Input data should be sorted
+.TP 10
+.B cor
+[\|\fB\-F\fIfile\fR\|] \c
+\- correlation coefficient
+.br
+\fBF\fRile containing base vector
+.TP 10
+.B hilo
+.RB [\| "\- h l o ox oy" \|\|] \c
+\- find high and low values
+.br
+.BR h "igh only, " l "ow only, " o "ption form, "\c
+.BR o "ption form with " x " prepended, "\c
+.BR o "ption form with " y " prepended "
+.TP 10
+.B lreg
+[\|\fB\-\c
+.BI F file\^
+.B i o s\c
+\|\|] \c
+\- linear regression
+.br
+.BR F "ile containing base vector, " i "ntercept only, "
+.BR o "ption form for"
+.I siline\^\c
+.RB ", " s "lope only"
+.TP 10
+.B mean
+[\|\fB\-f\fIf\fB n\fIi\fB p\fIf\fR\|\|] \c
+\- (trimmed) arithmetic mean
+.br
+\fBf\fRraction, \fBn\fRumber, \fBp\fRercent
+.TP 10
+.B point
+[\|\fB\-f\fIf\fB n\fIi\fB p\fIf\fB s\fR\|\|] \c
+\- point from empirical cumulative density function
+.br
+\fBf\fRraction, \fBn\fRumber, \fBp\fRercent, \fBs\fRorted input
+.TP 10
+.B prod \c
+\- internal product
+.TP 10
+.B qsort
+[\|\fB\-c\fIi\fR\|] \c
+\- quick sort
+.TP 10
+.B rank \c
+\- vector rank
+.TP 10
+.B total \c
+\- sum total
+.TP 10
+.B var \c
+\- variance
+.RE
+.PP
+.IR Translators :
+.RS 5n
+.TP 10
+.B bar
+[\|\fB\-\c
+.BI "a b f g r" i\^\| w i\^\| x f\^
+.BI "xa y" f\|\| "ya yl" f\^
+.BI yh f\^
+\|\|] \c
+\- build a bar chart
+.br
+.RB "suppress " a "xes, " b "old, suppress " f\c
+.RB "rame, suppress " g "rid, " r "egion, " w\c
+.RB "idth in percent, " x " origin, suppress " x - a\c
+.RB "xis label, " y " origin, suppress " y - a\c
+.RB "xis label, " y "-axis " l "ower bound, " y\c
+.RB "-axis " h "igh bound"
+.br
+Data is rounded off to integers.
+.TP 10
+.B hist
+[\|\fB\-\c
+.BI "a b f g r" i\^\| x f\^
+.BI "xa y" f\|\| "ya yl" f\^
+.BI yh f\^
+\|\|] \c
+\- build a histogram
+.br
+.RB "suppress " a "xes, " b "old, suppress " f\c
+.RB "rame, suppress " g "rid, " r "egion, " x\c
+.RB   " origin, suppress " x - a\c
+.RB "xis label, " y " origin, suppress " y - a\c
+.RB "xis label, " y "-axis " l "ower bound, " y\c
+.RB "-axis " h "igh bound"
+.TP 10
+.B label
+[\|\fB\-\c
+.BI "b c F" file\^
+.B h p r\c
+.I i\^
+.B x xu y yr\c
+\|\|] \c
+\- label the axis of a \s-1GPS\s+1 file
+.br
+.BR b "ar chart input, retain " c "ase, label " F "ile, "
+.BR h "istogram input, " p "lot input, " r "otation, "
+.BR x "-axis, " u "pper " x "-axis, "
+.BR y "-axis, " r "ight " y "-axis"
+.TP 10
+.B pie
+[\|\fB\-\c
+.BI "b o p pn" "i " pp "i " r i\^
+.BI "v x" "i " y i\^\c
+\|\|] \c
+\- build a pie chart
+.br
+.BR b "old, values " o "utside pie, value as " p "ercentage(:=100), value as"
+.BR p "ercentage(:=i), draw " p "ercent of " p ie,
+.BR r "egion, no " v "alues, " "x " origin,
+.BR "y " origin
+.br
+Unlike other nodes, input is lines of the form
+.RS 15
+[\fB< i e f c\fIc \fB>\fR]
+value [label]
+.br
+.BR i "gnore (do not draw) slice, " e "xplode slice, "
+.BR f "ill slice, " c "olor slice
+.IR c =(
+.BR b "lack, " r "ed, "
+.BR g "reen, bl" u e)
+.RE
+.TP 10
+.B plot
+[\|\fB\-\c
+.BI "a b c" string\|\| "d f F" file\|\| "g m r" i\^
+.BI x f\|\| "xa xi" f\|\| xh f\^
+.BI xl f\|\| xn i\| xt\^
+.BI y f\|\| "ya yi" f\|\| yh f\^
+.BI yl f\|\| yn i\| yt\^\c
+\|\|] \c
+\- plot a graph
+.br
+.RB "suppress " a "xes, " b "old, plotting " c\c
+.RB "haracters, " d "isconnected, suppress " f "rame, " F\c
+.RB "ile containing x vector, suppress " g\c
+.RB "rid, " m "ark points, " r "egion, " x\c
+.RB " origin, suppress " x\c
+.RB - a "xis label, " "x i" "nterval, " "x h\c"\c
+.RB "igh bound, " "x l" "ow bound, " n "umber of ticks on " x\c
+.RB "-axis, suppress " x "-axis " t \c
+.RB "itle, " y " origin, suppress " y\c
+.RB - a "xis label, " "y i" "nterval, " "y h\c"\c
+.RB "igh bound, " "y l" "ow bound, " n "umber of ticks on " y\c
+.RB "-axis, suppress " y "-axis "   t itle
+.TP 10
+.B title
+[\|\fB\-\c
+.BI "b c l" string\|\| v string\|\| u string\^
+\|\|] \c
+\- title a vector or a \s-1GPS\s+1
+.br
+.RB "title " b "old, retain " c "ase, " l\c
+.RB "ower title, " u "pper title, " v "ector title"
+.RE
+.PP
+.IR Generators :
+.RS 5n
+.TP 10
+.B gas
+[\|\fB\-c\fIi \fBi\fIf \fBn\fIi \fBs\fIf \fBt\fIf\fR\|\|] \c
+\- generate additive sequence
+.br
+\fBi\fRnterval, \fBn\fRumber, \fBs\fRtart, \fBt\fRerminate
+.TP 10
+.B prime
+[\|\fB-c\fIi \fBh\fIi \fBl\fIi \fBn\fIi\fR\|\|] \c
+\- generate prime numbers
+.br
+\fBh\fRigh, \fBl\fRow, \fBn\fRumber
+.TP 10
+.B rand
+[\|\fB\-c\fIi \fBh\fIf\| \fBl\fIf\| \fBm\fIf\| \fBn\fIi \fBs\fIi\fR\|] \c
+\- generate random sequence
+.br
+\fBh\fRigh, \fBl\fRow, \fBm\fRultiplier, \fBn\fRumber, \fBs\fReed
+.RE
+.SH RESTRICTIONS
+Some nodes have a limit on the size of the input vector.
+.SH "SEE ALSO"
+graphics(1G). 
+.br
+gps(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)stat.1g	6.2 of 9/2/83

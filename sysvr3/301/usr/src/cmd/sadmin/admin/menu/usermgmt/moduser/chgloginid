@@ -1,0 +1,64 @@
+#ident	"@(#)sadmin:admin/menu/usermgmt/moduser/chgloginid	2.3"
+#menu# change a user's login ID
+#help# 
+#help#	This procedure allows you to change a user's login ID.
+#help#	You cannot change the login IDs of the administrative and system
+#help#	logins.
+
+loginlen=8	# Maximum login ID length
+minid=100	# Minimum user and group ID
+
+trap 'exit 0' 1 2 15
+flags="-qq -k$$"
+
+while  true
+do
+	loginid=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the user.
+	It also is used to identify data that belongs to the user.' \
+		-fe "Enter user's login ID [?, q]:  " \
+		-R ':' '":" is an illegal character.' \
+		-r '.' 'You must enter a value.'`
+	uid=`sed -n "/^${loginid}:/s/[^:]*:[^:]*:\([0-9]*\):.*/\1/p" /etc/passwd`
+	if [ -z "${uid}" ]
+	then
+		echo "\\tLogin ID '${loginid}' does not exist.  Choose another."
+		continue
+	elif [ "${uid}" -lt ${minid} ]
+	then
+		echo "\\tThis login has user ID ${uid}, which is less than ${minid}.
+	This procedure will not change its login ID."
+		continue
+	fi
+	while true
+	do
+		newloginid=`checkre ${flags} -H'
+	This is the "name" that the computer uses to identify the user.
+	It also is used to identify data that belongs to the user.
+	The login ID may be any combination of numbers and letters not already
+	used by someone else.  Typically, people choose their initials,
+	first or last name, or nickname.' \
+			-fe "Enter new login ID [?, q]:  " \
+			'.' "You must enter a value, not more than ${loginlen} characters long." \
+			'^[a-z0-9]*$' 'Answer contains an illegal character.
+	Only numbers and lower case letters are permitted.' \
+			"^.\{1,${loginlen}\}$" "Answer is too long.
+	No more than ${loginlen} characters are permitted."`
+		if  grep "^${newloginid}:" /etc/passwd >/dev/null
+		then
+			echo "\\tLogin ID '${newloginid}' already exists.  Choose another."
+			continue
+		fi
+		break
+	done
+
+	ed - /etc/passwd <<-!  ||  { admerr $0 'Cannot edit /etc/passwd.'; exit 1;}
+	H
+	/^${loginid}:/s//${newloginid}:/
+	w
+	!
+
+	checkyn ${flags} -f \
+		'Do you want to change the login ID of another login?'  ||
+		break
+done

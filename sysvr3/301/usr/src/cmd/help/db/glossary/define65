@@ -1,0 +1,9 @@
+
+\S white space \S
+
+White space is one or more space, tab, and/or newline characters.
+White space is normally used to separate "strings"\S*\S of
+characters, and is required to separate a command from its
+"arguments"\S*\S on a command line.
+
+\S*\S defined in the \Sglossary\S

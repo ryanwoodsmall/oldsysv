@@ -1,0 +1,88 @@
+#	vpmstart 1.8 of 4/22/83
+#	@(#)vpmstart	1.8
+
+: usage: vpmstart device n [filen]
+case $1 in
+	-r)
+ 	   ropt=true
+	   shift
+	   ;;
+	-*)
+	   echo "vpmstart: illegal option $1"
+	   exit 2
+	   ;;
+	*)
+	   break
+	   ;;
+esac
+if test -z "$2" -o -n "$4"
+	then
+		echo "vpmstart: Incorrect number of arguments"
+		echo "Usage: vpmstart [-r] device n [filen]"
+		exit 2
+	else
+		if [ ! -c "$1" ]
+		then
+			echo "$0: $1 is not a character special file"
+			exit 2
+		fi
+		if test $2 -ne 6
+			then
+				echo "vpmstart: illegal magic number"
+				exit 2
+		fi
+		if test -n "$3"
+			then
+				filen="$3"
+			else
+				filen="a.out"
+		fi
+		test -r $filen
+		if [ $? -ne 0 ]
+			then
+				test -f $filen
+				if [ $? -ne 0 ]
+					then
+						echo "vpmstart: $filen not found"
+					else
+						echo "vpmstart: $filen not readable"
+				fi
+				exit 2
+		fi
+		if test -n "$ropt"
+			then
+				if kasb -d "$1" <<-!
+				   .reset
+				!
+					then
+						kasb -d "$1" <<-!
+						.load "$filen"
+						.reset
+						.run $2
+					!
+					else
+						exit 2
+				fi
+			else
+				if kasb -d "$1" <<-!
+				   .reset
+				!
+					then
+						
+						sleep 10 	# Wait for OK check, if any
+						kasb -d "$1" <<-!
+						.load "$filen"
+						.clear
+						.run $2
+						!
+					else
+						exit 2
+				fi
+		fi
+		if [ $? -ne 0 ]
+			then
+				exit 2
+			else
+				exit 0
+		fi
+fi

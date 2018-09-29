@@ -1,0 +1,35 @@
+.TH EXP 3F
+.SH NAME
+exp, dexp, cexp \- \s-1FORTRAN\s+1 exponential intrinsic function
+.SH SYNOPSIS
+.nf
+.B "real r1, r2"
+.B "double precision dp1, dp2"
+.B "complex cx1, cx2"
+.P
+.B "r2 = exp(r1)"
+.P
+.B "dp2 = dexp(dp1)"
+.B "dp2 = exp(dp1)"
+.P
+.B "cx2 = cexp(cx1)"
+.B "cx2 = exp(cx1)"
+.SH DESCRIPTION
+.I Exp\^
+returns the real exponential function
+.I e\u\s-2x\s0\d
+of its real argument.
+.I Dexp\^
+returns the double-precision exponential function of its double-precision argument.
+.I Cexp\^
+returns the complex exponential function of its complex argument.
+The generic function
+.I exp\^
+becomes a call to
+.I dexp\^
+or
+.I cexp\^
+as required, depending on the type of its argument.
+.SH SEE ALSO
+exp(3M).
+.\"	@(#)exp.3f	6.2 of 10/20/83

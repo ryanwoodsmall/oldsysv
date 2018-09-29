@@ -1,0 +1,46 @@
+
+\Stabs\S:  Options
+
+     -arbitrary   <arbitrary> is a string of integers separated by commas.
+                  Each integer is added to the last integer to set the tab 
+                  stops.  (i.e., 1, +7, +4, +4, +4, +35 is the same as the 
+                  tab stops for COBOL, normal format 1, 8, 12, 16, 20, 55.) 
+                  This enables you to set tabs that are any distance apart.
+
+     -canned   <canned> is a one or two letter code that designates tab 
+               settings for a normal format for a computer language.  
+               The following is a list of choices for <canned>:
+
+               a     Assembler, IBM S/370, first format, 1, 10, 16, 36, 72
+               a2    Assembler, IBM S/370, second format, 1, 10, 16, 40, 72
+               c     COBOL, normal format, 1, 8, 12, 16, 20, 55
+               c2    COBOL, compact format, 1, 6, 10, 14, 49
+
+
+               c3    COBOL, compact format with more tabs,
+                     1, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 
+                     58, 62, 67
+               f     FORTRAN 1, 7, 11, 15, 19, 23
+               p     PL/I 1, 5, 9, 13, 17, 21, 25, 29, 33, 37,
+                     41, 45, 49, 53, 57, 61
+               s     SNOBOL 1, 10, 55
+               u     UNIVAC 1100 Assembler 1, 12, 20, 44
+
+     -repetitive   <repetitive> is an integer that sets tabs at
+                   1 + <repetitive>, 1 * 2 <repetitive>, etc.  This sets tabs at
+                   regular intervals.
+
+     +mmargin      moves the margin over <margin> columns.  The default is 10.
+
+
+
+
+     -Tterminal_type   sets the tabs as they would normally be set for a
+                       <terminal_type> terminal.  Valid terminal types are
+                       listed in the UNIX System Programmer's Reference manual
+                       on the manual page for tabs(5).
+
+     --file_name   sets tab stops to the tab specification on the first line of
+                   <file_name>.  The format for tab specification includes the
+                   options for \Stabs\S, surrounded by angle brackets and
+                   colons, "<:    :>".  The default is every 8 characters.

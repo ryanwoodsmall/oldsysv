@@ -1,0 +1,14 @@
+
+\Secho\S:  Description
+
+Syntax Summary:  echo string ...
+
+         where:  string  is a sequence of characters delimited by
+                         white space and/or double quotes.
+
+Description:
+     \Secho\S prints the string that is its argument on the standard output.
+     It is used in shell programs to print messages.  You can also use
+     \Secho\S to find the value of shell variables by preceding the variable
+     name with a "$".  See the manual page for special characters that \Secho\S
+     understands.

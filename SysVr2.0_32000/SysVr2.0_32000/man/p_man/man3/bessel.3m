@@ -1,0 +1,90 @@
+.TH BESSEL 3M 
+.SH NAME
+j0, j1, jn, y0, y1, yn \- Bessel functions
+.SH SYNOPSIS
+.nf
+.B #include <math.h>
+.PP
+.B double j0 (x)
+.B double x;
+.PP
+.B double j1 (x)
+.B double x;
+.PP
+.B double jn (n, x)
+.B int n;
+.B double x;
+.PP
+.B double y0 (x)
+.B double x;
+.PP
+.B double y1 (x)
+.B double x;
+.PP
+.B double yn (n, x)
+.B int n;
+.B double x;
+.SH DESCRIPTION
+.I J0\^
+and
+.I j1\^
+return Bessel functions of
+.I x\^
+of the first kind of orders 0 and 1
+respectively.
+.I Jn\^
+returns the Bessel function of
+.I x\^
+of the first kind of order
+.IR n .
+.PP
+.I Y0\^
+and
+.I y1\^
+return Bessel functions of
+.I x\^
+of the second kind of orders 0 and 1 respectively.
+.I Yn\^
+returns the Bessel function of
+.I x\^
+of the second kind of order
+.IR n .
+The value of
+.I x\^
+must be positive.
+.SH DIAGNOSTICS
+Non-positive arguments cause
+.IR y0 ,
+.I y1\^
+and
+.I yn\^
+to return the value
+.SM
+.B \-HUGE
+and to set
+.I errno\^
+to
+.SM
+.BR EDOM .
+In addition, a message indicating
+.SM DOMAIN
+error is printed on the standard error output.
+.PP
+Arguments too large in magnitude cause
+.IR j0 ", " j1 ,
+.IR y0 " and " y1
+to return zero
+and to set
+.I errno\^
+to
+.SM
+.BR ERANGE .
+In addition, a message indicating
+.SM TLOSS
+error is printed on the standard error output.
+.PP
+These error-handling procedures may be changed with the function
+.IR matherr (3M).
+.SH SEE ALSO
+matherr(3M).
+.\"	%W% of %G%

@@ -1,0 +1,314 @@
+.tr ~
+.TH CONFIG 1M
+.SH NAME
+config \- configure a \s-1UNIX\s+1 System
+.SH SYNOPSIS
+.B /etc/config
+[
+.B \-t
+]
+[
+.B \-l
+file ] [
+.B \-c
+file ] [
+.B \-m
+file ] dfile
+.SH DESCRIPTION
+.I Config\^
+is a program that takes a description of a
+.SM UNIX
+system and
+generates two files.
+One file provides information regarding the interface between
+the hardware and device handlers.
+The other file is a C program defining the configuration tables
+for the various devices on the system.
+.PP
+The
+.B \-l
+option specifies the name of the hardware interface file;
+.B low.s
+is the default name.
+.PP
+The
+.B \-c
+option specifies the name of the configuration table file;
+.B conf.c
+is the default name.
+.PP
+The
+.B \-m
+option specifies the name of the file that contains
+all the information regarding supported devices;
+.B /etc/master
+is the default name.
+This file is supplied with the
+.SM UNIX
+system and should
+.I not\^
+be modified unless the user
+.I fully\^
+understands its construction.
+.PP
+The
+.B \-t
+option requests a short table of major device numbers for
+character and block type devices.
+This can facilitate the creation of special files.
+.PP
+The user must supply
+.IR dfile ;
+it must contain device information
+for the user's system.
+This file is divided into two parts.
+The first part contains physical device specifications.
+The second part contains system-dependent information.
+Any line with an asterisk (\f3\(**\fP) in column 1 is a comment.
+.PP
+All configurations are assumed to have the following devices:
+.PP
+.RS
+one Signetics 2651 (for the system console)
+.br
+one Intel 8253 programmable interval timer
+.RE
+.PP
+with standard interrupt vectors and addresses.
+These two devices
+.I "must not\^"
+be specified in
+.IR dfile .
+.SS First Part of \f2dfile\fP
+Each line contains four or five fields, delimited by blanks and/or tabs
+in the following format:
+.PP
+.RS
+devname    vector    address    bus    number
+.RE
+.PP
+where
+.I devname\^
+is the name of the device (as it appears in the
+.B /etc/master
+device table),
+.I vector\^
+is
+the interrupt vector location (decimal),
+.I address\^
+is the device address (hex),
+.I bus\^
+is the bus request level (4 through 7),
+and
+.I number\^
+is the number (decimal) of devices associated with the
+corresponding controller;
+.I number\^
+is optional, and if omitted, a default
+value which is the maximum value for that controller is used.
+.PP
+There are certain drivers that may be provided with the system,
+that are actually
+.I "pseudo-device\^"
+drivers;
+that is, there is no real hardware associated with the driver.
+Drivers of this type are identified on their respective manual entries.
+When these devices are specified in the description file, the
+interrupt
+.IR vector ,
+device
+.IR address ,
+and
+.I bus\^
+request level must all be zero.
+.if \n()s .bp
+.SS Second Part of \f2dfile\fP
+The second part contains three different types of lines.
+Note that
+.I all\^
+specifications of this part
+.IR "are required" ,
+although their order is arbitrary.
+.PP
+.ti -3n
+1.
+.I "Root\^/\^pipe\^/\^dump device specification\^"
+.PP
+Three lines of three fields each:
+.PP
+.RS
+\f3root\fP	devname	minor
+.br
+\f3pipe\fP	devname	minor
+.br
+\f3dump\fP	devname	minor	dumplo
+.RE
+.PP
+where
+.I minor\^
+is the minor device number (in octal).
+.PP
+.ti -3n
+2.
+.I "Swap device specification\^"
+.PP
+One line that contains five fields as follows:
+.PP
+.RS
+\f3swap\fP	devname	minor	swplo	nswap
+.RE
+.PP
+where
+.I swplo\^
+is the lowest disk block (decimal) in the swap area and
+.I nswap\^
+is the number of disk blocks (decimal) in the swap area.
+.PP
+.ti -3n
+3.
+.I "Parameter specification\^"
+.PP
+Several lines of two fields each as follows
+.RI ( number\^
+is decimal):
+.RS
+.PP
+.PD 0
+.TP 15
+.B buffers
+number
+.TP
+.B inodes
+number
+.TP
+.B files
+number
+.TP
+.B mounts
+number
+.TP
+.B swapmap
+number
+.TP
+.B calls
+number
+.TP
+.B procs
+number
+.TP
+.B maxproc
+number
+.TP
+.B texts
+number
+.TP
+.B clists
+number
+.TP
+.B hashbuf
+number
+.TP
+.B physbuf
+number
+.TP
+.B mesg
+0 or 1
+.TP
+.B sema
+0 or 1
+.TP
+.B shmem
+0 or 1
+.PD
+.RE
+.SH EXAMPLE
+To configure a
+.SM SYS\*S-32
+system with the following devices:
+.RS
+.nf
+one disk drive controller
+one tape drive controller
+one serial i/o board with 8 lines
+one line printer
+.fi
+.RE
+We must also specify the following parameter information:
+.RS
+.nf
+root device is a dc (drive 1, section 0)
+pipe device is a dc (drive 1, section 0)
+swap device is a dc (drive 1, section 1)
+~~~~~~~with a swplo of 6000 and an nswap of 2000
+dump device is a tc (drive 0)
+number of buffers is 35
+number of processes is 150
+maximum number of processes per user \s-1ID\s+1 is 25
+number of mounts is 8
+number of inodes is 120
+number of files is 120
+number of calls is 30
+number of texts is 35
+number of character buffers is 150
+number of swapmap entries is 50
+messages are to be included
+semaphores are to be included
+.fi
+.RE
+.ne 8
+The actual system configuration would be specified as follows:
+.RS
+.nf
+.ta 12n 20n 30n 38n 46n
+dc	3	0d00000	5
+tc	4	0d00200	5
+lp	12	0fff800	4
+sio	14	0a00000	4
+root	dc	10
+pipe	dc	10
+swap	dc	11	6000	2000
+dump	tc	0	0
+\(** Comments may be inserted in this manner
+buffers	35
+procs	150
+maxproc	25
+mounts	8
+inodes	120
+files	120
+calls	30
+texts	35
+clists	150
+swapmap	50
+msg	1
+sema	1
+.fi
+.RE
+.DT
+.SH FILES
+.PD 0
+.TP 15
+/etc/master
+default input master device table
+.TP
+low\f3.\fPs
+default output hardware interface file
+.TP
+conf\f3.\fPc
+default output configuration table file
+.PD
+.SH "SEE ALSO"
+sysdef(1M),
+master(4).
+.br
+.I "Setting up the \s-1UNIX\s+1 System"
+in the 
+.IR "\s-1UNIX\s+1 System V Administrator Guide" .
+.SH DIAGNOSTICS
+Diagnostics are routed to the standard output and are
+self-explanatory.
+.SH BUGS
+The
+.B \-t
+option does not know about devices that have aliases.
+.tr ~~
+.\"	@(#)config.ns.1m	5.2 of 5/18/82

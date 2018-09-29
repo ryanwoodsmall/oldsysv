@@ -1,0 +1,81 @@
+#ident	"@(#)rfs.admin:startstop/setauto	1.10"
+
+#menu# set up/turn off automatic start of RFS when system starts
+
+#help# 
+#help#  The subcommand "setauto" allows to you set up / turn off 
+#help#  automatic start of RFS when your system starts.  When RFS 
+#help#  is started automatically, all the same steps occur that 
+#help#  would have happened if you had manually started RFS by 
+#help#  using the subcommand "startrfs." 
+#help#
+
+#set trap
+trap '/bin/rm -f /usr/tmp/setauto$$; /bin/chmod 555 /etc/inittab; /bin/chown bin /etc/inittab; /bin/chgrp bin /etc/inittab; trap 0; exit' 0 1 2 3 15
+
+# Print heading
+echo "\n\nIf you want to quit the subcommand at any time, type \"q\"."
+echo "\n\n          SET UP / TURN OFF AUTOMATIC START OF RFS"
+
+# Define messages and questions
+RFSON="
+Do you want to set up RFS auto-start?"
+
+RFSOFF="
+Do you want to turn off RFS auto-start?"
+
+DEF_AUTO="
+You can set up your system so that any time you start your machine the 
+system automatically starts RFS.  When RFS is automatically started, 
+all the resources you have set up to be automatically advertised and 
+mounted are advertised and mounted just as if you had manually started
+RFS by using the \"startrfs\" subcommand.  
+
+You also use this \"setauto\" subcommand to turn off automatic starting 
+of RFS.  When you turn off the automatic start option the machine will 
+be set to come up in multi-user mode when the system starts."
+
+ACKNOWLEDGE=
+
+#initialization
+cflags="-qq -k$$"
+
+# Print description
+echo "$DEF_AUTO\n"
+
+# Determine initial set up of system
+STATE=`/bin/grep ":initdefault:" /etc/inittab 2>/dev/null | /usr/bin/cut -d":" -f2`
+
+# If the system is set up for RFS, then ask the user whether to set it for multi-user.
+# If the system is set up for multi-user, ask the user whether to set it for RFS.
+if [ "$STATE" = "3" ]
+then
+        echo "\nYour system is set up to automatically start RFS when the system starts."
+        if /usr/lbin/checkyn $cflags -f "$RFSOFF"
+        then
+                NEWSTATE=2
+                ACKNOWLEDGE="\nRFS auto-start is OFF.\n"
+
+        else
+                echo "\nRFS auto-start will remain ON.\n"
+                exit 
+        fi
+else
+        echo "\nYour system is NOT set up to automatically start RFS when the system starts."
+        if /usr/lbin/checkyn $cflags -f "$RFSON"
+        then
+                NEWSTATE=3
+                ACKNOWLEDGE="\nRFS auto-start is ON.\n"
+        else
+                echo "\nRFS auto-start will remain OFF.\n"
+                exit 
+        fi
+fi
+
+# Set the new state
+/bin/grep -v ":initdefault:" /etc/inittab >/usr/tmp/setauto$$
+echo "is:$NEWSTATE:initdefault:" >>/usr/tmp/setauto$$
+/bin/mv /usr/tmp/setauto$$ /etc/inittab
+
+# Print the new state change.
+echo $ACKNOWLEDGE

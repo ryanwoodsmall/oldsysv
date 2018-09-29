@@ -1,0 +1,33 @@
+#ident	"@(#)sadmin:etc/disketteparm	1.2"
+#	Parameters for file systems made on diskettes.
+#	See mkfs(1M) and makefsys.
+
+
+case "`uname -m`" in
+3b5 | 3B5 )
+	#	blocks in the file system
+	blocks=12800
+	#	inodes in the file system, may be empty
+	inodes=
+	#	rotational gap size
+	gap=1	
+	#	blocks/cylinder
+	blockcyl=32
+	;;
+3b2 | 3B2 )
+	blocks=1422
+	inodes=200
+	gap=1
+	blockcyl=18
+	;;
+PM68K | phoenix )
+	blocks=720
+	inodes=200
+	gap=1
+	blockcyl=18
+	;;
+* )
+	admerr $0 "Do not know diskette file system parameters for machine
+	type '`uname -m`'"
+	exit 1
+esac

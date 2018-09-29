@@ -1,0 +1,17 @@
+#ident	"@(#)rfs.admin:resrcmgmt/advmgmt/DESC	1.2"
+#menu#  local resource advertising and info management menu
+
+#head# 		LOCAL RESOURCE ADVERTISING AND INFO MANAGEMENT
+#help# 
+#help#	You offer to share your local resources with other 
+#help#	machines by advertising them.  The subcommands of the
+#help#	Local Resource Offering Management Menu allow you to handle
+#help#	all aspects of advertising local resources to other machines.
+#help# 	The subcommands let you list the local resources you have
+#help# 	offered (advertised), and let you see which of your local
+#help#	resources are mounted by other machines.  The subcommands
+#help#	also allow you to advertise and unadvertise your local
+#help#	resources, and to add and remove them from the Automatic 
+#help#	Advertise List.  Resources in this list are advertised 
+#help#	automatically whenever RFS is started.
+#help#	

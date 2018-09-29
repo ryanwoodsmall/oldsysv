@@ -1,0 +1,50 @@
+/dev/null
+1422 200
+d--775 0 3
+install	d--775 0 0
+	Rlist		---555 2 2	./install/perf/Rlist.perf
+	INSTALL		---555 2 2	./install/perf/INSTALL
+	UNINSTALL	---555 2 2	./install/perf/UNINSTALL
+	setup		---555 2 2	./install/perf/setup
+	unsetup		---555 2 2	./install/perf/unsetup
+$
+new	d--775 0 3
+	boot	d--755 0 3
+		prf.o		---555 2 2	../usr/src/uts/3b2/io/prf.o
+	$
+	etc	d--775 0 3
+		master.d	d--755 0 3
+			prf		---444 2 2	../usr/src/uts/3b2/master.d/prf
+		$
+		init.d		d--775 0 3
+			perf		---444 0 3	../etc/init.d/perf
+		$
+		prfdc		---555 2 2	../etc/prfdc
+		prfld		---555 2 2	../etc/prfld
+		prfpr		---555 2 2	../etc/prfpr
+		prfsnap		---555 2 2	../etc/prfsnap
+		prfstat		---555 2 2	../etc/prfstat
+	$
+	usr	d--775 0 3
+		bin	d--775 2 2
+			sadp		--g555 2 3	../usr/bin/sadp
+			sag		---555 2 2	../usr/bin/sag
+			sar		---555 2 2	../usr/bin/sar
+			timex		---555 2 3	../usr/bin/timex
+			tplot		---555 2 2	../usr/bin/tplot
+			graph		---555 2 2	../usr/bin/graph
+		$
+		lib	d--775 0 3
+			sa	d--775 4 2
+				sa1		---555 2 2	../usr/lib/sa/sa1
+				sa2		---555 2 2	../usr/lib/sa/sa2
+				sadc		--g555 2 3	../usr/lib/sa/sadc
+			$
+		$
+		options	d--775 0 3
+			perf.name	---555 2 2	./install/perf/perf.name
+		$
+	$
+$
+$
+#ident	"@(#)pkg.perf:perf/proto	1.14"

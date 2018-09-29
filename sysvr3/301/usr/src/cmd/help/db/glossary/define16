@@ -1,0 +1,10 @@
+
+\S file descriptor \S
+
+A file descriptor is a name or number that represents a file.  A
+"file name"\S*\S is a file descriptor.  Certain file descriptors are
+reserved by the system. The file descriptor 0 is reserved for
+"standard input"\S*\S, 1 is reserved for "standard output"\S*\S,
+and 2 is reserved for"standard error output"\S*\S.
+
+\S*\S defined in the \Sglossary\S

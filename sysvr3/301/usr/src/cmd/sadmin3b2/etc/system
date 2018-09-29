@@ -1,0 +1,45 @@
+*ident	"@(#)sadmin3b2:etc/system	1.5"
+*
+*  SYSTEM SPECIFICATION FILE FOR THE 3B2
+*
+
+* kernel
+*
+BOOT: /boot/KERNEL
+
+* Drivers appearing in /boot that ARE to be configured, even though no device
+* appears in the EDT (software drivers are in this category)
+*
+INCLUDE:
+INCLUDE: MAU
+
+* Drivers appearing in /boot that are NOT to be configured even though
+* the device appears in the EDT
+*
+EXCLUDE:
+
+* Devices appearing in the EDT that are to be ignored
+*
+EXCLUDE: SBD
+
+* System device specifications
+*
+* NOTE:  With VTOC, specifications are not required.
+* 	 following is an example of what should go here
+*
+*	ROOTDEV: /dev/idsk00
+*	PIPEDEV: /dev/idsk00
+*	SWAPDEV: /dev/swap 0 3528
+
+*	DISP == dispatcher
+INCLUDE: DISP
+
+*	S5 == System V file system
+INCLUDE: S5
+
+*	Required Modules
+INCLUDE: IDISK
+INCLUDE: HDELOG
+INCLUDE: MEM
+INCLUDE: GENTTY
+INCLUDE: IUART

@@ -1,0 +1,179 @@
+.TH GCAT 1C
+.SH NAME
+gcat \- send phototypesetter output to the \s-1HONEYWELL\s+1 6000
+.SH SYNOPSIS
+.B gcat
+[ options ] [ files ]
+.SH DESCRIPTION
+.I Gcat\^
+arranges to have
+.IR troff (1)
+output sent to
+the phototypesetter or debugging devices
+(\s-1STARE\s+1 or line printer)
+attached to the
+.SM HONEYWELL
+system.
+.SM GCOS
+identification must appear in
+the
+.SM UNIX
+System password file (see
+.IR passwd (4)),
+or be supplied by the
+.B \-i
+option.
+If no file name appears, the standard input is sent; thus
+.I gcat\^
+may be used as an output pipe for
+.IR troff (1).
+.PP
+The option
+.B \-g
+(for \s-1GCOS\s+1) must be used
+with the
+.IR troff (1)
+command to make things work properly.
+This command string sends output to the
+.SM GCOS
+phototypesetter:
+.PP
+.RS
+troff \|\-g \|file \|\(bv \|gcat
+.RE
+.PP
+The following options, each as a separate argument,
+and in any combination (multiple outputs are permitted),
+may be given after gcat:
+.PP
+.PD 0
+.TP 7
+.B \-ph
+Send output to the phototypesetter.
+This is a default option.
+.TP 7
+.B \-st
+Send output to
+.SM STARE
+for fast turn-around.
+.TP 7
+.B \-tx
+Send output as text to the line printer
+(useful for checking spelling, hyphenation, pagination, etc.).
+.TP 7
+.B \-du
+Send output to the line printer, dummied up to make the
+format correct.
+Because many characters are dropped, the output is unreadable,
+but useful for seeing the shape (margins, etc.) of the document.
+.TP 7
+.B \-c
+Make a copy of the file to be sent before returning to the user.
+.TP 7
+.B \-r
+Remove the file after sending it.
+.TP 7
+.BI \-f file
+Use
+.I file
+as a dummy file name to report back in the mail.
+(This is useful for distinguishing multiple runs, especially when
+.I gcat\^
+is being used as a filter).
+.TP 7
+.BI \-i job,bin
+Supply the
+.SM GCOS
+``ident card'' image as the parameter
+.BI \-i job,bin
+where
+.I job
+is the
+.SM GCOS
+job number and
+.I bin
+the
+.SM GCOS
+bin number
+or any comment to the
+.SM GCOS
+operators.
+.TP 7
+.B \-m
+When transmission is complete, report by
+.IR mail (1)
+the so-called
+.I snumb\^
+of the receiving
+.SM GCOS
+job.
+The mail is sent by the
+.SM UNIX
+daemon;
+there is no guarantee that the
+.SM GCOS
+job ran successfully.
+This is a default option.
+.TP 7
+.B \-n
+Do not report the completion of transmission by
+.IR mail (1).
+.TP 7
+.B \-o
+Print the on-line
+.SM GCOS
+accounting output.
+.TP 7
+.B \-t
+Toss out the on-line
+.SM GCOS
+accounting output.
+This is a default option.
+.TP 7
+.BI \-s n\^
+Submit job to
+.SM GCOS
+with service grade
+.I n\^
+.RI ( n "=1, 2, 3, 4)."
+Default is
+.BR \-s1 .
+.PD
+.PP
+If none of the output options are specified,
+phototypesetter output
+.RB ( \-ph )
+is assumed by default.
+.SH EXAMPLE
+The command:
+.PP
+.RS
+troff \|\-g \|myfile \|\(bv \|gcat \|\-st \|\-im1234,m567,myname \|\-f\|myfile
+.RE
+.PP
+will send the output of
+.IR troff (1)
+to \s-1STARE\s+1,
+with the
+.SM GCOS
+``ident card'' specifying ``M1234,M567,\s-1MYNAME\s+1'',
+and will report back that
+.B myfile
+has been sent.
+.SH FILES
+.PD 0
+.TP 20
+/etc/passwd
+user's identification and
+.SM GCOS
+ident card.
+.TP
+/usr/lib/dpd
+sending daemon.
+.TP
+/usr/spool/dpd/\(**
+spool area.
+.PD
+.SH SEE ALSO
+dpd(1C), dpr(1C), fget(1C), fsend(1C), troff(1).
+.\"	@(#)gcat.1c	5.2 of 5/18/82

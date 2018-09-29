@@ -1,0 +1,40 @@
+.TH GROUP 4
+.SH NAME
+group \- group file
+.SH DESCRIPTION
+.I Group\^
+contains for each group the
+following information:
+.RS
+.PP
+group name
+.br
+encrypted password
+.br
+numerical group
+.SM ID
+.br
+comma-separated list of all users allowed in the group
+.RE
+.PP
+This is an \s-1ASCII\s0 file.
+The fields are separated
+by colons;
+each group is separated from the next by a new-line.
+If the password field is null, no password is demanded.
+.PP
+This file resides in directory
+.BR /etc .
+Because of the encrypted
+passwords, it can and does have general read
+permission and can be used, for example,
+to map numerical group \s-1ID\s0's to names.
+.SH FILES
+/etc/group
+.SH "SEE ALSO"
+crypt(3C), passwd(4).
+.br
+newgrp(1), passwd(1) in the
+\f2\s-1UNIX\s+1 System V User Reference Manual\fR.
+.br
+.\"	%W% of %G%

@@ -1,0 +1,15 @@
+* @(#)gdts	6.3
+disk	8	0	5
+ts11	224	172520	5
+root	disk	00
+swap	disk	00	10032	8000
+pipe	disk	00
+dump	ts11	0
+buffers	200
+inodes	175
+files	300
+mounts	8
+calls	50
+procs	65
+clists	150
+regions 163

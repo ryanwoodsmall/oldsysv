@@ -1,0 +1,28 @@
+
+\Sln\S:  Description
+
+Syntax Summary: ln [-f] original_file new_file
+                ln [-f] original_file ... new_dir
+
+         where:  original_file and new_file  are names of files.
+
+                 new_dir  is a directory.
+
+Description:
+     \Sln\S stands for "link." Use \Sln\S to give a file more than one name.
+     \Sln\S "links" the new name to a file so that you can reference the
+     <original_file> using either the original or new file name.  You can link
+     a new name to a file, or you can link a new directory to many file names.
+     When you link a new directory to many file names, the files maintain the
+     same names and are members of the new directory as well as the original
+     directory.  If the access permissions of the <new_file> or <new_dir> 
+     forbid writing, \Sln\S will ask you if you want to link the file names
+     anyway.  If you respond "y" for "yes," \Sln\S will make a link between the
+     <new_file> or <new_dir> and the <original_file>.  You must be careful of
+     three things with \Sln\S:  First, you will have the same permissions on
+     the <new_file> as you did on the <original_file>. Second, if you edit a
+     file using one of the file names, the contents of all of the file names
+     that are linked to it change:  remember, there's really only one file.
+     Third, \Sln\S won't work unless all of the file names reside on the same
+     file system.  See also:  cp(1) and mv(1) for commands with functions
+     similar to \Sln\S.

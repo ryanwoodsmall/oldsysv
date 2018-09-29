@@ -1,0 +1,7 @@
+#ident	"@(#)sadmin:admin/menu/packagemgmt/DESC	1.3"
+#menu# package management menu
+#head#				PACKAGE MANAGEMENT
+#help#
+#help#	These submenus and subcommands manage various software and hardware
+#help#	packages that you install on your machine.  Not all optional packages
+#help#	add subcommands here.

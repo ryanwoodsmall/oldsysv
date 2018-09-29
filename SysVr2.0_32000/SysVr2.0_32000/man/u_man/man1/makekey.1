@@ -1,0 +1,47 @@
+.TH MAKEKEY 1
+.SH NAME
+makekey \- generate encryption key
+.SH SYNOPSIS
+.B /usr/lib/makekey
+.SH DESCRIPTION
+.I Makekey\^
+improves the usefulness of encryption schemes
+depending on a key by increasing the amount of time required to
+search the key space.
+It reads 10 bytes from its standard input,
+and writes 13 bytes on its standard output.
+The output depends on the input in a way intended
+to be difficult to compute (i.e., to require a substantial
+fraction of a second).
+.PP
+The first eight input bytes
+(the
+.IR "input key" )
+can be arbitrary
+.SM ASCII
+characters.
+The last
+two (the
+.IR salt )
+are best chosen from the set of digits,
+.BR . ,
+.BR / ,
+and
+upper- and lower-case
+letters.
+The salt characters are repeated as the first two characters of the output.
+The remaining 11 output characters are chosen from the same set as the salt
+and constitute the
+.IR "output key" .
+.PP
+.I Makekey\^
+is intended for programs that perform encryption
+[e.g.,
+.IR ed (1)].
+Usually, its input and output will be pipes.
+.SH SEE ALSO
+ed(1).
+.br
+passwd(4) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)makekey.1	6.2 of 9/2/83

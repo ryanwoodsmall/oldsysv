@@ -1,0 +1,14 @@
+/* #ident	"@(#)kern-port:boot/mboot/mbld	10.3" */
+
+/* mboot.b loader instruction file */
+
+MEMORY	{
+	mbcode:origin = 0x2004000, length = 512
+        mbbss:origin = 0x2004200,length = 1024
+	}
+SECTIONS	{
+	.text: { } > mbcode
+	.data: { } > mbcode
+	.bss:  { } > mbbss
+	}
+mboot.o

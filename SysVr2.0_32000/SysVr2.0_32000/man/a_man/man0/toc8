@@ -1,0 +1,4 @@
+.xx "intro" "introduction to system maintenance procedures"
+.xx "mk" "how to remake the system and commands"
+.xx "nscops" "NSC SYS32 console operations"
+.bp

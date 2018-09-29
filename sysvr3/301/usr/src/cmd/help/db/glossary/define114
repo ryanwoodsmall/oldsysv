@@ -1,0 +1,13 @@
+
+\S super user \S
+
+Super user is a user who can read and modify any file in the file system.
+He or she can also change the "permissions"\S*\S for the files. There
+are two ways a user can become the super user.  The first is by logging in
+under the login name root.  The second is by using the su(1) command.  Both
+of these methods of becoming super user require the user to know the
+password for the root login name. Every system needs a super user because
+someone must have access to all the files to do maintenance.  This
+maintenance is usually the job of the system administrator.
+
+\S*\S defined in the \Sglossary\S

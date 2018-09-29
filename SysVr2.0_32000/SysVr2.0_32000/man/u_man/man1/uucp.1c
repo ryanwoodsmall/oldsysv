@@ -1,0 +1,294 @@
+.TH UUCP 1C
+.SH NAME
+uucp, uulog, uuname \- \s-1UNIX\s+1 system to \s-1UNIX\s+1 system copy
+.SH SYNOPSIS
+.B uucp
+[ options ]
+source-files destination-file
+.PP
+.B uulog
+[ options ]
+.PP
+.B uuname
+[
+.B \-l
+]
+[
+.B \-v
+]
+.SH DESCRIPTION
+.SS Uucp.
+.I Uucp\^
+copies files named by the
+.I source-file\^
+arguments to the
+.I destination-file\^
+argument.
+A file name may be a path name on your machine, or may
+have the form:
+.PP
+.RS .5i
+system-name!path-name
+.RE
+.PP
+where
+.I system-name\^
+is taken from a list of system names which
+.I uucp\^
+knows about.
+The
+.I system-name\^
+may also be a list of names such as
+.PP
+.RS .5i
+system-name!system-name!...!system-name!path-name
+.RE
+.PP
+in which case an attempt is made to send the file via the specified route,
+and only to a destination in \s-1PUBDIR\s+1 (see below).
+Care should be taken to insure that intermediate nodes in the
+route are willing to foward information.
+.PP
+The shell metacharacters
+.BR ? ,
+.B \(**
+and
+.B [\|.\|.\|.\|]
+appearing in
+.I path-name\^
+will be expanded on the appropriate system.
+.PP
+Path names may be one of:
+.PP
+.RS
+.TP
+(1)
+a full path name;
+.TP
+(2)
+a path name preceded by
+.BI ~ user\^
+where
+.I user\^
+is a login name on the specified system
+and is replaced by that user's login directory;
+.TP
+(3)
+a path name preceded by
+.BI ~/ user\^
+where
+.I user\^
+is a login name on the specified system
+and is replaced by that user's directory under \s-1PUBDIR\s+1;
+.TP
+(4)
+anything else is prefixed by the current directory.
+.RE
+.PP
+If the result is an erroneous path name for the remote system
+the copy will fail.
+If the
+.I destination-file\^
+is a directory, the last part of the
+.I source-file\^
+name is used.
+.ig
+If a simple
+.I ~user\^
+destination is inaccessible to 
+.IR uucp ,
+data is copied to a spool directory and the user
+is notified by
+.IR mail (1).
+..
+.PP
+.I Uucp\^
+preserves execute permissions across the transmission
+and gives 0666 read and write permissions [see
+.IR chmod (2)].
+.PP
+The following options are interpreted by
+.IR uucp :
+.TP .5i
+.B \-d
+Make all necessary directories for the file copy (default).
+.TP 
+.B \-f
+Do not make intermediate directories for the file copy.
+.TP
+.B \-c
+Use the source file when copying out rather than
+copying the file to the spool directory (default).
+.TP
+.B \-C
+Copy the source file to the spool directory.
+.TP
+.BI \-m file\^
+Report status of the transfer in
+.I file.\^
+If
+.I file
+is omitted, send mail to the requester when the copy is
+completed.
+.TP
+.BI \-n user\^
+Notify
+.I user\^
+on the remote system that a file was sent.
+.TP
+.BI \-e sys\^
+Send the
+.I uucp\^
+command to system
+.I sys\^
+to be executed there.
+(Note: this will only be successful if the remote
+machine allows the
+.I uucp\^
+command to be executed by
+.BR /usr/lib/uucp/uuxqt .)
+.TP
+.B \-r
+Queue job but do not start the file transfer process.
+By default a file transfer process is started each time 
+uucp is evoked.
+.TP
+.B \-j
+Control writing of the 
+.I uucp\^
+job number to standard output (see below).
+.PP
+.I Uucp\^
+associates a job number with each request.
+This job number can be used by
+.I uustat\^
+to obtain status or terminate the job.
+.PP
+The environment variable \fBJOBNO\fP and the \fB-j\fP option
+are used to control the listing of the \fIuucp\fP job number
+on standard output.
+If the environment variable \fBJOBNO\fP is undefined or set to 
+\fBOFF\fP, the job number will not be listed (default).
+If \fIuucp\fP is then invoked with the \fB-j\fP option, the job number
+will be listed.
+If the environment variable \fBJOBNO\fP is set to \fBON\fP and
+is exported, a job number will be written to standard output 
+each time uucp is invoked.  
+In this case, the \fB-j\fP option will supress output of the job
+number.  
+.SS Uulog
+.PP
+.I Uulog\^
+queries a summary log
+of 
+.I uucp\^
+and
+.IR uux (1C)
+transactions in the file
+.B /usr/spool/uucp/\s-1LOGFILE.\s0
+.ne 3
+.PP
+The options cause 
+.I uulog
+to print logging information:
+.TP .5i
+.BI \-s sys\^
+Print information about work involving system
+.IR sys .
+If 
+.IR sys
+is not specified, then logging information for all systems
+will be printed.
+.TP
+.BI \-u user\^
+Print information about work done for the specified,
+.IR user .
+If 
+.IR user
+is not specified then logging information for all users
+will be printed.
+.SS Uuname.
+.PP
+.I Uuname\^
+lists the uucp names of known systems.
+The
+.B \-l
+option returns the local system name.
+The 
+.B \-v 
+option will print additional information about each system.
+A description will be printed for each system that has a line of
+information in \fB/usr/lib/uucp/\s-1ADMIN\s+1\fR.
+The format of \s-1ADMIN\s+1 is:
+.SP
+.I sysname\^ 
+tab
+.I description\^
+tab.
+.SH FILES
+.PD 0
+.TP \w'/usr/spool/uucppublic\ \ 'u
+/usr/spool/uucp
+spool directory
+.TP
+/usr/spool/uucppublic
+public directory for receiving and sending (\s-1PUBDIR\s0)
+.TP
+/usr/lib/uucp/\(**
+other data and program files
+.PD
+.SH SEE ALSO
+mail(1), uux(1C).
+.br
+chmod(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.SH WARNING
+The domain of remotely accessible files can
+(and for obvious security reasons, usually should)
+be severely restricted.
+You will very likely not be able to fetch files
+by path name;
+ask a responsible person on the remote system to
+send them to you.
+For the same reasons, you will probably not be able
+to send files to arbitrary path names.
+As distributed, the remotely accessible files are
+those whose names begin
+.B /usr/spool/uucppublic
+(equivalent to
+.B ~nuucp
+or just
+.BR ~ ).
+.SH NOTES
+In order to send files that begin with a dot (e.g., .profile) the files must 
+by qualified with a dot. For example: .profile, .prof*, .profil?
+are correct; whereas *prof*, ?profile are incorrect.
+.PP
+.I Uucp\^
+will not generate a job number for a strictly local transaction.
+.bp
+.SH BUGS
+All files received by
+.I uucp\^
+will be owned by
+.IR uucp .
+.br
+The \fB\-m\fP option will only work sending files or receiving
+a single file.
+Receiving multiple files specified by special shell
+characters \fB? \(** \|[\|.\|.\|.\|]\fP will not activate
+the \fB\-m\fP option.
+.br
+The \fB\-m\fP option will not work if all transactions are local
+or if 
+.B uucp
+is executed remotely via the \fB\-e\fP option.
+.br
+The \fB\-n\fP option will function only when the source and destination
+are not on the same machine.
+.br
+Only the first six characters of a 
+.I system-name
+are significant.
+Any excess characters are ignored.
+.\"	@(#)uucp.1c	6.1 of 5/4/83

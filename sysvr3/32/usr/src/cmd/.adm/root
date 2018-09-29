@@ -1,0 +1,5 @@
+#ident	@(#)adm:root	1.1.2.1
+#
+# The root crontab should be used to perform accounting data collection.
+#
+0 2 * * 0,4 /usr/lib/cron/logchecker

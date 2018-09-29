@@ -1,0 +1,351 @@
+500 boxarrow #ident	"@(#)script.files:t.assubs	1.4"
+256 13 32
+2 3007 3003 
+30 
+3 -->
+31 
+25 
+8 1000 1001 Strike the RETURN key to continue. 
+15 
+20 
+200 1
+245 10000
+25 
+32 
+20 
+250 
+2 3000 3000
+34 alt
+58 9 45 601
+35 alt
+15 
+510 
+500 diff
+705 0 0 75
+ CURRENT FORM: diff      PREVIOUS MENU/FORM: Compare Files    HELP: ^A OR f8
+
+
+      NAME OF FIRST FILE:
+
+      NAME OF SECOND FILE:
+
+      REDIRECT OUTPUT TO:
+
+      IGNORE TRAILING BLANKS [-b] (y/n): n
+
+      PRODUCE SCRIPT CONVERTING FIRST FILE TO SECOND [-e] (y/n): n 
+
+      PRODUCE SCRIPT CONVERTING SECOND FILE TO FIRST [-f] (y/n): n
+
+      FAST, PARTIAL COMPARISON ONLY [-h] (y/n): n
+
+      ADDITIONS TO COMMAND LINE:
+
+
+
+ COMMAND LINE: diff
+706 
+34 alt
+2 1 0
+700 r79
+2 20 0
+700 r79
+2 22 0
+700 r79
+35 alt
+510 
+500 cflines
+34 alt
+2 1 0
+700 r79
+2 20 0
+700 r79
+2 22 0
+700 r79
+35 alt
+510 
+500 instruct
+30 
+8 16 10 -->
+31 
+2 1000 1001
+15 
+510 
+500 clearall
+2 0 0
+12 
+15 
+510 
+500 ansloopa
+15 
+20 
+200 1
+245 5
+32 
+2 3007  3003
+7 32 39
+15 
+30 
+8 3007 3003  Use 
+255 
+31 
+2 2000 2000
+25 
+15 
+20 
+247 
+32 
+8 3007 3003 Let me do it for you. 
+15 
+1 2
+250 
+2 3007 3003
+7 32 39
+15 
+510 
+500 botarrow
+256 13 32
+15 
+2 21 7
+30 
+3 -->
+31 
+25 
+8 1000 1001 Strike the RETURN key to continue. 
+15 
+20 
+200 1
+245 10000
+25 
+32 
+20 
+250 
+2 21 0
+11 
+15 
+510 
+500 addinto
+3 >
+2 1000 999
+18 
+510 
+500 box9-45
+2 3000 3000
+34 alt
+58 9 45 601
+35 alt
+510 
+500 fkeyhelp
+34 alt
+2 2000 2000
+58 11 78 601
+35 alt
+705 2001 2001 75
+NAVIGATING, EXECUTING     CURSOR POSITIONING        MISCELLANEOUS
+f1 Select current item    <CR>,DOWN Next item       f3 Redraw screen
+f2 Clear help or prompt          UP Previous item   f6 Current item help
+f4 Previous menu or form      RIGHT ...             f7 Current menu help
+f5 Pop-up menu                 LEFT ...             f8 ASSIST help
+^T TOP menu                      ^U Next page       ^K ...
+^D Exit ASSIST                                      ^C ...
+^E Shell escape                <letter> Go to item that starts with <letter>
+706 
+510 
+500 ckeyhelp
+34 alt
+2 2000 2000
+58 10 77 601
+35 alt
+705 2001 2001 71
+NAVIGATING, EXECUTING     CURSOR POSITIONING        MISCELLANEOUS
+^G Select current item      <CR>,^N Next item       ^L Redraw screen
+^V Clear help or prompt          ^P Previous item   ^Y Current item help
+^R Previous menu or form         ^W ...             ^O Current menu help
+^F Pop-up menu                   ^B ...             ^A ASSIST help
+^T Top menu                      ^U Next page       ^K ...
+^D Exit ASSIST                                      ^C ...
+^E Shell escape           <letter> Go to item that starts with <letter>
+706 
+510 
+500 dumb-top
+2 0 60
+11 
+8 0 70 HELP: ^A
+510 
+500 ansunix
+2 2000 2000
+25 
+3 $ 
+15 
+21 50
+210 1
+245 10000
+32 
+2 2002 2000
+3 Type 
+30 
+255 
+31 
+8 1000 1001 (You typed 
+320 
+3 )
+15 
+2 2000 2002
+11 
+2 2000 2002
+25 
+15 
+21 50
+2 2002 2002
+11 
+15 
+250 
+510 
+500 ansloopstr
+25 
+15 
+20 
+220 1
+245 3
+32 
+2 3005 3003
+7 32 41
+30 
+8 3005 3003 Type 
+7 510 1
+31 
+2 2000 2000
+25 
+15 
+20 
+246 
+2 2000 2000
+6 500 1
+18 
+15 
+2 3005 3003
+7 32 41
+2 2000 2000
+15 
+249 
+20 
+250 
+510 
+500 instructhere
+30 
+3 -->
+31 
+7 32 1
+15 
+510 
+500 compare
+705 0 0 76
+ CURRENT MENU: Compare Files    PREVIOUS MENU OR FORM: TOP     HELP: ^A OR f8
+
+
+                          COMPARE FILES
+
+      cmp ...... Show byte and line numbers of differences
+      comm ..... Select/reject common lines
+      diff ..... Show all lines that differ
+
+
+                   MORE COMMANDS FOR COMPARING FILES
+
+      bdiff .... Show differences between files too large for "diff"
+      diff3 .... Compare three files
+      diffmk ... Create new file with "nroff" commands to mark differences 
+      sdiff .... Show files side-by-side, marking differences
+706 
+34 alt
+2 1 0
+700 r79
+35 alt
+510 
+500 newtop
+705 0 0 75
+  CURRENT MENU: TOP     [ACCESSED FROM UNIX SYSTEM]           HELP: ^A OR f8
+
+
+              Batch, Background, and Execution Control
+              Compare Files
+              Create, Copy, Rename, and Remove Files
+              Directory-Related Commands
+              Edit, Cut, and Paste Files
+
+              Electronic Mail and Networking
+              Find Files
+              Format Text and Hardcopy Output
+              Look Inside Files and Directories
+              Permissions of Files and Directories
+
+              Program
+              Set Up User and Terminal Environments
+              Sort, Transform, and Archive Files
+              Statistics of Files, Directories, and Disk Blocks
+              System, Terminal, and General Information
+706 
+34 alt
+2 1 0
+700 r79
+35 alt
+510 
+500 mwalkmenu
+705 0 0 78
+  CURRENT MENU: ASSIST WALKTHRU   PREVIOUS MENU OR FORM: TOP     HELP: ^A OR f8
+
+
+                INTRODUCTION TO ASSIST
+                   Complete Introductory Walkthru
+                     Menus
+                     Command Forms
+                     Pop-up Help
+                     Pop-up Menu Functions
+
+706 
+34 alt
+2 1 0
+700 r79
+35 alt
+510 
+500 tophelp
+2 5 10
+34 alt
+58 4 45 601
+35 alt
+705 6 11 42
+The TOP menu groups UNIX system commands by
+functionality.
+706 
+510 
+500 batchhelp
+2 6 10
+34 alt
+58 6 57 601
+35 alt
+705 7 11 54
+The Batch, Background, and Execution Control menu lists
+commands that control many commands at one time, give
+process status, and terminate processes.  Examples are
+"batch", "ps", and "kill".
+706 
+510 
+500 popmenu
+34 alt
+58 9 23 601
+35 alt
+705 2001 2002 19
+ASSIST Walkthru
+Command Forms
+Command Search
+Exit ASSIST
+Switch Directory
+UNIX System Subshell
+UNIX System Walkthru
+706 
+510 
+500 helpmess
+30 
+8 23 1 Strike ^V OR f2 TO CLEAR MESSAGE, OR TYPE ASSIST COMMAND 
+31 
+510 

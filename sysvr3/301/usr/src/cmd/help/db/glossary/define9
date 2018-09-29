@@ -1,0 +1,13 @@
+
+\S #:  pound sign \S
+
+1)  A pound sign is the "erase character"\S*\S  for your terminal,
+unless you specify a different character.  Each pound sign erases
+one character that precedes it on the current  line.
+
+2) When it is used in a "shell script"\S*\S, a pound sign marks a
+comment. The pound sign causes the shell to ignore everything that
+follows until the end of the line, where a newline character signals
+the end of the comment.
+
+\S*\S defined in the \Sglossary\S

@@ -1,0 +1,14 @@
+set x $*
+. ./.param
+
+date > $TMPDIR/list
+echo >> $TMPDIR/list
+
+for dir in $DIRLST
+do
+	cd $MANDIR/man$dir
+	echo "---------------" >> $TMPDIR/list
+	echo "Section $dir" >> $TMPDIR/list
+	ls -ldas .* $FILLST >> $TMPDIR/list
+done
+#	@(#)list	5.2 of 5/19/82

@@ -1,0 +1,10 @@
+*#ident	"@(#)kern-port:master.d/idisk	10.2"
+*
+* IDISK
+*
+*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
+rsbc11	1	sd	17	1	11	
+						idiskmaj	( %i )	={ #M }
+						iddefect[IDDEFSZ] (%0x800)
+$$$
+IDDEFSZ =	2

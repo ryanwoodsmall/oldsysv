@@ -1,0 +1,17 @@
+# Remove all files from $TMPDIR that only have
+# the date string and an extra new line.  In other
+# words, clean up the files that have no useful stuff.
+
+set x $*
+. ./.param
+
+cd $TMPDIR
+
+for file in *
+do
+	lines=`cat $file | wc -l`
+	if [ "$lines" -le 2 ]; then
+		rm $file
+	fi
+done
+#	@(#)cleanup	5.2 of 5/19/82

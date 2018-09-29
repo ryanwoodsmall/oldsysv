@@ -1,0 +1,75 @@
+#ident	"@(#)rfs.admin:startstop/stoprfs	1.6"
+#menu# stop RFS on your machine - return to multi-user mode
+
+#help# 
+#help# 	The subcommand "stoprfs" stops RFS on your machine and returns
+#help#	your machine to multi-user mode.  All local resources will be
+#help#	unadvertised and all remote resources will be unmounted.
+#help#	Stopping RFS will make remote resources unavailable to your local
+#help#	users and will make your local resources unavailable to client
+#help#	machines.  Be sure to consider the affect to local and remote 
+#help#	users when planning to stop RFS.
+#help#	
+
+# set trap
+trap '/bin/rm -f /usr/tmp/stoprfs$$; trap 0; exit' 0 1 2 3 15
+
+cflags="-qq -k$$"
+
+# Print heading
+echo "\n\nIf you want to quit the sequence at any time, type \"q\"."
+echo "\n\n\t\tSTOP REMOTE FILE SHARING"
+
+# define messages
+QUIT_MESG="
+Stopping RFS will make remote resources unavailable to your local users 
+and will make your local resources unavailable to remote users.  Processes
+using these resources will be killed.  Remote users currently in one of 
+your directories will be logged off.  Be sure to consider the affect to 
+local and remote users before stopping RFS."  
+
+# Determine if RFS is running; if not, print appropriate error message.
+if /usr/lbin/rfsrunning
+then
+	: OK!
+else
+	echo "\n\t\tRFS is NOT currently running.\n"
+	exit
+fi
+
+# Ask the user if they want to continue stopping RFS; quitting if the response is yes.
+echo "$QUIT_MESG\n"
+
+if /usr/lbin/checkyn $cflags -f "Do you want to continue to stop RFS?"
+then
+	: OK
+else
+	echo "\n\tRFS will NOT be stopped at this time.\n"
+	exit
+fi
+
+# Unadvertise resources
+ADV=`/usr/bin/adv`
+if [ "$ADV" != "" ]
+then
+	echo "\n	Unadvertising local resources.\n"
+	/bin/sh /etc/init.d/fumounts
+fi
+
+# unount resources
+MNT=`/etc/mount | /usr/bin/fgrep "/remote on"`
+if [ "$MNT" != "" ]
+then
+	echo "\n	Unmounting remote resources.\n"
+	/bin/sh /etc/init.d/rumounts stop
+fi
+
+#Stop RFS and state whether completed successfully or not
+/usr/bin/rfstop 2>/usr/tmp/stoprfs$$
+if [ $? -ne 0 ]
+then
+	/bin/sed "s/^rfstop:/WARNING:/" /usr/tmp/stoprfs$$
+	echo ""
+else
+	echo "\n	RFS has been stopped.\n"
+fi

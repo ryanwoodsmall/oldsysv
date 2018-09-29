@@ -1,0 +1,24 @@
+
+\S find \S:  Examples
+
+       find . -print
+
+    Prints the relative path names of all files and directories, and their
+    subdirectories in the current working directory.
+
+    ----------------------------------------------------------------------
+
+       find $HOME -user xyz -exec chmod 771 {} \;
+
+    Changes the permissions for all files in your HOME directory that are owned
+    by the user "xyz" to "771", which is read, write, and execute permission 
+    for the owner and group, and execute permission for the other users.
+
+
+
+    ----------------------------------------------------------------------
+
+       find . -print | cpio -pdl $HOME/bin
+
+     Copies all files and directories under the current working directory to
+    your "$HOME/bin" directory.

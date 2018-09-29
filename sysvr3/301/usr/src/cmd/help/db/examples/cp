@@ -1,0 +1,25 @@
+
+\S cp \S:  Examples
+
+       cp oldfile newfile
+
+    Copies the contents of "oldfile" to "newfile" in the current working
+    directory without destroying the contents of "oldfile".
+
+    ----------------------------------------------------------------------
+
+       cp /dir/cp.c $HOME
+
+    Copies the contents of "/dir/cp.c" to a file with the same name "cp.c" in
+    your "HOME" directory.
+
+
+
+
+    ----------------------------------------------------------------------
+
+       cp memo attach MEMO_DIR
+
+    Copies the contents of the files "memo" and "attach" in the current working
+    directory to the subdirectory "MEMO_DIR".  The names of the new files are
+    the same as the original files.

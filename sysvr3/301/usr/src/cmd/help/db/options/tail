@@ -1,0 +1,23 @@
+
+\Stail\S : Options
+
+     + number <number> is an integer that is the number of blocks, characters,
+              or lines from the beginning of the file where printing starts.
+
+     - number < number> is an integer that is the number of blocks,
+              characters, or lines from the end of the file where printing
+              starts.
+
+     b   counts in blocks.  If <number> is specified, begins printing <number>
+         blocks from the beginning or end of the file.  Default is 10.
+
+     c   counts in characters.  If <number> is specified, begins printing
+         <number> characters from the beginning or end of the file.  Default is
+         10.
+
+
+     l   counts in lines.  If <number> is specified, begins printing <number>
+         lines from the beginning or end of the file. Default is 10.
+
+     -f  monitors the growth of the output file by causing \Stail\S to send
+         information to standard output.

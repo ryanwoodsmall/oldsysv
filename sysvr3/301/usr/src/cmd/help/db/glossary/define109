@@ -1,0 +1,16 @@
+
+\S synchronous transmission:  asynchronous transmission \S
+
+Data can be transmitted between a terminal and computer in either
+synchronous or asynchronous transmission. For synchronous transmission,
+characters are sent across transmission lines in preestablished numbers 
+in one continuous stream.  The terminal and computer must have the same 
+phase, that is they must both send and receive the same number of 
+characters so that they know which "bit"\S*\S begins a character.
+
+In asynchronous transmission, one character is transmitted at a time.  Each
+character is marked by a start and stop signal which tells the receiving
+terminal or computer when to start and stop sampling bits that make up the
+character.  UNIX systems usually use asynchronous transmission.
+
+\S*\S defined in the \Sglossary\S

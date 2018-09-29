@@ -1,0 +1,22 @@
+
+\Srm\S:  Description
+
+Syntax Summary:  rm [-fi] file_name ...
+                 rm -r [-fi] name ...
+
+         where:  file_name  is the name of a file.
+
+                 name  is the name of a file or directory.
+
+Description:
+     \Srm\S stands for "remove".  Use \Srm\S to remove files and
+     directories.  \Srm\S followed by file names, removes the files, but you
+     must use the "r" option to remove non-empty directories.  With the "r"
+     option and a directory name, \Srm\S recursively removes all the files and
+     subdirectories from a directory, then removes the directory itself.  You
+     must have write permission for the directory in order to remove it.  To
+     remove a file, you must have write permission for the file and the
+     directory.  You can remove all the files in a directory by typing "rm *".
+     Use \Srm\S carefully!  Once you remove files, you cannot replace them
+     easily.  See also:  rmdir(1) for a command with a function similar to 
+     \Srm\S.

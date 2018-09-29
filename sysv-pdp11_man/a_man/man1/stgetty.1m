@@ -1,0 +1,53 @@
+.TH STGETTY 1M
+.SH NAME
+stgetty \- wait on synchronous login line for use
+.SH SYNOPSIS
+.B /etc/stgetty
+name type delay
+.SH DESCRIPTION
+.I Stgetty\^
+is normally invoked
+by
+.IR init (1M)
+as the first step in allowing users to login to the system.
+Lines in
+.B /etc/inittab
+tell
+.I init\^
+to invoke
+.I stgetty\^
+with the proper arguments.
+.PP
+.I Name\^
+should be the name of a terminal in
+.B /dev
+(e.g.,
+.BR tty93 );
+.I type\^
+should be a single character chosen from
+.BR \- ,
+which is used to start up a line,
+or
+.BR ! ,
+which tells
+.I stgetty\^
+to update
+.B /etc/utmp
+and exit;
+.I delay\^
+is relevant for dial-up ports only.
+It specifies the time in seconds that should elapse
+before the port is disconnected if the user does
+not respond to the \fBlogin:\fP request.
+.PP
+.IR Stlogin (1)
+is called with
+.I delay\^
+as an argument.
+.SH SEE ALSO
+stlogin(1),
+init(1M),
+inittab(4),
+utmp(4),
+stermio(7).
+.\"	@(#)stgetty.1m	5.2 of 5/18/82

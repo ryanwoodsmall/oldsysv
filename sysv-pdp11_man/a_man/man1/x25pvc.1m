@@ -1,0 +1,312 @@
+.TH X25PVC 1M
+.SH NAME
+x25pvc, x25lnk \- install, remove, or get status for a \s-1BX\s+1.25 minor device or link
+.SH SYNOPSIS
+.BR /etc/x25pvc " options"
+.PP
+.BR /etc/x25lnk " options"
+.SH DESCRIPTION
+.PP
+.I X25pvc\^
+may be used
+to install or remove a
+.SM BX\*S.25
+Permanent Virtual Circuit (\s-1PVC\s+1)
+on a specified
+.SM BX\*S.25
+interface
+.RI ( link ),
+or to display the status of a specified
+.SM BX\*S.25
+minor device
+.RI ( slot ).
+Exactly one of the following \fIoptions\fP
+(i.e.
+.BR \-i ,
+.BR \-r ,
+.BR \-s ,
+.BR \-e )
+must be used:
+.PP
+.PD 0
+.TP 7
+.BR \-i " [ \-\fBS\fP ] [ \-\fBR\fP ] [ \-\fBN\fP ] \-\fBm\fP \fIslotname\fP \-\\fBc\fP \fIchno\fP \-\fBl\fP \fIlinkno\fP"
+.I Slotname
+is a path name that specifies a
+.SM BX\*S.25
+minor device (slot).
+If that minor device is currently connected to some logical channel
+on some
+.SM BX\*S.25
+interface (link), then first that minor device
+will be removed, if possible (see the
+.B \-r
+\fIoption\fP).
+If that minor device is now available,
+it is connected to logical channel
+.I chno
+on link number
+.IR linkno .
+.I Chno
+must be in the range of 1 to 4,095
+and must not currently be in use
+for any other
+.SM BX\*S.25
+minor device associated with that link.
+Exactly one of three session-establishment \fIoptions\fP must be used:
+.BR \-S ,
+which is the preferred \fIoption\fP, indicates that session-layer
+connect/accept/disconnect
+qualified data messages are to be used;
+.B \-R
+indicates that
+.SM RESET
+in-order/out-of-order packets will be recognized
+but not transmitted;
+.B \-N
+indicates that
+the ``no protocol'' session mode will be used.
+The
+.B \-R
+and
+.B \-N
+\fIoptions\fP are provided only for compatibility with
+non-\s-1UNIX\s+1 system
+implementations of
+.SM BX\*S.25.
+This command will fail if the link, channel, or minor
+device number is out of range, or if the slot is in use. 
+.PD 0
+.TP 7
+.BI \-r " slotname"
+Remove the association between
+.SM BX\*S.25
+minor device
+.I slotname
+and the link and channel number to which
+it is currently connected.
+The command will fail if
+the minor device number is out of range, 
+the slot is not installed, 
+the slot is open, packets are waiting to
+be transmitted, or there are unacknowledged packets outstanding.
+.PD 0
+.TP 7
+.BI \-s " slotname"
+Print abbreviated status information for
+.SM BX\*S.25
+minor device
+.IR slotname .
+The information printed consists of
+.IR slotname ,
+the logical channel
+number, the link number, and
+the session-establishment \fIoption\fP.
+This command will fail if the minor device number is out of range or
+the slot is not installed. 
+.PD 0
+.TP 7
+.BI \-e " slotname"
+Print extended status information for
+.SM BX\*S.25
+minor device
+.IR slotname .
+The information printed consists of most of the information that is
+stored in the internal data structures
+associated with this device.
+This information is useful for
+determining the state of the PVC associated with this
+device when hardware or software anomalies are suspected
+and is intended for use by developers and sophisticated users.
+This command will fail if the minor device number is out of range
+or the slot is not installed.
+.PD
+.PP
+.I X25lnk\^
+is used to attach, detach, activate, deactivate,
+get status for and perform a changeover on
+a specified
+.SM BX\*S.25
+interface (link).
+Exactly one of the following \fIoptions\fP
+(i.e.
+.BR \-a ,
+.BR \-d ,
+.BR \-i ,
+.BR \-h ,
+.BR \-s ,
+.BR \-c )
+must be used:
+.PP
+.PD 0
+.TP 7
+.BR \-a " [ \-\fBk\fP ] \-\fBm\fP \fIdevice\fP [ \-\fBn\fP \fIlineno\fP ] [ \-\fBo\fP \fImodctl\fP ] \-\fBl\fP \fIlinkno\fP"
+Attach the
+.SM BX\*S.25
+link that is specified by
+.I linkno
+to the level 2 device whose name is
+.IR device .
+This command
+makes the necessary connections between data structures.
+.I Linkno
+is the number of the
+.SM BX\*S.25
+link to be attached;
+links are numbered starting with 0.
+If a line number must be specified for the device,
+(e.g. the device is a
+\s-1KMS\s+111),
+the
+.B \-n
+.I option
+is used.
+If the
+.I device
+is a
+\s-1KMS\s+111 
+and modem control is needed, 
+the
+.B \-o
+.I option
+is used and
+.I modctl
+is the path name of the
+\s-1DM\s+111-\s-1BA\s+1 modem control unit associated with a particular
+.SM KMC
+as part of a
+\s-1KMS\s+111. 
+If the
+.B \-k
+\fIoption\fP is used,
+this command will attach
+.I device
+as a backup for link
+.IR linkno ;
+otherwise,
+.I device
+is the primary.
+This command will fail if the link number is out of range, the
+link is already attached, or the device is already attached. 
+.PD 0
+.TP 7
+.BR \-d " [ \-\fBk\fP ] \-\fBl\fP \fIlinkno\fP"
+Detach the
+.SM BX\*S.25
+link that is specified by
+.IR linkno .
+This command removes the logical connections that were made
+by the
+.B \-a
+\fIoption\fP.
+If the
+.B \-k
+\fIoption\fP is used,
+this command will detach the backup device
+associated with
+.IR linkno ;
+otherwise the primary device is detached.
+This command will fail
+if the link number is out of range, 
+the device is not attached, 
+or the device has not been halted.
+.PD 0
+.TP 7
+.BR \-i " [ \-\fBk\fP ] [ \-\fBb\fP ] [ \-\fBp\fP \fIpktsize\fP ] [ \-\\fBf\fP ] \-\fBl\fP \fIlinkno\fP"
+Activate the
+.SM BX\*S.25
+link that is specified by
+.IR linkno .
+The
+.B \-b
+\fIoption\fP specifies that the link-level protocol
+will use address B;
+the default is address A.
+The
+.B \-p
+\fIoption\fP specifies the packet size;
+if it is used,
+.I pktsize
+must be a number that is a power of 2 and lies between 16
+and 1,024 inclusive.
+The default packet size is 128.
+The
+.B \-f
+\fIoption\fP,
+which is used only on the 3B20S,
+indicates that the speed of the device
+associated with link
+.I linkno
+is greater than 9.6KB.
+If the
+.B \-k
+\fIoption\fP is used, this command
+will start the level 2 protocol on the backup device
+associated with link
+.IR linkno ;
+otherwise,
+the
+.SM BX\*S.25
+level 2 and level 3
+protocols will be started on the primary device
+associated with link
+.IR linkno .
+This command will fail if the link number is out of range,
+the link is not attached, the device is already started,
+or the packet size is invalid.
+.PD 0
+.TP 7
+.BR \-h " [ \-\fBk\fP ] \-\fBl\fP \fIlinkno\fP"
+Halt the link specified by
+.IR linkno .
+If the
+.B \-k
+\fIoption\fP is used,
+the level 2 protocol on the backup device will be stopped
+provided the level 3 protocol is not running on the backup device.
+If the
+.B \-k
+\fIoption\fP is not used,
+the level 3 protocol is stopped
+(wherever it is running)
+and the level 2
+protocol on the primary device is stopped.
+If a backup device has been attached and started,
+the level 2 protocol on the backup will also be stopped.
+This command will fail if the link number is out of range or the link is
+not attached.
+.PD 0
+.TP 7
+.BR \-s " \-\fBl\fP \fIlinkno\fP"
+Print the status of the link specified by
+.IR linkno .
+The information printed consists of the link number, the packet size
+used on that link,
+and internal status information including
+whether or not the level 2 queue is full,
+the restart state of the link,
+whether or not the high and low priority queues are empty,
+and whether or not a restart packet is on the level 2 queue.
+Information about level 2 status is printed
+for the primary device and also for the backup device, if it has been attached.
+The value of
+.I csidev
+modulo 16 indicates the channel number used for tracing events with the
+.I vpmsave
+command. 
+This command will fail if the link number is out of range or
+the link is not attached to either a primary or backup device.
+.PD 0
+.TP 7
+.BR \-c " \-\fBl\fP \fIlinkno\fP"
+Changeover to the standby synchronous device associated with link
+.IR linkno .
+If the standby device is synchronized at level 2,
+level 3 will now run on that device.
+This command will fail
+if the link number is out of range,
+the link is not attached to both a primary and backup device, or
+a backup device has not been started.
+.SH SEE ALSO
+vpmsave(1M), nc(7), x25(7).
+.\"	@(#)x25pvc.1m	5.2 of 5/18/82

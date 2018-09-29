@@ -1,0 +1,182 @@
+#ident	"@(#)sadmin:etc/savecpio	2.7"
+#	Mechanism to save file-systems in cpio format on removable media.
+
+#!	chmod +x ${file}
+
+complete=yes
+ddrive=/dev/diskette
+msg=
+ncpiocmd=ncpio
+ndrive='diskette drive'
+verbose=-V
+exit=
+while [ -n "$1" ]
+do
+	case "$1" in
+	-d )
+		shift
+		ddrive=$1
+		;;
+	-n )
+		shift
+		ndrive=$1
+		;;
+	-v )
+		verbose=-v
+		;;
+	-c )
+		complete=yes
+		;;
+	-i )
+		complete=
+		;;
+	-M )
+		if [ -z "${ndrive}" ]
+		then
+			echo >&2 "$0:  -n drive-name must be specified before -M msg"
+			exit 1
+		fi
+		shift
+		msg="MRemove medium.
+$1
+Insert the medium in the ${ndrive}.
+Press <RETURN> when ready. [q] "
+		;;
+	-C )
+		if [ -n "$2" ]
+		then
+			ncpiocmd=$2
+		fi
+		shift
+		;;
+	-* )
+		echo >&2 "$0:  illegal flag argument '$1'"
+		exit 1
+		;;
+	* )
+		break
+	esac
+	shift
+done
+
+if [ $# -lt 1  -o  -z "${ddrive}"  -o  -z "${ndrive}" ]
+then
+	echo >&2 "Usage:  $0 -c|i -d device  -n device-name  \\
+	[ -v ] [ -M msg ] [ -C cmd ] file-system ..."
+	exit 1
+fi
+
+for d
+do
+	if [ -z "`/etc/mount  |  grep \"^${d} \"`" ]
+	then
+		echo "$0:  ${d}:  Not a mounted file system."
+		exit=1
+	fi
+done
+if [ ${exit} ]
+then
+	exit ${exit}
+fi
+mounted=`/etc/mount  |  grep " ${ddrive} "`
+if [ -n "${mounted}" ]
+then
+	echo "	A file system is still mounted on the ${ndrive}.
+${mounted}
+	Save not performed.  Stop."
+	exit 1
+fi
+
+SAVEDIR=/etc/save.d
+
+if [ ! -d ${SAVEDIR}/timestamp ]
+then
+	mkdir ${SAVEDIR} ${SAVEDIR}/timestamp 2>/dev/null
+fi
+cd ${SAVEDIR}/timestamp
+
+trap exit 1 2 15
+trap 'rm -f /tmp/$$.?.save ${SAVEDIR}/timestamp/$$*' 0
+
+if [ ${complete} ]
+then
+	for dir
+	{
+		if [ ${dir} = / ]
+		then
+			DIR=:root:
+			mounted=`/etc/mount  |  cut -d' ' -f1  |  fgrep -vx /`
+			echo "${mounted}" > fgrep.tmp
+			dirlist="${dirlist} `ls -d /*  |  fgrep -vx -f fgrep.tmp`"
+			rm -f fgrep.tmp
+		else
+			DIR=`expr "${dir}" : '/\(.*\)'`
+			dirlist="${dirlist} ${dir}"
+		fi
+		date +'%a. %D, %r' >$$${DIR}
+	}
+
+	#	Finding and sorting in a loop allows for shorter sorts,
+	#	file systems are backed up in order requested, and
+	#	find of 2nd-thru-Nth file system overlaps with ncpio output.
+	#	find(1) output is sorted to make looking for file names easier.
+	for d in ${dirlist}
+	do
+		find ${d} -depth -print  |  sort
+	done  |
+		${ncpiocmd} -oac"${msg}" ${verbose} -O ${ddrive}
+else
+	sed '	/^#/d
+		s/.*/\\;&;d/
+	    ' ${SAVEDIR}/except >/tmp/$$.3.save 2>/dev/null
+	>/tmp/$$.2.save
+	for dir
+	{
+		if [ ${dir} = / ]
+		then
+			DIR=:root:
+			mounted=`/etc/mount  |  cut -d' ' -f1  |  fgrep -vx /`
+			echo "${mounted}" > fgrep.tmp
+			dirlist=`ls -d /*  |  fgrep -vx -f fgrep.tmp`
+			rm -f fgrep.tmp
+		else
+			DIR=`expr "${dir}" : '/\(.*\)'`
+			dirlist=${dir}
+		fi
+		lastsave=`cat -s ${DIR}`
+		if [ -z "${lastsave}" ]
+		then
+			echo >&2 "$0:  ${SAVEDIR}/timestamp/${DIR} does not exist or empty.
+			Complete backup ( ${cmd} -c ${dir} ) needs to be run first."
+			exit 1
+		fi
+
+		date +'%a. %D, %r' >$$${DIR}
+		find ${dirlist} -depth -newer ${DIR} -print  |
+			sed -f /tmp/$$.3.save  |
+			sort >/tmp/$$.4.save
+		if [ ! -s /tmp/$$.4.save ]
+		then
+			echo "no files to save since ${lastsave} on ${dir}"
+		else
+			echo `wc -l </tmp/$$.4.save` \
+				"files to save since ${lastsave} on ${dir}"
+			cat /tmp/$$.4.save >>/tmp/$$.2.save
+			rm /tmp/$$.4.save
+		fi
+	}
+	if [ ! -s /tmp/$$.2.save ]
+	then
+		exit
+	fi
+
+	${ncpiocmd} -oac"${msg}" ${verbose} -O ${ddrive} </tmp/$$.2.save
+fi
+if [ $? != 0 ]
+then
+	exit 1
+fi
+for f in $$*
+{
+	mv -f ${f} `expr ${f} : "$$\(.*\)"`
+}

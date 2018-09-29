@@ -1,0 +1,303 @@
+520 redraw #ident
+8 0 0 This passage contains severKPHal short
+8 1 0 lines.  It will shABCow you how to delete
+8 2 0 things you can see, like letters
+8 3 0 and numbers.  It will also show you how
+8 4 0 to delete char acters you cannot see,
+8 5 0 such as blanks.
+15 
+8 16 7 DESCRIPTION: 
+18 
+30 
+3 x
+31 
+7 32 1
+3 deletes the character at the cursor.
+8 17 2000 Remember x for x-out
+520 instruct
+8 1000 1002 Delete the character K in the word "severKPHal"
+2 0 27
+18 
+256 120
+254 x to delete a character
+25 
+520 ansloop
+2 2000 2000
+10 1
+15 
+1 2
+520 clear1
+520 instruct
+8 1000 1002 Now delete the letter P
+2 0 27
+25 
+15 
+520 ansloop
+2 2000 2000
+10 1
+15 
+1 1
+520 clear1
+520 instruct
+8 1000 1002 And the letter H
+2 0 27
+25 
+15 
+520 ansloop
+2 2000 2000
+10 1
+15 
+1 1
+520 clear1
+8 16 7 You can multiply delete commands just the way you
+8 17 7 multiplied cursor moving commmands.
+520 instruct
+8 1000 1002 Delete the letters ABC with a multiplied command.
+2 1 18
+18 
+25 
+15 
+256 51
+254 the number 3
+520 ansloop
+2 2000 2000
+15 
+256 120
+254 x
+520 ansloop
+2 2000 2000
+15 
+10 3
+15 
+1 1
+520 clear1
+8 16 7 You treat spaces just like characters you can see.
+520 instruct
+8 1000 1002 Remove the space between char and acter . 
+2 4 14
+18 
+25 
+520 ansloop
+2 4 14
+10 1
+15 
+1 2
+520 clear1
+520 arrow
+520 redraw
+8 0 0 This short passage is designed to give
+8 1 0 you you some practice deleting words.  In it,
+8 2 0 you will delete single words and also several
+8 3 0 words such as these one at a time or simultaneously.
+8 16 7 DESCRIPTION: 
+18 
+30 
+3 dw
+31 
+7 32 1
+3 deletes from the cursor to the end of the word.
+8 17 2000 Remember d for delete and w for word
+520 instruct
+8 1000 1002 Delete the word "short" 
+2 0 5
+18 
+253 dw
+520 ansloopstr
+2 2000 2000
+15 
+10 6
+15 
+1 2
+520 clear1
+520 instruct
+8 1000 1002 Now delete the word "you" 
+2 1 4
+18 
+15 
+520 ansloopstr
+2 2000 2000
+15 
+10 4
+15 
+1 2
+520 clear1
+2 0 6
+8 16 7 You can delete several words at once by multiplying 
+8 17 7 the dw command.  For example, 3dw deletes three words.
+520 instruct
+8 1000 1002 Delete the words "such as these" with a multiplied command 
+2 3 6
+18 
+15 
+253 3dw
+520 ansloopstr
+2 2000 2000
+10 14
+15 
+1 2
+520 clear1
+520 instruct
+8 1000 1002 Delete the words "one at a time or" with a multiplied command.
+2 2000 2000
+15 
+253 5dw
+520 ansloopstr
+2 2000 2000
+15 
+10 17
+15 
+1 3
+520 clear1
+520 arrow
+520 redraw
+8 0 0 This passage will give you some practice in deleting lines.
+2 1 0
+10 1
+8 2 0 Paddle, paddle, paddle your canoe
+8 3 0 Row, row, row your boat
+8 4 0 Ride, ride, ride your bike
+8 5 0 Gently down
+8 6 0 the lake
+8 7 0 the ocean
+8 8 0 the stream
+2 9 0
+11 
+8 10 0 Merrily, merrily, merrily
+2 11 0
+11 
+8 12 0 Life is but a dream.
+8 13 0 A dream, a dream, a dream.
+15 
+400 0 13
+8 16 7 DESCRIPTION: 
+18 
+30 
+3 dd
+31 
+7 32 1
+3 deletes the entire line that the cursor is on. 
+8 17 2000 Remember d for delete
+520 instruct
+8 1000 1002 Delete the line beginning "Paddle, "
+2 2 5
+18 
+253 dd
+520 ansloopstr
+2 2000 2000
+15 
+27 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+15 
+520 clear1
+520 arrow
+520 instruct
+8 1000 1002 Delete the line beginning "Ride, "
+2 3 10
+18 
+15 
+520 ansloopstr
+2 2000 2000
+15 
+27 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+15 
+520 clear1
+8 16 7 You can delete several lines at once by multiplying 
+8 17 7 the dd command.  For example, 2dd deletes two lines.
+520 instruct
+18 
+8 2000 2002 Delete the lines "the lake" and "the ocean"
+8 2001 2002 using a multiplied command. 
+2 4 6
+18 
+15 
+253 2dd
+520 ansloopstr
+2 2000 2000
+15 
+27 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+27 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+15 
+520 clear1
+8 16 7 You also delete blank or empty lines with the dd command.
+520 instruct
+8 1000 1002 Delete the empty line the cursor is on.
+2 5 0
+15 
+18 
+253 dd
+520 ansloopstr
+2 2000 2000
+15 
+27 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+15 
+520 clear1
+520 instruct
+8 1000 1002 Move the cursor down to the next blank line and delete it.
+2 2000 2000
+25 
+15 
+256 106 258 14 13 10
+254 j to move the cursor down a line. 
+520 ansloop
+520 movedown
+520 ansloopstr
+2 2000 2000
+15 
+27 
+18 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+15 
+520 clear1
+520 instruct
+8 1000 1002 Move the cursor to the last line of the file and delete it.
+2 2000 2000
+25 
+15 
+520 ansloop
+520 movedown
+520 ansloopstr
+2 2000 2000
+15 
+27 
+2 13 0
+28 
+8 13 0 ~
+2 2000 2000
+15 
+400 0 23
+520 clear1
+520 arrow
+2 0 0
+12 
+30 
+8 3 20 SUMMARY OF DELETING COMMANDS
+31 
+8 6 24 x .... x-out character
+8 1001 23 dw .... delete word
+8 1001 23 dd .... delete entire line
+8 1002 23 3x .... delete (x-out) 3 characters
+8 1001 22 6dw .... delete 6 words
+8 1001 22 4dd .... delete 4 lines
+15 

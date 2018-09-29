@@ -1,0 +1,23 @@
+.TH LINE 1
+.SH NAME
+line \- read one line
+.SH SYNOPSIS
+.B line
+.SH DESCRIPTION
+.I Line\^
+copies one line (up to a new-line) from the standard
+input and writes it on the standard output.
+It
+returns an exit code of 1 on
+.SM
+.B EOF
+and always
+prints at least a new-line.
+It is often used within shell files to
+read from the user's terminal.
+.SH "SEE ALSO"
+sh(1).
+.br
+read(2) in the
+\f2\s-1UNIX\s+1 System V Programmer Reference Manual\fR.
+.\"	@(#)line.1	6.2 of 9/2/83

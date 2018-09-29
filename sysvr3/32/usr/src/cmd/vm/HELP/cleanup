@@ -1,0 +1,11 @@
+
+   The CLEANUP command closes all frames on  the  screen  except  the
+   Office  Frame  and  those frames you have defined to be open upon
+   login via the office preferences form accessed from the preferences
+   menu.
+
+   Use one of the following:
+
+      - Command Menu - Select CLEANUP + RETURN
+
+      - Typed Command - Type cleanup + RETURN
